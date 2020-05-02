@@ -1,0 +1,207 @@
+import React, { FC, Suspense, useState } from 'react';
+import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from "react-router-dom";
+import { ProductType, OrderColums } from '../../graphql/products/type';
+import { toLink, fromLink } from '../../utils/string';
+
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
+const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
+const ItemBox = React.lazy(() => import(/* webpackChunkName: "ItemBox" */'../ItemBox'));
+const Search = React.lazy(() => import(/* webpackChunkName: "Search" */'../Images/Search'));
+const PagerArrowLeft = React.lazy(() => import(/* webpackChunkName: "PagerArrowLeftPagerArrowLeft" */'../Images/PagerArrowLeft'));
+const PagerArrowRight = React.lazy(() => import(/* webpackChunkName: "PagerArrowRight" */'../Images/PagerArrowRight'));
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Images/Chevron'));
+
+const Container = styled.div``
+
+const Toolbox = styled.div`
+    display: flex;
+    align-items: center;
+`
+
+const InputGroup = styled.div`
+    display: flex;
+    align-items: center;
+    position: relative;    
+    flex: 1;
+    background: var(--f-gray);
+    border-radius: 44px;
+    margin-right: 40px;
+    svg {
+        position: absolute;
+        left: 20px;
+    }
+    input {
+        background: none;
+        border: 0;
+        padding: 15px 50px;
+        font-family: MullerBold;
+        font-size: 14px;
+        line-height: 14px;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.01em;
+        color: var(--black);
+        flex: 1;
+    }
+    button {
+        padding: 12px 50px;
+    }
+`
+
+const SelectBox = styled.div`
+    position: relative;
+    z-index: 2;
+`
+
+const Select = styled.div`
+    border: 1px solid var(--red);
+    box-sizing: border-box;
+    border-radius: 44px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    span {
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: 0.01em;
+        color: var(--font);
+    }
+    b {
+        font-family: MullerBold;
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: 0.01em;
+        color: var(--black);
+        margin: 0 8px;
+    }
+`
+
+const List = styled.ul`
+    position: absolute;
+    background: var(--white);
+    box-shadow: 0px 6px 74px rgba(0,0,0,0.06);
+    width: 100%;
+    border-radius: 20px;
+    padding: 25px 0 0;
+`
+
+const Item = styled.li<{ key: number }>`
+    padding: 15px 30px;
+    cursor: pointer;
+    font-family: MullerBold;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    &:hover {
+        color: var(--red);
+    }
+`
+const Grid = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+`
+
+const Pager = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+`
+
+const PageArrow = styled.div<{ allowed: boolean }>`
+    opacity: ${props => props.allowed ? '1' : '.3'};
+    margin: 0 10px;
+    cursor: ${props => props.allowed ? 'pointer' : 'default'};
+`
+
+const Page = styled.div<{ selected: boolean }>`
+    font-family: ${props => props.selected ? 'MullerBold' : 'MullerRegular'};
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: ${props => props.selected ? 'var(--red)' : 'var(--font)'};
+    margin: 0 5px;
+    cursor: ${props => props.selected ? 'default' : 'pointer'};
+`
+
+type Props = {
+    products: Array<ProductType>,
+    count: number,
+    orderQuery: Function
+}
+
+const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
+    const { t } = useTranslation();
+    const { pathname } = useLocation();
+    const query = new URLSearchParams(useLocation().search);
+    const history = useHistory();
+    const [search, setSearch] = useState(query.get('q'));
+    const [order, setOrder] = useState(OrderColums[0]);
+    const [page, setPage] = useState(1);
+    const [open, setOpen] = useState(false);
+
+    const selectItem = (item: string) => {
+        setOrder(item);
+        setOpen(false);
+        orderQuery(item);
+    }
+
+    const doSearch = () => {
+        history.push({ pathname, search: `?q=${toLink(search)}` })
+    }
+
+    const move = (fwd: boolean) => {
+        if (fwd && page < Math.ceil(count / 9)) changePage(page + 1);
+        else if (!fwd && page > 1) changePage(page - 1);
+    };
+
+    const changePage = (page: number) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        let search = '?';
+        if (query.get('q')) search += `q=${query.get('q')}&`;
+        search += `p=${page}`;
+        history.push({ pathname, search })
+        setPage(page);
+    }
+
+    return <Suspense fallback={<Loader />}>
+        <Container>
+            <Toolbox>
+                <InputGroup>
+                    <Search />
+                    <input type="search" value={fromLink(search)} onChange={evt => setSearch(evt.target.value)} placeholder={t('products.product_list.search_product')} />
+                    <Cta filled={true} action={doSearch} text={t('products.product_list.search')} />
+                </InputGroup>
+                <SelectBox>
+                    <Select onClick={() => setOpen(!open)}>
+                        <span>{t('products.product_list.order_by')}</span>
+                        <b>{t('products.product_list.' + order)}</b>
+                        <Chevron />
+                    </Select>
+                    {open && <List>
+                        {OrderColums.map((item: string, index: number) => <Item key={index} onClick={() => selectItem(item)}>{t('products.product_list.' + item)}</Item>)}
+                    </List>}
+                </SelectBox>
+            </Toolbox>
+            {!!products.length && <Grid>
+                {products.map((product: ProductType) => <ItemBox key={product.entity_id} product={product} />)}
+            </Grid>}
+            {!!products.length && count > 9 && <Pager>
+                <PageArrow onClick={() => move(false)} allowed={page > 1}>
+                    <PagerArrowLeft />
+                </PageArrow>
+                {[...Array(Math.ceil(count / 9))].map((v: any, index: number) => <Page selected={page === index + 1} key={index} onClick={() => changePage(index + 1)}>{index + 1}</Page>)}
+                <PageArrow onClick={() => move(true)} allowed={page < Math.ceil(count / 9)}>
+                    <PagerArrowRight />
+                </PageArrow>
+            </Pager>}
+        </Container>
+    </Suspense >
+}
+
+export default ProductList;

@@ -1,0 +1,87 @@
+{
+    "header": {
+        "login": "Ingresar",
+        "home": "Home",
+        "products": "Productos",
+        "faq": "Preguntas frecuentes",
+        "slogan": "En Sofía se confía."
+    },
+    "footer": {
+        "text": "Siempre hemos estado cerca y hoy lo estamos aún mas, comprometidos con tu familia y la seguridad alimentaria del país",
+        "copy": "Sofia {{year}} - Todos los derechos reservados",
+        "slogan": "En Sofía se confía.",
+        "contact": "Para consultas, comunícate con nosotros:",
+        "phone": "Teléfono",
+        "mail": "Correo"
+    },
+    "homepage": {
+        "hero": {
+            "text": "¿Qué te llevamos hoy?",
+            "city_select": "Selecciona la ciudad de entrega",
+            "product_search": "¿Qué producto buscas?",
+            "search": "buscar"
+        },
+        "categoryslider": {
+            "all": "Todos",
+            "seeall": "Ver todos"
+        },
+        "benefits": {
+            "title": "Los mejores beneficios",
+            "text": "Nuestra tienda siempre te conviene, porque nos preocupamos siempre para brindarte los mejorer servicios",
+            "delivery": {
+                "title": "Envío a domicilio",
+                "text": "Hacé tu orden y obtenela dentro de 48hs hábiles en tu hogar."
+            },
+            "payment": {
+                "title": "Pagá como más te convenga",
+                "text": "Aboná tu pedido desde nuestro sitio con tarjeta, o con efectivo cuando lo recibís."
+            },
+            "order": {
+                "title": "Pedido mínimo, envío gratis",
+                "text": "Tira de costilla de cerdo congelado en bandeja"
+            }
+        },
+        "promotions": {
+            "title": "Nuestras promociones",
+            "seeall": "Ver todas"
+        },
+        "subscribe": {
+            "store": "Tienda",
+            "notifications": "NOTIFICACIONES Y OFERTAS",
+            "title": "Quieres conocer nuestras ofertas y novedades?",
+            "mail": "Ingresa tu mail",
+            "button": "suscríbete",
+            "text": "Producimos alimentos sanos y nutritivos en armonía con el medio ambiente y la comunidad, innovando constantemente para mejorar la calidad de vida de nuestros consumidores."
+        },
+        "recipes": {
+            "title": "Nuestras recetas",
+            "seeall": "Ver nuestras recetas"
+        }
+    },
+    "itembox": {
+        "add": "Agregar"
+    },
+    "citymodal": {
+        "title": "¿A qué ciudad enviamos tu pedido?",
+        "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:"
+    },
+    "products": {
+        "filter_side_bar": {
+            "title": "Nuestros productos",
+            "all": "Todas las categorías",
+            "new": "nuevo",
+            "freedelivery": {
+                "title": "Envío es gratuito dentro de las 48 horas hábiles",
+                "text": "*La entrega y cobro de los productos queda sujeta a la disponibilidad de los mismos."
+            },
+            "product_count": "{{count}} Productos encontrados"
+        },
+        "product_list": {
+            "search_product": "Buscar producto",
+            "search": "Buscar",
+            "order_by": "Ordenar por",
+            "weight": "Peso",
+            "price": "Precio"
+        }
+    }
+}

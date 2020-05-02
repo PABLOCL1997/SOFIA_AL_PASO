@@ -1,0 +1,15 @@
+export const toLink = (str: string | null) => {
+    return str ? str.toLowerCase().replace(/ /g, '-') : '';
+}
+
+export const fromLink = (str: string | null) => {
+    return str ? str
+        .split(/-/g).map(word =>
+            `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+        .join(" ") : ''
+}
+
+export type KeyValue = {
+    key: string,
+    value: string
+}
