@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useEffect } from 'react';
+import React, { FC, Suspense } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -121,7 +121,7 @@ const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
         <Container>
             <Cta hover={false} text={t('products.filter_side_bar.title')} action={() => { }} filled={true} />
             <CategoryList>
-                <Category onClick={() => navigate({ entity_id: 0, name: '' })} selected={!category || category === ''}>{t('products.filter_side_bar.all')}</Category>
+                <Category onClick={() => navigate({ entity_id: 0, name: '', level: 0, parent_id: 0 })} selected={!category || category === ''}>{t('products.filter_side_bar.all')}</Category>
                 {categories.length && categories.filter((row: CategoryType) => row.entity_id !== MascotasId).map((row: CategoryType) =>
                     <Category onClick={() => navigate(row)} selected={category === toLink(row.name)} key={row.entity_id}>
                         {row.name}

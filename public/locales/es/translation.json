@@ -83,5 +83,23 @@
             "weight": "Peso",
             "price": "Precio"
         }
+    },
+    "product": {
+        "continue_shopping": "Seguir comprando",
+        "categories": "CATEGORÍAS",
+        "add": "Agregar",
+        "delivery": {
+            "title": "Envío es gratuito dentro de las 48 horas hábiles",
+            "text": "Los envíos se realizan de lunes a viernes"
+        },
+        "warranty": {
+            "title": "100% GARANTÍA DE CALIDAD",
+            "text": "Los productos más frescos para tu familia."
+        },
+        "disclaimer": "*La entrega y cobro de los productos queda sujeta a la disponibilidad de los mismos.",
+        "related": {
+            "title": "También te recomendamos",
+            "see": "Ver"
+        }
     }
 }

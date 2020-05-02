@@ -31,13 +31,15 @@ const SliderContainer = styled.div`
             bottom: -5px;
             li {
                 background: var(--btn-background);
+                box-shadow: 0 0 0 1px var(--black);
                 border-radius: 20px;
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
                 opacity: .35;
                 * { opacity: 0 }
             }
             .slick-active {
+                box-shadow: 0 0 0 1px var(--btn-background);
                 opacity: 1;
             }
         }

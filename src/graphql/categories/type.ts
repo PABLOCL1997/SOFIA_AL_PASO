@@ -1,4 +1,6 @@
 export type CategoryType = {
     entity_id: number,
-    name: string
+    name: string,
+    level: number,
+    parent_id: number
 }

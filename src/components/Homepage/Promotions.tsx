@@ -57,7 +57,7 @@ const Promotions: FC<Props> = () => {
     const _user = user.get();
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
         variables: { category_id: 0, limit: 20, offset: 0, onsale: true, city: _user.address ? _user.address.key : '' },
-        // fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'cache-and-network',
         onCompleted: (d) => setProducts(d.products.rows)
     });
 

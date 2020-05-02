@@ -66,6 +66,7 @@ const Products: FC<Props> = () => {
     useEffect(() => {
         setTitle();
         loadProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -77,6 +78,7 @@ const Products: FC<Props> = () => {
             let offset = Number(query.get('p')) - 1;
             setOffset((offset < 0 ? 0 : offset) * limit);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query]);
 
     useEffect(() => {
@@ -88,6 +90,7 @@ const Products: FC<Props> = () => {
             setOffset(0);
             setPage(1);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
     return (

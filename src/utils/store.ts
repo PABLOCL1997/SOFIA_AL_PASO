@@ -24,3 +24,17 @@ export const user = {
         localStorage.removeItem('user');
     }
 };
+
+export const cart = {
+    get(): any {
+        let cart = localStorage.getItem('cart');
+        return cart ? JSON.parse(cart) : [];
+    },
+    set(value: any): any {
+        localStorage.setItem('cart', JSON.stringify(value));
+        return cart.get();
+    },
+    delete(): void {
+        localStorage.removeItem('cart');
+    }
+};

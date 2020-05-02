@@ -4,8 +4,6 @@ import { ProductType } from '../graphql/products/type';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { toLink } from '../utils/string';
 import { ADD_ITEM } from '../graphql/cart/mutations';
 
@@ -63,6 +61,7 @@ const Title = styled.h2`
     line-height: 110%;
     text-align: center;
     color: var(--black);
+    height: 35px;
 `
 
 const PriceBox = styled.div`
@@ -148,6 +147,11 @@ const ItemBox: FC<Props> = ({ product }) => {
         history.push(`/${toLink(product.name)}`);
     }
 
+    const addAndGo = () => {
+        addItem();
+        history.push('/checkout');
+    }
+
     const discount = (1 - (product.special_price / product.price)) * 100;
 
     return <Suspense fallback={<Loader />}>
@@ -155,7 +159,7 @@ const ItemBox: FC<Props> = ({ product }) => {
             {discount > 0 && <Discount>{discount}%</Discount>}
             <Link onClick={goToProduct}>
                 <Category>{product.category_name}</Category>
-                <Image src={product.image}></Image>
+                <Image src={product.image.split(',')[0]}></Image>
                 <Title>{product.name}</Title>
                 <PriceBox>
                     <Size>{product.size} - </Size>
@@ -170,7 +174,7 @@ const ItemBox: FC<Props> = ({ product }) => {
                     </select>
                     <Chevron />
                 </Qty>
-                <Add onClick={() => addItem()}>{t('itembox.add')}</Add>
+                <Add onClick={addAndGo}>{t('itembox.add')}</Add>
             </Pill>
         </Container>
     </Suspense>

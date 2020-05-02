@@ -5,6 +5,7 @@ export const OrderColums = ['weight', 'price'];
 export type ProductType = {
     entity_id: number,
     name: string,
+    sku: string,
     image: string,
     size: string,
     price: number,

@@ -14,6 +14,7 @@ query Products($category_id: Int!, $limit: Int!, $offset: Int!, $onsale: Boolean
         rows {
             entity_id
             name
+            sku
             image
             size
             price
@@ -23,6 +24,41 @@ query Products($category_id: Int!, $limit: Int!, $offset: Int!, $onsale: Boolean
             stock
         }
         count
+    }
+}
+`
+
+export const GET_PRODUCT = gql`
+query Product($name: String!, $city: String!, $categories: Boolean, $related: Boolean) {
+    product(
+        name: $name,
+        city: $city,
+        categories: $categories,
+        related: $related
+    ) {
+        entity_id
+        name
+        sku
+        image
+        size
+        price
+        unit
+        category_name
+        special_price
+        stock
+        description
+        categories {
+            entity_id
+            name
+            level
+        }
+        related {
+            entity_id
+            name
+            image
+            price
+            unit
+        }
     }
 }
 `

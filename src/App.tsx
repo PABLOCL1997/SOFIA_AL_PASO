@@ -7,19 +7,21 @@ const LayoutGeneral = React.lazy(() => import(/* webpackChunkName: "LayoutGenera
 const Homepage = React.lazy(() => import(/* webpackChunkName: "Homepage" */'./pages/homepage'));
 const Products = React.lazy(() => import(/* webpackChunkName: "Products" */'./pages/products'));
 const Product = React.lazy(() => import(/* webpackChunkName: "Product" */'./pages/product'));
+const Checkout = React.lazy(() => import(/* webpackChunkName: "Checkout" */'./pages/checkout'));
 
 const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Router>
+        <Switch>
           <Route exact path="/" children={<LayoutGeneral><Homepage /></LayoutGeneral>} />
           <Route exact path="/productos" children={<LayoutGeneral><Products /></LayoutGeneral>} />
+          <Route exact path="/checkout" children={<LayoutGeneral><Checkout /></LayoutGeneral>} />
           <Route exact path="/productos/:category" children={<LayoutGeneral><Products /></LayoutGeneral>} />
-          <Route exact path="/:product" children={<LayoutGeneral><Product /></LayoutGeneral>} />
-        </Suspense>
-      </Switch>
-    </Router>
+          <Route exact path="/:prodname" children={<Product />} />
+        </Switch>
+      </Router>
+    </Suspense>
   );
 }
 

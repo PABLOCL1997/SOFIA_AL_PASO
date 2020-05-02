@@ -1,5 +1,6 @@
 module.exports = {
     HOMEPAGE_TITLE: 'Tienda Sofia - Homepage',
     PRODUCTS_TITLE: 'Tienda Sofia - Productos',
-    PRODUCT_TITLE: 'Tienda Sofia -'
+    PRODUCT_TITLE: 'Tienda Sofia -',
+    CHECKOUT_TITLE: 'Tienda Sofia - Checkout'
 }
