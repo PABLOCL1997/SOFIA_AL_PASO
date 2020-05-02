@@ -20,15 +20,12 @@ const loadPage = (res, meta = {}) => {
     });
 }
 
-app.use(express.static(__dirname + '/build'));
-
-// <!-- ROUTES
 app.get('/', (req, res) => loadPage(res, { title: HOMEPAGE_TITLE }));
+app.use(express.static(__dirname + '/build'));
 app.get('/productos', (req, res) => loadPage(res, { title: PRODUCTS_TITLE }));
 app.get('/checkout', (req, res) => loadPage(res, { title: CHECKOUT_TITLE }));
 app.get('/productos/:category', (req, res) => loadPage(res, { title: `${PRODUCTS_TITLE} - ${fromLink(req.params.category)}` }));
 app.get('/:product', (req, res) => loadPage(res, { title: `${PRODUCT_TITLE} ${fromLink(req.params.product)}` }));
-// ROUTES -->
 
 app.get('*', (req, res) => loadPage(res));
 app.listen(port, () => console.log(`Webapp on ::${port}`));

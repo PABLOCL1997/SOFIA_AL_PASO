@@ -9,7 +9,7 @@ const Container = styled.span`
 type Props = {}
 
 const Loader: FC<Props> = () => {
-    return <Container>Loading...</Container>
+    return <Container></Container>
 }
 
 export default Loader;
