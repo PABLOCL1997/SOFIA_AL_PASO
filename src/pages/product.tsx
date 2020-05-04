@@ -10,6 +10,7 @@ import { PRODUCT_TITLE } from '../meta';
 import { fromLink, toLink } from '../utils/string';
 import { ProductType } from '../graphql/products/type';
 import { CategoryType } from '../graphql/categories/type';
+import { BREAKPOINT } from '../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
@@ -24,12 +25,19 @@ const Header = styled.div`
     padding: var(--padding);
     display: flex;
     justify-content: flex-end;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        padding: 20px;
+        justify-content: flex-start;
+    }
 `
 
 const HeaderLink = styled.div`
     display: flex;
     align-items: center;
     cursor: pointer;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        flex-direction: row-reverse;
+    }
     span {
         font-size: 16px;
         line-height: 16px;
@@ -39,12 +47,20 @@ const HeaderLink = styled.div`
     }
     svg {
         cursor: pointer;
+        @media screen and (max-width: ${BREAKPOINT}) {
+            transform: rotate(180deg);
+            margin-right: 10px;
+        }
     }
 `
 
 const Wrapper = styled.div`
     padding: var(--padding);
     display: flex;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        flex-direction: column;
+        padding: 20px;
+    }
 `
 
 const Col1 = styled.div`
@@ -66,6 +82,11 @@ const Col1 = styled.div`
             opacity: 1;
         }
     }
+    @media screen and (max-width: ${BREAKPOINT}) {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 30px;
+    }
 `
 
 const Col2 = styled.div`
@@ -75,6 +96,10 @@ const Col2 = styled.div`
 const Image = styled.div<{ src: string }>`
     height: 354px;
     background: url(${props => props.src}) no-repeat center center / contain;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        height: 250px;
+    }
 `
 
 const ProductTitle = styled.h1`
@@ -140,6 +165,16 @@ const Toolbox = styled.div`
         padding: 11px 80px;
         margin-left: 20px;
     }
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        position: fixed;
+        bottom: 0;
+        background: white;
+        width: 100%;
+        left: 0;
+        padding: 30px;
+        margin: 0;
+    }
 `
 
 const Qty = styled.div`
@@ -193,7 +228,11 @@ const Disclaimer = styled.div`
     font-family: MullerMedium;
     font-size: 14px;
     line-height: 18px;
-    color: var(--black); `
+    color: var(--black);
+    @media screen and (max-width: ${BREAKPOINT}) {
+        margin-bottom: 30px;
+    }
+`
 
 type Props = {}
 const Product: FC<Props> = () => {
@@ -255,7 +294,7 @@ const Product: FC<Props> = () => {
                         <ProductTitle>{product.name}</ProductTitle>
                         <Price>Bs. {product.special_price.toFixed(2).replace('.', ',')}</Price>
                         <ProductText>
-                            {product.description.split('\n').map((line: string, index: number) => <li key={index} dangerouslySetInnerHTML={{ __html: line }} />)}
+                            {product.description.split('\n').filter((line: string) => line.trim()).map((line: string, index: number) => <li key={index} dangerouslySetInnerHTML={{ __html: line.trim() }} />)}
                         </ProductText>
                         <Categories>
                             <span>{t('product.categories')}: </span>

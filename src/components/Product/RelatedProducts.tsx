@@ -2,6 +2,7 @@ import React, { FC, Suspense } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { ProductType } from '../../graphql/products/type';
+import { BREAKPOINT } from '../../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
@@ -20,12 +21,23 @@ const Container = styled.div`
         width: 100%;
         height: 200px;
         z-index: -1;
+        @media screen and (max-width: ${BREAKPOINT}) {
+            height: 150px;
+            bottom: 20px;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 30px;
+            width: 80%;
+            left: 20%;
+        }
     }
 `
 
 const Wrapper = styled.div`
     padding: var(--padding);
     padding-bottom: 0;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        padding: 20px;
+    }
 `
 
 const Title = styled.h2`
@@ -65,7 +77,7 @@ const RelatedProducts: FC<Props> = ({ products }) => {
                     slidesToShow: 2,
                     slidesToScroll: 2,
                     arrows: false,
-                    dots: true
+                    dots: false
                 }
             },
             {
@@ -74,7 +86,7 @@ const RelatedProducts: FC<Props> = ({ products }) => {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     arrows: false,
-                    dots: true
+                    dots: false
                 }
             }
         ]
