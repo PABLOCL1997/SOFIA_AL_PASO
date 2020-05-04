@@ -8,6 +8,7 @@ import { GET_PRODUCTS } from '../graphql/products/queries';
 import { CategoryType } from '../graphql/categories/type';
 import { OrderColums } from '../graphql/products/type';
 import { toLink, fromLink } from '../utils/string';
+import { BREAKPOINT } from '../utils/constants';
 import { PRODUCTS_TITLE } from '../meta';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
@@ -17,11 +18,19 @@ const FilterSideBar = React.lazy(() => import(/* webpackChunkName: "FilterSideBa
 const Wrapper = styled.div`
     padding: var(--padding);
     display: flex;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        flex-direction: column;
+        padding: 20px;
+    }
 `
 
 const Col1 = styled.div`
     width: 250px;
     margin-right: 16px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        width: 100%;
+        margin-right: 0;
+    }
 `
 
 const Col2 = styled.div`

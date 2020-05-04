@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import { toLink } from '../utils/string';
 import { ADD_ITEM } from '../graphql/cart/mutations';
+import { BREAKPOINT } from '../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'./Images/Chevron'));
@@ -53,6 +54,7 @@ const Image = styled.img`
     max-width: 100%;
     height: 200px;
     margin: 0 auto;
+    display: block;
 `
 
 const Title = styled.h2`
@@ -62,6 +64,9 @@ const Title = styled.h2`
     text-align: center;
     color: var(--black);
     height: 35px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        height: auto;    
+    }
 `
 
 const PriceBox = styled.div`

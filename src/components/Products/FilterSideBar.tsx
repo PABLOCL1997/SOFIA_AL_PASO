@@ -1,8 +1,9 @@
-import React, { FC, Suspense } from 'react';
+import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation, useSSR } from 'react-i18next';
 import { CategoryType } from '../../graphql/categories/type';
+import { BREAKPOINT } from '../../utils/constants';
 
 import { toLink } from '../../utils/string';
 
@@ -10,20 +11,38 @@ const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loade
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
 const Paw = React.lazy(() => import(/* webpackChunkName: "Paw" */'../Images/Paw'));
 const FreeDelivery = React.lazy(() => import(/* webpackChunkName: "FreeDelivery" */'../Images/FreeDelivery'));
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Images/Chevron'));
 
 const Container = styled.div`
+    position: relative;
     button {
         width: 100%;
         text-align: left;
         padding: 10px 30px
     }
+    @media screen and (max-width: ${BREAKPOINT}) {
+        > div:first-child {
+            position: relative;
+            z-index: 3;
+        }
+    }
 `
 
-const CategoryList = styled.ul`
+const CategoryList = styled.ul<{ open: boolean }>`
     background: var(--white);
     box-shadow: 0px 6px 74px rgba(0,0,0,0.06);
     border-radius: 20px;
     padding: 25px 0;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        top: 0;
+        padding-top: 60px;
+        display: ${props => props.open ? 'block' : 'none'}
+    }
+}
 `
 
 const Category = styled.li<{ selected: boolean, key?: number }>`
@@ -67,6 +86,9 @@ const CategoryPet = styled.li<{ selected: boolean, key?: number }>`
 
 const DeliveryBox = styled.div`
     margin-top: 50px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        display: none;
+    }
 `
 
 const Title = styled.div`
@@ -96,6 +118,9 @@ const ProductsFound = styled.div`
     line-height: 14px;
     letter-spacing: 0.01em;
     color: var(--m-gray);
+    @media screen and (max-width: ${BREAKPOINT}) {
+        display: none;
+    }
 `
 
 type Props = {
@@ -108,6 +133,7 @@ const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const MascotasId = 354;
+    const [open, setOpen] = useState(false);
 
     const navigate = (cat: CategoryType) => {
         if (cat.entity_id === 0) {
@@ -119,8 +145,8 @@ const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
 
     return <Suspense fallback={<Loader />}>
         <Container>
-            <Cta hover={false} text={t('products.filter_side_bar.title')} action={() => { }} filled={true} />
-            <CategoryList>
+            <Cta icon={<Chevron />} hover={false} text={t('products.filter_side_bar.title')} action={() => setOpen(!open)} filled={true} />
+            <CategoryList open={open}>
                 <Category onClick={() => navigate({ entity_id: 0, name: '', level: 0, parent_id: 0 })} selected={!category || category === ''}>{t('products.filter_side_bar.all')}</Category>
                 {categories.length && categories.filter((row: CategoryType) => row.entity_id !== MascotasId).map((row: CategoryType) =>
                     <Category onClick={() => navigate(row)} selected={category === toLink(row.name)} key={row.entity_id}>

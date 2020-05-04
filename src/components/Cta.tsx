@@ -13,15 +13,21 @@ const Button = styled.button<{ filled: boolean, hover: boolean }>`
     padding: 5px 30px;
     border-radius: 30px;
     transition: all .2s linear;
+    display: flex;
+    align-items: center;
     span {
         font-family: MullerMedium;
         font-size: 16px;
         line-height: 16px;
+        flex: 1;
     }
     &:hover {
         background: ${props => props.hover ? (!props.filled ? 'var(--red)' : 'white') : (!props.filled ? 'white' : 'var(--red)')};
         color: ${props => props.hover ? (!props.filled ? 'var(--white)' : 'var(--red)') : (!props.filled ? 'var(--red)' : 'var(--white)')};
         box-shadow: ${props => props.hover ? (!props.filled ? 'var(--btn-shadow)' : '0 0') : (!props.filled ? '0 0' : 'var(--btn-shadow)')};
+    }
+    svg {
+        filter: ${props => props.filled ? 'brightness(100)' : 'brightness(0)'};
     }
 `
 
@@ -35,15 +41,21 @@ const Link = styled.a<{ filled: boolean, hover: boolean }>`
     border-radius: 30px;
     transition: all .2s linear;
     text-decoration: none;
+    display: flex;
+    align-items: center;
     span {
         font-family: MullerMedium;
         font-size: 16px;
         line-height: 16px;
+        flex: 1;
     }
     &:hover {
         background: ${props => props.hover ? (!props.filled ? 'var(--red)' : 'white') : (!props.filled ? 'white' : 'var(--red)')};
         color: ${props => props.hover ? (!props.filled ? 'var(--white)' : 'var(--red)') : (!props.filled ? 'var(--red)' : 'var(--white)')};
         box-shadow: ${props => props.hover ? (!props.filled ? 'var(--btn-shadow)' : '0 0') : (!props.filled ? '0 0' : 'var(--btn-shadow)')};
+    }
+    svg {
+        filter: ${props => props.filled ? 'brightness(100)' : 'brightness(0)'};
     }
 `
 
@@ -52,10 +64,11 @@ type Props = {
     blank?: boolean,
     text: string,
     action: any,
-    hover?: boolean
+    hover?: boolean,
+    icon?: any
 }
 
-const Cta: FC<Props> = ({ filled = false, text, action, blank = false, hover = true }) => {
+const Cta: FC<Props> = ({ filled = false, text, action, blank = false, hover = true, icon = false }) => {
     return <Container>
         {blank ?
             <Link hover={hover} filled={filled} href={action} target="_blank">
@@ -63,6 +76,7 @@ const Cta: FC<Props> = ({ filled = false, text, action, blank = false, hover = t
             </Link> :
             <Button hover={hover} filled={filled} onClick={action}>
                 <span>{text}</span>
+                {icon}
             </Button>}
     </Container>
 }

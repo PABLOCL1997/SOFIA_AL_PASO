@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from "react-router-dom";
 import { ProductType, OrderColums } from '../../graphql/products/type';
 import { toLink, fromLink } from '../../utils/string';
+import { BREAKPOINT } from '../../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
@@ -18,6 +19,9 @@ const Container = styled.div``
 const Toolbox = styled.div`
     display: flex;
     align-items: center;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        display: none;
+    }
 `
 
 const InputGroup = styled.div`
@@ -103,6 +107,9 @@ const Item = styled.li<{ key: number }>`
 const Grid = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        grid-template-columns: 1fr;
+    }
 `
 
 const Pager = styled.div`
@@ -110,6 +117,7 @@ const Pager = styled.div`
     align-items: center;
     justify-content: center;
     margin: 20px 0;
+    flex-wrap: wrap;
 `
 
 const PageArrow = styled.div<{ allowed: boolean }>`
@@ -125,7 +133,7 @@ const Page = styled.div<{ selected: boolean }>`
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: ${props => props.selected ? 'var(--red)' : 'var(--font)'};
-    margin: 0 5px;
+    margin: 5px;
     cursor: ${props => props.selected ? 'default' : 'pointer'};
 `
 
