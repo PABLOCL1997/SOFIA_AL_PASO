@@ -141,6 +141,7 @@ const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
         } else {
             history.push(`/productos/${toLink(cat.name)}`);
         }
+        setOpen(false);
     }
 
     return <Suspense fallback={<Loader />}>
