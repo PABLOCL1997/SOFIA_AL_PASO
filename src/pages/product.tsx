@@ -174,6 +174,7 @@ const Toolbox = styled.div`
         left: 0;
         padding: 30px;
         margin: 0;
+        z-index: 3;
     }
 `
 
