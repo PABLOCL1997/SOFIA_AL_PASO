@@ -29,7 +29,8 @@ const Title = styled.div`
 
 const CtaWrapper = styled.div`
     text-align: center;
-    margin-top: 30px;
+    max-width: 380px;
+    margin: 30px auto 0;
     a {
         padding: 13px 80px;
         text-transform: uppercase;

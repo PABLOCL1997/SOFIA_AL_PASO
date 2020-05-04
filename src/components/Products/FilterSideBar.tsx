@@ -18,12 +18,20 @@ const Container = styled.div`
     button {
         width: 100%;
         text-align: left;
-        padding: 10px 30px
+        padding: 10px 30px;
+        svg {
+            display: none;
+        }
     }
     @media screen and (max-width: ${BREAKPOINT}) {
         > div:first-child {
             position: relative;
             z-index: 3;
+            button {
+                svg {
+                    display: block;
+                }
+            }
         }
     }
 `
