@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState, useEffect } from 'react';
+import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { ProductType } from '../../graphql/products/type';

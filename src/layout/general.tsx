@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useEffect, useState } from 'react';
+import React, { FC, Suspense, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { BREAKPOINT } from '../utils/constants';
@@ -19,9 +19,9 @@ type Props = {}
 
 const LayoutGeneral: FC<Props> = ({ children }) => {
     const history = useHistory();
-    let url = history.location.pathname;
 
     useEffect(() => {
+        let url = history.location.pathname;
         const unlisten = history.listen(() => {
             let { location: { pathname } } = history;
             console.log(pathname, url);
@@ -33,6 +33,7 @@ const LayoutGeneral: FC<Props> = ({ children }) => {
         return () => {
             unlisten();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

@@ -92,13 +92,15 @@ const Products: FC<Props> = () => {
     }, [query]);
 
     useEffect(() => {
-        let __category = data.categories.find((row: CategoryType) => toLink(row.name) === toLink(category || ''));
-        if (__category && __category.entity_id !== category_id) {
-            setTitle();
-            setCategoryId(__category.entity_id);
-            setSearch('');
-            setOffset(0);
-            setPage(1);
+        if (data && data.categories) {
+            let __category = data.categories.find((row: CategoryType) => toLink(row.name) === toLink(category || ''));
+            if (__category && __category.entity_id !== category_id) {
+                setTitle();
+                setCategoryId(__category.entity_id);
+                setSearch('');
+                setOffset(0);
+                setPage(1);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
