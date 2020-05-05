@@ -1,4 +1,5 @@
-import React, { FC, Suspense } from 'react';
+import React, { FC, Suspense, useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { BREAKPOINT } from '../utils/constants';
 
@@ -17,6 +18,22 @@ const Wrapper = styled.div`
 type Props = {}
 
 const LayoutGeneral: FC<Props> = ({ children }) => {
+    const history = useHistory();
+    let url = history.location.pathname;
+
+    useEffect(() => {
+        const unlisten = history.listen(() => {
+            let { location: { pathname } } = history;
+            console.log(pathname, url);
+            if (pathname !== url && (pathname === '/' || pathname.indexOf('/productos') >= 0)) {
+                url = pathname;
+                window.scrollTo(0, 0);
+            }
+        });
+        return () => {
+            unlisten();
+        }
+    }, []);
 
     return (
         <Suspense fallback={<Loader />}>

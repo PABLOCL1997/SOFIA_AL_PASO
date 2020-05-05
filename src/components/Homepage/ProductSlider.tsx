@@ -1,13 +1,16 @@
-import React, { FC, Suspense } from 'react';
+import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { ProductType } from '../../graphql/products/type';
 import { BREAKPOINT } from '../../utils/constants';
+import { toLink } from '../../utils/string';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
 const ItemBox = React.lazy(() => import(/* webpackChunkName: "ItemBox" */'../ItemBox'));
 const ArrowLeft = React.lazy(() => import(/* webpackChunkName: "ArrowLeft" */'../Images/ArrowLeft.js'));
 const ArrowRight = React.lazy(() => import(/* webpackChunkName: "ArrowRight" */'../Images/ArrowRight.js'));
+const Product = React.lazy(() => import(/* webpackChunkName: "Product" */'../../pages/product'));
 
 type Props = {
     products: Array<ProductType>
@@ -46,7 +49,29 @@ const SliderContainer = styled.div`
     }
 `
 
+const ProductModal = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, .8);
+    z-index: 3;
+    padding: 30px 50px;
+    > div {
+        box-shadow: 0 0 5px #ccc;
+        background: white;
+        height: calc(100vh - 60px);
+        width: 100%;
+        overflow: auto;
+    }
+`
+
 const ProductSlider: FC<Props> = ({ products }) => {
+    const { pathname } = useLocation();
+    const [open, setOpen] = useState(false);
+    const [product, setProduct] = useState<ProductType | any>({});
+
     const settings = {
         dots: false,
         infinite: false,
@@ -86,17 +111,29 @@ const ProductSlider: FC<Props> = ({ products }) => {
             }
         ]
     };
+
+    const openModal = (product: ProductType) => {
+        setProduct(product);
+        window.history.replaceState('', '', `/${toLink(product.name)}`);
+        setOpen(true);
+    }
+
     return (
         <Suspense fallback={<Loader />}>
             <div className="main-container">
                 <SliderContainer>
                     <Slider {...settings}>
                         {products.map((product: ProductType) => <div key={product.entity_id}>
-                            <ItemBox product={product} />
+                            <ItemBox openModal={openModal} product={product} />
                         </div>)
                         }
                     </Slider>
                 </SliderContainer>
+                {open && <ProductModal>
+                    <div>
+                        <Product closeModal={() => setOpen(false)} oldUrl={pathname} inlineProdname={toLink(product.name)} />
+                    </div>
+                </ProductModal>}
             </div>
         </Suspense>
     );

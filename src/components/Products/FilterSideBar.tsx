@@ -1,7 +1,7 @@
 import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
-import { useTranslation, useSSR } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { CategoryType } from '../../graphql/categories/type';
 import { BREAKPOINT } from '../../utils/constants';
 

@@ -1,9 +1,11 @@
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { KeyValue } from '../utils/string';
-import { user } from '../utils/store';
 import { BREAKPOINT } from '../utils/constants';
+import { useMutation, useQuery } from 'react-apollo';
+import { SET_USER } from '../graphql/user/mutations';
+import { GET_USER } from '../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const WorldPin = React.lazy(() => import(/* webpackChunkName: "WorldPin" */'./Images/WorldPin'));
@@ -92,14 +94,19 @@ const RadionGroup = styled.div<any>`
     }
 `
 
-type Props = {
-    open: boolean
+type Props = {}
+
+type User = {
+    cityKey?: String,
+    cityName?: String,
+    openModal?: Boolean
 }
 
-const CityModal: FC<Props> = ({ open }) => {
+const CityModal: FC<Props> = () => {
     const { t } = useTranslation();
-    const address = user.get().address;
-    const [city, setCity] = useState<KeyValue | null>(address);
+    const { data } = useQuery(GET_USER, {});
+    const [city, setCity] = useState<User>({});
+    const [setUser] = useMutation(SET_USER, { variables: { user: city } });
 
     const cities: Array<KeyValue> = [
         { key: 'CB', value: 'Cochabamba' },
@@ -109,22 +116,27 @@ const CityModal: FC<Props> = ({ open }) => {
     ];
 
     const changeCity = (c: KeyValue) => {
-        setCity(c);
-        user.set({
-            address: c
-        });
-        window.location.reload();
+        setCity({
+            cityKey: c.key,
+            cityName: c.value,
+            openModal: false
+        })
     }
 
+    useEffect(() => {
+        if (city.cityKey) setUser();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [city]);
+
     return <Suspense fallback={<Loader />}>
-        <Courtain className={open && 'visible'}>
+        <Courtain className={(!data.userInfo.length || data.userInfo[0].openModal) && 'visible'}>
             <Modal>
                 <WorldPin />
                 <Title>{t('citymodal.title')}</Title>
                 <Text>{t('citymodal.text')}</Text>
                 <Radios>
-                    {cities.map((c: KeyValue) => <RadionGroup className={city && city.key === c.key && 'selected'} onClick={() => changeCity(c)} key={c.key}>
-                        <input readOnly id={`city${c.key}`} name="city" type="radio" checked={!!(city && city.key === c.key)} />
+                    {cities.map((c: KeyValue) => <RadionGroup className={data.userInfo.length && data.userInfo[0].cityKey === c.key && 'selected'} onClick={() => changeCity(c)} key={c.key}>
+                        <input readOnly id={`city${c.key}`} name="city" type="radio" checked={!!(data.userInfo.length && data.userInfo[0].cityKey === c.key)} />
                         <label>{c.value}</label>
                     </RadionGroup>)}
                 </Radios>

@@ -11,7 +11,7 @@ const Checkout = React.lazy(() => import(/* webpackChunkName: "Checkout" */'./pa
 
 const App = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div />}>
       <Router>
         <Switch>
           <Route exact path="/" children={<LayoutGeneral><Homepage /></LayoutGeneral>} />

@@ -1,11 +1,11 @@
 import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { useHistory } from "react-router-dom";
 import { GET_PRODUCTS } from '../../graphql/products/queries';
-import { user } from '../../utils/store';
 import { useTranslation } from 'react-i18next';
 import { BREAKPOINT } from '../../utils/constants';
+import { GET_USER } from '../../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const ProductSlider = React.lazy(() => import(/* webpackChunkName: "ProductSlider" */'./ProductSlider'));
@@ -54,9 +54,9 @@ const Promotions: FC<Props> = () => {
     const { t } = useTranslation();
     const history = useHistory();
     const [products, setProducts] = useState([]);
-    const _user = user.get();
+    const { data: userData } = useQuery(GET_USER, {});
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
-        variables: { category_id: 0, limit: 20, offset: 0, onsale: true, city: _user.address ? _user.address.key : '' },
+        variables: { category_id: 0, limit: 20, offset: 0, onsale: true, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '' },
         fetchPolicy: 'cache-and-network',
         onCompleted: (d) => setProducts(d.products.rows)
     });

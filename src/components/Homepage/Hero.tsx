@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
 import { toLink } from '../../utils/string';
 import { BREAKPOINT } from '../../utils/constants';
+import { SET_USER } from '../../graphql/user/mutations';
+import { useMutation } from 'react-apollo';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const HeaderLogo = React.lazy(() => import(/* webpackChunkName: "HeaderLogo" */'../Images/HeaderLogo'));
@@ -139,13 +141,13 @@ const CtaWrapper = styled.div`
 `
 
 type Props = {
-    setOpen: Function
 }
 
-const Hero: FC<Props> = ({ setOpen }) => {
+const Hero: FC<Props> = () => {
     const { t } = useTranslation();
     const [q, setQ] = useState("");
     const history = useHistory();
+    const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openModal: true } } });
 
     return <Suspense fallback={<Loader />}>
         <div className="main-container">
@@ -153,7 +155,7 @@ const Hero: FC<Props> = ({ setOpen }) => {
                 <HeaderLogo withSlogan={false} />
                 <Title>{t('homepage.hero.text')}</Title>
                 <SearchBox>
-                    <CitySelect onClick={() => setOpen(true)}>
+                    <CitySelect onClick={() => toggleCityModal()}>
                         <Pin />
                         <span>{t('homepage.hero.city_select')}</span>
                         <Chevron />

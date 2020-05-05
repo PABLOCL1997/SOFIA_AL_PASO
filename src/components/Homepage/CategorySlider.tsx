@@ -5,10 +5,10 @@ import { useHistory } from "react-router-dom";
 import { CategoryType } from '../../graphql/categories/type';
 import { GET_PRODUCTS } from '../../graphql/products/queries';
 import { GET_CATEGORIES } from '../../graphql/categories/queries';
-import { user } from '../../utils/store';
 import { useTranslation } from 'react-i18next';
 import { toLink } from '../../utils/string';
 import { BREAKPOINT } from '../../utils/constants';
+import { GET_USER } from '../../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const ProductSlider = React.lazy(() => import(/* webpackChunkName: "ProductSlider" */'./ProductSlider'));
@@ -111,9 +111,10 @@ const CategorySlider: FC<Props> = () => {
     const [products, setProducts] = useState([]);
     const [open, setOpen] = useState(false);
     const { loading, data } = useQuery(GET_CATEGORIES, {});
-    const _user = user.get();
+    const { data: userData } = useQuery(GET_USER, {});
+
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
-        variables: { category_id: selected, limit: 8, offset: 0, city: _user.address ? _user.address.key : '' },
+        variables: { category_id: selected, limit: 8, offset: 0, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '' },
         fetchPolicy: 'cache-and-network',
         onCompleted: (d) => setProducts(d.products.rows)
     });

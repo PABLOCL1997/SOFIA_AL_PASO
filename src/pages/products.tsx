@@ -1,7 +1,6 @@
 import React, { Suspense, FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useLocation } from "react-router-dom";
-import { user } from '../utils/store';
 import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { GET_CATEGORIES } from '../graphql/categories/queries';
 import { GET_PRODUCTS } from '../graphql/products/queries';
@@ -10,6 +9,8 @@ import { OrderColums } from '../graphql/products/type';
 import { toLink, fromLink } from '../utils/string';
 import { BREAKPOINT } from '../utils/constants';
 import { PRODUCTS_TITLE } from '../meta';
+import { GET_USER } from '../graphql/user/queries';
+import DelayedWrapper from '../components/DelayedWrapper';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const ProductList = React.lazy(() => import(/* webpackChunkName: "ProductList" */'../components/Products/ProductList'));
@@ -40,7 +41,6 @@ const Col2 = styled.div`
 type Props = {}
 const Products: FC<Props> = () => {
     const limit = 9;
-    const _user = user.get();
     const { category } = useParams();
     const query = new URLSearchParams(useLocation().search);
 
@@ -53,8 +53,9 @@ const Products: FC<Props> = () => {
     const [category_id, setCategoryId] = useState(0);
 
     const { loading, data } = useQuery(GET_CATEGORIES, {});
+    const { data: userData } = useQuery(GET_USER, {});
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
-        variables: { category_id, limit, order, offset: offset, search: search, city: _user.address ? _user.address.key : '' },
+        variables: { category_id, limit, order, offset: offset, search: search, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '' },
         fetchPolicy: 'cache-and-network',
         onCompleted: (d) => {
             setProducts(d.products.rows)
@@ -104,16 +105,18 @@ const Products: FC<Props> = () => {
 
     return (
         <Suspense fallback={<Loader />}>
-            <div className="main-container">
-                <Wrapper>
-                    <Col1>
-                        <FilterSideBar categories={!loading && data ? data.categories : []} category={category} count={total} />
-                    </Col1>
-                    <Col2>
-                        <ProductList orderQuery={orderQuery} products={products} count={total} />
-                    </Col2>
-                </Wrapper>
-            </div>
+            <DelayedWrapper>
+                <div className="main-container">
+                    <Wrapper>
+                        <Col1>
+                            <FilterSideBar categories={!loading && data ? data.categories : []} category={category} count={total} />
+                        </Col1>
+                        <Col2>
+                            <ProductList orderQuery={orderQuery} products={products} count={total} />
+                        </Col2>
+                    </Wrapper>
+                </div>
+            </DelayedWrapper>
         </Suspense>
     );
 }

@@ -7,6 +7,7 @@ import { setContext } from 'apollo-link-context'
 import { token } from './utils/store';
 import './i18n';
 import { GET_CART_ITEMS } from './graphql/cart/queries';
+import { GET_USER } from './graphql/user/queries';
 
 const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' })
 
@@ -30,6 +31,12 @@ const client = new ApolloClient({
     link: authLink.concat(httpLink),
     cache: cache,
     typeDefs: gql`
+        type User {
+            cityKey: String!,
+            cityName: String!
+            openModal: Boolean!
+            isLoggedIn: Boolean!
+        }
         type Product {
             entity_id: Int!,
             name: String!,
@@ -43,14 +50,27 @@ const client = new ApolloClient({
             stock: Int!
         }
         extend type Query {
-            cartItems: [Product!]!
+            cartItems: [Product!]!,
+            userInfo: [User!]!
         }
         extend type Mutation {
-            addToCart(product: Product!): [Product!]!
+            addToCart(product: Product!): [Product!]!,
+            addInfoToUser(user: User!): [User!]!
         }
   `,
     resolvers: {
         Mutation: {
+            addInfoToUser: (_, { user }, { cache }) => {
+                const queryResult = cache.readQuery({ query: GET_USER });
+                if (queryResult) {
+                    let { userInfo } = queryResult;
+                    const data = [{ ...userInfo[0], ...user }];
+                    userInfo = data;
+                    cache.writeQuery({ query: GET_USER, data: { userInfo } });
+                    return data;
+                }
+                return [];
+            },
             addToCart: (_, { product }, { cache }) => {
                 const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
                 if (queryResult) {
@@ -73,6 +93,7 @@ const client = new ApolloClient({
 cache.writeData({
     data: {
         cartItems: [],
+        userInfo: []
     },
 });
 

@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
 import { useQuery } from "@apollo/react-hooks";
-import { user } from '../utils/store';
 import { GET_CART_ITEMS, GET_TOTAL, GET_QTY } from '../graphql/cart/queries';
 import { Desktop, Mobile } from './ResponsiveContainers';
 import { BREAKPOINT } from '../utils/constants';
+import { GET_USER } from '../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Cta'));
@@ -18,6 +18,7 @@ const Close = React.lazy(() => import(/* webpackChunkName: "Close" */'./Images/C
 const Home = React.lazy(() => import(/* webpackChunkName: "Home" */'./Images/Home'));
 const Steak = React.lazy(() => import(/* webpackChunkName: "Steak" */'./Images/Steak'));
 const Faq = React.lazy(() => import(/* webpackChunkName: "Faq" */'./Images/Faq'));
+const CityModal = React.lazy(() => import(/* webpackChunkName: "CityModal" */'./CityModal'));
 
 const Wrapper = styled.div``
 
@@ -27,7 +28,7 @@ const Fixed = styled.div`
     width: 100%;
     left: 0;
     top: 0;
-    z-index: 1;
+    z-index: 3;
 `
 
 const Container = styled.div`
@@ -192,7 +193,7 @@ const Header: FC<Props> = () => {
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const { data } = useQuery(GET_CART_ITEMS);
-    const _user = user.get();
+    const { data: userData } = useQuery(GET_USER, {});
 
     return <Suspense fallback={<Loader />}>
         <Wrapper>
@@ -205,7 +206,7 @@ const Header: FC<Props> = () => {
                             </Logo>
                             <Address>
                                 <Pin />
-                                <span>{_user.address ? `${_user.address.value}, Bolivia` : ''}</span>
+                                <span>{userData.userInfo.length && userData.userInfo[0].cityName ? `${userData.userInfo[0].cityName}, Bolivia` : ''}</span>
                             </Address>
                             <Cta text={t('header.login')} action={() => { }} />
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
@@ -264,6 +265,7 @@ const Header: FC<Props> = () => {
                     <span>{t('header.slogan')}</span>
                 </MenuBottom>
             </SideMenu>
+            <CityModal />
         </Wrapper>
     </Suspense>
 }

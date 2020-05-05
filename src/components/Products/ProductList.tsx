@@ -13,6 +13,7 @@ const Search = React.lazy(() => import(/* webpackChunkName: "Search" */'../Image
 const PagerArrowLeft = React.lazy(() => import(/* webpackChunkName: "PagerArrowLeftPagerArrowLeft" */'../Images/PagerArrowLeft'));
 const PagerArrowRight = React.lazy(() => import(/* webpackChunkName: "PagerArrowRight" */'../Images/PagerArrowRight'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Images/Chevron'));
+const Product = React.lazy(() => import(/* webpackChunkName: "Product" */'../../pages/product'));
 
 const Container = styled.div``
 
@@ -137,6 +138,24 @@ const Page = styled.div<{ selected: boolean }>`
     cursor: ${props => props.selected ? 'default' : 'pointer'};
 `
 
+const ProductModal = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, .8);
+    z-index: 3;
+    > div {
+        margin: 30px 50px;
+        box-shadow: 0 0 5px #ccc;
+        background: white;
+        height: calc(100vh - 60px);
+        width: calc(100% - 100px);
+        overflow: auto;
+    }
+`
+
 type Props = {
     products: Array<ProductType>,
     count: number,
@@ -152,6 +171,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
     const [order, setOrder] = useState(OrderColums[0]);
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
+    const [product, setProduct] = useState<ProductType | any>({});
 
     const selectItem = (item: string) => {
         setOrder(item);
@@ -177,6 +197,12 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
         setPage(page);
     }
 
+    const openModal = (product: ProductType) => {
+        setProduct(product);
+        window.history.replaceState('', '', `/${toLink(product.name)}`);
+        setOpen(true);
+    }
+
     return <Suspense fallback={<Loader />}>
         <Container>
             <Toolbox>
@@ -197,7 +223,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
                 </SelectBox>
             </Toolbox>
             {!!products.length && <Grid>
-                {products.map((product: ProductType) => <ItemBox key={product.entity_id} product={product} />)}
+                {products.map((product: ProductType) => <ItemBox openModal={openModal} key={product.entity_id} product={product} />)}
             </Grid>}
             {!!products.length && count > 9 && <Pager>
                 <PageArrow onClick={() => move(false)} allowed={page > 1}>
@@ -208,6 +234,11 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
                     <PagerArrowRight />
                 </PageArrow>
             </Pager>}
+            {open && <ProductModal>
+                <div>
+                    <Product closeModal={() => setOpen(false)} oldUrl={pathname} inlineProdname={toLink(product.name)} />
+                </div>
+            </ProductModal>}
         </Container>
     </Suspense >
 }

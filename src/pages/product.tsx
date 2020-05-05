@@ -1,8 +1,7 @@
 import React, { Suspense, FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, Link, useParams } from "react-router-dom";
-import { user } from '../utils/store';
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { useTranslation } from 'react-i18next';
 import { GET_PRODUCT } from '../graphql/products/queries';
 import { ADD_ITEM } from '../graphql/cart/mutations';
@@ -11,6 +10,8 @@ import { fromLink, toLink } from '../utils/string';
 import { ProductType } from '../graphql/products/type';
 import { CategoryType } from '../graphql/categories/type';
 import { BREAKPOINT } from '../utils/constants';
+import { GET_USER } from '../graphql/user/queries';
+import DelayedWrapper from '../components/DelayedWrapper';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
@@ -235,10 +236,15 @@ const Disclaimer = styled.div`
     }
 `
 
-type Props = {}
-const Product: FC<Props> = () => {
+type Props = {
+    inlineProdname?: String,
+    oldUrl?: String,
+    closeModal?: Function
+}
+
+const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
     let { prodname } = useParams();
-    prodname = fromLink(prodname || '');
+    prodname = fromLink(prodname || String(inlineProdname));
     const settings = {
         dots: true,
         infinite: false,
@@ -249,13 +255,13 @@ const Product: FC<Props> = () => {
     };
     const { t } = useTranslation();
     const history = useHistory();
-    const _user = user.get();
     const [product, setProduct] = useState<ProductType | any>({});
     const [categories, setCategories] = useState<Array<CategoryType>>([]);
     const [related, setRelated] = useState<Array<ProductType>>([]);
     const [qty, setQty] = useState<number>(1);
+    const { data: userData } = useQuery(GET_USER, {});
     const [loadProduct] = useLazyQuery(GET_PRODUCT, {
-        variables: { name: prodname, city: _user.address ? _user.address.key : '', categories: true, related: true },
+        variables: { name: prodname, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '', categories: true, related: true },
         fetchPolicy: 'cache-and-network',
         onCompleted: (d) => {
             setProduct(d.product)
@@ -266,8 +272,22 @@ const Product: FC<Props> = () => {
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, categories: [], description: false, qty } } });
 
     const addAndGo = () => {
-        addItem();
-        history.push('/checkout');
+        if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+            addItem();
+            history.push('/checkout');
+        } else {
+            if (closeModal) closeModal();
+            alert('TBD Login Popup');
+        }
+    }
+
+    const proceed = () => {
+        if (oldUrl) {
+            history.push(String(oldUrl));
+            if (closeModal) closeModal();
+        } else {
+            history.push('/productos');
+        }
     }
 
     useEffect(() => {
@@ -278,57 +298,59 @@ const Product: FC<Props> = () => {
 
     return (
         <Suspense fallback={<Loader />}>
-            <div className="main-container">
-                <Header>
-                    <HeaderLink onClick={() => history.push('/productos')}>
-                        <span>{t('product.continue_shopping')}</span>
-                        <ContinueArrow />
-                    </HeaderLink>
-                </Header>
-                {product && product.entity_id && <Wrapper>
-                    <Col1>
-                        <Slider {...settings}>
-                            {product.image.split(',').map((img: string, index: number) => <div key={index}><Image src={img}></Image></div>)}
-                        </Slider>
-                    </Col1>
-                    <Col2>
-                        <ProductTitle>{product.name}</ProductTitle>
-                        <Price>Bs. {product.special_price.toFixed(2).replace('.', ',')}</Price>
-                        <ProductText>
-                            {product.description.split('\n').filter((line: string) => line.trim()).map((line: string, index: number) => <li key={index} dangerouslySetInnerHTML={{ __html: line.trim() }} />)}
-                        </ProductText>
-                        <Categories>
-                            <span>{t('product.categories')}: </span>
-                            {categories.map((cat: CategoryType, index: number) => <Link key={index} to={`/productos/${toLink(cat.name)}`}>{cat.name}</Link>)}
-                        </Categories>
-                        <Toolbox>
-                            <Qty>
-                                <select onChange={event => setQty(Number(event.target.value))}>
-                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
-                                </select>
-                                <Chevron />
-                            </Qty>
-                            <Cta filled={true} text={t('product.add')} action={addAndGo} />
-                        </Toolbox>
-                        <DeliveryBox>
-                            <FreeDelivery />
-                            <Title>
-                                <span>{t('product.delivery.title')}</span>
-                                <Text>{t('product.delivery.text')}</Text>
-                            </Title>
-                        </DeliveryBox>
-                        <DeliveryBox>
-                            <Quality />
-                            <Title>
-                                <span>{t('product.warranty.title')}</span>
-                                <Text>{t('product.warranty.text')}</Text>
-                            </Title>
-                        </DeliveryBox>
-                        <Disclaimer>{t('product.disclaimer')}</Disclaimer>
-                    </Col2>
-                </Wrapper>}
-                {!!related.length && <RelatedProducts products={related} />}
-            </div>
+            <DelayedWrapper noHeader={true}>
+                <div className="main-container">
+                    <Header>
+                        <HeaderLink onClick={proceed}>
+                            <span>{t('product.continue_shopping')}</span>
+                            <ContinueArrow />
+                        </HeaderLink>
+                    </Header>
+                    {product && product.entity_id && <Wrapper>
+                        <Col1>
+                            <Slider {...settings}>
+                                {product.image.split(',').map((img: string, index: number) => <div key={index}><Image src={img}></Image></div>)}
+                            </Slider>
+                        </Col1>
+                        <Col2>
+                            <ProductTitle>{product.name}</ProductTitle>
+                            <Price>Bs. {product.special_price.toFixed(2).replace('.', ',')}</Price>
+                            <ProductText>
+                                {product.description.split('\n').filter((line: string) => line.trim()).map((line: string, index: number) => <li key={index} dangerouslySetInnerHTML={{ __html: line.trim() }} />)}
+                            </ProductText>
+                            <Categories>
+                                <span>{t('product.categories')}: </span>
+                                {categories.map((cat: CategoryType, index: number) => <Link key={index} to={`/productos/${toLink(cat.name)}`}>{cat.name}</Link>)}
+                            </Categories>
+                            <Toolbox>
+                                <Qty>
+                                    <select onChange={event => setQty(Number(event.target.value))}>
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
+                                    </select>
+                                    <Chevron />
+                                </Qty>
+                                <Cta filled={true} text={t('product.add')} action={addAndGo} />
+                            </Toolbox>
+                            <DeliveryBox>
+                                <FreeDelivery />
+                                <Title>
+                                    <span>{t('product.delivery.title')}</span>
+                                    <Text>{t('product.delivery.text')}</Text>
+                                </Title>
+                            </DeliveryBox>
+                            <DeliveryBox>
+                                <Quality />
+                                <Title>
+                                    <span>{t('product.warranty.title')}</span>
+                                    <Text>{t('product.warranty.text')}</Text>
+                                </Title>
+                            </DeliveryBox>
+                            <Disclaimer>{t('product.disclaimer')}</Disclaimer>
+                        </Col2>
+                    </Wrapper>}
+                    {!!related.length && <RelatedProducts products={related} />}
+                </div>
+            </DelayedWrapper>
         </Suspense>
     );
 }

@@ -6,10 +6,12 @@ const Container = styled.span`
     color: black;
 `
 
-type Props = {}
+type Props = {
+    show?: boolean
+}
 
-const Loader: FC<Props> = () => {
-    return <Container></Container>
+const Loader: FC<Props> = ({ show = false }) => {
+    return <Container>{show && 'Loading...'}</Container >
 }
 
 export default Loader;

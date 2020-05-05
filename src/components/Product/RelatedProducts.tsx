@@ -20,7 +20,7 @@ const Container = styled.div`
         background: var(--yellow);
         width: 100%;
         height: 200px;
-        z-index: -1;
+        z-index: 0;
         @media screen and (max-width: ${BREAKPOINT}) {
             height: 150px;
             bottom: 20px;
@@ -35,6 +35,8 @@ const Container = styled.div`
 const Wrapper = styled.div`
     padding: var(--padding);
     padding-bottom: 0;
+    position: relative;
+    z-index: 2;
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 20px;
     }

@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import { ProductType } from '../graphql/products/type';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { toLink } from '../utils/string';
 import { ADD_ITEM } from '../graphql/cart/mutations';
 import { BREAKPOINT } from '../utils/constants';
+import { GET_USER } from '../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'./Images/Chevron'));
@@ -139,22 +140,32 @@ const Add = styled.button`
 `
 
 type Props = {
-    product: ProductType
+    product: ProductType,
+    openModal: Function
 }
 
-const ItemBox: FC<Props> = ({ product }) => {
+const ItemBox: FC<Props> = ({ product, openModal }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [qty, setQty] = useState<number>(1);
+    const { data: userData } = useQuery(GET_USER, {});
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, qty } } });
 
     const goToProduct = () => {
-        history.push(`/${toLink(product.name)}`);
+        if (window.innerWidth < parseInt(BREAKPOINT.replace('px', ''))) {
+            history.push(`/${toLink(product.name)}`);
+        } else {
+            openModal(product);
+        }
     }
 
     const addAndGo = () => {
-        addItem();
-        history.push('/checkout');
+        if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+            addItem();
+            history.push('/checkout');
+        } else {
+            alert('TBD Login Popup');
+        }
     }
 
     const discount = (1 - (product.special_price / product.price)) * 100;
