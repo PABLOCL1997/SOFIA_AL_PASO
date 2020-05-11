@@ -10,6 +10,7 @@ import { useParams, useHistory } from 'react-router-dom';
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Cta'));
 const Google = React.lazy(() => import(/* webpackChunkName: "Google" */'./Images/Google'));
+const Close = React.lazy(() => import(/* webpackChunkName: "Close" */'./Images/Close'));
 const Facebook = React.lazy(() => import(/* webpackChunkName: "Facebook" */'./Images/Facebook'));
 
 const ModalCourtain = styled.div`
@@ -30,6 +31,7 @@ const ModalCourtain = styled.div`
 `
 
 const Modal = styled.div`
+    position: relative;
     padding: 42px;
     background: white;
     border-radius: 20px;
@@ -51,6 +53,20 @@ const Modal = styled.div`
         line-height: 14px;
         letter-spacing: 0.01em;
         color: var(--font);
+    }
+`
+
+const CloseWrapper = styled.div`
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    &:hover {
+        opacity: .8;
+    }
+    > svg {
+        width: 12px;
+        height: 12px;
     }
 `
 
@@ -284,6 +300,7 @@ const AuthModal: FC<Props> = () => {
     return <Suspense fallback={<Loader />}>
         <ModalCourtain className={(!data.userInfo.length || data.userInfo[0].openLoginModal) && 'visible'}>
             {step === Steps.Login && <Modal>
+                <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.login.title')}</Title>
                 <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.login.email')} />
                 <input type="password" onChange={$evt => setForm({ ...form, password: $evt.target.value })} placeholder={t('auth_modal.login.password')} />
@@ -308,6 +325,7 @@ const AuthModal: FC<Props> = () => {
                 </Disclaimer>
             </Modal>}
             {step === Steps.SignUp && <Modal>
+                <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.sign_up.title')}</Title>
                 <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.sign_up.email')} />
                 <input type="password" onChange={$evt => setForm({ ...form, password: $evt.target.value })} placeholder={t('auth_modal.sign_up.password')} />
@@ -332,6 +350,7 @@ const AuthModal: FC<Props> = () => {
                 </Disclaimer>
             </Modal>}
             {step === Steps.ForgotPassword && <Modal>
+                <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.forgot_password.title')}</Title>
                 <Description>{t('auth_modal.forgot_password.subtitle')}</Description>
                 <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.forgot_password.email')} />
@@ -341,6 +360,7 @@ const AuthModal: FC<Props> = () => {
                 <Link position="center" onClick={() => setStep(Steps.Login)}>{t('auth_modal.forgot_password.back')}</Link>
             </Modal>}
             {step === Steps.ForgotPasswordMsg && <Modal>
+                <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.forgot_password.message.title')}</Title>
                 <Description>{t('auth_modal.forgot_password.message.subtitle')}</Description>
                 <CtaWrapper>
@@ -352,6 +372,7 @@ const AuthModal: FC<Props> = () => {
                 </Disclaimer>
             </Modal>}
             {step === Steps.ResetPassword && <Modal>
+                <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.reset_password.title')}</Title>
                 <Description>{t('auth_modal.reset_password.subtitle')}</Description>
                 <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.reset_password.email')} />

@@ -9,6 +9,7 @@ import { GET_USER } from '../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const WorldPin = React.lazy(() => import(/* webpackChunkName: "WorldPin" */'./Images/WorldPin'));
+const Close = React.lazy(() => import(/* webpackChunkName: "Close" */'./Images/Close'));
 
 const Courtain = styled.div<any>`
     position: fixed;
@@ -27,6 +28,7 @@ const Courtain = styled.div<any>`
 `
 
 const Modal = styled.div`
+    position: relative;
     background: white;
     border-radius: 10px;
     padding: 50px;
@@ -34,6 +36,20 @@ const Modal = styled.div`
     @media screen and (max-width: ${BREAKPOINT}) {
         margin: 0 20px;
         padding: 20px 40px;
+    }
+`
+
+const CloseWrapper = styled.div`
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    &:hover {
+        opacity: .8;
+    }
+    > svg {
+        width: 12px;
+        height: 12px;
     }
 `
 
@@ -137,6 +153,7 @@ const CityModal: FC<Props> = () => {
     return <Suspense fallback={<Loader />}>
         <Courtain className={(!data.userInfo.length || !data.userInfo[0].cityKey || data.userInfo[0].openCityModal) && 'visible'}>
             <Modal>
+                {!!data.userInfo.length && data.userInfo[0].cityKey && <CloseWrapper onClick={() => toggleCityModal()}><Close /></CloseWrapper>}
                 <WorldPin />
                 <Title>{t('citymodal.title')}</Title>
                 <Text>{t('citymodal.text')}</Text>
