@@ -15,6 +15,7 @@ const App = () => {
       <Router>
         <Switch>
           <Route exact path="/" children={<LayoutGeneral><Homepage /></LayoutGeneral>} />
+          <Route exact path="/password-reset/:token" children={<LayoutGeneral><Homepage /></LayoutGeneral>} />
           <Route exact path="/productos" children={<LayoutGeneral><Products /></LayoutGeneral>} />
           <Route exact path="/checkout" children={<LayoutGeneral><Checkout /></LayoutGeneral>} />
           <Route exact path="/productos/:category" children={<LayoutGeneral><Products /></LayoutGeneral>} />

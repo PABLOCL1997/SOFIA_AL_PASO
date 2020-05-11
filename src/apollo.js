@@ -33,9 +33,11 @@ const client = new ApolloClient({
     typeDefs: gql`
         type User {
             cityKey: String!,
-            cityName: String!
-            openModal: Boolean!
-            isLoggedIn: Boolean!
+            cityName: String!,
+            openCityModal: Boolean!,
+            openLoginModal: Boolean!,
+            isLoggedIn: Boolean!,
+            id: Int!
         }
         type Product {
             entity_id: Int!,

@@ -2,11 +2,12 @@ import React, { FC, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_CART_ITEMS, GET_TOTAL, GET_QTY } from '../graphql/cart/queries';
 import { Desktop, Mobile } from './ResponsiveContainers';
 import { BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
+import { SET_USER } from '../graphql/user/mutations';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Cta'));
@@ -19,6 +20,7 @@ const Home = React.lazy(() => import(/* webpackChunkName: "Home" */'./Images/Hom
 const Steak = React.lazy(() => import(/* webpackChunkName: "Steak" */'./Images/Steak'));
 const Faq = React.lazy(() => import(/* webpackChunkName: "Faq" */'./Images/Faq'));
 const CityModal = React.lazy(() => import(/* webpackChunkName: "CityModal" */'./CityModal'));
+const AuthModal = React.lazy(() => import(/* webpackChunkName: "AuthModal" */'./AuthModal'));
 
 const Wrapper = styled.div``
 
@@ -194,6 +196,7 @@ const Header: FC<Props> = () => {
     const [open, setOpen] = useState(false);
     const { data } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
+    const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
 
     return <Suspense fallback={<Loader />}>
         <Wrapper>
@@ -208,7 +211,7 @@ const Header: FC<Props> = () => {
                                 <Pin />
                                 <span>{userData.userInfo.length && userData.userInfo[0].cityName ? `${userData.userInfo[0].cityName}, Bolivia` : ''}</span>
                             </Address>
-                            <Cta text={t('header.login')} action={() => { }} />
+                            {(!userData.userInfo.length || !userData.userInfo[0].id) && <Cta text={t('header.login')} action={() => toggleLoginModal()} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
                             <CartWrapper onClick={() => history.push('/carrito')}>
                                 <Cart />
@@ -266,6 +269,7 @@ const Header: FC<Props> = () => {
                 </MenuBottom>
             </SideMenu>
             <CityModal />
+            <AuthModal />
         </Wrapper>
     </Suspense>
 }

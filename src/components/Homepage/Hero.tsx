@@ -147,7 +147,7 @@ const Hero: FC<Props> = () => {
     const { t } = useTranslation();
     const [q, setQ] = useState("");
     const history = useHistory();
-    const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openModal: true } } });
+    const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openCityModal: true } } });
 
     return <Suspense fallback={<Loader />}>
         <div className="main-container">

@@ -101,5 +101,69 @@
             "title": "También te recomendamos",
             "see": "Ver"
         }
+    },
+    "auth_modal": {
+        "login": {
+            "title": "Iniciar sesión",
+            "email": "Email",
+            "password": "Contraseña",
+            "forget_password": "Olvidé mi contraseña",
+            "button": "Ingresar",
+            "google": {
+                "text": "Ingresar con",
+                "network": "Google"
+            },
+            "facebook": {
+                "text": "Ingresar con",
+                "network": "Facebook"
+            },
+            "disclaimer": {
+                "no_account": "Todavía no tenés cuenta?",
+                "sign_up": "Registrate!"
+            }
+        },
+        "sign_up": {
+            "title": "Registrarme",
+            "email": "Ingresa tu email",
+            "password": "Ingresá una contraseña",
+            "r_password": "Reingresá la contraseña",
+            "button": "registrarme",
+            "google": {
+                "text": "Ingresar con",
+                "network": "Google"
+            },
+            "facebook": {
+                "text": "Ingresar con",
+                "network": "Facebook"
+            },
+            "disclaimer": {
+                "account": "Ya tenés cuenta?",
+                "login": "Inicia sesión!"
+            }
+        },
+        "forgot_password": {
+            "title": "Recuperar contraseña",
+            "subtitle": "Te enviaremos las instrucciones al mail para que puedas recuperar tu contraseña",
+            "email": "Ingresa tu mail",
+            "button": "Enviar",
+            "back": "Volver",
+            "message": {
+                "title": "¡Listo!",
+                "subtitle": "Revisa tu mail y continúa desde allí",
+                "button": "Volver al inicio",
+                "disclaimer": {
+                    "no_message": "¿No lo recibiste?",
+                    "retry": "Volver a enviar"
+                }
+            }
+        },
+        "reset_password": {
+            "title": "Nueva contraseña",
+            "subtitle": "Ingresá una nueva contraseña para tu cuenta",
+            "email": "Ingresa tu email",
+            "password": "Ingresá una contraseña",
+            "r_password": "Reingresá la contraseña",
+            "button": "Confirmar"
+        }
     }
 }

@@ -99,7 +99,7 @@ type Props = {}
 type User = {
     cityKey?: String,
     cityName?: String,
-    openModal?: Boolean
+    openCityModal?: Boolean
 }
 
 const CityModal: FC<Props> = () => {
@@ -107,6 +107,7 @@ const CityModal: FC<Props> = () => {
     const { data } = useQuery(GET_USER, {});
     const [city, setCity] = useState<User>({});
     const [setUser] = useMutation(SET_USER, { variables: { user: city } });
+    const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openCityModal: false } } });
 
     const cities: Array<KeyValue> = [
         { key: 'CB', value: 'Cochabamba' },
@@ -119,9 +120,14 @@ const CityModal: FC<Props> = () => {
         setCity({
             cityKey: c.key,
             cityName: c.value,
-            openModal: false
+            openCityModal: false
         })
     }
+
+    useEffect(() => {
+        if (data.userInfo.length && data.userInfo[0].cityKey) toggleCityModal();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (city.cityKey) setUser();
@@ -129,7 +135,7 @@ const CityModal: FC<Props> = () => {
     }, [city]);
 
     return <Suspense fallback={<Loader />}>
-        <Courtain className={(!data.userInfo.length || data.userInfo[0].openModal) && 'visible'}>
+        <Courtain className={(!data.userInfo.length || !data.userInfo[0].cityKey || data.userInfo[0].openCityModal) && 'visible'}>
             <Modal>
                 <WorldPin />
                 <Title>{t('citymodal.title')}</Title>
