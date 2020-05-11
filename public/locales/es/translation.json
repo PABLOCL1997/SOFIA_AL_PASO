@@ -1,6 +1,7 @@
 {
     "header": {
         "login": "Ingresar",
+        "logout": "Salir",
         "home": "Home",
         "products": "Productos",
         "faq": "Preguntas frecuentes",

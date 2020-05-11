@@ -197,6 +197,17 @@ const Header: FC<Props> = () => {
     const { data } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
+    const [logout] = useMutation(SET_USER, {
+        variables: {
+            user: {
+                openLoginModal: false,
+                isLoggedIn: false,
+                id: null
+            }
+        }
+    });
+
+    console.log(userData);
 
     return <Suspense fallback={<Loader />}>
         <Wrapper>
@@ -212,6 +223,7 @@ const Header: FC<Props> = () => {
                                 <span>{userData.userInfo.length && userData.userInfo[0].cityName ? `${userData.userInfo[0].cityName}, Bolivia` : ''}</span>
                             </Address>
                             {(!userData.userInfo.length || !userData.userInfo[0].id) && <Cta text={t('header.login')} action={() => toggleLoginModal()} />}
+                            {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.logout')} action={() => logout()} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
                             <CartWrapper onClick={() => history.push('/carrito')}>
                                 <Cart />

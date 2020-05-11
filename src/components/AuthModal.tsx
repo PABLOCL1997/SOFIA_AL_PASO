@@ -5,7 +5,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { SET_USER, SIGN_UP, LOGIN, RECOVER, RESET } from '../graphql/user/mutations';
 import { GET_USER } from '../graphql/user/queries';
 import { googleLogin, facebookLogin } from '../utils/social';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Cta'));
@@ -177,6 +177,7 @@ const Steps = {
 
 const AuthModal: FC<Props> = () => {
     let { token } = useParams();
+    const history = useHistory();
     const { t } = useTranslation();
     const { data } = useQuery(GET_USER, {});
     const [step, setStep] = useState(Steps.Login);
@@ -257,13 +258,22 @@ const AuthModal: FC<Props> = () => {
     };
 
     const recoverPassword = async () => {
-        await doRecover();
-        setStep(Steps.ForgotPasswordMsg)
+        try {
+            await doRecover();
+            setStep(Steps.ForgotPasswordMsg)
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     const resetPassword = async () => {
-        const response = await doReset();
-        setStep(Steps.Login);
+        try {
+            await doReset();
+            setStep(Steps.Login);
+            history.push('/');
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     const closeModal = () => {
