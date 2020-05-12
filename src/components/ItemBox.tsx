@@ -8,6 +8,7 @@ import { toLink } from '../utils/string';
 import { ADD_ITEM } from '../graphql/cart/mutations';
 import { BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
+import { SET_USER } from '../graphql/user/mutations';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'./Images/Chevron'));
@@ -150,6 +151,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     const [qty, setQty] = useState<number>(1);
     const { data: userData } = useQuery(GET_USER, {});
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, qty } } });
+    const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
 
     const goToProduct = () => {
         if (window.innerWidth < parseInt(BREAKPOINT.replace('px', ''))) {
@@ -164,7 +166,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             addItem();
             history.push('/checkout');
         } else {
-            alert('TBD Login Popup');
+            toggleLoginModal();
         }
     }
 

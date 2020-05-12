@@ -13,5 +13,6 @@ export type ProductType = {
     unit: string,
     category_name: string,
     description?: string,
-    categories?: Array<CategoryType>
+    categories?: Array<CategoryType>,
+    qty?: number
 }

@@ -166,6 +166,22 @@ const Disclaimer = styled.div`
     }
 `
 
+const LoaderWrapper = styled.div`
+    position: absolute;
+    background: white;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    img {
+        width: 50px;
+    }
+`
+
 type Props = {}
 
 type User = {
@@ -199,6 +215,7 @@ const AuthModal: FC<Props> = () => {
     const [step, setStep] = useState(Steps.Login);
     const [user, setUser] = useState<User>({});
     const [form, setForm] = useState<FormData>({ email: '' });
+    const [loader, setLoader] = useState(false);
 
     const [doSignUp] = useMutation(SIGN_UP, { variables: { email: form.email, password: form.password, firstname: form.firstname, lastname: form.lastname } });
     const [doLogin] = useMutation(LOGIN, { variables: { email: form.email, password: form.password } });
@@ -207,6 +224,7 @@ const AuthModal: FC<Props> = () => {
     const [updateUser] = useMutation(SET_USER, { variables: { user } });
     const [closeLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: false } } });
     const [openLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
+    const [showError] = useMutation(SET_USER, { variables: { user: { showError: t('auth_modal.error') } } });
 
     useEffect(() => {
         closeLoginModal();
@@ -224,6 +242,7 @@ const AuthModal: FC<Props> = () => {
 
     const login = async () => {
         try {
+            setLoader(true);
             const response: any = await doLogin();
             setUser({
                 openLoginModal: false,
@@ -231,25 +250,32 @@ const AuthModal: FC<Props> = () => {
                 id: response.data.login.id
             });
         } catch (e) {
-            console.log(e);
+            showError();
         }
+        setLoader(false);
     };
 
     const networkCallback = async ({ email, firstname, lastname, password }: FormData) => {
-        setForm({
-            ...form,
-            email,
-            firstname,
-            lastname,
-            password,
-            network: true
-        })
-        const response = await doSignUp();
-        setUser({
-            openLoginModal: false,
-            isLoggedIn: true,
-            id: response.data.signup.id
-        });
+        try {
+            setLoader(true);
+            setForm({
+                ...form,
+                email,
+                firstname,
+                lastname,
+                password,
+                network: true
+            })
+            const response = await doSignUp();
+            setUser({
+                openLoginModal: false,
+                isLoggedIn: true,
+                id: response.data.signup.id
+            });
+        } catch (e) {
+            showError();
+        }
+        setLoader(false);
     }
 
     const loginWithGoogle = async () => {
@@ -262,6 +288,7 @@ const AuthModal: FC<Props> = () => {
 
     const signUp = async () => {
         try {
+            setLoader(true);
             const response = await doSignUp();
             setUser({
                 openLoginModal: false,
@@ -269,27 +296,32 @@ const AuthModal: FC<Props> = () => {
                 id: response.data.signup.id
             });
         } catch (e) {
-            console.log(e);
+            showError();
         }
+        setLoader(false);
     };
 
     const recoverPassword = async () => {
         try {
+            setLoader(true);
             await doRecover();
             setStep(Steps.ForgotPasswordMsg)
         } catch (e) {
-            console.log(e);
+            showError();
         }
+        setLoader(false);
     }
 
     const resetPassword = async () => {
         try {
+            setLoader(true);
             await doReset();
             setStep(Steps.Login);
             history.push('/');
         } catch (e) {
-            console.log(e);
+            showError();
         }
+        setLoader(false);
     }
 
     const closeModal = () => {
@@ -300,6 +332,7 @@ const AuthModal: FC<Props> = () => {
     return <Suspense fallback={<Loader />}>
         <ModalCourtain className={(!data.userInfo.length || data.userInfo[0].openLoginModal) && 'visible'}>
             {step === Steps.Login && <Modal>
+                {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.login.title')}</Title>
                 <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.login.email')} />
@@ -325,6 +358,7 @@ const AuthModal: FC<Props> = () => {
                 </Disclaimer>
             </Modal>}
             {step === Steps.SignUp && <Modal>
+                {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.sign_up.title')}</Title>
                 <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.sign_up.email')} />
@@ -350,6 +384,7 @@ const AuthModal: FC<Props> = () => {
                 </Disclaimer>
             </Modal>}
             {step === Steps.ForgotPassword && <Modal>
+                {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.forgot_password.title')}</Title>
                 <Description>{t('auth_modal.forgot_password.subtitle')}</Description>
@@ -360,6 +395,7 @@ const AuthModal: FC<Props> = () => {
                 <Link position="center" onClick={() => setStep(Steps.Login)}>{t('auth_modal.forgot_password.back')}</Link>
             </Modal>}
             {step === Steps.ForgotPasswordMsg && <Modal>
+                {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.forgot_password.message.title')}</Title>
                 <Description>{t('auth_modal.forgot_password.message.subtitle')}</Description>
@@ -372,6 +408,7 @@ const AuthModal: FC<Props> = () => {
                 </Disclaimer>
             </Modal>}
             {step === Steps.ResetPassword && <Modal>
+                {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.reset_password.title')}</Title>
                 <Description>{t('auth_modal.reset_password.subtitle')}</Description>

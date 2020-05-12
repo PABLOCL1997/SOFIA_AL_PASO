@@ -104,6 +104,7 @@
         }
     },
     "auth_modal": {
+        "error": "No se pudo realizar la acción, intente nuevamente.",
         "login": {
             "title": "Iniciar sesión",
             "email": "Email",
@@ -166,5 +167,13 @@
             "r_password": "Reingresá la contraseña",
             "button": "Confirmar"
         }
+    },
+    "cart": {
+        "title": "Carrito",
+        "items": "items",
+        "subtotal": "Subtotal",
+        "disclaimer": "*La entrega y cobro de los productos queda sujeta a la disponibilidad de los mismos.",
+        "empty": "Vaciar carrito",
+        "pay": "Ir a pagar"
     }
 }

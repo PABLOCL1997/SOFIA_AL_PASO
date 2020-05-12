@@ -21,6 +21,7 @@ const Steak = React.lazy(() => import(/* webpackChunkName: "Steak" */'./Images/S
 const Faq = React.lazy(() => import(/* webpackChunkName: "Faq" */'./Images/Faq'));
 const CityModal = React.lazy(() => import(/* webpackChunkName: "CityModal" */'./CityModal'));
 const AuthModal = React.lazy(() => import(/* webpackChunkName: "AuthModal" */'./AuthModal'));
+const CartModal = React.lazy(() => import(/* webpackChunkName: "CartModal" */'./CartModal'));
 
 const Wrapper = styled.div``
 
@@ -197,6 +198,7 @@ const Header: FC<Props> = () => {
     const { data } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
+    const [toggleCartModal] = useMutation(SET_USER, { variables: { user: { openCartModal: true } } });
     const [logout] = useMutation(SET_USER, {
         variables: {
             user: {
@@ -206,8 +208,6 @@ const Header: FC<Props> = () => {
             }
         }
     });
-
-    console.log(userData);
 
     return <Suspense fallback={<Loader />}>
         <Wrapper>
@@ -225,7 +225,7 @@ const Header: FC<Props> = () => {
                             {(!userData.userInfo.length || !userData.userInfo[0].id) && <Cta text={t('header.login')} action={() => toggleLoginModal()} />}
                             {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.logout')} action={() => logout()} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
-                            <CartWrapper onClick={() => history.push('/carrito')}>
+                            <CartWrapper onClick={() => toggleCartModal()}>
                                 <Cart />
                                 <span>{GET_QTY(data.cartItems)}</span>
                             </CartWrapper>
@@ -238,7 +238,7 @@ const Header: FC<Props> = () => {
             </Desktop>
             <Mobile>
                 <MobileMenu>
-                    <CartWrapper onClick={() => history.push('/carrito')}>
+                    <CartWrapper onClick={() => toggleCartModal()}>
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>
                     </CartWrapper>
@@ -252,7 +252,7 @@ const Header: FC<Props> = () => {
             </Mobile>
             <SideMenu className={open && 'open'}>
                 <CloseRow>
-                    <CartWrapper onClick={() => history.push('/carrito')}>
+                    <CartWrapper onClick={() => toggleCartModal()}>
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>
                     </CartWrapper>
@@ -282,6 +282,7 @@ const Header: FC<Props> = () => {
             </SideMenu>
             <CityModal />
             <AuthModal />
+            <CartModal />
         </Wrapper>
     </Suspense>
 }

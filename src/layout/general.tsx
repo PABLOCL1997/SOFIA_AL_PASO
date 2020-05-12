@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { BREAKPOINT } from '../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
+const Error = React.lazy(() => import(/* webpackChunkName: "Error" */'../components/Error'));
 const Header = React.lazy(() => import(/* webpackChunkName: "Header" */'../components/Header'));
 const Footer = React.lazy(() => import(/* webpackChunkName: "Footer" */'../components/Footer'));
 
@@ -24,7 +25,6 @@ const LayoutGeneral: FC<Props> = ({ children }) => {
         let url = history.location.pathname;
         const unlisten = history.listen(() => {
             let { location: { pathname } } = history;
-            console.log(pathname, url);
             if (pathname !== url && (pathname === '/' || pathname.indexOf('/productos') >= 0)) {
                 url = pathname;
                 window.scrollTo(0, 0);
@@ -42,6 +42,7 @@ const LayoutGeneral: FC<Props> = ({ children }) => {
                 <Header />
                 {children}
                 <Footer />
+                <Error />
             </Wrapper>
         </Suspense>
     );

@@ -36,6 +36,8 @@ const client = new ApolloClient({
             cityName: String!,
             openCityModal: Boolean!,
             openLoginModal: Boolean!,
+            openCartModal: Boolean!,
+            showError: String!,
             isLoggedIn: Boolean!,
             id: Int!
         }
@@ -57,6 +59,8 @@ const client = new ApolloClient({
         }
         extend type Mutation {
             addToCart(product: Product!): [Product!]!,
+            deleteFromCart(product: Product!): [Product!]!,
+            emptyCart: [Product!]!,
             addInfoToUser(user: User!): [User!]!
         }
   `,
@@ -83,6 +87,30 @@ const client = new ApolloClient({
                         cartItems.splice(item, 1);
                     }
                     cartItems = [...cartItems, product];
+                    cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
+                    return cartItems;
+                }
+                return [];
+            },
+            deleteFromCart: (_, { product }, { cache }) => {
+                const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
+                if (queryResult) {
+                    let { cartItems } = queryResult;
+                    const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
+                    if (item >= 0) {
+                        cartItems.splice(item, 1);
+                    }
+                    cartItems = [...cartItems];
+                    cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
+                    return cartItems;
+                }
+                return [];
+            },
+            emptyCart: (_, data, { cache }) => {
+                const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
+                if (queryResult) {
+                    let { cartItems } = queryResult;
+                    cartItems = [];
                     cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
                     return cartItems;
                 }

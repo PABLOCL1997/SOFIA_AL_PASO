@@ -12,6 +12,7 @@ import { CategoryType } from '../graphql/categories/type';
 import { BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
 import DelayedWrapper from '../components/DelayedWrapper';
+import { SET_USER } from '../graphql/user/mutations';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
@@ -269,6 +270,7 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
             if (d.product.related) setRelated(d.product.related);
         }
     });
+    const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, categories: [], description: false, qty } } });
 
     const addAndGo = () => {
@@ -277,7 +279,7 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
             history.push('/checkout');
         } else {
             if (closeModal) closeModal();
-            alert('TBD Login Popup');
+            toggleLoginModal();
         }
     }
 
