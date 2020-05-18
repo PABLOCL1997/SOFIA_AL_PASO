@@ -209,6 +209,14 @@ const Header: FC<Props> = () => {
         }
     });
 
+    const showCart = () => {
+        if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+            toggleCartModal();
+        } else {
+            toggleLoginModal();
+        }
+    }
+
     return <Suspense fallback={<Loader />}>
         <Wrapper>
             <Desktop>
@@ -225,7 +233,7 @@ const Header: FC<Props> = () => {
                             {(!userData.userInfo.length || !userData.userInfo[0].id) && <Cta text={t('header.login')} action={() => toggleLoginModal()} />}
                             {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.logout')} action={() => logout()} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
-                            <CartWrapper onClick={() => toggleCartModal()}>
+                            <CartWrapper onClick={showCart}>
                                 <Cart />
                                 <span>{GET_QTY(data.cartItems)}</span>
                             </CartWrapper>
@@ -238,7 +246,7 @@ const Header: FC<Props> = () => {
             </Desktop>
             <Mobile>
                 <MobileMenu>
-                    <CartWrapper onClick={() => toggleCartModal()}>
+                    <CartWrapper onClick={showCart}>
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>
                     </CartWrapper>
@@ -252,7 +260,7 @@ const Header: FC<Props> = () => {
             </Mobile>
             <SideMenu className={open && 'open'}>
                 <CloseRow>
-                    <CartWrapper onClick={() => toggleCartModal()}>
+                    <CartWrapper onClick={showCart}>
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>
                     </CartWrapper>

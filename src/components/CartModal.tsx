@@ -42,8 +42,6 @@ const Modal = styled.div`
     align-items: center;
     min-width: 380px;
     max-width: 100%;
-    max-height: 90vh;
-    overflow: auto;
 `
 
 const CloseWrapper = styled.div`
@@ -115,11 +113,29 @@ const Count = styled.span`
     }
 `
 
+const UnderBudget = styled.div`
+    background: var(--red);
+    width: calc(100% + 84px);
+    padding: 20px;
+    color: white;
+    text-align: center;
+    font-family: MullerBold;
+    text-transform: uppercase;
+    font-size: 12px;
+`
+
+const Items = styled.div`
+    max-height: calc(100vh - 300px);
+    overflow: auto;
+`
+
 const Row = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 300px auto auto auto auto;
     align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid #ccc;
+    width: 100%;
 `
 
 const Image = styled.img`
@@ -132,7 +148,6 @@ const NameBox = styled.div`
     flex-direction: column;
     margin-right: 20px;
     flex: 1;
-    max-width: 300px;
 `
 
 const Name = styled.h3`
@@ -284,17 +299,19 @@ const AuthModal: FC<Props> = () => {
         else if (action.action === 'delete') {
             await deleteItem();
             setAction({});
+            if (data && !data.cartItems.length) closeCartModal();
         }
         else if (action.action === 'empty') {
             await emptyCart();
             setAction({});
+            closeCartModal();
         }
     }
 
-    useEffect(() => {
-        if (data && !data.cartItems.length) closeCartModal();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    const checkout = () => {
+        closeCartModal();
+        history.push('/checkout');
+    }
 
     useEffect(() => {
         doAction(action);
@@ -305,6 +322,8 @@ const AuthModal: FC<Props> = () => {
         closeCartModal();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const totalAmount = GET_TOTAL(data.cartItems);
 
     return <Suspense fallback={<Loader />}>
         <ModalCourtain className={(!userData.userInfo.length || userData.userInfo[0].openCartModal) && 'visible'}>
@@ -317,34 +336,37 @@ const AuthModal: FC<Props> = () => {
                     </Count>
                     <CloseWrapper onClick={() => closeCartModal()}><Close /></CloseWrapper>
                 </Header>
-                {data && data.cartItems && data.cartItems.map((product: ProductType) => <Row key={product.entity_id}>
-                    <Image src={product.image}></Image>
-                    <NameBox>
-                        <Name>{product.name}</Name>
-                        <Units>{product.size} {product.unit}</Units>
-                    </NameBox>
-                    <Qty>
-                        <select onChange={event => updateItem(Number(event.target.value), product)}>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
-                        </select>
-                        <Chevron />
-                    </Qty>
-                    <UnitPrice>Bs. {product.special_price.toFixed(2).replace('.', ',')} c/u -</UnitPrice>
-                    <Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace('.', ',')}</Price>
-                    <DeleteWrapper onClick={() => removeRow(product)}>
-                        <Delete />
-                    </DeleteWrapper>
-                </Row>)}
+                {totalAmount < 200 && <UnderBudget>{t('cart.under_budget')}</UnderBudget>}
+                <Items>
+                    {data && data.cartItems && data.cartItems.map((product: ProductType) => <Row key={product.entity_id}>
+                        <Image src={product.image}></Image>
+                        <NameBox>
+                            <Name>{product.name}</Name>
+                            <Units>{product.size} {product.unit}</Units>
+                        </NameBox>
+                        <Qty>
+                            <select onChange={event => updateItem(Number(event.target.value), product)}>
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
+                            </select>
+                            <Chevron />
+                        </Qty>
+                        <UnitPrice>Bs. {product.special_price.toFixed(2).replace('.', ',')} c/u -</UnitPrice>
+                        <Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace('.', ',')}</Price>
+                        <DeleteWrapper onClick={() => removeRow(product)}>
+                            <Delete />
+                        </DeleteWrapper>
+                    </Row>)}
+                </Items>
                 <Totals>
                     <Subtotal>{t('cart.subtotal')}</Subtotal>
-                    <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
+                    <Total>Bs. {totalAmount}</Total>
                 </Totals>
                 <Footer>
                     <Disclaimer>{t('cart.disclaimer')}</Disclaimer>
                     <Toolbox>
                         <Empty onClick={() => empty()}>{t('cart.empty')}</Empty>
                         <CtaWrapper>
-                            <Cta filled={true} text={t('cart.pay')} action={() => history.push('/checkout')} />
+                            <Cta filled={true} text={t('cart.pay')} action={checkout} />
                         </CtaWrapper>
                     </Toolbox>
                 </Footer>

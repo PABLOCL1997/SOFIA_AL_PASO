@@ -164,7 +164,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     const addAndGo = () => {
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             addItem();
-            history.push('/checkout');
+            // history.push('/checkout');
         } else {
             toggleLoginModal();
         }

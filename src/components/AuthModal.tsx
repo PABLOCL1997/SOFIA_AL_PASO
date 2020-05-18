@@ -177,6 +177,7 @@ const LoaderWrapper = styled.div`
     align-items: center;
     justify-content: center;
     z-index: 1;
+    border-radius: 20px;
     img {
         width: 50px;
     }

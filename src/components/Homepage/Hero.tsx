@@ -20,18 +20,41 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     background: url(/images/hero_img.jpg) no-repeat center center / cover;
+    border-radius: 20px;
+    margin-top: 15px;
+    position: relative;
 
-    > svg {
+    > div > svg {
         width: 140px;
         height: 105px;
     }
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 40px 20px;
         min-height: auto;
-        > svg {
+        > div > svg {
             width: 90px;
             height: 60px;
         }
+    }
+
+    &:before {
+        content: "";
+        display: block;
+        background: rgba(0, 0, 0, .2);
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        border-radius: 20px;
+    }
+
+    > div {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 `
 
@@ -42,7 +65,7 @@ const Title = styled.h1`
     text-align: center;
     letter-spacing: 0.025em;
     text-transform: uppercase;
-    color: var(--red);
+    color: white;
     margin: 30px 0;
     padding: 0;
     @media screen and (max-width: ${BREAKPOINT}) {
@@ -152,21 +175,23 @@ const Hero: FC<Props> = () => {
     return <Suspense fallback={<Loader />}>
         <div className="main-container">
             <Container>
-                <HeaderLogo withSlogan={false} />
-                <Title>{t('homepage.hero.text')}</Title>
-                <SearchBox>
-                    <CitySelect onClick={() => toggleCityModal()}>
-                        <Pin />
-                        <span>{t('homepage.hero.city_select')}</span>
-                        <Chevron />
-                    </CitySelect>
-                    <ProductBox>
-                        <input onChange={evt => setQ(evt.target.value)} type="text" placeholder={t('homepage.hero.product_search')} />
-                    </ProductBox>
-                    <CtaWrapper>
-                        <Cta filled={true} text={t('homepage.hero.search')} action={() => history.push(`/productos?q=${toLink(q)}`)} />
-                    </CtaWrapper>
-                </SearchBox>
+                <div>
+                    <HeaderLogo withSlogan={false} />
+                    <Title>{t('homepage.hero.text')}</Title>
+                    <SearchBox>
+                        <CitySelect onClick={() => toggleCityModal()}>
+                            <Pin />
+                            <span>{t('homepage.hero.city_select')}</span>
+                            <Chevron />
+                        </CitySelect>
+                        <ProductBox>
+                            <input onChange={evt => setQ(evt.target.value)} type="text" placeholder={t('homepage.hero.product_search')} />
+                        </ProductBox>
+                        <CtaWrapper>
+                            <Cta filled={true} text={t('homepage.hero.search')} action={() => history.push(`/productos?q=${toLink(q)}`)} />
+                        </CtaWrapper>
+                    </SearchBox>
+                </div>
             </Container>
         </div>
     </Suspense>
