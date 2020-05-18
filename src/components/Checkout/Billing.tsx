@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { BREAKPOINT } from '../../utils/constants';
@@ -48,7 +48,7 @@ const InputGroup = styled.div<{ key: string }>`
         align-items: center;
         letter-spacing: 0.01em;
         color: var(--font);
-        padding: 10px 20px;
+        padding: 12px 20px;
         border: 0;
         margin-top: 10px;
     }
@@ -68,9 +68,11 @@ const Other = styled.button`
     }
 `
 
-type Props = {}
+type Props = {
+    updateOrder: Function
+}
 
-const Billing: FC<Props> = () => {
+const Billing: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [inputs, setInputs] = useState({});
 
@@ -80,6 +82,10 @@ const Billing: FC<Props> = () => {
             [key]: value
         })
     }
+
+    useEffect(() => {
+        updateOrder('billing', inputs);
+    }, [inputs]);
 
     return <Suspense fallback={<Loader />}>
         <Container>

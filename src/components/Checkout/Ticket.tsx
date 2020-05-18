@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { GET_CART_ITEMS, GET_TOTAL } from '../../graphql/cart/queries';
@@ -183,19 +183,18 @@ const CtaWrapper = styled.div`
     }
 `
 
-type Props = {}
+type Props = {
+    order: Function,
+    updateOrder: Function
+}
 
-const Ticket: FC<Props> = () => {
+const Ticket: FC<Props> = ({ order, updateOrder }) => {
     const { t } = useTranslation();
     const [discount, setDiscount] = useState("0");
     const [showCoupon, setShowCoupon] = useState(false);
     const [coupon, setCoupon] = useState("");
     const { data } = useQuery(GET_CART_ITEMS);
     const totalAmount = GET_TOTAL(data.cartItems);
-
-    const order = () => {
-
-    }
 
     const addCoupon = () => {
         setDiscount("100");
@@ -205,6 +204,13 @@ const Ticket: FC<Props> = () => {
         setDiscount("0");
         setCoupon("");
     }
+
+    useEffect(() => {
+        updateOrder('coupon', {
+            coupon,
+            discount
+        });
+    }, [discount]);
 
     return <Suspense fallback={<Loader />}>
         <Container>

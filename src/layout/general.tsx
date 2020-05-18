@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useEffect } from 'react';
+import React, { FC, Suspense, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { BREAKPOINT } from '../utils/constants';
@@ -20,11 +20,13 @@ type Props = {}
 
 const LayoutGeneral: FC<Props> = ({ children }) => {
     const history = useHistory();
+    const [checkout, setCheckout] = useState(history.location.pathname === '/checkout');
 
     useEffect(() => {
         let url = history.location.pathname;
         const unlisten = history.listen(() => {
             let { location: { pathname } } = history;
+            setCheckout(pathname === '/checkout');
             if (pathname !== url && (pathname === '/' || pathname.indexOf('/productos') >= 0)) {
                 url = pathname;
                 window.scrollTo(0, 0);
@@ -39,7 +41,7 @@ const LayoutGeneral: FC<Props> = ({ children }) => {
     return (
         <Suspense fallback={<Loader />}>
             <Wrapper>
-                <Header />
+                <Header checkout={checkout} />
                 {children}
                 <Footer />
                 <Error />

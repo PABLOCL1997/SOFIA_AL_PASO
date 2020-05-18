@@ -291,7 +291,6 @@ const AuthModal: FC<Props> = () => {
     }
 
     const doAction = async (action: Action) => {
-        console.log(action);
         if (action.action === 'add') {
             await addItem();
             setAction({});

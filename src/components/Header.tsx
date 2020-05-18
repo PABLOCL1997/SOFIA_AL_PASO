@@ -189,9 +189,15 @@ const MobileMenu = styled.div`
     padding: 25px;
 `
 
-type Props = {}
+const Separator = styled.div`
+    flex: 1;
+`
 
-const Header: FC<Props> = () => {
+type Props = {
+    checkout: boolean
+}
+
+const Header: FC<Props> = ({ checkout }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -222,7 +228,7 @@ const Header: FC<Props> = () => {
             <Desktop>
                 <Fixed>
                     <div className="main-container">
-                        <Container>
+                        {!checkout && <Container>
                             <Logo onClick={() => history.push('/')}>
                                 <HeaderLogo />
                             </Logo>
@@ -240,7 +246,16 @@ const Header: FC<Props> = () => {
                             <MenuWrapper onClick={() => setOpen(true)}>
                                 <Menu />
                             </MenuWrapper>
-                        </Container>
+                        </Container>}
+                        {checkout && <Container>
+                            <Logo onClick={() => history.push('/')}>
+                                <HeaderLogo />
+                            </Logo>
+                            <Separator />
+                            <MenuWrapper onClick={() => setOpen(true)}>
+                                <Menu />
+                            </MenuWrapper>
+                        </Container>}
                     </div>
                 </Fixed>
             </Desktop>

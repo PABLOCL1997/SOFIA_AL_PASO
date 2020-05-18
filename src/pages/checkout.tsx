@@ -1,4 +1,4 @@
-import React, { Suspense, FC, useEffect } from 'react';
+import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useMutation } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from '../meta';
@@ -11,6 +11,7 @@ const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */'../com
 const Shipping = React.lazy(() => import(/* webpackChunkName: "Shipping" */'../components/Checkout/Shipping'));
 const Payment = React.lazy(() => import(/* webpackChunkName: "Payment" */'../components/Checkout/Payment'));
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */'../components/Checkout/Ticket'));
+const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */'../components/Checkout/Thanks'));
 
 const Wrapper = styled.div`
     padding: 60px 100px;
@@ -19,6 +20,10 @@ const Wrapper = styled.div`
         padding: 20px;
     }
 `
+
+const CheckoutWrapper = styled.div``
+
+const ThanktWrapper = styled.div``
 
 const Cols = styled.div`
     display: flex;
@@ -86,35 +91,53 @@ const Line = styled.div`
 `
 
 type Props = {}
+
 const Checkout: FC<Props> = () => {
     const { t } = useTranslation();
     const [toggleCartModal] = useMutation(SET_USER, { variables: { user: { openCartModal: true } } });
+    const [orderData, setOrderData] = useState({ increment_id: '' });
 
     useEffect(() => {
         document.title = CHECKOUT_TITLE;
     }, [])
 
+    const order = () => {
+        console.log(orderData);
+    }
+
+    const updateOrderData = (key: string, values: any) => {
+        setOrderData({
+            ...orderData,
+            [key]: values
+        })
+    }
+
     return (
         <Suspense fallback={<Loader />}>
             <Wrapper>
-                <Title>
-                    <h1>{t('checkout.title')}</h1>
-                    <button onClick={() => toggleCartModal()}>{t('checkout.modify_cart')}</button>
-                </Title>
-                <Cols>
-                    <Col1>
-                        <Steps>
-                            <Billing />
-                            <Line />
-                            <Shipping />
-                            <Line />
-                            <Payment />
-                        </Steps>
-                    </Col1>
-                    <Col2>
-                        <Ticket />
-                    </Col2>
-                </Cols>
+                {!orderData.increment_id && <CheckoutWrapper>
+                    <Title>
+                        <h1>{t('checkout.title')}</h1>
+                        <button onClick={() => toggleCartModal()}>{t('checkout.modify_cart')}</button>
+                    </Title>
+                    <Cols>
+                        <Col1>
+                            <Steps>
+                                <Billing updateOrder={updateOrderData} />
+                                <Line />
+                                <Shipping updateOrder={updateOrderData} />
+                                <Line />
+                                <Payment updateOrder={updateOrderData} />
+                            </Steps>
+                        </Col1>
+                        <Col2>
+                            <Ticket updateOrder={updateOrderData} order={order} />
+                        </Col2>
+                    </Cols>
+                </CheckoutWrapper>}
+                {!!orderData.increment_id && <ThanktWrapper>
+                    <Thanks incrementId={orderData.increment_id} />
+                </ThanktWrapper>}
             </Wrapper>
         </Suspense>
     );

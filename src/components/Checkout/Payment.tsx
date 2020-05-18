@@ -24,14 +24,17 @@ const Disclaimer = styled.div`
     margin-top: 20px;
 `
 
-type Props = {}
+type Props = {
+    updateOrder: Function
+}
 
-const Payment: FC<Props> = () => {
+const Payment: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [option, setOption] = useState('cash');
 
     const changeOption = (val: string) => {
         setOption(val);
+        updateOrder('payment', { method: option });
     }
 
     const values = [

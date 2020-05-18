@@ -70,7 +70,7 @@ const InputGroup = styled.div<{ key: string, withLabel: boolean }>`
         align-items: center;
         letter-spacing: 0.01em;
         color: var(--font);
-        padding: 10px 20px;
+        padding: 12px 20px;
         border: 0;
         margin-top: 10px;
     }
@@ -225,9 +225,11 @@ const Geo = styled.div`
     }
 `
 
-type Props = {}
+type Props = {
+    updateOrder: Function
+}
 
-const Shipping: FC<Props> = () => {
+const Shipping: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [inputs, setInputs] = useState<any>({ addressType: t('checkout.delivery.street') });
     const [other, setOther] = useState(false);
@@ -277,6 +279,10 @@ const Shipping: FC<Props> = () => {
     useEffect(() => {
         if (other) enableGmap();
     }, [other]);
+
+    useEffect(() => {
+        updateOrder('shipping', inputs);
+    }, [inputs]);
 
     return <Suspense fallback={<Loader />}>
         <Container>
