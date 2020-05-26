@@ -265,7 +265,7 @@ const Header: FC<Props> = ({ checkout }) => {
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>
                     </CartWrapper>
-                    <Logo>
+                    <Logo onClick={() => history.push('/')}>
                         <HeaderLogo />
                     </Logo>
                     <MenuWrapper onClick={() => setOpen(true)}>

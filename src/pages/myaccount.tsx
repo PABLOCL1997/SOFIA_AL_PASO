@@ -39,7 +39,7 @@ const SidebarContainer = styled.div`
 `
 
 const Container = styled.div`
-    background: white;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(251,252,252,1) 30%, rgba(250,250,250,1) 100%);
     box-shadow: 7px 15px 84px rgba(0, 0, 0, 0.07);
     border-radius: 20px;
     padding: 30px 40px;

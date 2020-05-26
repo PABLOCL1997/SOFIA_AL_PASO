@@ -1,6 +1,7 @@
 import React, { FC, Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { BREAKPOINT } from '../utils/constants';
 import { useMutation, useQuery } from 'react-apollo';
 import { SET_USER } from '../graphql/user/mutations';
 import { GET_USER } from '../graphql/user/queries';
@@ -42,6 +43,13 @@ const Modal = styled.div`
     align-items: center;
     min-width: 380px;
     max-width: 100%;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        min-width: 100%;
+        padding: 20px;
+        height: 100vh;
+        border-radius: 0;
+    }
 `
 
 const CloseWrapper = styled.div`
@@ -90,6 +98,10 @@ const Header = styled.div`
     padding: 30px;
     margin-top: -42px;
     box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.1);
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        padding: 40px 50px 15px;
+    }
 `
 
 const Title = styled.h2`
@@ -127,15 +139,24 @@ const UnderBudget = styled.div`
 const Items = styled.div`
     max-height: calc(100vh - 300px);
     overflow: auto;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        max-width: calc(100% - 40px);
+        max-height: calc(100vh - 260px);
+        height: calc(100vh - 260px);
+    }
 `
 
 const Row = styled.div`
     display: grid;
-    grid-template-columns: auto 300px auto auto auto auto;
+    grid-template-columns: 115px 1fr 95px 95px 100px 24px;
     align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid #ccc;
     width: 100%;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        grid-template-columns: 115px 300px 95px 95px 100px 24px;
+    }
 `
 
 const Image = styled.img`
@@ -213,12 +234,20 @@ const Footer = styled.div`
     align-items: center;
     width: 100%;
     padding: 0 15px;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        flex-direction: column;
+    }
 `
 const Disclaimer = styled.p`
     max-width: 290px;
     font-size: 11px;
     line-height: 18px;
     padding-right: 30px;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        margin-bottom: 20px;
+    }
 `
 
 const Toolbox = styled.div`

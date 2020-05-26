@@ -27,3 +27,45 @@ query Details {
     }
 }
 `
+
+export const ORDERS = gql`
+query Orders {
+    orders {
+        id
+        incrementId
+        createdAt
+        status
+        total
+    }
+}
+`
+
+export const ORDER = gql`
+query Order($orderId: Int!) {
+    order(orderId: $orderId) {
+        id
+        incrementId
+        createdAt
+        status
+        billingFirstname
+        billingLastname
+        billingEmail
+        billingNit
+        shippingFirstname
+        shippingLastname
+        shippingPhone
+        shippingNit
+        shippingStreet
+        shippingCity
+        shippingReference
+        items {
+            itemId
+            name
+            price
+        }
+        subtotal
+        shippingPrice
+        total
+    }
+}
+`

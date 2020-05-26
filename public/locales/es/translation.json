@@ -287,32 +287,37 @@
             "see": "Ver",
             "date": "Fecha",
             "number": "Número de órden",
-            "val": "Valor",
-            "status": "Estado"
+            "value": "Valor",
+            "status": "Estado",
+            "labels": {
+                "pending": "Pendiente",
+                "canceled": "Cancelado"
+            }
         },
         "order": {
+            "back": "Volver",
             "title": "Orden #{{increment_id}}",
             "billing": {
                 "title": "Datos de facturación",
-                "firstname": "Nombre",
-                "lastname": "Apellido",
-                "email": "Email",
-                "nit": "NIT/Carnet identidad"
+                "billingFirstname": "Nombre",
+                "billingLastname": "Apellido",
+                "billingEmail": "Email",
+                "billingNit": "NIT/Carnet identidad"
             },
             "shipping": {
                 "title": "Datos de envío",
-                "firstname": "Nombre",
-                "lastname": "Apellido",
-                "phone": "*Teléfono",
-                "nit": "NIT/*Carnet identidad",
-                "street": "Calle",
-                "city": "Ciudad",
-                "reference": "Referencia",
-                "detail": "Detalle",
-                "subtotal": "Subtotal",
-                "shipping": "Envío",
-                "total": "Total"
-            }
+                "shippingFirstname": "Nombre",
+                "shippingLastname": "Apellido",
+                "shippingPhone": "*Teléfono",
+                "shippingNit": "NIT/*Carnet identidad",
+                "shippingStreet": "Calle",
+                "shippingCity": "Ciudad",
+                "shippingReference": "Referencia"
+            },
+            "detail": "Detalle",
+            "subtotal": "Subtotal",
+            "shippingPrice": "Envío",
+            "total": "Total"
         }
     }
 }
