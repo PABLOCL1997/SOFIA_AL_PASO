@@ -319,5 +319,8 @@
             "shippingPrice": "Envío",
             "total": "Total"
         }
+    },
+    "faq": {
+        "title": "¿Cómo podemos ayudarte?"
     }
 }

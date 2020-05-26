@@ -1,6 +1,5 @@
 import React, { Suspense, FC, useEffect } from 'react';
 import styled from 'styled-components';
-import Subscribe from '../components/Homepage/Subscribe';
 import { BREAKPOINT } from '../utils/constants';
 import { HOMEPAGE_TITLE } from '../meta';
 import DelayedWrapper from '../components/DelayedWrapper';
@@ -11,6 +10,7 @@ const CategorySlider = React.lazy(() => import(/* webpackChunkName: "CategorySli
 const Benefits = React.lazy(() => import(/* webpackChunkName: "Benefits" */'../components/Homepage/Benefits'));
 const Promotions = React.lazy(() => import(/* webpackChunkName: "Promotions" */'../components/Homepage/Promotions'));
 const Recipes = React.lazy(() => import(/* webpackChunkName: "Recipes" */'../components/Homepage/Recipes'));
+const Subscribe = React.lazy(() => import(/* webpackChunkName: "Subscribe" */'../components/Homepage/Subscribe'));
 
 const SectionWrapper = styled.div`
     margin-bottom: 88px;

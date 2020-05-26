@@ -9,6 +9,7 @@ const MyAccount = React.lazy(() => import(/* webpackChunkName: "myaccount" */'./
 const Products = React.lazy(() => import(/* webpackChunkName: "Products" */'./pages/products'));
 const Product = React.lazy(() => import(/* webpackChunkName: "Product" */'./pages/product'));
 const Checkout = React.lazy(() => import(/* webpackChunkName: "Checkout" */'./pages/checkout'));
+const Faq = React.lazy(() => import(/* webpackChunkName: "Faq" */'./pages/faq'));
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Switch>
           <Route exact path="/" children={<LayoutGeneral><Homepage /></LayoutGeneral>} />
           <Route exact path="/password-reset/:token" children={<LayoutGeneral><Homepage /></LayoutGeneral>} />
+          <Route exact path="/preguntas-frecuentes" children={<LayoutGeneral><Faq /></LayoutGeneral>} />
           <Route exact path="/mi-cuenta" children={<LayoutGeneral><MyAccount /></LayoutGeneral>} />
           <Route exact path="/mi-cuenta/ordenes" children={<LayoutGeneral><MyAccount /></LayoutGeneral>} />
           <Route exact path="/productos" children={<LayoutGeneral><Products /></LayoutGeneral>} />

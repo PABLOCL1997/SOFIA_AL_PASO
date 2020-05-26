@@ -56,7 +56,7 @@ const Container = styled.div`
 `
 
 type Props = {}
-const Homepage: FC<Props> = () => {
+const MyAccount: FC<Props> = () => {
     const history = useHistory();
     const { pathname } = useLocation();
     const [showDetails, setShowDetails] = useState(pathname.indexOf('ordenes') < 0);
@@ -87,4 +87,4 @@ const Homepage: FC<Props> = () => {
     );
 }
 
-export default Homepage;
+export default MyAccount;

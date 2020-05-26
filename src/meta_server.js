@@ -4,5 +4,6 @@ module.exports = {
     PRODUCT_TITLE: 'Tienda Sofia -',
     CHECKOUT_TITLE: 'Tienda Sofia - Checkout',
     MY_ACCOUNT_TITLE: 'Tienda Sofia - Mi Cuenta',
-    MY_ORDERS_TITLE: 'Tienda Sofia - Mi Ordenes'
+    MY_ORDERS_TITLE: 'Tienda Sofia - Mi Ordenes',
+    FAQ_TITLE: 'Tienda Sofia - Preguntas Frecuentes'
 }

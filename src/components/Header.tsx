@@ -32,6 +32,7 @@ const Fixed = styled.div`
     left: 0;
     top: 0;
     z-index: 3;
+    box-shadow: 0px -1px 52px rgba(0, 0, 0, 0.04);
 `
 
 const Container = styled.div`
