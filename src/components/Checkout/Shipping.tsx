@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { BREAKPOINT } from '../../utils/constants';
 import { setLatLng } from '../../utils/googlemaps';
+import { useQuery } from 'react-apollo';
+import { DETAILS } from '../../graphql/user/queries';
+import { AddressType } from '../../graphql/user/type';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */'../Map'));
@@ -158,6 +161,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [inputs, setInputs] = useState<any>({ addressType: t('checkout.delivery.street') });
     const [other, setOther] = useState(false);
+    const { data: userData } = useQuery(DETAILS);
 
     const onChange = (key: string, value: string | number | null) => {
         setInputs({
@@ -195,6 +199,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
 
     useEffect(() => {
         updateOrder('shipping', inputs);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputs]);
 
     return <Suspense fallback={<Loader />}>
@@ -203,9 +208,9 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
                 <h2>{t('checkout.delivery.title')}</h2>
                 <span>{t('checkout.delivery.time', { day: '', from: '', to: '' })}</span>
             </Title>
-            {[{ id: 1, label: 'Pepe' }, { id: 2, label: 'Test' }].map((address: any) => <CheckboxGroup red={!other} key={address.id}>
-                <input type="radio" checked={Number(address.id) === Number(inputs.addressId)} id={'address' + address.id} name="addressId" value={address.id} onChange={() => selectAddress(address.id)} />
-                <label onClick={() => selectAddress(address.id)}>{address.label}</label>
+            {userData && userData.details.addresses && userData.details.addresses.map((address: AddressType) => <CheckboxGroup red={!other} key={address.id}>
+                <input type="radio" checked={Number(address.id) === Number(inputs.addressId)} id={'address' + address.id} name="addressId" value={address.id} onChange={() => selectAddress(Number(address.id))} />
+                <label onClick={() => selectAddress(Number(address.id))}>{address.street}</label>
             </CheckboxGroup>)}
             <Other margin={!!other} onClick={showOther}>{t('checkout.delivery.other_address')}</Other>
             <Form hidden={!other}>

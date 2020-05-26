@@ -17,6 +17,9 @@ const Container = styled.div`
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
     box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.06);
+    @media screen and (min-width: ${BREAKPOINT}) and (max-width: 1300px) {
+        background: none;
+    }
 `
 
 const LogoContainer = styled.div`
@@ -88,7 +91,7 @@ const InputGroup = styled.div`
 `
 const CtaWrapper = styled.div`
     button {
-        padding: 13px 40px;
+        padding: 15px 40px;
         text-transform: uppercase;
         span {
             font-family: MullerBold;
@@ -126,6 +129,10 @@ const Image = styled.img`
     transform: rotate(90deg);
     width: calc(100% + 15px);
     margin-bottom: -55px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        width: calc(100% - 30px);
+        margin-bottom: -80px;
+    }
 `
 
 type Props = {}

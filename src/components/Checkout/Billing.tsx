@@ -2,6 +2,8 @@ import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { BREAKPOINT } from '../../utils/constants';
+import { useQuery } from 'react-apollo';
+import { DETAILS } from '../../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 
@@ -75,6 +77,7 @@ type Props = {
 const Billing: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [inputs, setInputs] = useState({});
+    const { data: userData } = useQuery(DETAILS);
 
     const onChange = (key: string, value: string) => {
         setInputs({
@@ -82,6 +85,18 @@ const Billing: FC<Props> = ({ updateOrder }) => {
             [key]: value
         })
     }
+
+    useEffect(() => {
+        if (userData.details) {
+            setInputs({
+                firstname: userData.details.firstname,
+                lastname: userData.details.lastname,
+                email: userData.details.email,
+                nit: userData.details.nit
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userData]);
 
     useEffect(() => {
         updateOrder('billing', inputs);
@@ -93,7 +108,7 @@ const Billing: FC<Props> = ({ updateOrder }) => {
             <Form>
                 {['firstname', 'lastname', 'email', 'nit'].map((key: string) => <InputGroup key={key}>
                     <label>{t('checkout.billing.' + key)}</label>
-                    <input onChange={evt => onChange(key, evt.target.value)} type="text" placeholder={t('checkout.billing.' + key)} />
+                    <input value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} type="text" placeholder={t('checkout.billing.' + key)} />
                 </InputGroup>)}
             </Form>
             <Other>{t('checkout.billing.other_person')}</Other>
