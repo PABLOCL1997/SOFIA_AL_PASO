@@ -2,7 +2,7 @@ import React, { FC, Suspense } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from "@apollo/react-hooks";
-import { GET_USER } from '../../graphql/user/queries';
+import { DETAILS } from '../../graphql/user/queries';
 import { Link, useLocation } from "react-router-dom";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
@@ -51,11 +51,11 @@ type Props = {}
 const Sidebar: FC<Props> = () => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
-    const { data: userData } = useQuery(GET_USER, {});
+    const { data } = useQuery(DETAILS, {});
 
     return <Suspense fallback={<Loader />}>
         <>
-            <Name>Gonzalo Faraone</Name>
+            <Name>{data ? `${data.details.firstname} ${data.details.lastname}` : ``}</Name>
             <Menu>
                 <Item active={pathname.indexOf('ordenes') < 0}>
                     <ProfileIcon />
