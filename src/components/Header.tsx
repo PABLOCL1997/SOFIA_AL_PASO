@@ -8,6 +8,7 @@ import { Desktop, Mobile } from './ResponsiveContainers';
 import { BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
 import { SET_USER } from '../graphql/user/mutations';
+import { token } from '../utils/store';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Cta'));
@@ -216,6 +217,13 @@ const Header: FC<Props> = ({ checkout }) => {
         }
     });
 
+    const doLogout = () => {
+        logout();
+        token.delete();
+        setOpen(false);
+        history.push('/');
+    };
+
     const showCart = () => {
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             toggleCartModal();
@@ -299,7 +307,7 @@ const Header: FC<Props> = ({ checkout }) => {
                         <Link to="/faq">{t('header.faq')}</Link>
                     </MenuItem>
                     <MenuItem>
-                        <button onClick={() => logout()}>{t('header.logout')}</button>
+                        <button onClick={() => doLogout()}>{t('header.logout')}</button>
                     </MenuItem>
                 </MenuList>
                 <MenuBottom>
