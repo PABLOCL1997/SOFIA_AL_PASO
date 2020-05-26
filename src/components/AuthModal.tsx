@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { SET_USER, SIGN_UP, LOGIN, RECOVER, RESET } from '../graphql/user/mutations';
 import { GET_USER } from '../graphql/user/queries';
 import { googleLogin, facebookLogin } from '../utils/social';
+import { token as StoreToken } from '../utils/store';
 import { useParams, useHistory } from 'react-router-dom';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
@@ -250,6 +251,7 @@ const AuthModal: FC<Props> = () => {
                 isLoggedIn: true,
                 id: response.data.login.id
             });
+            StoreToken.set(response.data.login.token);
         } catch (e) {
             showError();
         }
@@ -273,6 +275,7 @@ const AuthModal: FC<Props> = () => {
                 isLoggedIn: true,
                 id: response.data.signup.id
             });
+            StoreToken.set(response.data.sign_up.token);
         } catch (e) {
             showError();
         }
@@ -296,6 +299,7 @@ const AuthModal: FC<Props> = () => {
                 isLoggedIn: true,
                 id: response.data.signup.id
             });
+            StoreToken.set(response.data.sign_up.token);
         } catch (e) {
             showError();
         }

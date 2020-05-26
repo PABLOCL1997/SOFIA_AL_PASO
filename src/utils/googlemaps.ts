@@ -10,6 +10,8 @@ export const setLatLng = (city: string, lat?: any, lng?: any) => {
     }
     window.map.setCenter(gll);
     window.marker.setPosition(gll);
+    window.latitude = lat;
+    window.longitude = lng;
 };
 
 export const enableGmap = () => {

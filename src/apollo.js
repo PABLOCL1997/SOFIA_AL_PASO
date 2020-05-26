@@ -37,6 +37,7 @@ const client = new ApolloClient({
             openCityModal: Boolean!,
             openLoginModal: Boolean!,
             openCartModal: Boolean!,
+            openAddressModal: Boolean!,
             showError: String!,
             isLoggedIn: Boolean!,
             id: Int!

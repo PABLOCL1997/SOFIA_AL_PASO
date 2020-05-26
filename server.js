@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const port = process.env.PORT || 26235;
-const { HOMEPAGE_TITLE, PRODUCTS_TITLE, PRODUCT_TITLE, CHECKOUT_TITLE } = require('./src/meta_server');
+const { HOMEPAGE_TITLE, PRODUCTS_TITLE, PRODUCT_TITLE, CHECKOUT_TITLE, MY_ACCOUNT_TITLE } = require('./src/meta_server');
 
 const fromLink = (str) => {
     return str ? str
@@ -23,6 +23,8 @@ const loadPage = (res, meta = {}) => {
 app.get('/', (req, res) => loadPage(res, { title: HOMEPAGE_TITLE }));
 app.use(express.static(__dirname + '/build'));
 app.get('/productos', (req, res) => loadPage(res, { title: PRODUCTS_TITLE }));
+app.get('/mi-cuenta', (req, res) => loadPage(res, { title: MY_ACCOUNT_TITLE }));
+app.get('/mi-cuenta/ordenes', (req, res) => loadPage(res, { title: MY_ORDERS_TITLE }));
 app.get('/checkout', (req, res) => loadPage(res, { title: CHECKOUT_TITLE }));
 app.get('/productos/:category', (req, res) => loadPage(res, { title: `${PRODUCTS_TITLE} - ${fromLink(req.params.category)}` }));
 app.get('/:product', (req, res) => loadPage(res, { title: `${PRODUCT_TITLE} ${fromLink(req.params.product)}` }));

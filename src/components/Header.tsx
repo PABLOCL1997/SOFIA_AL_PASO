@@ -237,7 +237,7 @@ const Header: FC<Props> = ({ checkout }) => {
                                 <span>{userData.userInfo.length && userData.userInfo[0].cityName ? `${userData.userInfo[0].cityName}, Bolivia` : ''}</span>
                             </Address>
                             {(!userData.userInfo.length || !userData.userInfo[0].id) && <Cta text={t('header.login')} action={() => toggleLoginModal()} />}
-                            {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.logout')} action={() => logout()} />}
+                            {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.account')} action={() => history.push('/mi-cuenta')} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
                             <CartWrapper onClick={showCart}>
                                 <Cart />
@@ -296,6 +296,9 @@ const Header: FC<Props> = ({ checkout }) => {
                     <MenuItem>
                         <Faq />
                         <Link to="/faq">{t('header.faq')}</Link>
+                    </MenuItem>
+                    <MenuItem>
+                        <button onClick={() => logout()}>{t('header.logout')}</button>
                     </MenuItem>
                 </MenuList>
                 <MenuBottom>

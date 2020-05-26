@@ -2,6 +2,7 @@
     "header": {
         "login": "Ingresar",
         "logout": "Salir",
+        "account": "Mi cuenta",
         "home": "Home",
         "products": "Productos",
         "faq": "Preguntas frecuentes",
@@ -257,5 +258,61 @@
             "thanks": "¡Gracias por confiar en Sofía!"
         },
         "go_home": "Volver al inicio"
+    },
+    "account": {
+        "sidebar": {
+            "personal_info": "Datos personales",
+            "history": "Historial de ordenes"
+        },
+        "title": "Mi cuenta",
+        "edit": "Editar",
+        "data": "Datos",
+        "firstname": "Nombre",
+        "lastname": "Apellido",
+        "email": "Email",
+        "nit": "NIT/*Carnet identidad",
+        "phone": "Teléfono",
+        "password": "Contraseña",
+        "addresses": "Direcciones",
+        "newaddress": "+ Agregar dirección",
+        "modal": {
+            "title": "Agregar dirección de entrega",
+            "street": "Ingresa la dirección",
+            "city": "Seleccionar ciudad",
+            "reference": "Referencia",
+            "add": "Agregar"
+        },
+        "orders": {
+            "title": "Historial de ordenes",
+            "see": "Ver",
+            "date": "Fecha",
+            "number": "Número de órden",
+            "val": "Valor",
+            "status": "Estado"
+        },
+        "order": {
+            "title": "Orden #{{increment_id}}",
+            "billing": {
+                "title": "Datos de facturación",
+                "firstname": "Nombre",
+                "lastname": "Apellido",
+                "email": "Email",
+                "nit": "NIT/Carnet identidad"
+            },
+            "shipping": {
+                "title": "Datos de envío",
+                "firstname": "Nombre",
+                "lastname": "Apellido",
+                "phone": "*Teléfono",
+                "nit": "NIT/*Carnet identidad",
+                "street": "Calle",
+                "city": "Ciudad",
+                "reference": "Referencia",
+                "detail": "Detalle",
+                "subtotal": "Subtotal",
+                "shipping": "Envío",
+                "total": "Total"
+            }
+        }
     }
 }
