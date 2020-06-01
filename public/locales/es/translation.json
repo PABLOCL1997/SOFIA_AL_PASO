@@ -29,14 +29,14 @@
         },
         "benefits": {
             "title": "Los mejores beneficios",
-            "text": "Nuestra tienda siempre te conviene, porque nos preocupamos siempre para brindarte los mejorer servicios",
+            "text": "Nuestra tienda te conviene, porque nos preocupamos por darte el mejor servicio.",
             "delivery": {
                 "title": "Envío a domicilio",
                 "text": "Hacé tu orden y obtenela dentro de 48hs hábiles en tu hogar."
             },
             "payment": {
                 "title": "Pagá como más te convenga",
-                "text": "Aboná tu pedido desde nuestro sitio con tarjeta, o con efectivo cuando lo recibís."
+                "text": "Paga online, con tarjeta o efectivo cuando recibas tu pedido."
             },
             "order": {
                 "title": "Pedido mínimo, envío gratis",
