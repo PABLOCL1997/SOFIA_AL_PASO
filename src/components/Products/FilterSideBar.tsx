@@ -175,7 +175,7 @@ const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
                     <FreeDelivery />
                     <span>{t('products.filter_side_bar.freedelivery.title')}</span>
                 </Title>
-                <Text>{t('products.filter_side_bar.freedelivery.text')}</Text>
+                <Text>{/*t('products.filter_side_bar.freedelivery.text')*/}</Text>
             </DeliveryBox>
             <ProductsFound>{t('products.filter_side_bar.product_count', { count })}</ProductsFound>
         </Container>
