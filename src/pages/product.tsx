@@ -347,7 +347,7 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
                                     <Text>{t('product.warranty.text')}</Text>
                                 </Title>
                             </DeliveryBox>
-                            <Disclaimer>{t('product.disclaimer')}</Disclaimer>
+                            <Disclaimer>{/*t('product.disclaimer')*/}</Disclaimer>
                         </Col2>
                     </Wrapper>}
                     {!!related.length && <RelatedProducts products={related} />}
