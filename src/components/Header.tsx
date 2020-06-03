@@ -55,6 +55,7 @@ const Address = styled.div`
     display: flex;
     align-items: center;
     flex: 1;
+    cursor: pointer;
     span {
         font-family: MullerMedium;
         font-weight: 500;
@@ -205,6 +206,7 @@ const Header: FC<Props> = ({ checkout }) => {
     const [open, setOpen] = useState(false);
     const { data } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
+    const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openCityModal: true } } });
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
     const [toggleCartModal] = useMutation(SET_USER, { variables: { user: { openCartModal: true } } });
     const [logout] = useMutation(SET_USER, {
@@ -246,6 +248,16 @@ const Header: FC<Props> = ({ checkout }) => {
         }
     }
 
+    const addressLabel = () => {
+        if (userData.userInfo.length && userData.userInfo.length) {
+            if (userData.userInfo[0].defaultAddressLabel)
+                return `${userData.userInfo[0].defaultAddressLabel}, Bolivia`
+            if (userData.userInfo[0].cityName)
+                return `${userData.userInfo[0].cityName}, Bolivia`
+        }
+        return "";
+    }
+
     return <Suspense fallback={<Loader />}>
         <Wrapper>
             <Desktop>
@@ -255,9 +267,9 @@ const Header: FC<Props> = ({ checkout }) => {
                             <Logo onClick={goHome}>
                                 <HeaderLogo />
                             </Logo>
-                            <Address>
+                            <Address onClick={() => toggleCityModal()}>
                                 <Pin />
-                                <span>{userData.userInfo.length && userData.userInfo[0].cityName ? `${userData.userInfo[0].cityName}, Bolivia` : ''}</span>
+                                <span>{addressLabel()}</span>
                             </Address>
                             {(!userData.userInfo.length || !userData.userInfo[0].isLoggedIn) && <Cta text={t('header.login')} action={myAccount} />}
                             {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.account')} action={myAccount} />}

@@ -40,7 +40,9 @@ const client = new ApolloClient({
             openAddressModal: Boolean!,
             showError: String!,
             isLoggedIn: Boolean!,
-            id: Int!
+            id: Int!,
+            defaultAddressId: Int,
+            defaultAddressLabel: String
         }
         type Product {
             entity_id: Int!,
