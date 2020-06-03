@@ -366,7 +366,7 @@ const AuthModal: FC<Props> = () => {
                 </Header>
                 {totalAmount < 200 && <UnderBudget>{t('cart.under_budget')}</UnderBudget>}
                 <Items>
-                    {data && data.cartItems && data.cartItems.map((product: ProductType) => <Row key={product.entity_id}>
+                    {data && data.cartItems && data.cartItems.sort((a: ProductType, b: ProductType) => a.entity_id - b.entity_id).map((product: ProductType) => <Row key={product.entity_id}>
                         <Image src={product.image}></Image>
                         <NameBox>
                             <Name>{product.name}</Name>
@@ -374,7 +374,7 @@ const AuthModal: FC<Props> = () => {
                         </NameBox>
                         <Qty>
                             <select onChange={event => updateItem(Number(event.target.value), product)}>
-                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
+                                {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt} selected={opt === product.qty}>{opt}</option>)}
                             </select>
                             <Chevron />
                         </Qty>

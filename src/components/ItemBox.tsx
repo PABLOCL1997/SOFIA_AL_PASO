@@ -9,6 +9,7 @@ import { ADD_ITEM } from '../graphql/cart/mutations';
 import { BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
 import { SET_USER } from '../graphql/user/mutations';
+import { GET_CART_ITEMS } from '../graphql/cart/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'./Images/Chevron'));
@@ -65,7 +66,7 @@ const Title = styled.h2`
     line-height: 110%;
     text-align: center;
     color: var(--black);
-    height: 35px;
+    min-height: 35px;
     @media screen and (max-width: ${BREAKPOINT}) {
         height: auto;    
     }
@@ -160,6 +161,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [qty, setQty] = useState<number>(1);
+    const { data: cartItems } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, qty } } });
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
@@ -181,6 +183,14 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
         }
     }
 
+    const amIselected = (opt: number) => {
+        if (cartItems && cartItems.cartItems && cartItems.cartItems.length) {
+            let p: ProductType = cartItems.cartItems.find((p: ProductType) => p.entity_id === product.entity_id);
+            if (p && p.qty === opt) return true;
+        }
+        return false;
+    }
+
     const discount = (1 - (product.special_price / product.price)) * 100;
 
     return <Suspense fallback={<Loader />}>
@@ -200,7 +210,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             <Pill>
                 <Qty>
                     <select onChange={event => setQty(Number(event.target.value))}>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
+                        {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt} selected={amIselected(opt)}>{opt}</option>)}
                     </select>
                     <Chevron />
                 </Qty>

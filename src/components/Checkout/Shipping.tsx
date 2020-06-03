@@ -174,9 +174,11 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
     }
 
     const selectAddress = (address: AddressType) => {
-        onChange('addressId', Number(address.id));
-        updateOrder('shipping', address);
-        setOther(false);
+        if (address) {
+            onChange('addressId', Number(address.id));
+            updateOrder('shipping', address);
+            setOther(false);
+        }
     }
 
     const showOther = () => {
