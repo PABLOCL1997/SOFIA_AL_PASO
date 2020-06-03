@@ -343,7 +343,7 @@ const Details: FC<Props> = () => {
 
     const edit = () => {
         setAddressArgs({
-            addressId: inputs.addressId,
+            addressId: inputs.addressId || 0,
             firstname: inputs.firstname,
             lastname: inputs.lastname,
             email: inputs.email,

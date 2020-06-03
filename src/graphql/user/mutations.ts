@@ -57,7 +57,7 @@ mutation SignUp($email: String!, $password: String!, $firstname: String, $lastna
 
 export const ADD_ADDRESS = gql`
 mutation AddAddress(
-    $addressId: Int!, 
+    $addressId: Int, 
     $firstname: String, 
     $lastname: String, 
     $email: String,
