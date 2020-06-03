@@ -84,7 +84,7 @@ const client = new ApolloClient({
                     let { cartItems } = queryResult;
                     const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
                     if (item >= 0) {
-                        product.qty = /*cartItems[item].qty + */product.qty;
+                        // product.qty = cartItems[item].qty + product.qty;
                         cartItems.splice(item, 1);
                     }
                     cartItems = [...cartItems, product];
