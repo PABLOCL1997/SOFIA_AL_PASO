@@ -73,21 +73,14 @@ const Title = styled.h2`
 
 const PriceBox = styled.div`
     text-align: center;
-    margin: 12px 0 24px;
-`
-
-const Size = styled.span`
-    font-family: MullerBold;
-    font-size: 14px;
-    line-height: 14px;
-    color: var(--font);
+    margin: 0px 0 10px;
 `
 
 const Price = styled.span`
 font-family: MullerBold;
-font-size: 14px;
-line-height: 14px;
-color: var(--black);
+font-size: 16px;
+line-height: 16px;
+color: var(--red);
 `
 
 const DiscountPrice = styled.span`
@@ -140,6 +133,24 @@ const Add = styled.button`
     text-transform: uppercase;
 `
 
+const EstimatedPrice = styled.div`
+    font-family: MullerMedium;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    color: var(--font);
+    padding: 5px 0;
+`
+
+const Label = styled.div`
+    font-family: MullerBold;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    color: var(--font);
+    padding: 5px 0;
+`
+
 type Props = {
     product: ProductType,
     openModal: Function
@@ -179,9 +190,10 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
                 <Category>{product.category_name}</Category>
                 <Image src={product.image.split(',')[0]}></Image>
                 <Title>{product.name}</Title>
+                <EstimatedPrice>Bs. {product.fullprice.toFixed(2).replace('.', ',')}/{product.unit}</EstimatedPrice>
+                <Label>{t('itembox.price_label')}</Label>
                 <PriceBox>
-                    <Size>{product.size} - </Size>
-                    <Price>Bs. {product.special_price.toFixed(2).replace('.', ',')} {product.unit}</Price>
+                    <Price>Bs. {product.special_price.toFixed(2).replace('.', ',')}</Price>
                     {discount > 0 && <DiscountPrice>Bs. {product.price.toFixed(2).replace('.', ',')}</DiscountPrice>}
                 </PriceBox>
             </Link>

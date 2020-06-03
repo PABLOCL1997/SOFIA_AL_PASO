@@ -24,6 +24,8 @@ const App = () => {
           <Route exact path="/productos" children={<LayoutGeneral><Products /></LayoutGeneral>} />
           <Route exact path="/checkout" children={<LayoutGeneral><Checkout /></LayoutGeneral>} />
           <Route exact path="/productos/:category" children={<LayoutGeneral><Products /></LayoutGeneral>} />
+          <Route exact path="/productos/:category/:subcategory" children={<LayoutGeneral><Products /></LayoutGeneral>} />
+          <Route exact path="/productos/:category/:subcategory/:lastlevel" children={<LayoutGeneral><Products /></LayoutGeneral>} />
           <Route exact path="/:prodname" children={<LayoutGeneral><Product /></LayoutGeneral>} />
         </Switch>
       </Router>

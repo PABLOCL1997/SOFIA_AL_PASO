@@ -2,7 +2,7 @@ import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { CategoryType } from '../../graphql/categories/type';
+import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from '../../graphql/categories/type';
 import { BREAKPOINT } from '../../utils/constants';
 
 import { toLink } from '../../utils/string';
@@ -54,6 +54,7 @@ const CategoryList = styled.ul<{ open: boolean }>`
 `
 
 const Category = styled.li<{ selected: boolean, key?: number }>`
+    position: relative;
     padding: 15px 30px;
     cursor: pointer;
     font-family: MullerBold;
@@ -61,8 +62,19 @@ const Category = styled.li<{ selected: boolean, key?: number }>`
     line-height: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    border-left: 3px solid ${props => props.selected ? 'var(--yellow)' : 'transparent'};
     color: ${props => props.selected ? 'var(--red)' : 'var(--black)'};
+    &:before {
+        content: "";
+        display: block;
+        left: 0;
+        top: 5px;
+        height: 30px;
+        position: absolute;
+        border-left: 3px solid ${props => props.selected ? 'var(--yellow)' : 'transparent'};
+    }
+    span {
+        font-family: MullerBold;
+    }
 `
 
 const CategoryPet = styled.li<{ selected: boolean, key?: number }>`
@@ -131,25 +143,46 @@ const ProductsFound = styled.div`
     }
 `
 
+const SubCategory = styled.div<{ selected: boolean, key?: number }>`
+    padding-left: 30px;
+    padding: 20px 30px 0;
+    span {
+        font-family: MullerBold;
+    }
+`
+
 type Props = {
     category: string | undefined,
+    subcategory: string | undefined,
+    lastlevel: string | undefined,
     count: number,
     categories: Array<CategoryType>
 }
 
-const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
+const FilterSideBar: FC<Props> = ({ category, count, categories, subcategory, lastlevel }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const MascotasId = 354;
     const [open, setOpen] = useState(false);
 
-    const navigate = (cat: CategoryType) => {
+    const navigate = (cat: CategoryType, s3cat?: SubCategoryLvl3Type, s4cat?: SubCategoryLvl4Type) => {
         if (cat.entity_id === 0) {
             history.push(`/productos/`);
         } else {
-            history.push(`/productos/${toLink(cat.name)}`);
+            let link = `/productos/${toLink(cat.name)}`;
+            if (s3cat) link = `${link}/${toLink(s3cat.name)}`;
+            if (s4cat) link = `${link}/${toLink(s4cat.name)}`;
+            console.log(link)
+            history.push(link);
         }
         setOpen(false);
+    }
+
+    const compare = (cat: CategoryType, s3cat?: SubCategoryLvl3Type, s4cat?: SubCategoryLvl4Type) => {
+        let is = category === toLink(cat.name);
+        if (s3cat) is = is && subcategory === toLink(s3cat.name);
+        if (s4cat) is = is && lastlevel === toLink(s4cat.name);
+        return is;
     }
 
     return <Suspense fallback={<Loader />}>
@@ -158,8 +191,18 @@ const FilterSideBar: FC<Props> = ({ category, count, categories }) => {
             <CategoryList open={open}>
                 <Category onClick={() => navigate({ entity_id: 0, name: '', level: 0, parent_id: 0 })} selected={!category || category === ''}>{t('products.filter_side_bar.all')}</Category>
                 {categories.length && categories.filter((row: CategoryType) => row.entity_id !== MascotasId).map((row: CategoryType) =>
-                    <Category onClick={() => navigate(row)} selected={category === toLink(row.name)} key={row.entity_id}>
-                        {row.name}
+                    <Category selected={compare(row)} key={row.entity_id}>
+                        <span onClick={() => navigate(row)}>{row.name}</span>
+                        {compare(row) && row.subcategories && !!row.subcategories.length && row.subcategories.map((s3row: SubCategoryLvl3Type) =>
+                            <SubCategory selected={compare(row, s3row)} key={s3row.entity_id}>
+                                <span onClick={() => navigate(row, s3row)}>{s3row.name}</span>
+                                {compare(row, s3row) && s3row.subcategories && !!s3row.subcategories.length && s3row.subcategories.map((s4row: SubCategoryLvl4Type) =>
+                                    <SubCategory selected={compare(row, s3row, s4row)} key={s4row.entity_id}>
+                                        <span onClick={() => navigate(row, s3row, s4row)}>{s4row.name}</span>
+                                    </SubCategory>
+                                )}
+                            </SubCategory>
+                        )}
                     </Category>)
                 }
                 {categories.length && categories.filter((row: CategoryType) => row.entity_id === MascotasId).map((row: CategoryType) =>

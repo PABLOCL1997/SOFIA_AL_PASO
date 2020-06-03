@@ -1,11 +1,20 @@
 import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { BREAKPOINT } from '../../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */'../Switch'));
 
-const Container = styled.div``
+const Container = styled.div`
+    @media screen and (max-width: ${BREAKPOINT}) {
+        .switchContainer > div {
+            > div {
+                font-size: 10px;
+            }
+        }
+    }
+`
 
 const Title = styled.h2`
     font-family: MullerMedium;
@@ -30,28 +39,34 @@ type Props = {
 
 const Payment: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
-    const [option, setOption] = useState('cash');
+    const [option, setOption] = useState('cashondelivery');
 
     const changeOption = (val: string) => {
         setOption(val);
-        updateOrder('payment', { method: option });
+        updateOrder('payment', { method: val });
     }
 
     const values = [
         {
-            title: t('checkout.payment.cash'),
-            value: 'cash'
+            title: t('checkout.payment.cashondelivery'),
+            value: 'cashondelivery'
         },
         {
-            title: t('checkout.payment.card'),
-            value: 'card'
+            title: t('checkout.payment.checkmo'),
+            value: 'checkmo'
+        },
+        {
+            title: t('checkout.payment.todotix'),
+            value: 'todotix'
         }
     ]
 
     return <Suspense fallback={<Loader />}>
         <Container>
             <Title>{t('checkout.payment.title')}</Title>
-            <Switch changeOption={changeOption} option={option} values={values} />
+            <div className="switchContainer">
+                <Switch changeOption={changeOption} option={option} values={values} />
+            </div>
             <Disclaimer>{t('checkout.payment.bs_only')}</Disclaimer>
         </Container>
     </Suspense>

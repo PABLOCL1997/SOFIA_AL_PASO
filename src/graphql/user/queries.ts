@@ -18,8 +18,12 @@ query Details {
         addressId
         addresses {
             id
+            firstname
+            lastname
+            nit
             street
             city
+            phone
             reference
             latitude
             longitude
@@ -66,6 +70,14 @@ query Order($orderId: Int!) {
         subtotal
         shippingPrice
         total
+    }
+}
+`
+
+export const ORDER_STATUS = gql`
+query SofiawsOrderStatus($incremendId: String!) {
+    sofiawsOrderStatus(incremendId: $incremendId) {
+        status
     }
 }
 `

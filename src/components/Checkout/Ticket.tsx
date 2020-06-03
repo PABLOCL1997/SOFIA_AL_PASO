@@ -1,8 +1,9 @@
 import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { CHECK_COUPON } from '../../graphql/cart/mutations';
 import { GET_CART_ITEMS, GET_TOTAL } from '../../graphql/cart/queries';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import { ProductType } from '../../graphql/products/type';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
@@ -190,14 +191,29 @@ type Props = {
 
 const Ticket: FC<Props> = ({ order, updateOrder }) => {
     const { t } = useTranslation();
+    const [type, setType] = useState("");
     const [discount, setDiscount] = useState("0");
     const [showCoupon, setShowCoupon] = useState(false);
     const [coupon, setCoupon] = useState("");
     const { data } = useQuery(GET_CART_ITEMS);
+    const [checkCoupon] = useMutation(CHECK_COUPON, {
+        variables: { name: coupon }
+    });
     const totalAmount = GET_TOTAL(data.cartItems);
 
-    const addCoupon = () => {
-        setDiscount("100");
+    const addCoupon = async () => {
+        try {
+            const response: any = await checkCoupon();
+            setType(response.data.coupon.type);
+            if (response.data.coupon.type === '%') {
+                setDiscount(parseFloat(String(totalAmount * (response.data.coupon.discount_amount / 100))).toFixed(2));
+            } else {
+                setDiscount(String(response.data.coupon.discount_amount));
+            }
+            setCoupon(response.data.coupon.code);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     const removeCoupon = () => {
@@ -208,8 +224,10 @@ const Ticket: FC<Props> = ({ order, updateOrder }) => {
     useEffect(() => {
         updateOrder('coupon', {
             coupon,
-            discount
+            discount,
+            type
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [discount]);
 
     return <Suspense fallback={<Loader />}>
@@ -244,7 +262,7 @@ const Ticket: FC<Props> = ({ order, updateOrder }) => {
             <Line />
             <Total>
                 <b>{t('checkout.ticket.total')}</b>
-                <b>Bs. {totalAmount.replace('.', ',')}</b>
+                <b>Bs. {String(totalAmount - parseFloat(discount)).replace('.', ',')}</b>
             </Total>
             <CtaWrapper>
                 <Cta filled={true} text={t('checkout.ticket.send')} action={order} />

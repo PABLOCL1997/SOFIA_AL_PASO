@@ -76,6 +76,7 @@ type Props = {
 
 const Billing: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
+    const [other, setOther] = useState(false);
     const [inputs, setInputs] = useState({});
     const { data: userData } = useQuery(DETAILS);
 
@@ -86,8 +87,8 @@ const Billing: FC<Props> = ({ updateOrder }) => {
         })
     }
 
-    useEffect(() => {
-        if (userData.details) {
+    const loadUser = () => {
+        if (userData && userData.details) {
             setInputs({
                 firstname: userData.details.firstname,
                 lastname: userData.details.lastname,
@@ -95,11 +96,22 @@ const Billing: FC<Props> = ({ updateOrder }) => {
                 nit: userData.details.nit
             })
         }
+    }
+
+    useEffect(() => {
+        loadUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userData]);
 
     useEffect(() => {
-        updateOrder('billing', inputs);
+        if (other) setInputs({});
+        else loadUser();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [other]);
+
+    useEffect(() => {
+        if ((inputs as any).email) updateOrder('billing', inputs);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputs]);
 
     return <Suspense fallback={<Loader />}>
@@ -111,7 +123,7 @@ const Billing: FC<Props> = ({ updateOrder }) => {
                     <input value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} type="text" placeholder={t('checkout.billing.' + key)} />
                 </InputGroup>)}
             </Form>
-            <Other>{t('checkout.billing.other_person')}</Other>
+            <Other onClick={() => setOther(!other)}>{t(!other ? 'checkout.billing.other_person' : 'checkout.billing.to_me')}</Other>
         </Container>
     </Suspense>
 }

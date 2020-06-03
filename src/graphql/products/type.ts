@@ -9,6 +9,7 @@ export type ProductType = {
     image: string,
     size: string,
     price: number,
+    fullprice: number,
     special_price: number,
     unit: string,
     category_name: string,

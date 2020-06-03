@@ -28,6 +28,8 @@ app.get('/mi-cuenta', (req, res) => loadPage(res, { title: MY_ACCOUNT_TITLE }));
 app.get('/mi-cuenta/ordenes', (req, res) => loadPage(res, { title: MY_ORDERS_TITLE }));
 app.get('/checkout', (req, res) => loadPage(res, { title: CHECKOUT_TITLE }));
 app.get('/productos/:category', (req, res) => loadPage(res, { title: `${PRODUCTS_TITLE} - ${fromLink(req.params.category)}` }));
+app.get('/productos/:category/:subcategory', (req, res) => loadPage(res, { title: `${PRODUCTS_TITLE} - ${fromLink(req.params.category)} - ${fromLink(req.params.subcategory)}` }));
+app.get('/productos/:category/:subcategory/:lastlevel', (req, res) => loadPage(res, { title: `${PRODUCTS_TITLE} - ${fromLink(req.params.category)} - ${fromLink(req.params.subcategory)} - ${fromLink(req.params.lastlevel)}` }));
 app.get('/:product', (req, res) => loadPage(res, { title: `${PRODUCT_TITLE} ${fromLink(req.params.product)}` }));
 
 app.get('*', (req, res) => loadPage(res));

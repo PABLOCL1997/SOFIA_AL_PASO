@@ -1,10 +1,14 @@
 import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from '../meta';
 import { useTranslation } from 'react-i18next';
 import { SET_USER } from '../graphql/user/mutations';
 import { BREAKPOINT } from '../utils/constants';
+import { CREATE_ORDER, EMPTY_CART, PAY } from '../graphql/cart/mutations';
+import { GET_CART_ITEMS, TODOTIX } from '../graphql/cart/queries';
+import { ProductType } from '../graphql/products/type';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */'../components/Checkout/Billing'));
@@ -92,17 +96,147 @@ const Line = styled.div`
 
 type Props = {}
 
+type OrderData = {
+    discount_amount: number,
+    discount_type: string,
+    coupon_code: string,
+    items: Array<string>,
+    delivery_price: number,
+    customer_email: string,
+    customer_firstname: string,
+    customer_lastname: string,
+    facturacion: string,
+    envio: string,
+    payment_method: string
+};
+
 const Checkout: FC<Props> = () => {
     const { t } = useTranslation();
+    const history = useHistory();
+    const location = useLocation();
+    const [order, setOrder] = useState<OrderData>();
+    const [orderData, setOrderData] = useState<any>({});
+    const [result, setResult] = useState<Array<{ entity_id: string, increment_id: string }>>([]);
+
+    const { data } = useQuery(GET_CART_ITEMS);
+    const [getTodotixLink, { data: todotixData }] = useLazyQuery(TODOTIX);
     const [toggleCartModal] = useMutation(SET_USER, { variables: { user: { openCartModal: true } } });
-    const [orderData, setOrderData] = useState({ increment_id: '' });
+    const [createOrder] = useMutation(CREATE_ORDER, {
+        variables: {
+            ...order
+        }
+    })
+    const [pay] = useMutation(PAY);
+    const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
+    const [showError] = useMutation(SET_USER, { variables: { user: { showError: t('checkout.error') } } });
 
     useEffect(() => {
         document.title = CHECKOUT_TITLE;
-    }, [])
+        if (data && !data.cartItems.length) history.push('/');
 
-    const order = () => {
-        console.log(orderData);
+        let params = new URLSearchParams(location.search);
+        if (params.get('orderIds') && params.get('transaction_id')) {
+            (async () => {
+                try {
+                    const response = await pay({
+                        variables: {
+                            parent_ids: params.get('orderIds'),
+                            last_trans_id: params.get('transaction_id')
+                        }
+                    });
+                    setResult(response.data.addPayment.map((co: any) => ({ entity_id: co.entity_id, increment_id: co.increment_id })));
+                    emptyCart();
+                    window.history.pushState('checkout', 'Tienda Sofia - Checkout', '/checkout');
+                } catch (e) {
+                    showError();
+                }
+            })();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (order) {
+            (async () => {
+                try {
+                    const response = await createOrder();
+                    if (orderData.payment && orderData.payment.method === 'todotix') {
+                        getTodotixLink({ variables: { orderIds: response.data.createOrder.map((co: any) => co.entity_id) } });
+                    } else {
+                        setResult(response.data.createOrder.map((co: any) => ({ entity_id: co.entity_id, increment_id: co.increment_id })));
+                        emptyCart();
+                    }
+                } catch (e) {
+                    showError();
+                }
+            })();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [order]);
+
+    useEffect(() => {
+        if (todotixData && todotixData.todotix && todotixData.todotix.url_pasarela_pagos) {
+            window.location = todotixData.todotix.url_pasarela_pagos
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [todotixData])
+
+    const saveOrder = () => {
+        let items: Array<string> = [];
+        data && data.cartItems && data.cartItems.forEach((product: ProductType) => {
+            items.push(JSON.stringify({
+                entity_id: product.entity_id,
+                sku: product.sku,
+                name: product.name,
+                price: product.price,
+                quantity: product.qty,
+                type_id: 'simple',
+                addQty: true,
+                toSerialize: {
+                    info_buyRequest: {
+                        uenc: "",
+                        product: product.entity_id,
+                        form_key: "",
+                        related_product: "",
+                        super_attribute: {},
+                        qty: product.qty
+                    }
+                }
+            }));
+        })
+        setOrder({
+            discount_amount: parseFloat(orderData.coupon.discount),
+            discount_type: orderData.coupon.type,
+            coupon_code: orderData.coupon.coupon,
+            items: items,
+            delivery_price: 0,
+            customer_email: orderData.billing.email,
+            customer_firstname: orderData.billing.firstname,
+            customer_lastname: orderData.billing.lastname,
+            facturacion: JSON.stringify({
+                firstname: orderData.billing.firstname,
+                lastname: orderData.billing.lastname,
+                fax: orderData.billing.nit,
+                email: orderData.billing.email,
+                telephone: orderData.billing.phone,
+                country_id: 'BO'
+            }),
+            envio: JSON.stringify({
+                entity_id: orderData.shipping.id,
+                firstname: orderData.shipping.firstname,
+                lastname: orderData.shipping.lastname,
+                fax: orderData.shipping.nit,
+                email: orderData.billing.email,
+                telephone: orderData.shipping.phone,
+                street: orderData.shipping.street,
+                city: orderData.shipping.city,
+                region: orderData.shipping.reference,
+                country_id: 'BO',
+                latitude: orderData.shipping.latitude,
+                longitude: orderData.shipping.longitude
+            }),
+            payment_method: orderData.payment ? orderData.payment.method : 'cashondelivery'
+        });
     }
 
     const updateOrderData = (key: string, values: any) => {
@@ -115,7 +249,7 @@ const Checkout: FC<Props> = () => {
     return (
         <Suspense fallback={<Loader />}>
             <Wrapper>
-                {!orderData.increment_id && <CheckoutWrapper>
+                {!result.length && <CheckoutWrapper>
                     <Title>
                         <h1>{t('checkout.title')}</h1>
                         <button onClick={() => toggleCartModal()}>{t('checkout.modify_cart')}</button>
@@ -131,12 +265,12 @@ const Checkout: FC<Props> = () => {
                             </Steps>
                         </Col1>
                         <Col2>
-                            <Ticket updateOrder={updateOrderData} order={order} />
+                            <Ticket updateOrder={updateOrderData} order={saveOrder} />
                         </Col2>
                     </Cols>
                 </CheckoutWrapper>}
-                {!!orderData.increment_id && <ThanktWrapper>
-                    <Thanks incrementId={orderData.increment_id} />
+                {!!result.length && <ThanktWrapper>
+                    <Thanks orders={result} />
                 </ThanktWrapper>}
             </Wrapper>
         </Suspense>

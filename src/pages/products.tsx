@@ -4,7 +4,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { GET_CATEGORIES } from '../graphql/categories/queries';
 import { GET_PRODUCTS } from '../graphql/products/queries';
-import { CategoryType } from '../graphql/categories/type';
+import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from '../graphql/categories/type';
 import { OrderColums } from '../graphql/products/type';
 import { toLink, fromLink } from '../utils/string';
 import { BREAKPOINT } from '../utils/constants';
@@ -41,7 +41,7 @@ const Col2 = styled.div`
 type Props = {}
 const Products: FC<Props> = () => {
     const limit = 9;
-    const { category } = useParams();
+    const { category, subcategory, lastlevel } = useParams();
     const query = new URLSearchParams(useLocation().search);
 
     const [products, setProducts] = useState([]);
@@ -93,17 +93,38 @@ const Products: FC<Props> = () => {
 
     useEffect(() => {
         if (data && data.categories) {
-            let __category = data.categories.find((row: CategoryType) => toLink(row.name) === toLink(category || ''));
-            if (__category && __category.entity_id !== category_id) {
+            let entity_id = null;
+
+            let __category: any = data.categories.find((row: CategoryType) => toLink(row.name) === toLink(category || ''));
+            if (__category) {
+                if (subcategory) {
+                    let __subcategory: any = __category.subcategories.find((row: SubCategoryLvl3Type) => toLink(row.name) === toLink(subcategory || ''));
+                    if (__subcategory) {
+                        if (lastlevel) {
+                            let __lastlevel: any = __subcategory.subcategories.find((row: SubCategoryLvl4Type) => toLink(row.name) === toLink(lastlevel || ''));
+                            if (__lastlevel)
+                                entity_id = __lastlevel.entity_id;
+                        } else {
+                            entity_id = __subcategory.entity_id;
+                        }
+                    }
+                } else {
+                    entity_id = __category.entity_id;
+                }
+            }
+
+            console.log(entity_id);
+
+            if (entity_id && entity_id !== category_id) {
                 setTitle();
-                setCategoryId(__category.entity_id);
+                setCategoryId(entity_id);
                 setSearch('');
                 setOffset(0);
                 setPage(1);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category]);
+    }, [category, subcategory, lastlevel]);
 
     return (
         <Suspense fallback={<Loader />}>
@@ -111,7 +132,7 @@ const Products: FC<Props> = () => {
                 <div className="main-container">
                     <Wrapper>
                         <Col1>
-                            <FilterSideBar categories={!loading && data ? data.categories : []} category={category} count={total} />
+                            <FilterSideBar categories={!loading && data ? data.categories : []} category={category} subcategory={subcategory} lastlevel={lastlevel} count={total} />
                         </Col1>
                         <Col2>
                             <ProductList orderQuery={orderQuery} products={products} count={total} />

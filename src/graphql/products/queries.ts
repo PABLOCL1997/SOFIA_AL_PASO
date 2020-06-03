@@ -18,6 +18,7 @@ query Products($category_id: Int!, $limit: Int!, $offset: Int!, $onsale: Boolean
             image
             size
             price
+            fullprice
             unit
             category_name
             special_price
@@ -42,6 +43,7 @@ query Product($name: String!, $city: String!, $categories: Boolean, $related: Bo
         image
         size
         price
+        fullprice
         unit
         category_name
         special_price
@@ -57,6 +59,7 @@ query Product($name: String!, $city: String!, $categories: Boolean, $related: Bo
             name
             image
             price
+            fullprice
             unit
         }
     }

@@ -64,10 +64,12 @@ const MyAccount: FC<Props> = () => {
     useEffect(() => {
         document.title = MY_ACCOUNT_TITLE;
         if (!token.get()) history.push('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
         setShowDetails(pathname.indexOf('ordenes') < 0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     return (

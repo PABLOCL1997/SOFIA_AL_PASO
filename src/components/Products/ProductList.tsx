@@ -153,6 +153,7 @@ const ProductModal = styled.div`
         height: calc(100vh - 60px);
         width: calc(100% - 100px);
         overflow: auto;
+        border-radius: 20px;
     }
 `
 

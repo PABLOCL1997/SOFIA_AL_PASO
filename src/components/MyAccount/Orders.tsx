@@ -55,7 +55,9 @@ const Body = styled.div`
         font-size: 12px;
         line-height: 12px;
         color: var(--black);
-        &.pending {
+        &.recibimos-tu-pedido {
+            line-height: 1.5em;
+            font-family: MullerBold;
             color: var(--green);
         }
         &.canceled {
@@ -171,7 +173,9 @@ const Header = styled.div`
         font-size: 14px;
         line-height: 14px;
         color: var(--black);
-        &.pending {
+        &.recibimos-tu-pedido {
+            line-height: 1.5em;
+            font-family: MullerBold;
             color: var(--green);
         }
         &.canceled {
@@ -313,6 +317,16 @@ const Total = styled.div`
     }
 `
 
+const LoaderWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    img {
+        width: 40px;
+    }
+`
+
 
 type Props = {}
 
@@ -321,7 +335,9 @@ const Orders: FC<Props> = () => {
     const [orderId, setOrderId] = useState(0);
     const [order, setOrder] = useState<UserOrder | any>({});
 
-    const { data: orders } = useQuery(ORDERS, {});
+    const { data: orders, loading } = useQuery(ORDERS, {
+        fetchPolicy: 'cache-and-network'
+    });
     const [getOrder] = useLazyQuery(ORDER, {
         variables: { orderId },
         fetchPolicy: 'network-only',
@@ -348,12 +364,13 @@ const Orders: FC<Props> = () => {
                     <Head>{t('account.orders.value')}</Head>
                     <Head>{t('account.orders.status')}</Head>
                 </Row>
-                {orders && orders.orders.map((order: UserOrder) => <Body key={order.id}>
+                {loading && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
+                {!loading && orders && orders.orders.map((order: UserOrder) => <Body key={order.id}>
                     <span><button onClick={() => setOrderId(order.id)}><Eye /></button></span>
                     <span>{toLocalDate(order.createdAt)}</span>
                     <span>{order.incrementId}</span>
                     <span>Bs. {order.total.toFixed(2).replace('.', ',')}</span>
-                    <span className={order.status}>{t(`account.orders.labels.${order.status}`)}</span>
+                    <span className={order.status.toLowerCase().replace(/ /g, '-')}>{order.status}</span>
                 </Body>)}
             </Grid>}
             {orderId > 0 && order && <Order>
@@ -363,7 +380,7 @@ const Orders: FC<Props> = () => {
                 </HeaderLink>
                 <Header>
                     <h2>{t('account.order.title', { increment_id: order.incrementId })}</h2>
-                    <span className={order.status}>{t(`account.orders.labels.${order.status}`)}</span>
+                    <span className={order.status && order.status.toLowerCase().replace(/ /g, '-')}>{order.status}</span>
                 </Header>
                 <FormWrapper>
                     <SectionTitle>{t('account.order.billing.title')}</SectionTitle>

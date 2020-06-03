@@ -5,6 +5,14 @@ query Categories {
     categories {
         entity_id
         name
+        subcategories {
+        entity_id
+        name
+        subcategories {
+            entity_id
+            name
+        }
+        }
     }
 }
 `

@@ -28,6 +28,10 @@ export type UserOrder = {
 
 export type AddressType = {
     id?: number,
+    firstname?: string,
+    lastname?: string,
+    nit?: string,
+    phone?: string,
     street?: string,
     city?: string,
     reference?: string,

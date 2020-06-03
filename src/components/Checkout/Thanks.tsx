@@ -108,10 +108,10 @@ const CtaWrapper = styled.div`
 `
 
 type Props = {
-    incrementId: string
+    orders: Array<{ entity_id: string, increment_id: string }>
 }
 
-const Thanks: FC<Props> = ({ incrementId }) => {
+const Thanks: FC<Props> = ({ orders }) => {
     const { t } = useTranslation();
     const history = useHistory();
 
@@ -120,7 +120,7 @@ const Thanks: FC<Props> = ({ incrementId }) => {
             <Title>
                 <ThankCheck />
                 <h1>{t('thankyou.title')}</h1>
-                <p>{t('thankyou.subtitle', { increment_id: incrementId })}</p>
+                <p>{orders.map((order: { entity_id: string, increment_id: string }) => t('thankyou.subtitle', { increment_id: order.increment_id })).join(', ')}</p>
             </Title>
             <Grid>
                 <Box>

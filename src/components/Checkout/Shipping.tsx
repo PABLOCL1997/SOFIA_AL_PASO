@@ -161,7 +161,9 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [inputs, setInputs] = useState<any>({ addressType: t('checkout.delivery.street') });
     const [other, setOther] = useState(false);
-    const { data: userData } = useQuery(DETAILS);
+    const { data: userData } = useQuery(DETAILS, {
+        fetchPolicy: 'network-only'
+    });
 
     const onChange = (key: string, value: string | number | null) => {
         setInputs({
@@ -171,8 +173,9 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
         if (key === 'city' && value) setLatLng(String(value));
     }
 
-    const selectAddress = (id: number) => {
-        onChange('addressId', id);
+    const selectAddress = (address: AddressType) => {
+        onChange('addressId', Number(address.id));
+        updateOrder('shipping', address);
         setOther(false);
     }
 
@@ -198,7 +201,12 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
     };
 
     useEffect(() => {
-        updateOrder('shipping', inputs);
+        if (userData && userData.details.addresses) selectAddress(userData.details.addresses[0]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userData]);
+
+    useEffect(() => {
+        if (!inputs.addressId) updateOrder('shipping', inputs);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputs]);
 
@@ -209,8 +217,8 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
                 <span>{t('checkout.delivery.time', { day: '', from: '', to: '' })}</span>
             </Title>
             {userData && userData.details.addresses && userData.details.addresses.map((address: AddressType) => <CheckboxGroup red={!other} key={address.id}>
-                <input type="radio" checked={Number(address.id) === Number(inputs.addressId)} id={'address' + address.id} name="addressId" value={address.id} onChange={() => selectAddress(Number(address.id))} />
-                <label onClick={() => selectAddress(Number(address.id))}>{address.street}</label>
+                <input type="radio" checked={Number(address.id) === Number(inputs.addressId)} id={'address' + address.id} name="addressId" value={address.id} onChange={() => selectAddress(address)} />
+                <label onClick={() => selectAddress(address)}>{address.street}</label>
             </CheckboxGroup>)}
             <Other margin={!!other} onClick={showOther}>{t('checkout.delivery.other_address')}</Other>
             <Form hidden={!other}>

@@ -17,3 +17,13 @@ query GetCartItems {
     cartItems @client
 }
 `
+
+export const TODOTIX = gql`
+query Todotix($orderIds: [Int!]) {
+    todotix(orderIds: $orderIds) {
+        id_transaccion
+        url_pasarela_pagos
+        error
+    }
+}
+`

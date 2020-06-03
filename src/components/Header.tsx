@@ -221,12 +221,26 @@ const Header: FC<Props> = ({ checkout }) => {
         logout();
         token.delete();
         setOpen(false);
-        history.push('/');
     };
 
     const showCart = () => {
+        setOpen(false)
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             toggleCartModal();
+        } else {
+            toggleLoginModal();
+        }
+    }
+
+    const goHome = () => {
+        setOpen(false);
+        history.push('/')
+    }
+
+    const myAccount = () => {
+        setOpen(false);
+        if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+            history.push('/mi-cuenta');
         } else {
             toggleLoginModal();
         }
@@ -238,15 +252,15 @@ const Header: FC<Props> = ({ checkout }) => {
                 <Fixed>
                     <div className="main-container">
                         {!checkout && <Container>
-                            <Logo onClick={() => history.push('/')}>
+                            <Logo onClick={goHome}>
                                 <HeaderLogo />
                             </Logo>
                             <Address>
                                 <Pin />
                                 <span>{userData.userInfo.length && userData.userInfo[0].cityName ? `${userData.userInfo[0].cityName}, Bolivia` : ''}</span>
                             </Address>
-                            {(!userData.userInfo.length || !userData.userInfo[0].id) && <Cta text={t('header.login')} action={() => toggleLoginModal()} />}
-                            {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.account')} action={() => history.push('/mi-cuenta')} />}
+                            {(!userData.userInfo.length || !userData.userInfo[0].isLoggedIn) && <Cta text={t('header.login')} action={myAccount} />}
+                            {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.account')} action={myAccount} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
                             <CartWrapper onClick={showCart}>
                                 <Cart />
@@ -257,7 +271,7 @@ const Header: FC<Props> = ({ checkout }) => {
                             </MenuWrapper>
                         </Container>}
                         {checkout && <Container>
-                            <Logo onClick={() => history.push('/')}>
+                            <Logo onClick={goHome}>
                                 <HeaderLogo />
                             </Logo>
                             <Separator />
@@ -274,7 +288,7 @@ const Header: FC<Props> = ({ checkout }) => {
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>
                     </CartWrapper>
-                    <Logo onClick={() => history.push('/')}>
+                    <Logo onClick={goHome}>
                         <HeaderLogo />
                     </Logo>
                     <MenuWrapper onClick={() => setOpen(true)}>
@@ -296,18 +310,19 @@ const Header: FC<Props> = ({ checkout }) => {
                 <MenuList>
                     <MenuItem>
                         <Home />
-                        <Link to="/">{t('header.home')}</Link>
+                        <Link onClick={() => setOpen(false)} to="/">{t('header.home')}</Link>
                     </MenuItem>
                     <MenuItem>
                         <Steak />
-                        <Link to="/productos">{t('header.products')}</Link>
+                        <Link onClick={() => setOpen(false)} to="/productos">{t('header.products')}</Link>
                     </MenuItem>
                     <MenuItem>
                         <Faq />
-                        <Link to="/faq">{t('header.faq')}</Link>
+                        <Link onClick={() => setOpen(false)} to="/preguntas-frecuentes">{t('header.faq')}</Link>
                     </MenuItem>
                     <MenuItem>
-                        <button onClick={() => doLogout()}>{t('header.logout')}</button>
+                        <Faq />
+                        <Link onClick={doLogout} to="/">{t('header.logout')}</Link>
                     </MenuItem>
                 </MenuList>
                 <MenuBottom>
