@@ -183,12 +183,12 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
         }
     }
 
-    const amIselected = (opt: number) => {
+    const defaultValue = () => {
         if (cartItems && cartItems.cartItems && cartItems.cartItems.length) {
             let p: ProductType = cartItems.cartItems.find((p: ProductType) => p.entity_id === product.entity_id);
-            if (p && p.qty === opt) return true;
+            if (p) return p.qty;
         }
-        return false;
+        return 1;
     }
 
     const discount = (1 - (product.special_price / product.price)) * 100;
@@ -209,8 +209,8 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             </Link>
             <Pill>
                 <Qty>
-                    <select onChange={event => setQty(Number(event.target.value))}>
-                        {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt} selected={amIselected(opt)}>{opt}</option>)}
+                    <select defaultValue={defaultValue()} onChange={event => setQty(Number(event.target.value))}>
+                        {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
                     </select>
                     <Chevron />
                 </Qty>

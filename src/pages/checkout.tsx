@@ -249,29 +249,31 @@ const Checkout: FC<Props> = () => {
     return (
         <Suspense fallback={<Loader />}>
             <Wrapper>
-                {!result.length && <CheckoutWrapper>
-                    <Title>
-                        <h1>{t('checkout.title')}</h1>
-                        <button onClick={() => toggleCartModal()}>{t('checkout.modify_cart')}</button>
-                    </Title>
-                    <Cols>
-                        <Col1>
-                            <Steps>
-                                <Billing updateOrder={updateOrderData} />
-                                <Line />
-                                <Shipping updateOrder={updateOrderData} />
-                                <Line />
-                                <Payment updateOrder={updateOrderData} />
-                            </Steps>
-                        </Col1>
-                        <Col2>
-                            <Ticket updateOrder={updateOrderData} order={saveOrder} />
-                        </Col2>
-                    </Cols>
-                </CheckoutWrapper>}
-                {!!result.length && <ThanktWrapper>
-                    <Thanks orders={result} />
-                </ThanktWrapper>}
+                <div className="main-container">
+                    {!result.length && <CheckoutWrapper>
+                        <Title>
+                            <h1>{t('checkout.title')}</h1>
+                            <button onClick={() => toggleCartModal()}>{t('checkout.modify_cart')}</button>
+                        </Title>
+                        <Cols>
+                            <Col1>
+                                <Steps>
+                                    <Billing updateOrder={updateOrderData} />
+                                    <Line />
+                                    <Shipping updateOrder={updateOrderData} />
+                                    <Line />
+                                    <Payment updateOrder={updateOrderData} />
+                                </Steps>
+                            </Col1>
+                            <Col2>
+                                <Ticket updateOrder={updateOrderData} order={saveOrder} />
+                            </Col2>
+                        </Cols>
+                    </CheckoutWrapper>}
+                    {!!result.length && <ThanktWrapper>
+                        <Thanks orders={result} />
+                    </ThanktWrapper>}
+                </div>
             </Wrapper>
         </Suspense>
     );

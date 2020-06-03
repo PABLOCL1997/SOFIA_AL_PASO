@@ -100,17 +100,21 @@ const Faq: FC<Props> = () => {
     return (
         <Suspense fallback={<Loader />}>
             <DelayedWrapper>
+
                 <Header>
                     <div className="main-container">
                         <h1>{t('faq.title')}</h1>
                     </div>
                 </Header>
-                <Accordion>
-                    {questions.map((q: Question, index: number) => <Question active={question === index} key={index}>
-                        <h2 onClick={() => setQuestion(index)}>{q.title}</h2>
-                        <p>{q.text}</p>
-                    </Question>)}
-                </Accordion>
+                <div className="main-container">
+                    <Accordion>
+                        {questions.map((q: Question, index: number) => <Question active={question === index} key={index}>
+                            <h2 onClick={() => setQuestion(index)}>{q.title}</h2>
+                            <p>{q.text}</p>
+                        </Question>)}
+                    </Accordion>
+                </div>
+
             </DelayedWrapper>
         </Suspense>
     );

@@ -373,8 +373,8 @@ const AuthModal: FC<Props> = () => {
                             <Units>{product.size} {product.unit}</Units>
                         </NameBox>
                         <Qty>
-                            <select onChange={event => updateItem(Number(event.target.value), product)}>
-                                {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt} selected={opt === product.qty}>{opt}</option>)}
+                            <select defaultValue={product.qty} onChange={event => updateItem(Number(event.target.value), product)}>
+                                {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
                             </select>
                             <Chevron />
                         </Qty>

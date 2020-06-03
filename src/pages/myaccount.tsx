@@ -75,15 +75,17 @@ const MyAccount: FC<Props> = () => {
     return (
         <Suspense fallback={<Loader />}>
             <DelayedWrapper>
-                <Wrapper>
-                    <SidebarContainer>
-                        <Sidebar></Sidebar>
-                    </SidebarContainer>
-                    <Container>
-                        {showDetails && <Details />}
-                        {!showDetails && <Orders />}
-                    </Container>
-                </Wrapper>
+                <div className="main-container">
+                    <Wrapper>
+                        <SidebarContainer>
+                            <Sidebar></Sidebar>
+                        </SidebarContainer>
+                        <Container>
+                            {showDetails && <Details />}
+                            {!showDetails && <Orders />}
+                        </Container>
+                    </Wrapper>
+                </div>
             </DelayedWrapper>
         </Suspense>
     );

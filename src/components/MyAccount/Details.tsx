@@ -286,6 +286,7 @@ type AddressArgs = {
 const Details: FC<Props> = () => {
     const { t } = useTranslation();
 
+    const [editMode, setEditMode] = useState(false);
     const [inputs, setInputs] = useState<UserType>({ addresses: [] });
     const [addressInputs, setAddressInputs] = useState<AddressType>({});
     const [addressArgs, setAddressArgs] = useState<AddressArgs>({ on: false });
@@ -342,6 +343,7 @@ const Details: FC<Props> = () => {
     }
 
     const edit = () => {
+        setEditMode(false);
         setAddressArgs({
             addressId: inputs.addressId || 0,
             firstname: inputs.firstname,
@@ -357,7 +359,7 @@ const Details: FC<Props> = () => {
             longitude: '',
             billing: 1,
             on: true
-        })
+        });
     }
 
     const callAddressMutation = async () => {
@@ -398,17 +400,20 @@ const Details: FC<Props> = () => {
         <>
             <Title>
                 <h1>{t('account.title')}</h1>
-                <Button onClick={edit}>
+                {!editMode && <Button onClick={() => setEditMode(true)}>
                     <Pencil />
                     <span>{t('account.edit')}</span>
-                </Button>
+                </Button>}
+                {editMode && <Button onClick={edit}>
+                    <span>{t('account.save')}</span>
+                </Button>}
             </Title>
             <FormWrapper>
                 <SectionTitle>{t('account.data')}</SectionTitle>
                 <Form>
                     {['firstname', 'lastname', 'email', 'nit', 'phone', 'password'].map((key: string) => <InputGroup key={key}>
                         <label>{t('account.' + key)}</label>
-                        <input value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} type={key === 'password' ? 'password' : 'text'} placeholder={t('account.' + key)} />
+                        <input readOnly={!editMode} value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} type={key === 'password' ? 'password' : 'text'} placeholder={t('account.' + key)} />
                     </InputGroup>)}
                 </Form>
             </FormWrapper>
