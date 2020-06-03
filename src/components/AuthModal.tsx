@@ -275,7 +275,7 @@ const AuthModal: FC<Props> = () => {
                 isLoggedIn: true,
                 id: response.data.signup.id
             });
-            StoreToken.set(response.data.sign_up.token);
+            StoreToken.set(response.data.signup.token);
         } catch (e) {
             showError();
         }
