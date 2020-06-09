@@ -48,6 +48,10 @@ const Title = styled.h2`
     line-height: 24px;
     color: var(--black);
     padding: 0 10px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 20px;
+        line-height: 20px;
+    }
 `
 
 type Props = {

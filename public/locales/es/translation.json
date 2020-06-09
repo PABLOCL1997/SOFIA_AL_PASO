@@ -103,6 +103,10 @@
         "related": {
             "title": "También te recomendamos",
             "see": "Ver"
+        },
+        "modal": {
+            "text": "El producto ha sido añadido a tu cesta.",
+            "buttontext": "Ir a pagar"
         }
     },
     "auth_modal": {

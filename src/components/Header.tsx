@@ -48,6 +48,9 @@ const Logo = styled.div`
     cursor: pointer;
     @media screen and (max-width: ${BREAKPOINT}) {
         margin: 0 auto;
+        svg {
+            width: 48px !important;
+        }
     }
 `
 
@@ -185,11 +188,18 @@ const MenuBottom = styled.div`
     }
 `
 
-const MobileMenu = styled.div`
+const MobileMenu = styled.div<{ page?: string }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 25px;
+    padding: 3px 25px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.07);
+    position: ${props => props.page === 'productpage' ? 'fixed' : ''};
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    z-index: 99;
 `
 
 const Separator = styled.div`
@@ -197,10 +207,11 @@ const Separator = styled.div`
 `
 
 type Props = {
-    checkout: boolean
+    checkout: boolean,
+    page?: string
 }
 
-const Header: FC<Props> = ({ checkout }) => {
+const Header: FC<Props> = ({ checkout, page }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -295,7 +306,7 @@ const Header: FC<Props> = ({ checkout }) => {
                 </Fixed>
             </Desktop>
             <Mobile>
-                <MobileMenu>
+                <MobileMenu page={page}>
                     <CartWrapper onClick={showCart}>
                         <Cart />
                         <span>{GET_QTY(data.cartItems)}</span>

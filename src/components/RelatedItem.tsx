@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
 import { ProductType } from '../graphql/products/type';
 import { toLink } from '../utils/string';
+import { BREAKPOINT } from '../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 
@@ -14,6 +15,9 @@ const Container = styled.div`
     border-radius: 20px;
     margin: 40px 10px;
     padding: 30px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        margin: 20px 10px;
+    }
 `
 
 const Link = styled.div`

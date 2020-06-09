@@ -22,6 +22,7 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../components/
 const FreeDelivery = React.lazy(() => import(/* webpackChunkName: "FreeDelivery" */'../components/Images/FreeDelivery'));
 const Quality = React.lazy(() => import(/* webpackChunkName: "Quality" */'../components/Images/Quality'));
 const ContinueArrow = React.lazy(() => import(/* webpackChunkName: "ContinueArrow" */'../components/Images/ContinueArrow'));
+const Close = React.lazy(() => import(/* webpackChunkName: "Close" */'../components/Images/Close'));
 
 const Header = styled.div`
     padding: var(--padding);
@@ -87,7 +88,7 @@ const Col1 = styled.div`
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;
         margin-right: 0;
-        margin-bottom: 30px;
+        margin-bottom: 16px;
     }
 `
 
@@ -110,6 +111,10 @@ const ProductTitle = styled.h1`
     line-height: 30px;
     color: var(--black);
     margin-bottom: 16px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 20px;
+        line-height: 20px;
+    }
 `
 
 const Price = styled.div`
@@ -117,6 +122,11 @@ const Price = styled.div`
     line-height: 24px;
     color: var(--red);
     margin-bottom: 58px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 16px;
+        line-height: 16px;
+        margin-bottom: 30px;
+    }
 `
 
 const ProductText = styled.ul`
@@ -141,6 +151,9 @@ const Categories = styled.div`
     margin: 25px 0;
     display: flex;
     align-items: center;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        margin: 32px 0;
+    }
     span {
         font-family: MullerMedium;
         font-size: 10px;
@@ -177,6 +190,14 @@ const Toolbox = styled.div`
         padding: 30px;
         margin: 0;
         z-index: 3;
+        button {
+            font-size: 14px;
+            text-transform: uppercase;
+            padding: 15px 80px;
+            span {
+                font-family: MullerExtraBold;
+            }
+        }
     }
 `
 
@@ -196,6 +217,10 @@ const Qty = styled.div`
         padding-left: 10px;
         font-size: 12px;
         line-height: 12px;
+        font-family: MullerRegular;
+        @media screen and (max-width: ${BREAKPOINT}) {
+            color: var(--black);
+        }
     }
     svg {
         pointer-events: none;
@@ -237,6 +262,46 @@ const Disclaimer = styled.div`
     }
 `
 
+const AddedModal = styled.div`
+    position: absolute;
+    background: var(--white);
+    &::before {
+        content: "";
+        width: 0; 
+        height: 0; 
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid white;
+        position: absolute;
+    }
+    .btn-close {
+
+    }
+    @media screen and (max-width: ${BREAKPOINT}) {
+        width: calc(100% - 20px);
+        position: absolute;
+        top: 68px;
+        left: 10px;
+        background: white;
+        z-index: 99;
+        display: block;
+        padding: 40px 20px 20px;
+        text-align: center;
+        border-radius: 20px;
+        box-shadow: 0 0 20px 10px rgba(0,0,0,0.07);
+        p {
+            margin-bottom: 1em;
+        }
+        button {
+            height: 40px;
+        }
+        &::before {
+            top: -6px;
+            left: 18px;
+        }
+    }
+`
+
 type Props = {
     inlineProdname?: String,
     oldUrl?: String,
@@ -272,15 +337,25 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
     });
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, categories: [], description: false, qty } } });
+    const [addedModal, setAddedModal] = useState<boolean>(false);
 
     const addAndGo = () => {
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             addItem();
-            history.push('/checkout');
+            setAddedModal(true)
+            //history.push('/checkout');
         } else {
             if (closeModal) closeModal();
             toggleLoginModal();
         }
+    }
+
+    const GoToCheckout = () => {
+        history.push('/checkout');
+    }
+
+    const CloseModal = () => {
+        setAddedModal(false)
     }
 
     const proceed = () => {
@@ -300,6 +375,11 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
 
     return (
         <Suspense fallback={<Loader />}>
+            <AddedModal>
+                <button className="btn-close" onClick={CloseModal}><Close /></button>
+                <p>{t('product.modal.text')}</p>
+                <Cta filled={true} text={t('product.modal.buttontext')} action={GoToCheckout} />
+            </AddedModal>
             <DelayedWrapper noHeader={true}>
                 <div className="main-container">
                     <Header>
