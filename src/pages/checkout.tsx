@@ -245,7 +245,7 @@ const Checkout: FC<Props> = () => {
                 fax: orderData.shipping.nit,
                 email: orderData.billing.email,
                 telephone: orderData.shipping.phone,
-                street: `${orderData.shipping.street} ${orderData.shipping.number} ${orderData.shipping.home_type} ${orderData.shipping.apt_number} ${orderData.shipping.building_name}`,
+                street: `${orderData.shipping.address} ${orderData.shipping.number} ${orderData.shipping.home_type} ${orderData.shipping.apt_number} ${orderData.shipping.building_name}`,
                 city: orderData.shipping.city,
                 region: orderData.shipping.reference,
                 country_id: 'BO',
