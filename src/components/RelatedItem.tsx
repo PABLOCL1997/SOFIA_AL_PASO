@@ -59,6 +59,11 @@ const Action = styled.div`
     border-radius: 30px;
     text-align: center;
     padding: 15px 30px;
+    transition: all 0.3s;
+    &:hover, &:active {
+        background: var(--yellow);
+        color: var(--white);
+    }
 `
 
 type Props = {
