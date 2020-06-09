@@ -15,6 +15,7 @@ import DelayedWrapper from '../components/DelayedWrapper';
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const ProductList = React.lazy(() => import(/* webpackChunkName: "ProductList" */'../components/Products/ProductList'));
 const FilterSideBar = React.lazy(() => import(/* webpackChunkName: "FilterSideBar" */'../components/Products/FilterSideBar'));
+const CategoryBanner = React.lazy(() => import(/* webpackChunkName: "CategoryBanner" */'../components/Products/CategoryBanner'));
 
 const Wrapper = styled.div`
     padding: var(--padding);
@@ -130,6 +131,7 @@ const Products: FC<Props> = () => {
         <Suspense fallback={<Loader />}>
             <DelayedWrapper>
                 <div className="main-container">
+                    {(category === 'mascotas' || category === 'embutidos-premium') && <CategoryBanner category={category} />}
                     <Wrapper>
                         <Col1>
                             <FilterSideBar categories={!loading && data ? data.categories : []} category={category} subcategory={subcategory} lastlevel={lastlevel} count={total} />
