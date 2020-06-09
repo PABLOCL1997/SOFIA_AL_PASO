@@ -132,6 +132,12 @@ const Add = styled.button`
     font-size: 10px;
     line-height: 10px;
     text-transform: uppercase;
+    transition: all .2s linear;
+    &:hover {
+        background: none;
+        color: var(--red);
+        box-shadow: 1px 0px var(--yellow) inset;
+    }
 `
 
 const EstimatedPrice = styled.div`

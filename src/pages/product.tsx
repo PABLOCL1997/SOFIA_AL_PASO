@@ -276,7 +276,7 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
     const addAndGo = () => {
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             addItem();
-            history.push('/checkout');
+            //history.push('/checkout');
         } else {
             if (closeModal) closeModal();
             toggleLoginModal();

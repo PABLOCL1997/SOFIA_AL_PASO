@@ -147,11 +147,12 @@ const ProductModal = styled.div`
     background: rgba(255, 255, 255, .8);
     z-index: 3;
     > div {
-        margin: 30px 50px;
+        margin: 30px auto;
         box-shadow: 0 0 5px #ccc;
         background: white;
         height: calc(100vh - 60px);
         width: calc(100% - 100px);
+        max-width: 1000px;
         overflow: auto;
         border-radius: 20px;
     }

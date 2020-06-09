@@ -59,10 +59,12 @@ const ProductModal = styled.div`
     z-index: 3;
     padding: 30px 50px;
     > div {
+        margin: 0 auto;
         box-shadow: 0 0 5px #ccc;
         background: white;
         height: calc(100vh - 60px);
         width: 100%;
+        max-width: 1000px;
         overflow: auto;
     }
 `
