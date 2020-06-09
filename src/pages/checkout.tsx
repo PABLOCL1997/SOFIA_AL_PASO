@@ -9,6 +9,7 @@ import { CREATE_ORDER, EMPTY_CART, PAY } from '../graphql/cart/mutations';
 import { GET_CART_ITEMS, TODOTIX } from '../graphql/cart/queries';
 import { ProductType } from '../graphql/products/type';
 import { useHistory, useLocation } from 'react-router-dom';
+import { DETAILS, GET_USER } from '../graphql/user/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */'../components/Checkout/Billing'));
@@ -114,11 +115,19 @@ const Checkout: FC<Props> = () => {
     const { t } = useTranslation();
     const history = useHistory();
     const location = useLocation();
+    const [userData, setUserData] = useState({});
     const [order, setOrder] = useState<OrderData>();
     const [orderData, setOrderData] = useState<any>({});
     const [result, setResult] = useState<Array<{ entity_id: string, increment_id: string }>>([]);
 
+    const { data: localUserData } = useQuery(GET_USER, {});
     const { data } = useQuery(GET_CART_ITEMS);
+    const [getDetails] = useLazyQuery(DETAILS, {
+        fetchPolicy: 'network-only',
+        onCompleted: (d) => {
+            setUserData(d.details);
+        }
+    });
     const [getTodotixLink, { data: todotixData }] = useLazyQuery(TODOTIX);
     const [toggleCartModal] = useMutation(SET_USER, { variables: { user: { openCartModal: true } } });
     const [createOrder] = useMutation(CREATE_ORDER, {
@@ -152,6 +161,8 @@ const Checkout: FC<Props> = () => {
                 }
             })();
         }
+
+        getDetails();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -214,12 +225,18 @@ const Checkout: FC<Props> = () => {
             customer_firstname: orderData.billing.firstname,
             customer_lastname: orderData.billing.lastname,
             facturacion: JSON.stringify({
+                addressId: userData && (userData as any).addressId ? (userData as any).addressId : 0,
                 firstname: orderData.billing.firstname,
                 lastname: orderData.billing.lastname,
                 fax: orderData.billing.nit,
                 email: orderData.billing.email,
                 telephone: orderData.billing.phone,
-                country_id: 'BO'
+                country_id: 'BO',
+                city: localUserData && localUserData.userInfo && localUserData.userInfo.length ? localUserData.userInfo[0].cityName : '-',
+                latitude: '-',
+                longitude: '-',
+                street: '-',
+                reference: '-',
             }),
             envio: JSON.stringify({
                 entity_id: orderData.shipping.id,
@@ -228,7 +245,7 @@ const Checkout: FC<Props> = () => {
                 fax: orderData.shipping.nit,
                 email: orderData.billing.email,
                 telephone: orderData.shipping.phone,
-                street: orderData.shipping.street,
+                street: `${orderData.shipping.street} ${orderData.shipping.number} ${orderData.shipping.home_type} ${orderData.shipping.apt_number} ${orderData.shipping.building_name}`,
                 city: orderData.shipping.city,
                 region: orderData.shipping.reference,
                 country_id: 'BO',
