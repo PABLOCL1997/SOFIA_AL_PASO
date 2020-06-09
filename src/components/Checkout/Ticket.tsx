@@ -5,6 +5,7 @@ import { CHECK_COUPON } from '../../graphql/cart/mutations';
 import { GET_CART_ITEMS, GET_TOTAL } from '../../graphql/cart/queries';
 import { useQuery, useMutation } from 'react-apollo';
 import { ProductType } from '../../graphql/products/type';
+import { SET_USER } from '../../graphql/user/mutations';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
@@ -105,10 +106,11 @@ const Coupon = styled.div`
 const InputBox = styled.div`
     position: relative;
     input {
+        font-family: MullerRegular;
         background: var(--whiter);
         border-radius: 44px;
         border: 0;
-        padding: 10px 20px;
+        padding: 12px 20px;
         letter-spacing: 0.01em;
         color: var(--font);
         font-size: 14px;
@@ -200,6 +202,7 @@ const Ticket: FC<Props> = ({ order, updateOrder }) => {
         variables: { name: coupon }
     });
     const totalAmount = GET_TOTAL(data.cartItems);
+    const [showError] = useMutation(SET_USER, { variables: { user: { showError: t('checkout.ticket.coupon.error') } } });
 
     const addCoupon = async () => {
         try {
@@ -212,7 +215,7 @@ const Ticket: FC<Props> = ({ order, updateOrder }) => {
             }
             setCoupon(response.data.coupon.code);
         } catch (e) {
-            console.log(e);
+            showError();
         }
     }
 

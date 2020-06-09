@@ -106,7 +106,7 @@ const MenuWrapper = styled.div<any>`
 const SideMenu = styled.div<any>`
     position: fixed;
     top: 0;
-    z-index: 3;
+    z-index: 4;
     right: 0;
     height: 100vh;
     background: white;

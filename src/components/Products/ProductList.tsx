@@ -51,7 +51,12 @@ const InputGroup = styled.div`
         flex: 1;
     }
     button {
-        padding: 12px 50px;
+        padding: 14px 50px;
+        span {
+            font-size: 12px;
+            line-height: 12px;
+            text-transform: uppercase;
+        }
     }
 `
 
@@ -216,10 +221,12 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
 
     useEffect(() => {
         setOldUrl(getOldUrl());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, search]);
 
     useEffect(() => {
         setOldUrl(getOldUrl());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return <Suspense fallback={<Loader />}>

@@ -34,7 +34,7 @@ const Grid = styled.div`
 
 const Row = styled.div`
     display: grid;
-    grid-template-columns: 55px 100px 1fr 120px 100px;
+    grid-template-columns: 55px 100px 1fr 120px 140px;
 `
 
 const Head = styled.div`
@@ -48,7 +48,7 @@ const Head = styled.div`
 
 const Body = styled.div`
     display: grid;
-    grid-template-columns: 55px 100px 1fr 120px 100px;
+    grid-template-columns: 55px 100px 1fr 120px 140px;
     padding: 20px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.11);
     span {

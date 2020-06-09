@@ -243,7 +243,8 @@
                 "ask": "¿Tienes un cupón?",
                 "placeholder": "Cupón de descuento",
                 "add": "canjear",
-                "delete": "ELIMINAR"
+                "delete": "ELIMINAR",
+                "error": "El cupón ingresado no es válido"
             },
             "discount": "Descuento",
             "total": "Total",

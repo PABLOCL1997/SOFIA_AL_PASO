@@ -30,6 +30,7 @@ const DelayedWrapper: FC<Props> = ({ children, noHeader = false, time = 1000 }) 
 
     useEffect(() => {
         setTimeout(() => setShow(true), time)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return <Wrapper>

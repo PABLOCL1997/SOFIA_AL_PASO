@@ -16,14 +16,23 @@ const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Ima
 const Container = styled.div`
     position: relative;
     button {
+        cursor: default;
         width: 100%;
         text-align: left;
         padding: 10px 30px;
         svg {
             display: none;
         }
+        span {
+            font-family: MullerBold;
+            font-size: 14px;
+            line-height: 14px;
+        }
     }
     @media screen and (max-width: ${BREAKPOINT}) {
+        button {
+            cursor: pointer;
+        }
         > div:first-child {
             position: relative;
             z-index: 3;
@@ -39,8 +48,11 @@ const Container = styled.div`
 const CategoryList = styled.ul<{ open: boolean }>`
     background: var(--white);
     box-shadow: 0px 6px 74px rgba(0,0,0,0.06);
-    border-radius: 20px;
-    padding: 25px 0;
+    border-radius: 0 0 20px 20px;
+    padding: 35px 0 25px;
+    margin-top: -10px;
+    z-index: -1;
+    position: relative;
 
     @media screen and (max-width: ${BREAKPOINT}) {
         position: absolute;
@@ -48,6 +60,8 @@ const CategoryList = styled.ul<{ open: boolean }>`
         width: 100%;
         top: 0;
         padding-top: 60px;
+        border-radius: 20px;
+        margin-top: 0;
         display: ${props => props.open ? 'block' : 'none'}
     }
 }
