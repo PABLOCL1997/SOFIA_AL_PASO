@@ -39,12 +39,26 @@ const Col2 = styled.div`
     flex: 1;
 `
 
+const LoaderWrapper = styled.div`
+    background: white;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    border-radius: 20px;
+    img {
+        width: 50px;
+    }
+`
+
 type Props = {}
 const Products: FC<Props> = () => {
     const limit = 9;
     const { category, subcategory, lastlevel } = useParams();
     const query = new URLSearchParams(useLocation().search);
 
+    const [loader, setLoader] = useState(true);
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [offset, setOffset] = useState(0);
@@ -55,7 +69,7 @@ const Products: FC<Props> = () => {
 
     const { loading, data } = useQuery(GET_CATEGORIES, {});
     const { data: userData } = useQuery(GET_USER, {});
-    const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
+    const [loadProducts, { loading: loadingProds }] = useLazyQuery(GET_PRODUCTS, {
         variables: { category_id, limit, order, offset: offset, search: search, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '' },
         fetchPolicy: 'cache-and-network',
         onCompleted: (d) => {
@@ -93,6 +107,7 @@ const Products: FC<Props> = () => {
     }, [query]);
 
     useEffect(() => {
+        setLoader(true);
         if (data && data.categories) {
             let entity_id = null;
 
@@ -114,16 +129,17 @@ const Products: FC<Props> = () => {
                 }
             }
 
-            console.log(entity_id);
-
             if (entity_id && entity_id !== category_id) {
-                setTitle();
                 setCategoryId(entity_id);
-                setSearch('');
-                setOffset(0);
-                setPage(1);
+            } else if (!entity_id) {
+                setCategoryId(0);
             }
+            setTitle();
+            setSearch('');
+            setOffset(0);
+            setPage(1);
         }
+        setTimeout(() => setLoader(false), 500);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category, subcategory, lastlevel]);
 
@@ -137,7 +153,8 @@ const Products: FC<Props> = () => {
                             <FilterSideBar categories={!loading && data ? data.categories : []} category={category} subcategory={subcategory} lastlevel={lastlevel} count={total} />
                         </Col1>
                         <Col2>
-                            <ProductList orderQuery={orderQuery} products={products} count={total} />
+                            {(loader || loadingProds) && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
+                            {!loader && !loadingProds && <ProductList orderQuery={orderQuery} products={products} count={total} />}
                         </Col2>
                     </Wrapper>
                 </div>

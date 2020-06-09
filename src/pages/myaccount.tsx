@@ -78,7 +78,7 @@ const MyAccount: FC<Props> = () => {
                 <div className="main-container">
                     <Wrapper>
                         <SidebarContainer>
-                            <Sidebar></Sidebar>
+                            <Sidebar />
                         </SidebarContainer>
                         <Container>
                             {showDetails && <Details />}

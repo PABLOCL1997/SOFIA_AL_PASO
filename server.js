@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const port = process.env.PORT || 26235;
-const { HOMEPAGE_TITLE, PRODUCTS_TITLE, PRODUCT_TITLE, CHECKOUT_TITLE, MY_ACCOUNT_TITLE, FAQ_TITLE } = require('./src/meta_server');
+const { HOMEPAGE_TITLE, PRODUCTS_TITLE, PRODUCT_TITLE, CHECKOUT_TITLE, MY_ACCOUNT_TITLE, MY_ORDERS_TITLE, FAQ_TITLE } = require('./src/meta_server');
 
 const fromLink = (str) => {
     return str ? str
