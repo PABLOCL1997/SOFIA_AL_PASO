@@ -66,6 +66,7 @@ const ProductModal = styled.div`
         width: 100%;
         max-width: 1000px;
         overflow: auto;
+        border-radius: 20px;
     }
 `
 
