@@ -5,9 +5,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ApolloProvider } from "react-apollo";
 import './i18n';
-import client from './apollo';
+import createClient from './apollo';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-ReactDOM.render(<ApolloProvider client={client}><App /></ApolloProvider>, document.getElementById('root'));
-serviceWorker.unregister();
+createClient().then(client => {
+    ReactDOM.render(<ApolloProvider client={client}><App /></ApolloProvider>, document.getElementById('root'));
+    serviceWorker.unregister();
+});
