@@ -48,11 +48,8 @@ const Container = styled.div`
 const CategoryList = styled.ul<{ open: boolean }>`
     background: var(--white);
     box-shadow: 0px 6px 74px rgba(0,0,0,0.06);
-    border-radius: 0 0 20px 20px;
-    padding: 35px 0 25px;
-    margin-top: -10px;
-    z-index: -1;
-    position: relative;
+    border-radius: 20px;
+    padding: 25px 0;
 
     @media screen and (max-width: ${BREAKPOINT}) {
         position: absolute;
@@ -60,8 +57,6 @@ const CategoryList = styled.ul<{ open: boolean }>`
         width: 100%;
         top: 0;
         padding-top: 60px;
-        border-radius: 20px;
-        margin-top: 0;
         display: ${props => props.open ? 'block' : 'none'}
     }
 }
