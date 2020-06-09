@@ -55,7 +55,7 @@ const Sidebar: FC<Props> = () => {
 
     return <Suspense fallback={<Loader />}>
         <>
-            <Name>{data ? `${data.details.firstname} ${data.details.lastname}` : ``}</Name>
+            <Name>{data && data.details && data.details.firstname ? `${data.details.firstname} ${data.details.lastname}` : t('account.sidebar.welcome')}</Name>
             <Menu>
                 <Item active={pathname.indexOf('ordenes') < 0}>
                     <ProfileIcon />

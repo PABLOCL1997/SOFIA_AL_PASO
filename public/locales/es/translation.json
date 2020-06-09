@@ -265,6 +265,7 @@
     },
     "account": {
         "sidebar": {
+            "welcome": "Bienvenido",
             "personal_info": "Datos personales",
             "history": "Historial de ordenes"
         },

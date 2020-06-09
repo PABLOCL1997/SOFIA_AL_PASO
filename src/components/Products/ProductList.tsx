@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from "react-router-dom";
@@ -168,15 +168,17 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
     const { pathname } = useLocation();
     const query = new URLSearchParams(useLocation().search);
     const history = useHistory();
+    const [oldUrl, setOldUrl] = useState("");
     const [search, setSearch] = useState(query.get('q'));
     const [order, setOrder] = useState(OrderColums[0]);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(query.get('p') ? Number(query.get('p')) : 1);
+    const [openOrder, setOpenOrder] = useState(false);
     const [open, setOpen] = useState(false);
     const [product, setProduct] = useState<ProductType | any>({});
 
     const selectItem = (item: string) => {
         setOrder(item);
-        setOpen(false);
+        setOpenOrder(false);
         orderQuery(item);
     }
 
@@ -194,7 +196,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
         let search = '?';
         if (query.get('q')) search += `q=${query.get('q')}&`;
         search += `p=${page}`;
-        history.push({ pathname, search })
+        history.push(`${pathname}${search}`)
         setPage(page);
     }
 
@@ -204,21 +206,36 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
         setOpen(true);
     }
 
+    const getOldUrl = () => {
+        let _search = '?';
+        if (search) _search += `q=${search}&`;
+        _search += `p=${page}`;
+        return `${pathname}${_search}`;
+    }
+
+    useEffect(() => {
+        setOldUrl(getOldUrl());
+    }, [page, search]);
+
+    useEffect(() => {
+        setOldUrl(getOldUrl());
+    }, []);
+
     return <Suspense fallback={<Loader />}>
         <Container>
             <Toolbox>
                 <InputGroup>
                     <Search />
-                    <input type="search" value={fromLink(search)} onChange={evt => setSearch(evt.target.value)} placeholder={t('products.product_list.search_product')} />
+                    <input type="search" value={fromLink(search)} onKeyUp={evt => { if (evt.keyCode === 13) doSearch() }} onChange={evt => setSearch(evt.target.value)} placeholder={t('products.product_list.search_product')} />
                     <Cta filled={true} action={doSearch} text={t('products.product_list.search')} />
                 </InputGroup>
                 <SelectBox>
-                    <Select onClick={() => setOpen(!open)}>
+                    <Select onClick={() => setOpenOrder(!openOrder)}>
                         <span>{t('products.product_list.order_by')}</span>
                         <b>{t('products.product_list.' + order)}</b>
                         <Chevron />
                     </Select>
-                    {open && <List>
+                    {openOrder && <List>
                         {OrderColums.map((item: string, index: number) => <Item key={index} onClick={() => selectItem(item)}>{t('products.product_list.' + item)}</Item>)}
                     </List>}
                 </SelectBox>
@@ -237,7 +254,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
             </Pager>}
             {open && <ProductModal>
                 <div>
-                    <Product closeModal={() => setOpen(false)} oldUrl={pathname} inlineProdname={toLink(product.name)} />
+                    <Product closeModal={() => setOpen(false)} oldUrl={oldUrl} inlineProdname={toLink(product.name)} />
                 </div>
             </ProductModal>}
         </Container>

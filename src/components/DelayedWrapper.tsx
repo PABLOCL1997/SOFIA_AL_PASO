@@ -21,14 +21,15 @@ const Loader = styled.div<{ noHeader: boolean }>`
 `
 
 type Props = {
-    noHeader?: boolean
+    noHeader?: boolean,
+    time?: number
 }
 
-const DelayedWrapper: FC<Props> = ({ children, noHeader = false }) => {
+const DelayedWrapper: FC<Props> = ({ children, noHeader = false, time = 1000 }) => {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
-        setTimeout(() => setShow(true), 1000)
+        setTimeout(() => setShow(true), time)
     }, []);
 
     return <Wrapper>

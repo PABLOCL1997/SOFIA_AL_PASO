@@ -327,7 +327,7 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
                             <Toolbox>
                                 <Qty>
                                     <select onChange={event => setQty(Number(event.target.value))}>
-                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
+                                        {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
                                     </select>
                                     <Chevron />
                                 </Qty>
