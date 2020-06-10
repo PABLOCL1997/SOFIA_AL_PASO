@@ -5,6 +5,7 @@ import { BREAKPOINT } from '../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Error = React.lazy(() => import(/* webpackChunkName: "Error" */'../components/Error'));
+const Success = React.lazy(() => import(/* webpackChunkName: "Success" */'../components/Success'));
 const Header = React.lazy(() => import(/* webpackChunkName: "Header" */'../components/Header'));
 const Footer = React.lazy(() => import(/* webpackChunkName: "Footer" */'../components/Footer'));
 
@@ -50,6 +51,7 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
                 {children}
                 <Footer page={page}/>
                 <Error />
+                <Success />
             </Wrapper>
         </Suspense>
     );
