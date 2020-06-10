@@ -35,6 +35,7 @@ export default async () => {
             openCartModal: Boolean!,
             openAddressModal: Boolean!,
             showError: String!,
+            showSuccess: String!,
             isLoggedIn: Boolean!,
             id: Int!,
             defaultAddressId: Int,

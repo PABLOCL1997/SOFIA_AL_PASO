@@ -227,6 +227,7 @@ const AuthModal: FC<Props> = () => {
     const [closeLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: false } } });
     const [openLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
     const [showError] = useMutation(SET_USER, { variables: { user: { showError: t('auth_modal.error') } } });
+    const [showSuccess] = useMutation(SET_USER, { variables: { user: { showSuccess: t('auth_modal.success') } } });
 
     useEffect(() => {
         closeLoginModal();
@@ -276,6 +277,7 @@ const AuthModal: FC<Props> = () => {
                 id: response.data.signup.id
             });
             StoreToken.set(response.data.signup.token);
+            showSuccess();
         } catch (e) {
             showError();
         }
@@ -300,6 +302,7 @@ const AuthModal: FC<Props> = () => {
                 id: response.data.signup.id
             });
             StoreToken.set(response.data.signup.token);
+            showSuccess();
         } catch (e) {
             showError();
         }
@@ -311,6 +314,7 @@ const AuthModal: FC<Props> = () => {
             setLoader(true);
             await doRecover();
             setStep(Steps.ForgotPasswordMsg)
+            showSuccess();
         } catch (e) {
             showError();
         }
@@ -323,6 +327,7 @@ const AuthModal: FC<Props> = () => {
             await doReset();
             setStep(Steps.Login);
             history.push('/');
+            showSuccess();
         } catch (e) {
             showError();
         }

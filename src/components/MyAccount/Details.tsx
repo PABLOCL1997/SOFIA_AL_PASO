@@ -262,6 +262,16 @@ const CtaWrapper = styled.div`
         padding: 10px 50px;
         margin-top: 30px;
     }
+    img {
+        margin: 30px auto 0;
+        display: block;
+    }
+`
+
+const LoaderWrapper = styled.div`
+    img {
+        width: 20px;
+    }
 `
 
 type Props = {}
@@ -286,11 +296,14 @@ type AddressArgs = {
 const Details: FC<Props> = () => {
     const { t } = useTranslation();
 
+    const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [inputs, setInputs] = useState<UserType>({ addresses: [] });
     const [addressInputs, setAddressInputs] = useState<AddressType>({});
     const [addressArgs, setAddressArgs] = useState<AddressArgs>({ on: false });
     const [addressId, setAddressId] = useState(0);
+    const [showError] = useMutation(SET_USER, { variables: { user: { showError: t('account.error') } } });
+    const [showSuccess] = useMutation(SET_USER, { variables: { user: { showSuccess: t('account.success') } } });
 
     const { data: userData } = useQuery(GET_USER, {});
     const [getDetails] = useLazyQuery(DETAILS, {
@@ -324,6 +337,9 @@ const Details: FC<Props> = () => {
     };
 
     const addAddress = () => {
+        if (!addressInputs.street) return showError({ variables: { user: { showError: t('account.empty_street') } } });
+        if (!addressInputs.reference) return showError({ variables: { user: { showError: t('account.empty_reference') } } });
+        if (!addressInputs.city) return showError({ variables: { user: { showError: t('account.empty_city') } } });
         setAddressArgs({
             addressId: 0,
             firstname: inputs.firstname,
@@ -363,17 +379,29 @@ const Details: FC<Props> = () => {
     }
 
     const callAddressMutation = async () => {
-        await handleAddress();
-        setAddressArgs({ on: false });
-        setAddressInputs({});
-        closeAddressModal();
-        getDetails();
+        try {
+            setLoading(true);
+            await handleAddress();
+            setAddressArgs({ on: false });
+            setAddressInputs({});
+            closeAddressModal();
+            getDetails();
+            showSuccess();
+        } catch (e) {
+            showError();
+        }
+        setLoading(false);
     }
 
     const callDeleteMutation = async () => {
-        await deleteAddress();
-        setAddressId(0);
-        getDetails();
+        try {
+            await deleteAddress();
+            setAddressId(0);
+            getDetails();
+            showSuccess();
+        } catch (e) {
+            showError();
+        }
     }
 
     useEffect(() => {
@@ -400,11 +428,12 @@ const Details: FC<Props> = () => {
         <>
             <Title>
                 <h1>{t('account.title')}</h1>
-                {!editMode && <Button onClick={() => setEditMode(true)}>
+                {loading && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
+                {!loading && !editMode && <Button onClick={() => setEditMode(true)}>
                     <Pencil />
                     <span>{t('account.edit')}</span>
                 </Button>}
-                {editMode && <Button onClick={edit}>
+                {!loading && editMode && <Button onClick={edit}>
                     <span>{t('account.save')}</span>
                 </Button>}
             </Title>
@@ -450,7 +479,8 @@ const Details: FC<Props> = () => {
                         </Form>
                         {userData.userInfo.length && userData.userInfo[0].openAddressModal && <Map />}
                         <CtaWrapper>
-                            <Cta filled={true} text={t('account.modal.add')} action={addAddress} />
+                            {!loading && <Cta filled={true} text={t('account.modal.add')} action={addAddress} />}
+                            {loading && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                         </CtaWrapper>
                     </ModalContainer>
                 </Modal>

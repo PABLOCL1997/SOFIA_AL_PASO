@@ -189,7 +189,7 @@ const Detail = styled.div`
     margin: 50px 0;
     background: url(/images/order-detail.png) no-repeat bottom center;
     background-size: contain;
-    padding: 0 92px 125px;
+    padding: 0 86px 125px;
     margin-bottom: -80px;
     z-index: 2;
 
@@ -294,6 +294,7 @@ const Envio = styled.div`
         &:last-child {
             width: 120px;
             text-align: right;
+            color: var(--green);
         }
     }
     `

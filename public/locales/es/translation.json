@@ -106,6 +106,7 @@
         }
     },
     "auth_modal": {
+        "success": "Se realizo la acción con éxito",
         "error": "No se pudo realizar la acción, intente nuevamente.",
         "login": {
             "title": "Iniciar sesión",
@@ -265,6 +266,11 @@
         "go_home": "Volver al inicio"
     },
     "account": {
+        "success": "Se realizo la acción con éxito",
+        "error": "No se pudo realizar la acción, intente nuevamente.",
+        "empty_city": "Complete el campo ciudad",
+        "empty_reference": "Complete el campo referencia",
+        "empty_street": "Complete el campo dirección",
         "sidebar": {
             "welcome": "Bienvenido",
             "personal_info": "Datos personales",
