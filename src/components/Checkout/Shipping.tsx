@@ -232,7 +232,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
                             <Chevron />
                         </SelectWrapper>}
                         {key === 'street' && <Switch changeOption={(value: string) => onChange('addressType', value)} option={inputs.addressType} values={addressTypes} />}
-                        {key !== 'street' && !options[key] && <input onChange={evt => onChange(key, evt.target.value)} type="text" placeholder={t('checkout.delivery.' + key)} />}
+                        {key !== 'street' && !options[key] && <input onChange={evt => onChange(key, evt.target.value)} type={key === 'phone' || key === 'nit' ? 'number' : 'text'} placeholder={t('checkout.delivery.' + key)} />}
                     </InputGroup>
                 })}
             </Form>

@@ -51,7 +51,12 @@ const InputGroup = styled.div`
         flex: 1;
     }
     button {
-        padding: 12px 50px;
+        padding: 14px 50px;
+        span {
+            font-size: 12px;
+            line-height: 12px;
+            text-transform: uppercase;
+        }
     }
 `
 
@@ -146,14 +151,23 @@ const ProductModal = styled.div`
     height: 100vh;
     background: rgba(255, 255, 255, .8);
     z-index: 3;
-    > div {
-        margin: 30px 50px;
+    & > div {
+        margin: 30px auto;
         box-shadow: 0 0 5px #ccc;
         background: white;
         height: calc(100vh - 60px);
         width: calc(100% - 100px);
+        max-width: 1000px;
         overflow: auto;
         border-radius: 20px;
+        .main-container {
+            & > div {
+                padding: 30px 0;
+            }
+            .wrapper-related {
+                padding: 30px 0;
+            }
+        }
     }
 `
 
@@ -215,10 +229,12 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
 
     useEffect(() => {
         setOldUrl(getOldUrl());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, search]);
 
     useEffect(() => {
         setOldUrl(getOldUrl());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return <Suspense fallback={<Loader />}>
@@ -253,7 +269,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
                 </PageArrow>
             </Pager>}
             {open && <ProductModal>
-                <div>
+                <div className="product-modal">
                     <Product closeModal={() => setOpen(false)} oldUrl={oldUrl} inlineProdname={toLink(product.name)} />
                 </div>
             </ProductModal>}

@@ -14,7 +14,7 @@ const Container = styled.div`
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.06);
     border-radius: 20px;
     margin: 40px 10px;
-    padding: 30px;
+    padding: 14px 10px 22px;
     @media screen and (max-width: ${BREAKPOINT}) {
         margin: 20px 10px;
     }
@@ -37,11 +37,13 @@ const Title = styled.h2`
     text-align: center;
     color: var(--black);
     height: 35px;
+    padding: 0 10px;
 `
 
 const PriceBox = styled.div`
     text-align: center;
     margin: 12px 0 24px;
+    padding: 0 10px;
 `
 
 const Price = styled.span`
@@ -58,11 +60,17 @@ const Action = styled.div`
     color: var(--black);
     cursor: pointer;
     border: 1px solid var(--yellow);
-    padding: 10px;
     text-transform: uppercase;
     border-radius: 30px;
     text-align: center;
     padding: 15px 30px;
+    transition: all 0.3s;
+    width: calc(100% - 20px);
+    margin: 0 auto;
+    &:hover, &:active {
+        background: var(--yellow);
+        color: var(--white);
+    }
 `
 
 type Props = {

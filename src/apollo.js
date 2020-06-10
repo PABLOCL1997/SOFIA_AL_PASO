@@ -9,28 +9,24 @@ import './i18n';
 import { GET_CART_ITEMS } from './graphql/cart/queries';
 import { GET_USER } from './graphql/user/queries';
 
-const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' })
+export default async () => {
+    const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' })
 
-const authLink = setContext((_, { headers }) => {
-    return {
-        headers: {
-            ...headers,
-            Authorization: `${token.get()}`
+    const authLink = setContext((_, { headers }) => {
+        return {
+            headers: {
+                ...headers,
+                Authorization: `${token.get()}`
+            }
         }
-    }
-})
+    })
 
-const cache = new InMemoryCache();
+    const cache = new InMemoryCache();
 
-persistCache({
-    cache,
-    storage: window.localStorage,
-});
-
-const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: cache,
-    typeDefs: gql`
+    const client = new ApolloClient({
+        link: authLink.concat(httpLink),
+        cache: cache,
+        typeDefs: gql`
         type User {
             cityKey: String!,
             cityName: String!,
@@ -67,67 +63,70 @@ const client = new ApolloClient({
             addInfoToUser(user: User!): [User!]!
         }
   `,
-    resolvers: {
-        Mutation: {
-            addInfoToUser: (_, { user }, { cache }) => {
-                const queryResult = cache.readQuery({ query: GET_USER });
-                if (queryResult) {
-                    let { userInfo } = queryResult;
-                    const data = [{ ...userInfo[0], ...user }];
-                    userInfo = data;
-                    cache.writeQuery({ query: GET_USER, data: { userInfo } });
-                    return data;
-                }
-                return [];
-            },
-            addToCart: (_, { product }, { cache }) => {
-                const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
-                if (queryResult) {
-                    let { cartItems } = queryResult;
-                    const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
-                    if (item >= 0) {
-                        // product.qty = cartItems[item].qty + product.qty;
-                        cartItems.splice(item, 1);
+        resolvers: {
+            Mutation: {
+                addInfoToUser: (_, { user }, { cache }) => {
+                    const queryResult = cache.readQuery({ query: GET_USER });
+                    if (queryResult) {
+                        let { userInfo } = queryResult;
+                        const data = [{ ...userInfo[0], ...user }];
+                        userInfo = data;
+                        cache.writeQuery({ query: GET_USER, data: { userInfo } });
+                        return data;
                     }
-                    cartItems = [...cartItems, product];
-                    cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
-                    return cartItems;
-                }
-                return [];
-            },
-            deleteFromCart: (_, { product }, { cache }) => {
-                const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
-                if (queryResult) {
-                    let { cartItems } = queryResult;
-                    const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
-                    if (item >= 0) {
-                        cartItems.splice(item, 1);
+                    return [];
+                },
+                addToCart: (_, { product }, { cache }) => {
+                    const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
+                    if (queryResult) {
+                        let { cartItems } = queryResult;
+                        const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
+                        if (item >= 0) {
+                            if (cartItems[item].qty === product.qty) return cartItems;
+                            cartItems.splice(item, 1);
+                        }
+                        cartItems = [...cartItems, product];
+                        cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
+                        return cartItems;
                     }
-                    cartItems = [...cartItems];
-                    cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
-                    return cartItems;
-                }
-                return [];
+                    return [];
+                },
+                deleteFromCart: (_, { product }, { cache }) => {
+                    const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
+                    if (queryResult) {
+                        let { cartItems } = queryResult;
+                        const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
+                        if (item >= 0) {
+                            cartItems.splice(item, 1);
+                        }
+                        cartItems = [...cartItems];
+                        cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
+                        return cartItems;
+                    }
+                    return [];
+                },
+                emptyCart: (_, data, { cache }) => {
+                    const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
+                    if (queryResult) {
+                        let { cartItems } = queryResult;
+                        cartItems = [];
+                        cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
+                        return cartItems;
+                    }
+                    return [];
+                },
             },
-            emptyCart: (_, data, { cache }) => {
-                const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
-                if (queryResult) {
-                    let { cartItems } = queryResult;
-                    cartItems = [];
-                    cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
-                    return cartItems;
-                }
-                return [];
-            },
-        },
-    }
-});
+        }
+    });
 
-cache.writeData({
-    data: {
-        cartItems: [],
-        userInfo: []
-    },
-});
+    const initData = { cartItems: [], userInfo: [] };
 
-export default client;
+    cache.writeData({ data: initData });
+
+    await persistCache({
+        cache,
+        storage: window.localStorage,
+    });
+
+    return client;
+};

@@ -16,14 +16,23 @@ const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Ima
 const Container = styled.div`
     position: relative;
     button {
+        cursor: default;
         width: 100%;
         text-align: left;
         padding: 10px 30px;
         svg {
             display: none;
         }
+        span {
+            font-family: MullerBold;
+            font-size: 14px;
+            line-height: 14px;
+        }
     }
     @media screen and (max-width: ${BREAKPOINT}) {
+        button {
+            cursor: pointer;
+        }
         > div:first-child {
             position: relative;
             z-index: 3;

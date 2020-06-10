@@ -58,12 +58,23 @@ const ProductModal = styled.div`
     background: rgba(255, 255, 255, .8);
     z-index: 3;
     padding: 30px 50px;
-    > div {
+    & > div {
+        margin: 0 auto;
         box-shadow: 0 0 5px #ccc;
         background: white;
         height: calc(100vh - 60px);
         width: 100%;
+        max-width: 1000px;
         overflow: auto;
+        border-radius: 20px;
+        .main-container {
+            & > div {
+                padding: 30px 0;
+            }
+            .wrapper-related {
+                padding: 30px 0;
+            }
+        }
     }
 `
 
@@ -130,7 +141,7 @@ const ProductSlider: FC<Props> = ({ products }) => {
                     </Slider>
                 </SliderContainer>
                 {open && <ProductModal>
-                    <div>
+                    <div className="product-modal">
                         <Product closeModal={() => setOpen(false)} oldUrl={pathname} inlineProdname={toLink(product.name)} />
                     </div>
                 </ProductModal>}

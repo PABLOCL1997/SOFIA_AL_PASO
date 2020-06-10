@@ -134,6 +134,10 @@ const UnderBudget = styled.div`
     font-family: MullerBold;
     text-transform: uppercase;
     font-size: 12px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        width: calc(100% + 40px);
+        margin-top: 10px;
+    }
 `
 
 const Items = styled.div`

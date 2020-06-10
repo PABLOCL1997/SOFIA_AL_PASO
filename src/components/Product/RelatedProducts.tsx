@@ -100,7 +100,7 @@ const RelatedProducts: FC<Props> = ({ products }) => {
 
     return <Suspense fallback={<Loader />}>
         <Container>
-            <Wrapper>
+            <Wrapper className="wrapper-related">
                 <Title>{t('product.related.title')}</Title>
                 <Slider {...settings}>
                     {products.map((product: ProductType) => <div key={product.entity_id}>
