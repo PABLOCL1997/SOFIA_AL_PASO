@@ -9,7 +9,7 @@ import { PRODUCT_TITLE } from '../meta';
 import { fromLink, toLink } from '../utils/string';
 import { ProductType } from '../graphql/products/type';
 import { CategoryType } from '../graphql/categories/type';
-import { BREAKPOINT } from '../utils/constants';
+import { XXL, BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
 import DelayedWrapper from '../components/DelayedWrapper';
 import { SET_USER } from '../graphql/user/mutations';
@@ -262,9 +262,47 @@ const Disclaimer = styled.div`
     }
 `
 
+const ContentFixed = styled.div`
+    position: fixed;
+    z-index: 9;
+    @media screen and (max-width: ${XXL}) {
+        position: unset;
+    }
+    & > div {
+        width: 1330px;
+        margin: 0 auto;
+        position: relative;
+        display: block;
+        @media screen and (max-width: ${XXL}) {
+            width: 100%;
+        }
+    }
+`;
+
 const AddedModal = styled.div`
     position: absolute;
     background: var(--white);
+    transition: all .2s linear;
+    width: 400px;
+    top: 0;
+    left: auto;
+    right: 20px;
+    background: white;
+    z-index: 99;
+    display: block;
+    padding: 40px 20px 20px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 0 20px 10px rgba(0,0,0,0.07);
+    @media screen and (max-width: ${XXL}) {
+        right: 100px;
+    }
+    button {
+        height: 40px;
+    }
+    p {
+        margin-bottom: 1.5em;
+    }
     &::before {
         content: "";
         width: 0; 
@@ -273,31 +311,30 @@ const AddedModal = styled.div`
         border-right: 8px solid transparent;
         border-bottom: 8px solid white;
         position: absolute;
+        top: -6px;
+        left: auto;
+        right: 65px;
+        @media screen and (max-width: ${XXL}) {
+            right: 58px;
+        }
     }
     .btn-close {
-
+        border: 0;
+        background: transparent;
+        width: 50px;
+        height: 38px;
+        position: absolute;
+        top: 7px;
+        right: 5px;
     }
     @media screen and (max-width: ${BREAKPOINT}) {
+        padding: 50px 20px 20px;
         width: calc(100% - 20px);
         position: absolute;
-        top: 68px;
         left: 10px;
-        background: white;
-        z-index: 99;
-        display: block;
-        padding: 40px 20px 20px;
-        text-align: center;
-        border-radius: 20px;
-        box-shadow: 0 0 20px 10px rgba(0,0,0,0.07);
-        p {
-            margin-bottom: 1em;
-        }
-        button {
-            height: 40px;
-        }
         &::before {
-            top: -6px;
             left: 18px;
+            right: auto;
         }
     }
 `
@@ -342,7 +379,10 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
     const addAndGo = () => {
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             addItem();
-            setAddedModal(true)
+            setAddedModal(true);
+            setTimeout(() => {
+                setAddedModal(false)
+            }, 3000);
             //history.push('/checkout');
         } else {
             if (closeModal) closeModal();
@@ -375,13 +415,17 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
 
     return (
         <Suspense fallback={<Loader />}>
-            <AddedModal>
-                <button className="btn-close" onClick={CloseModal}><Close /></button>
-                <p>{t('product.modal.text')}</p>
-                <Cta filled={true} text={t('product.modal.buttontext')} action={GoToCheckout} />
-            </AddedModal>
             <DelayedWrapper noHeader={true}>
                 <div className="main-container">
+                    {addedModal && <ContentFixed>
+                        <div>
+                            <AddedModal>
+                                <button className="btn-close" onClick={CloseModal}><Close /></button>
+                                <p>{t('product.modal.text')}</p>
+                                <Cta filled={true} text={t('product.modal.buttontext')} action={GoToCheckout} />
+                            </AddedModal>
+                        </div>
+                    </ContentFixed>}
                     <Header>
                         <HeaderLink onClick={proceed}>
                             <span>{t('product.continue_shopping')}</span>
