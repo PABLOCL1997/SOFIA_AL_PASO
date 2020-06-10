@@ -328,6 +328,20 @@ const LoaderWrapper = styled.div`
     }
 `
 
+const NoResults = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--font);
+    font-family: MullerMedium;
+    font-size: 16px;
+    line-height: 1.5em;
+    letter-spacing: 0.1em;
+    max-width: 320px;
+    text-align: center;
+    margin: 40px auto 0;
+`
+
 
 type Props = {}
 
@@ -366,13 +380,14 @@ const Orders: FC<Props> = () => {
                     <Head>{t('account.orders.status')}</Head>
                 </Row>
                 {loading && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
-                {!loading && orders && orders.orders.map((order: UserOrder) => <Body key={order.id}>
+                {!loading && orders && !!orders.orders.length && orders.orders.map((order: UserOrder) => <Body key={order.id}>
                     <span><button onClick={() => setOrderId(order.id)}><Eye /></button></span>
                     <span>{toLocalDate(order.createdAt)}</span>
                     <span>{order.incrementId}</span>
                     <span>Bs. {order.total.toFixed(2).replace('.', ',')}</span>
                     <span className={order.status.toLowerCase().replace(/ /g, '-')}>{order.status}</span>
                 </Body>)}
+                {!loading && orders && !orders.orders.length && <NoResults>{t('account.orders.no_results')}</NoResults>}
             </Grid>}
             {orderId > 0 && order && <Order>
                 <HeaderLink onClick={() => setOrderId(0)}>

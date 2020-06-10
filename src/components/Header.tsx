@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, Link } from "react-router-dom";
 import styled from 'styled-components';
@@ -79,6 +79,9 @@ const Total = styled.div`
 const CartWrapper = styled.div<any>`
     cursor: pointer;
     position: relative;
+    transition: all .2s linear;
+    transform: scale(1);
+    animation: ${props => props.big ? 'pulse 1s infinite;' : 'none'};
     span {
         font-family: MullerBold;
         font-size: 8px;
@@ -214,6 +217,7 @@ type Props = {
 const Header: FC<Props> = ({ checkout, page }) => {
     const { t } = useTranslation();
     const history = useHistory();
+    const [bigCart, setBigCart] = useState(false);
     const [open, setOpen] = useState(false);
     const { data } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
@@ -269,6 +273,13 @@ const Header: FC<Props> = ({ checkout, page }) => {
         return "";
     }
 
+    useEffect(() => {
+        setBigCart(true);
+        setTimeout(() => {
+            setBigCart(false)
+        }, 3000);
+    }, [data])
+
     return <Suspense fallback={<Loader />}>
         <Wrapper>
             <Desktop>
@@ -285,7 +296,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
                             {(!userData.userInfo.length || !userData.userInfo[0].isLoggedIn) && <Cta text={t('header.login')} action={myAccount} />}
                             {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.account')} action={myAccount} />}
                             <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
-                            <CartWrapper onClick={showCart}>
+                            <CartWrapper big={bigCart} onClick={showCart}>
                                 <Cart />
                                 <span>{GET_QTY(data.cartItems)}</span>
                             </CartWrapper>

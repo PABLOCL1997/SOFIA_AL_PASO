@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { KeyValue } from '../utils/string';
 import { BREAKPOINT } from '../utils/constants';
-import { useMutation, useQuery } from 'react-apollo';
+import { useMutation, useQuery, useLazyQuery } from 'react-apollo';
 import { SET_USER } from '../graphql/user/mutations';
-import { GET_USER } from '../graphql/user/queries';
+import { GET_USER, DETAILS } from '../graphql/user/queries';
+import { UserType, AddressType } from '../graphql/user/type';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const WorldPin = React.lazy(() => import(/* webpackChunkName: "WorldPin" */'./Images/WorldPin'));
@@ -113,17 +114,26 @@ const RadionGroup = styled.div<any>`
 type Props = {}
 
 type User = {
-    cityKey?: String,
-    cityName?: String,
-    openCityModal?: Boolean
+    cityKey?: string,
+    cityName?: string,
+    openCityModal?: boolean,
+    defaultAddressId?: number,
+    defaultAddressLabel?: string
 }
 
 const CityModal: FC<Props> = () => {
     const { t } = useTranslation();
     const { data } = useQuery(GET_USER, {});
+    const [inputs, setInputs] = useState<UserType>({ addresses: [] });
     const [city, setCity] = useState<User>({});
     const [setUser] = useMutation(SET_USER, { variables: { user: city } });
     const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openCityModal: false } } });
+    const [getDetails] = useLazyQuery(DETAILS, {
+        fetchPolicy: 'network-only',
+        onCompleted: (d) => {
+            setInputs(d.details);
+        }
+    });
 
     const cities: Array<KeyValue> = [
         { key: 'CB', value: 'Cochabamba' },
@@ -140,9 +150,22 @@ const CityModal: FC<Props> = () => {
         })
     }
 
+    const setDefaultAddress = (address: AddressType) => {
+        setUser({
+            variables: {
+                user: {
+                    defaultAddressId: address.id,
+                    defaultAddressLabel: address.street,
+                    openCityModal: false
+                }
+            }
+        });
+    };
+
     useEffect(() => {
         if (data.userInfo.length && data.userInfo[0].cityKey) toggleCityModal();
         // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (data.userInfo.length) getDetails();
     }, []);
 
     useEffect(() => {
@@ -152,7 +175,7 @@ const CityModal: FC<Props> = () => {
 
     return <Suspense fallback={<Loader />}>
         <Courtain className={(!data.userInfo.length || !data.userInfo[0].cityKey || data.userInfo[0].openCityModal) && 'visible'}>
-            <Modal>
+            {inputs.addresses && !inputs.addresses.length && <Modal>
                 {!!data.userInfo.length && data.userInfo[0].cityKey && <CloseWrapper onClick={() => toggleCityModal()}><Close /></CloseWrapper>}
                 <WorldPin />
                 <Title>{t('citymodal.title')}</Title>
@@ -163,7 +186,19 @@ const CityModal: FC<Props> = () => {
                         <label>{c.value}</label>
                     </RadionGroup>)}
                 </Radios>
-            </Modal>
+            </Modal>}
+            {inputs.addresses && !!inputs.addresses.length && <Modal>
+                <CloseWrapper onClick={() => toggleCityModal()}><Close /></CloseWrapper>
+                <WorldPin />
+                <Title>{t('citymodal.title_alt')}</Title>
+                <Text>{t('citymodal.text_alt')}</Text>
+                <Radios>
+                    {inputs.addresses && inputs.addresses.map((address: AddressType) => <RadionGroup className={data.userInfo.length && data.userInfo[0].defaultAddressId === address.id && 'selected'} onClick={() => setDefaultAddress(address)} key={address.id}>
+                        <input readOnly id={`city${address.id}`} name="city" type="radio" checked={!!(data.userInfo.length && data.userInfo[0].defaultAddressId === address.id)} />
+                        <label>{address.street}</label>
+                    </RadionGroup>)}
+                </Radios>
+            </Modal>}
         </Courtain>
     </Suspense>
 }

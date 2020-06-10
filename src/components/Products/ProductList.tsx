@@ -171,6 +171,21 @@ const ProductModal = styled.div`
     }
 `
 
+const NoResults = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--font);
+    min-height: 400px;
+    font-family: MullerMedium;
+    font-size: 16px;
+    line-height: 1.5em;
+    letter-spacing: 0.1em;
+    max-width: 320px;
+    text-align: center;
+    margin: 0 auto;
+`
+
 type Props = {
     products: Array<ProductType>,
     count: number,
@@ -259,6 +274,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
             {!!products.length && <Grid>
                 {products.map((product: ProductType) => <ItemBox openModal={openModal} key={product.entity_id} product={product} />)}
             </Grid>}
+            {!products.length && <NoResults>{t('products.product_list.no_results')}</NoResults>}
             {!!products.length && count > 9 && <Pager>
                 <PageArrow onClick={() => move(false)} allowed={page > 1}>
                     <PagerArrowLeft />

@@ -66,7 +66,9 @@
     },
     "citymodal": {
         "title": "¿A qué ciudad enviamos tu pedido?",
-        "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:"
+        "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:",
+        "title_alt": "¿A qué dirección enviamos tu pedido?",
+        "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:"
     },
     "products": {
         "filter_side_bar": {
@@ -84,7 +86,8 @@
             "search": "Buscar",
             "order_by": "Ordenar por",
             "weight": "Peso",
-            "price": "Precio"
+            "price": "Precio",
+            "no_results": "No se encontraron resultados con los criterios de busqueda actuales."
         }
     },
     "product": {
@@ -306,6 +309,7 @@
             "number": "Número de órden",
             "value": "Valor",
             "status": "Estado",
+            "no_results": "No has realizado ordenes aún.",
             "labels": {
                 "pending": "Pendiente",
                 "canceled": "Cancelado"
@@ -338,6 +342,10 @@
         }
     },
     "faq": {
-        "title": "¿Cómo podemos ayudarte?"
+        "title": "¿Cómo podemos ayudarte?",
+        "footer": {
+            "title": "¿No encontraste lo que buscabas?",
+            "contact": "Envianos un mail a <a href='mailto:info@sofia.com.bo'>info@sofia.com.bo</a>"
+        }
     }
 }

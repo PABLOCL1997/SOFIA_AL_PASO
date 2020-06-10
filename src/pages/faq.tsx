@@ -67,6 +67,40 @@ const Question = styled.div<{ active: boolean }>`
     }
 `
 
+const Footer = styled.div`
+    background: var(--red);
+    padding: 90px 20px;
+    h2 {
+        font-family: MullerMedium;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 32px;
+        color: #FFFFFF;
+        text-align: center;
+    }
+    p {
+        font-family: MullerMedium;
+        font-size: 16px;
+        line-height: 16px;
+        text-align: center;
+        letter-spacing: 0.01em;
+        color: #FFFFFF;
+        margin-top: 32px;
+        a {
+            font-family: MullerBold;
+            font-size: 16px;
+            line-height: 16px;
+            letter-spacing: 0.01em;
+            color: #FFFFFF;
+            text-decoration: none;
+            &:hover {
+                opacity: 0;
+            }
+        }
+    }
+`
+
 type Question = {
     title: string,
     text: string
@@ -100,7 +134,6 @@ const Faq: FC<Props> = () => {
     return (
         <Suspense fallback={<Loader />}>
             <DelayedWrapper>
-
                 <Header>
                     <div className="main-container">
                         <h1>{t('faq.title')}</h1>
@@ -114,6 +147,12 @@ const Faq: FC<Props> = () => {
                         </Question>)}
                     </Accordion>
                 </div>
+                <Footer>
+                    <div className="main-container">
+                        <h2>{t('faq.footer.title')}</h2>
+                        <p dangerouslySetInnerHTML={{ __html: t('faq.footer.contact') }}></p>
+                    </div>
+                </Footer>
 
             </DelayedWrapper>
         </Suspense>

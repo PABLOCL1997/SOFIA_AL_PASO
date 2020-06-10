@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { BREAKPOINT } from '../../utils/constants';
 import { setLatLng } from '../../utils/googlemaps';
 import { useQuery } from 'react-apollo';
-import { DETAILS } from '../../graphql/user/queries';
+import { DETAILS, GET_USER } from '../../graphql/user/queries';
 import { AddressType } from '../../graphql/user/type';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
@@ -161,6 +161,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
     const { t } = useTranslation();
     const [inputs, setInputs] = useState<any>({ addressType: t('checkout.delivery.street') });
     const [other, setOther] = useState(false);
+    const { data: localData } = useQuery(GET_USER, {});
     const { data: userData } = useQuery(DETAILS, {
         fetchPolicy: 'network-only'
     });
@@ -203,7 +204,12 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
     };
 
     useEffect(() => {
-        if (userData && userData.details.addresses) selectAddress(userData.details.addresses[0]);
+        if (localData && localData.userInfo.length && localData.userInfo[0].defaultAddressId && userData && userData.details.addresses) {
+            let _a = userData.details.addresses.findIndex((a: AddressType) => Number(a.id) === Number(localData.userInfo[0].defaultAddressId));
+            if (_a) selectAddress(userData.details.addresses[_a])
+            else selectAddress(userData.details.addresses[0]);
+        }
+        else if (userData && userData.details.addresses) selectAddress(userData.details.addresses[0]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userData]);
 
