@@ -164,8 +164,8 @@ const CityModal: FC<Props> = () => {
 
     useEffect(() => {
         if (data.userInfo.length && data.userInfo[0].cityKey) toggleCityModal();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         if (data.userInfo.length) getDetails();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
