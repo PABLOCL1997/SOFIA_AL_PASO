@@ -14,12 +14,17 @@ const Wrapper = styled.div`
     padding: 113px 0 0;
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 0;
+        &.productpage {
+            padding-top: 72px !important;
+        }
     }
 `
 
-type Props = {}
+type Props = {
+    page?: string
+}
 
-const LayoutGeneral: FC<Props> = ({ children }) => {
+const LayoutGeneral: FC<Props> = ({ children, page }) => {
     const history = useHistory();
     const [checkout, setCheckout] = useState(history.location.pathname === '/checkout');
 
@@ -41,10 +46,10 @@ const LayoutGeneral: FC<Props> = ({ children }) => {
 
     return (
         <Suspense fallback={<Loader />}>
-            <Wrapper>
-                <Header checkout={checkout} />
+            <Wrapper className={page ? page : ''}>
+                <Header checkout={checkout} page={page}/>
                 {children}
-                <Footer />
+                <Footer page={page}/>
                 <Error />
                 <Success />
             </Wrapper>

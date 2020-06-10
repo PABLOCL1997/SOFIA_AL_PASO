@@ -48,6 +48,10 @@ const Title = styled.h2`
     line-height: 24px;
     color: var(--black);
     padding: 0 10px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 20px;
+        line-height: 20px;
+    }
 `
 
 type Props = {
@@ -96,7 +100,7 @@ const RelatedProducts: FC<Props> = ({ products }) => {
 
     return <Suspense fallback={<Loader />}>
         <Container>
-            <Wrapper>
+            <Wrapper className="wrapper-related">
                 <Title>{t('product.related.title')}</Title>
                 <Slider {...settings}>
                     {products.map((product: ProductType) => <div key={product.entity_id}>

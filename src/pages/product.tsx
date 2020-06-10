@@ -9,7 +9,7 @@ import { PRODUCT_TITLE } from '../meta';
 import { fromLink, toLink } from '../utils/string';
 import { ProductType } from '../graphql/products/type';
 import { CategoryType } from '../graphql/categories/type';
-import { BREAKPOINT } from '../utils/constants';
+import { XXL, BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
 import DelayedWrapper from '../components/DelayedWrapper';
 import { SET_USER } from '../graphql/user/mutations';
@@ -22,6 +22,7 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../components/
 const FreeDelivery = React.lazy(() => import(/* webpackChunkName: "FreeDelivery" */'../components/Images/FreeDelivery'));
 const Quality = React.lazy(() => import(/* webpackChunkName: "Quality" */'../components/Images/Quality'));
 const ContinueArrow = React.lazy(() => import(/* webpackChunkName: "ContinueArrow" */'../components/Images/ContinueArrow'));
+const Close = React.lazy(() => import(/* webpackChunkName: "Close" */'../components/Images/Close'));
 
 const Header = styled.div`
     padding: var(--padding);
@@ -87,7 +88,7 @@ const Col1 = styled.div`
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;
         margin-right: 0;
-        margin-bottom: 30px;
+        margin-bottom: 16px;
     }
 `
 
@@ -110,6 +111,10 @@ const ProductTitle = styled.h1`
     line-height: 30px;
     color: var(--black);
     margin-bottom: 16px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 20px;
+        line-height: 20px;
+    }
 `
 
 const Price = styled.div`
@@ -117,6 +122,11 @@ const Price = styled.div`
     line-height: 24px;
     color: var(--red);
     margin-bottom: 58px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 16px;
+        line-height: 16px;
+        margin-bottom: 30px;
+    }
 `
 
 const ProductText = styled.ul`
@@ -141,6 +151,9 @@ const Categories = styled.div`
     margin: 25px 0;
     display: flex;
     align-items: center;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        margin: 32px 0;
+    }
     span {
         font-family: MullerMedium;
         font-size: 10px;
@@ -177,6 +190,14 @@ const Toolbox = styled.div`
         padding: 30px;
         margin: 0;
         z-index: 3;
+        button {
+            font-size: 14px;
+            text-transform: uppercase;
+            padding: 15px 80px;
+            span {
+                font-family: MullerExtraBold;
+            }
+        }
     }
 `
 
@@ -196,6 +217,10 @@ const Qty = styled.div`
         padding-left: 10px;
         font-size: 12px;
         line-height: 12px;
+        font-family: MullerRegular;
+        @media screen and (max-width: ${BREAKPOINT}) {
+            color: var(--black);
+        }
     }
     svg {
         pointer-events: none;
@@ -237,6 +262,83 @@ const Disclaimer = styled.div`
     }
 `
 
+const ContentFixed = styled.div`
+    position: fixed;
+    z-index: 9;
+    @media screen and (max-width: ${XXL}) {
+        position: unset;
+    }
+    & > div {
+        width: 1330px;
+        margin: 0 auto;
+        position: relative;
+        display: block;
+        @media screen and (max-width: ${XXL}) {
+            width: 100%;
+        }
+    }
+`;
+
+const AddedModal = styled.div`
+    position: absolute;
+    background: var(--white);
+    transition: all .2s linear;
+    width: 400px;
+    top: 0;
+    left: auto;
+    right: 20px;
+    background: white;
+    z-index: 99;
+    display: block;
+    padding: 40px 20px 20px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 0 20px 10px rgba(0,0,0,0.07);
+    @media screen and (max-width: ${XXL}) {
+        right: 100px;
+    }
+    button {
+        height: 40px;
+    }
+    p {
+        margin-bottom: 1.5em;
+    }
+    &::before {
+        content: "";
+        width: 0; 
+        height: 0; 
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid white;
+        position: absolute;
+        top: -6px;
+        left: auto;
+        right: 65px;
+        @media screen and (max-width: ${XXL}) {
+            right: 58px;
+        }
+    }
+    .btn-close {
+        border: 0;
+        background: transparent;
+        width: 50px;
+        height: 38px;
+        position: absolute;
+        top: 7px;
+        right: 5px;
+    }
+    @media screen and (max-width: ${BREAKPOINT}) {
+        padding: 50px 20px 20px;
+        width: calc(100% - 20px);
+        position: absolute;
+        left: 10px;
+        &::before {
+            left: 18px;
+            right: auto;
+        }
+    }
+`
+
 type Props = {
     inlineProdname?: String,
     oldUrl?: String,
@@ -272,15 +374,28 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
     });
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, categories: [], description: false, qty } } });
+    const [addedModal, setAddedModal] = useState<boolean>(false);
 
     const addAndGo = () => {
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
             addItem();
+            setAddedModal(true);
+            setTimeout(() => {
+                setAddedModal(false)
+            }, 3000);
             //history.push('/checkout');
         } else {
             if (closeModal) closeModal();
             toggleLoginModal();
         }
+    }
+
+    const GoToCheckout = () => {
+        history.push('/checkout');
+    }
+
+    const CloseModal = () => {
+        setAddedModal(false)
     }
 
     const proceed = () => {
@@ -302,6 +417,15 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
         <Suspense fallback={<Loader />}>
             <DelayedWrapper noHeader={true}>
                 <div className="main-container">
+                    {addedModal && <ContentFixed>
+                        <div>
+                            <AddedModal>
+                                <button className="btn-close" onClick={CloseModal}><Close /></button>
+                                <p>{t('product.modal.text')}</p>
+                                <Cta filled={true} text={t('product.modal.buttontext')} action={GoToCheckout} />
+                            </AddedModal>
+                        </div>
+                    </ContentFixed>}
                     <Header>
                         <HeaderLink onClick={proceed}>
                             <span>{t('product.continue_shopping')}</span>

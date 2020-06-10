@@ -151,7 +151,7 @@ const ProductModal = styled.div`
     height: 100vh;
     background: rgba(255, 255, 255, .8);
     z-index: 3;
-    > div {
+    & > div {
         margin: 30px auto;
         box-shadow: 0 0 5px #ccc;
         background: white;
@@ -160,6 +160,14 @@ const ProductModal = styled.div`
         max-width: 1000px;
         overflow: auto;
         border-radius: 20px;
+        .main-container {
+            & > div {
+                padding: 30px 0;
+            }
+            .wrapper-related {
+                padding: 30px 0;
+            }
+        }
     }
 `
 
@@ -261,7 +269,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
                 </PageArrow>
             </Pager>}
             {open && <ProductModal>
-                <div>
+                <div className="product-modal">
                     <Product closeModal={() => setOpen(false)} oldUrl={oldUrl} inlineProdname={toLink(product.name)} />
                 </div>
             </ProductModal>}

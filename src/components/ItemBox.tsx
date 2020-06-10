@@ -20,7 +20,7 @@ const Container = styled.div`
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.06);
     border-radius: 20px;
     margin: 40px 10px;
-    padding: 30px;
+    padding: 14px 10px 22px;
 `
 
 const Discount = styled.div`
@@ -67,6 +67,7 @@ const Title = styled.h2`
     text-align: center;
     color: var(--black);
     min-height: 35px;
+    padding: 0 10px;
     @media screen and (max-width: ${BREAKPOINT}) {
         height: auto;    
     }
@@ -75,6 +76,7 @@ const Title = styled.h2`
 const PriceBox = styled.div`
     text-align: center;
     margin: 0px 0 10px;
+    padding: 0 10px;
 `
 
 const Price = styled.span`
@@ -146,7 +148,7 @@ const EstimatedPrice = styled.div`
     line-height: 12px;
     text-align: center;
     color: var(--font);
-    padding: 5px 0;
+    padding: 5px 10px;
 `
 
 const Label = styled.div`
@@ -155,7 +157,7 @@ const Label = styled.div`
     line-height: 12px;
     text-align: center;
     color: var(--font);
-    padding: 5px 0;
+    padding: 5px 10px;
 `
 
 type Props = {

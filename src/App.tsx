@@ -28,7 +28,7 @@ const App = () => {
             <Route exact path="/productos/:category" children={<LayoutGeneral><Products /></LayoutGeneral>} />
             <Route exact path="/productos/:category/:subcategory" children={<LayoutGeneral><Products /></LayoutGeneral>} />
             <Route exact path="/productos/:category/:subcategory/:lastlevel" children={<LayoutGeneral><Products /></LayoutGeneral>} />
-            <Route exact path="/:prodname" children={<LayoutGeneral><Product /></LayoutGeneral>} />
+            <Route exact path="/:prodname" children={<LayoutGeneral page="productpage"><Product /></LayoutGeneral>} />
           </Switch>
         </Router>
       </DelayedWrapper>

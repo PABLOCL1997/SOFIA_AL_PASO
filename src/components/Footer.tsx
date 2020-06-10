@@ -8,7 +8,7 @@ const FooterLogo = React.lazy(() => import(/* webpackChunkName: "FooterLogo" */'
 const Phone = React.lazy(() => import(/* webpackChunkName: "Phone" */'./Images/Phone'));
 const Mail = React.lazy(() => import(/* webpackChunkName: "Mail" */'./Images/Mail'));
 
-const Container = styled.div`
+const Container = styled.div<{ page?: string }>`
     background: var(--black);
     padding: 40px;
     .main-container {
@@ -16,7 +16,12 @@ const Container = styled.div`
         flex-direction: row;
         @media screen and (max-width: ${BREAKPOINT}) {
             flex-direction: column;
+            display: ${props => props.page === 'productpage' ? 'none' : ''};
         }
+    }
+    @media screen and (max-width: ${BREAKPOINT}) {
+        background: ${props => props.page === 'productpage' ? 'none' : 'var(--black)'};
+        min-height: ${props => props.page === 'productpage' ? '108px' : ''};
     }
 `
 
@@ -106,13 +111,15 @@ const Line1 = styled.p`
     color: white;
 `
 
-type Props = {}
+type Props = {
+    page?: string
+}
 
-const Footer: FC<Props> = () => {
+const Footer: FC<Props> = ({ page }) => {
     const { t } = useTranslation();
 
     return <Suspense fallback={<Loader />}>
-        <Container>
+        <Container page={page}>
             <div className="main-container">
                 <Col1>
                     <FooterLogo />
