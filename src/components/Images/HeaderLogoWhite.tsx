@@ -5,7 +5,6 @@ type Props = {
 }
 
 const HeaderLogoWhite: FC<Props> = ({ withSlogan = true }) => {
-    const randomId = `HeaderLogoWhite-${(Math.random() * 100000000).toFixed(0)}`;
     return (
         <svg width="119" height="69" viewBox="0 0 119 69" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M114.008 61.9547H114.009C116.005 61.9547 117.609 60.304 117.609 58.2892C117.609 56.2748 116.009 54.6238 114.009 54.6238C112.01 54.6238 110.406 56.2741 110.406 58.2892C110.406 60.3014 112.01 61.9505 114.008 61.9547Z" stroke="#E30613" strokeMiterlimit="3.8637" />

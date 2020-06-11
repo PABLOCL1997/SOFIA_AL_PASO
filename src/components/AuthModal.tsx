@@ -295,7 +295,7 @@ const AuthModal: FC<Props> = () => {
 
     const signUp = async () => {
         try {
-            if (form.password === '' || form.password !== form.rpassword) throw 'error';
+            if (form.password === '' || form.password !== form.rpassword) throw new Error('error');
             setLoader(true);
             const response = await doSignUp();
             setUser({
