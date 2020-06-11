@@ -209,6 +209,14 @@ const Separator = styled.div`
     flex: 1;
 `
 
+const MenuListTools = styled.div`
+    display: flex;
+    margin-bottom: 30px;
+    > div:first-child {
+        margin-right: 20px;
+    }
+`
+
 type Props = {
     checkout: boolean,
     page?: string
@@ -278,7 +286,17 @@ const Header: FC<Props> = ({ checkout, page }) => {
         setTimeout(() => {
             setBigCart(false)
         }, 3000);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data])
+
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.removeAttribute('style');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open])
 
     return <Suspense fallback={<Loader />}>
         <Wrapper>
@@ -342,6 +360,11 @@ const Header: FC<Props> = ({ checkout, page }) => {
                     </CloseWrapper>
                 </CloseRow>
                 <MenuList>
+                    <MenuListTools>
+                        {(!userData.userInfo.length || !userData.userInfo[0].isLoggedIn) && <Cta text={t('header.login')} action={myAccount} />}
+                        {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.account')} action={myAccount} />}
+                        {userData.userInfo.length && userData.userInfo[0].isLoggedIn && <Cta text={t('header.logout')} action={doLogout} />}
+                    </MenuListTools>
                     <MenuItem>
                         <Home />
                         <Link onClick={() => setOpen(false)} to="/">{t('header.home')}</Link>
@@ -353,10 +376,6 @@ const Header: FC<Props> = ({ checkout, page }) => {
                     <MenuItem>
                         <Faq />
                         <Link onClick={() => setOpen(false)} to="/preguntas-frecuentes">{t('header.faq')}</Link>
-                    </MenuItem>
-                    <MenuItem>
-                        <Faq />
-                        <Link onClick={doLogout} to="/">{t('header.logout')}</Link>
                     </MenuItem>
                 </MenuList>
                 <MenuBottom>

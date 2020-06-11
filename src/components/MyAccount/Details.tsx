@@ -442,7 +442,7 @@ const Details: FC<Props> = () => {
                 <Form>
                     {['firstname', 'lastname', 'email', 'nit', 'phone', 'password'].map((key: string) => <InputGroup key={key}>
                         <label>{t('account.' + key)}</label>
-                        <input readOnly={key === 'email' || (key !== 'key' && !editMode)} value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} type={key === 'phone' || key === 'nit' ? 'number' : (key === 'password' ? 'password' : 'text')} placeholder={t('account.' + key)} />
+                        <input readOnly={key === 'email' || (key !== 'key' && !editMode)} value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} pattern={key === 'phone' || key === 'nit' ? '[0-9]*' : ''} type={key === 'phone' || key === 'nit' ? 'number' : (key === 'password' ? 'password' : 'text')} placeholder={t('account.' + key)} />
                     </InputGroup>)}
                 </Form>
             </FormWrapper>

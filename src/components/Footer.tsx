@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { BREAKPOINT } from '../utils/constants';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
-const FooterLogo = React.lazy(() => import(/* webpackChunkName: "FooterLogo" */'./Images/FooterLogo'));
+const HeaderLogoWhite = React.lazy(() => import(/* webpackChunkName: "HeaderLogoWhite" */'./Images/HeaderLogoWhite'));
 const Phone = React.lazy(() => import(/* webpackChunkName: "Phone" */'./Images/Phone'));
 const Mail = React.lazy(() => import(/* webpackChunkName: "Mail" */'./Images/Mail'));
 
@@ -28,6 +28,9 @@ const Container = styled.div<{ page?: string }>`
 const Col1 = styled.div`
     width: 50%;
     margin-right: 110px;
+    > svg {
+        width: 80px;
+    }
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;
         margin-right: 0;
@@ -122,7 +125,7 @@ const Footer: FC<Props> = ({ page }) => {
         <Container page={page}>
             <div className="main-container">
                 <Col1>
-                    <FooterLogo />
+                    <HeaderLogoWhite />
                     <Text>{t('footer.text')}</Text>
                     <Copy className="copy">{t('footer.copy', { year: new Date().getFullYear() })}</Copy>
                     <Line />

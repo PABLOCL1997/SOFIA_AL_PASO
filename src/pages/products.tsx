@@ -71,7 +71,7 @@ const Products: FC<Props> = () => {
     const { data: userData } = useQuery(GET_USER, {});
     const [loadProducts, { loading: loadingProds }] = useLazyQuery(GET_PRODUCTS, {
         variables: { category_id, limit, order, offset: offset, search: search, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '' },
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'network-only',
         onCompleted: (d) => {
             setProducts(d.products.rows)
             setTotal(d.products.count)

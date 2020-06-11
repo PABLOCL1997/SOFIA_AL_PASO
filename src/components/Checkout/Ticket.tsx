@@ -186,12 +186,21 @@ const CtaWrapper = styled.div`
     }
 `
 
+const LoaderWrapper = styled.div`
+    img {
+        margin: 30px auto 0;
+        display: block;
+        width: 20px;
+    }
+`
+
 type Props = {
     order: Function,
-    updateOrder: Function
+    updateOrder: Function,
+    processing: boolean
 }
 
-const Ticket: FC<Props> = ({ order, updateOrder }) => {
+const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
     const { t } = useTranslation();
     const [type, setType] = useState("");
     const [discount, setDiscount] = useState("0");
@@ -238,7 +247,7 @@ const Ticket: FC<Props> = ({ order, updateOrder }) => {
             <Title>{t('checkout.ticket.title')}</Title>
             <Rows>
                 {data && data.cartItems && data.cartItems.map((product: ProductType) => <Row key={product.entity_id}>
-                    <span>{product.name}</span>
+                    <span>{product.qty} x {product.name}</span>
                     <span>Bs. {product.special_price.toFixed(2).replace('.', ',')}</span>
                 </Row>)}
             </Rows>
@@ -268,7 +277,8 @@ const Ticket: FC<Props> = ({ order, updateOrder }) => {
                 <b>Bs. {String(totalAmount - parseFloat(discount)).replace('.', ',')}</b>
             </Total>
             <CtaWrapper>
-                <Cta filled={true} text={t('checkout.ticket.send')} action={order} />
+                {!processing && <Cta filled={true} text={t('checkout.ticket.send')} action={order} />}
+                {processing && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
             </CtaWrapper>
         </Container>
     </Suspense>

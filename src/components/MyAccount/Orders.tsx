@@ -35,6 +35,9 @@ const Grid = styled.div`
 const Row = styled.div`
     display: grid;
     grid-template-columns: 55px 100px 1fr 120px 140px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        grid-template-columns: 55px 100px 120px 120px 140px
+    }
 `
 
 const Head = styled.div`
@@ -51,6 +54,9 @@ const Body = styled.div`
     grid-template-columns: 55px 100px 1fr 120px 140px;
     padding: 20px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+    @media screen and (max-width: ${BREAKPOINT}) {
+        grid-template-columns: 55px 100px 120px 120px 140px
+    }
     span {
         font-size: 12px;
         line-height: 12px;
@@ -173,6 +179,7 @@ const Header = styled.div`
         font-size: 14px;
         line-height: 14px;
         color: var(--black);
+        margin-left: 30px;
         &.recibimos-tu-pedido {
             line-height: 1.5em;
             font-family: MullerBold;
@@ -192,11 +199,13 @@ const Detail = styled.div`
     padding: 0 86px 125px;
     margin-bottom: -80px;
     z-index: 2;
+    min-width: 620px;
 
     @media screen and (max-width: ${BREAKPOINT}) {
         background: none;
         margin: 20px 0;
         padding: 0;
+        min-width: auto;
     }
 
     h2 {
@@ -429,7 +438,7 @@ const Orders: FC<Props> = () => {
                         </Subtotal>
                         <Envio>
                             <span>{t('account.order.shippingPrice')}</span>
-                            <span>Bs. {order.shippingPrice && order.shippingPrice.toFixed(2).replace('.', ',')}</span>
+                            <span>Bs. {order.shippingPrice ? Number(order.shippingPrice).toFixed(2).replace('.', ',') : '0,00'}</span>
                         </Envio>
                         <Total>
                             <b>{t('account.order.total')}</b>

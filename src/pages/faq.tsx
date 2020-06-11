@@ -95,7 +95,7 @@ const Footer = styled.div`
             color: #FFFFFF;
             text-decoration: none;
             &:hover {
-                opacity: 0;
+                text-decoration: underline;
             }
         }
     }

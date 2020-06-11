@@ -210,6 +210,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
             else selectAddress(userData.details.addresses[0]);
         }
         else if (userData && userData.details.addresses) selectAddress(userData.details.addresses[0]);
+        else setOther(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userData]);
 
@@ -238,7 +239,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
                             <Chevron />
                         </SelectWrapper>}
                         {key === 'street' && <Switch changeOption={(value: string) => onChange('addressType', value)} option={inputs.addressType} values={addressTypes} />}
-                        {key !== 'street' && !options[key] && <input onChange={evt => onChange(key, evt.target.value)} type={key === 'phone' || key === 'nit' ? 'number' : 'text'} placeholder={t('checkout.delivery.' + key)} />}
+                        {key !== 'street' && !options[key] && <input onChange={evt => onChange(key, evt.target.value)} pattern={key === 'phone' || key === 'nit' ? '[0-9]*' : ''} type={key === 'phone' || key === 'nit' ? 'number' : 'text'} placeholder={t('checkout.delivery.' + key)} />}
                     </InputGroup>
                 })}
             </Form>

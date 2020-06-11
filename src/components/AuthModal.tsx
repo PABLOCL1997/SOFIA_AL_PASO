@@ -125,6 +125,7 @@ const Line = styled.div`
 const SocialButton = styled.button<{ network: string }>`
     width: 190px;
     border: 1px solid var(--${props => props.network});
+    background: white;
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -294,6 +295,7 @@ const AuthModal: FC<Props> = () => {
 
     const signUp = async () => {
         try {
+            if (form.password === '' || form.password !== form.rpassword) throw 'error';
             setLoader(true);
             const response = await doSignUp();
             setUser({
@@ -345,8 +347,8 @@ const AuthModal: FC<Props> = () => {
                 {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.login.title')}</Title>
-                <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.login.email')} />
-                <input type="password" onChange={$evt => setForm({ ...form, password: $evt.target.value })} placeholder={t('auth_modal.login.password')} />
+                <input type="email" onKeyUp={evt => { if (evt.keyCode === 13) login() }} onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.login.email')} />
+                <input type="password" onKeyUp={evt => { if (evt.keyCode === 13) login() }} onChange={$evt => setForm({ ...form, password: $evt.target.value })} placeholder={t('auth_modal.login.password')} />
                 <Link position="right" onClick={() => setStep(Steps.ForgotPassword)}>{t('auth_modal.login.forget_password')}</Link>
                 <CtaWrapper>
                     <Cta filled={true} action={login} text={t('auth_modal.login.button')} />
@@ -371,9 +373,9 @@ const AuthModal: FC<Props> = () => {
                 {loader && <LoaderWrapper><img src="/images/loader.svg" alt="loader" /></LoaderWrapper>}
                 <CloseWrapper onClick={closeModal}><Close /></CloseWrapper>
                 <Title>{t('auth_modal.sign_up.title')}</Title>
-                <input type="email" onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.sign_up.email')} />
-                <input type="password" onChange={$evt => setForm({ ...form, password: $evt.target.value })} placeholder={t('auth_modal.sign_up.password')} />
-                <input type="password" onChange={$evt => setForm({ ...form, rpassword: $evt.target.value })} placeholder={t('auth_modal.sign_up.r_password')} />
+                <input type="email" onKeyUp={evt => { if (evt.keyCode === 13) signUp() }} onChange={$evt => setForm({ ...form, email: $evt.target.value })} placeholder={t('auth_modal.sign_up.email')} />
+                <input type="password" onKeyUp={evt => { if (evt.keyCode === 13) signUp() }} onChange={$evt => setForm({ ...form, password: $evt.target.value })} placeholder={t('auth_modal.sign_up.password')} />
+                <input type="password" onKeyUp={evt => { if (evt.keyCode === 13) signUp() }} onChange={$evt => setForm({ ...form, rpassword: $evt.target.value })} placeholder={t('auth_modal.sign_up.r_password')} />
                 <CtaWrapper>
                     <Cta filled={true} action={signUp} text={t('auth_modal.sign_up.button')} />
                 </CtaWrapper>

@@ -8,7 +8,7 @@ import { SET_USER } from '../../graphql/user/mutations';
 import { useMutation } from 'react-apollo';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
-const HeaderLogo = React.lazy(() => import(/* webpackChunkName: "HeaderLogo" */'../Images/HeaderLogo'));
+const HeaderLogoWhite = React.lazy(() => import(/* webpackChunkName: "HeaderLogoWhite" */'../Images/HeaderLogoWhite'));
 const Pin = React.lazy(() => import(/* webpackChunkName: "Pin" */'../Images/Pin'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Images/Chevron'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
@@ -176,7 +176,7 @@ const Hero: FC<Props> = () => {
         <div className="main-container">
             <Container>
                 <div>
-                    <HeaderLogo withSlogan={false} />
+                    <HeaderLogoWhite withSlogan={false} />
                     <Title>{t('homepage.hero.text')}</Title>
                     <SearchBox>
                         <CitySelect onClick={() => toggleCityModal()}>

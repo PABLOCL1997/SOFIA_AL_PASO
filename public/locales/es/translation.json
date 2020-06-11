@@ -188,6 +188,7 @@
         "under_budget": "El valor  mínimo para la compra es de Bs. 200. Por favor agrega mas productos"
     },
     "checkout": {
+        "todotix_error": "La orden fue creada correctamente, pero no se pudo obtener el link de pago",
         "error": "No se pudo generar la orden",
         "title": "Check out",
         "modify_cart": "Modificar carrito",
@@ -303,13 +304,13 @@
             "add": "Agregar"
         },
         "orders": {
-            "title": "Historial de ordenes",
+            "title": "Historial de órdenes",
             "see": "Ver",
             "date": "Fecha",
-            "number": "Número de órden",
+            "number": "Número de orden",
             "value": "Valor",
             "status": "Estado",
-            "no_results": "No has realizado ordenes aún.",
+            "no_results": "No has realizado órdenes aún.",
             "labels": {
                 "pending": "Pendiente",
                 "canceled": "Cancelado"

@@ -49,10 +49,14 @@ const InputGroup = styled.div`
         letter-spacing: 0.01em;
         color: var(--black);
         flex: 1;
+        &::placeholder {
+            color: var(--black);
+        }
     }
     button {
         padding: 14px 50px;
         span {
+            font-family: MullerBold;
             font-size: 12px;
             line-height: 12px;
             text-transform: uppercase;

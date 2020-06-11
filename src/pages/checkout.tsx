@@ -115,6 +115,7 @@ const Checkout: FC<Props> = () => {
     const { t } = useTranslation();
     const history = useHistory();
     const location = useLocation();
+    const [processing, setProcessing] = useState(false);
     const [userData, setUserData] = useState({});
     const [order, setOrder] = useState<OrderData>();
     const [orderData, setOrderData] = useState<any>({});
@@ -170,6 +171,7 @@ const Checkout: FC<Props> = () => {
         if (order) {
             (async () => {
                 try {
+                    setProcessing(true);
                     const response = await createOrder();
                     if (orderData.payment && orderData.payment.method === 'todotix') {
                         getTodotixLink({ variables: { orderIds: response.data.createOrder.map((co: any) => co.entity_id) } });
@@ -180,14 +182,18 @@ const Checkout: FC<Props> = () => {
                 } catch (e) {
                     showError();
                 }
+                setProcessing(false);
             })();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [order]);
 
     useEffect(() => {
-        if (todotixData && todotixData.todotix && todotixData.todotix.url_pasarela_pagos) {
-            window.location = todotixData.todotix.url_pasarela_pagos
+        if (todotixData && todotixData.todotix) {
+            if (todotixData.todotix.url_pasarela_pagos)
+                window.location = todotixData.todotix.url_pasarela_pagos
+            else
+                showError({ variables: { user: { showError: t('checkout.todotix_error') } } });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [todotixData])
@@ -283,7 +289,7 @@ const Checkout: FC<Props> = () => {
                                 </Steps>
                             </Col1>
                             <Col2>
-                                <Ticket updateOrder={updateOrderData} order={saveOrder} />
+                                <Ticket processing={processing} updateOrder={updateOrderData} order={saveOrder} />
                             </Col2>
                         </Cols>
                     </CheckoutWrapper>}

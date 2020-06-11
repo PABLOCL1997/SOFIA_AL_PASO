@@ -120,7 +120,7 @@ const Billing: FC<Props> = ({ updateOrder }) => {
             <Form>
                 {['firstname', 'lastname', 'email', 'nit'].map((key: string) => <InputGroup key={key}>
                     <label>{t('checkout.billing.' + key)}</label>
-                    <input value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} type={key === 'nit' ? 'number' : 'text'} placeholder={t('checkout.billing.' + key)} />
+                    <input value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} pattern={key === 'nit' ? '[0-9]*' : ''} type={key === 'nit' ? 'number' : 'text'} placeholder={t('checkout.billing.' + key)} />
                 </InputGroup>)}
             </Form>
             <Other onClick={() => setOther(!other)}>{t(!other ? 'checkout.billing.other_person' : 'checkout.billing.to_me')}</Other>
