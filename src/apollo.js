@@ -83,7 +83,8 @@ export default async () => {
                         let { cartItems } = queryResult;
                         const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
                         if (item >= 0) {
-                            if (cartItems[item].qty === product.qty) return cartItems;
+                            if (product.replace && cartItems[item].qty === product.qty) return cartItems;
+                            if (!product.replace) product.qty = Number(product.qty) + Number(cartItems[item].qty);
                             cartItems.splice(item, 1);
                         }
                         cartItems = [...cartItems, product];

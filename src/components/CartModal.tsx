@@ -298,7 +298,7 @@ const AuthModal: FC<Props> = () => {
     const [action, setAction] = useState<Action>({});
     const { data: userData } = useQuery(GET_USER, {});
     const [closeCartModal] = useMutation(SET_USER, { variables: { user: { openCartModal: false } } });
-    const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...action.product, qty: action.qty } } });
+    const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...action.product, qty: action.qty, replace: true } } });
     const [deleteItem] = useMutation(DELETE_ITEM, { variables: { product: { ...action.product } } });
     const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
 

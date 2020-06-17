@@ -274,6 +274,16 @@ const LoaderWrapper = styled.div`
     }
 `
 
+const LoaderWrapperBig = styled.div`
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+        width: 50px;
+    }
+`
+
 type Props = {}
 
 type AddressArgs = {
@@ -306,7 +316,7 @@ const Details: FC<Props> = () => {
     const [showSuccess] = useMutation(SET_USER, { variables: { user: { showSuccess: t('account.success') } } });
 
     const { data: userData } = useQuery(GET_USER, {});
-    const [getDetails] = useLazyQuery(DETAILS, {
+    const [getDetails, { loading: userLoading }] = useLazyQuery(DETAILS, {
         fetchPolicy: 'network-only',
         onCompleted: (d) => {
             setInputs(d.details);
@@ -437,7 +447,8 @@ const Details: FC<Props> = () => {
                     <span>{t('account.save')}</span>
                 </Button>}
             </Title>
-            <FormWrapper>
+            {userLoading && !inputs.email && <LoaderWrapperBig><img src="/images/loader.svg" alt="loader" /></LoaderWrapperBig>}
+            {!userLoading && inputs.email && <FormWrapper>
                 <SectionTitle>{t('account.data')}</SectionTitle>
                 <Form>
                     {['firstname', 'lastname', 'email', 'nit', 'phone', 'password'].map((key: string) => <InputGroup key={key}>
@@ -445,8 +456,8 @@ const Details: FC<Props> = () => {
                         <input readOnly={key === 'email' || (key !== 'key' && !editMode)} value={(inputs as any)[key] || ''} onChange={evt => onChange(key, evt.target.value)} pattern={key === 'phone' || key === 'nit' ? '[0-9]*' : ''} type={key === 'phone' || key === 'nit' ? 'number' : (key === 'password' ? 'password' : 'text')} placeholder={t('account.' + key)} />
                     </InputGroup>)}
                 </Form>
-            </FormWrapper>
-            <AddressWrapper>
+            </FormWrapper>}
+            {!userLoading && <AddressWrapper>
                 <SectionTitle>{t('account.addresses')}</SectionTitle>
                 {inputs.addresses && inputs.addresses.map((address: AddressType) => <AddressRow key={address.id}>
                     <Street>{address.street}</Street>
@@ -454,10 +465,10 @@ const Details: FC<Props> = () => {
                         <Delete />
                     </DeleteWrapper>
                 </AddressRow>)}
-            </AddressWrapper>
-            <NewAddress>
+            </AddressWrapper>}
+            {!userLoading && <NewAddress>
                 <button onClick={() => toggleAddressModal()}>{t('account.newaddress')}</button>
-            </NewAddress>
+            </NewAddress>}
             <ModalCourtain className={userData.userInfo.length && userData.userInfo[0].openAddressModal && 'visible'}>
                 <Modal>
                     <Header>

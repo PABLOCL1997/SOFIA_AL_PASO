@@ -2,6 +2,11 @@ export const toLink = (str: string | null) => {
     return str ? str.toLowerCase().replace(/ /g, '-') : '';
 }
 
+export const isValidEmail = (mail: string) => {
+    // eslint-disable-next-line
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail);
+}
+
 export const fromLink = (str: string | null) => {
     return str ? str
         .split(/-/g).map(word =>

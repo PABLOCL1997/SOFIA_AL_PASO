@@ -9,7 +9,6 @@ import { ADD_ITEM } from '../graphql/cart/mutations';
 import { BREAKPOINT } from '../utils/constants';
 import { GET_USER } from '../graphql/user/queries';
 import { SET_USER } from '../graphql/user/mutations';
-import { GET_CART_ITEMS } from '../graphql/cart/queries';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'./Loader'));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'./Images/Chevron'));
@@ -169,7 +168,6 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [qty, setQty] = useState<number>(1);
-    const { data: cartItems } = useQuery(GET_CART_ITEMS);
     const { data: userData } = useQuery(GET_USER, {});
     const [addItem] = useMutation(ADD_ITEM, { variables: { product: { ...product, qty } } });
     const [toggleLoginModal] = useMutation(SET_USER, { variables: { user: { openLoginModal: true } } });
@@ -191,13 +189,13 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
         }
     }
 
-    const defaultValue = () => {
-        if (cartItems && cartItems.cartItems && cartItems.cartItems.length) {
-            let p: ProductType = cartItems.cartItems.find((p: ProductType) => p.entity_id === product.entity_id);
-            if (p) return p.qty;
-        }
-        return 1;
-    }
+    // const defaultValue = () => {
+    //     if (cartItems && cartItems.cartItems && cartItems.cartItems.length) {
+    //         let p: ProductType = cartItems.cartItems.find((p: ProductType) => p.entity_id === product.entity_id);
+    //         if (p) return p.qty;
+    //     }
+    //     return 1;
+    // }
 
     const discount = (1 - (product.special_price / product.price)) * 100;
 
@@ -217,7 +215,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             </Link>
             <Pill>
                 <Qty>
-                    <select defaultValue={defaultValue()} onChange={event => setQty(Number(event.target.value))}>
+                    <select defaultValue={1} onChange={event => setQty(Number(event.target.value))}>
                         {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => <option key={index} value={opt}>{opt}</option>)}
                     </select>
                     <Chevron />

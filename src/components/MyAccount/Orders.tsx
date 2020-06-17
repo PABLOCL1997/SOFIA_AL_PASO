@@ -195,7 +195,7 @@ const Detail = styled.div`
     position: relative;
     margin: 50px 0;
     background: url(/images/order-detail.png) no-repeat bottom center;
-    background-size: contain;
+    background-size: 100%;
     padding: 0 86px 125px;
     margin-bottom: -80px;
     z-index: 2;
@@ -351,6 +351,15 @@ const NoResults = styled.div`
     margin: 40px auto 0;
 `
 
+const LoaderWrapperBig = styled.div`
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+        width: 50px;
+    }
+`
 
 type Props = {}
 
@@ -362,7 +371,7 @@ const Orders: FC<Props> = () => {
     const { data: orders, loading } = useQuery(ORDERS, {
         fetchPolicy: 'cache-and-network'
     });
-    const [getOrder] = useLazyQuery(ORDER, {
+    const [getOrder, { loading: orderLoading }] = useLazyQuery(ORDER, {
         variables: { orderId },
         fetchPolicy: 'network-only',
         onCompleted: (d) => {
@@ -398,7 +407,8 @@ const Orders: FC<Props> = () => {
                 </Body>)}
                 {!loading && orders && !orders.orders.length && <NoResults>{t('account.orders.no_results')}</NoResults>}
             </Grid>}
-            {orderId > 0 && order && <Order>
+            {orderId > 0 && orderLoading && <LoaderWrapperBig><img src="/images/loader.svg" alt="loader" /></LoaderWrapperBig>}
+            {orderId > 0 && order && !orderLoading && <Order>
                 <HeaderLink onClick={() => setOrderId(0)}>
                     <ContinueArrow />
                     <span>{t('account.order.back')}</span>

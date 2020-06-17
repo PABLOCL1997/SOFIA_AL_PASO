@@ -1,8 +1,11 @@
-import React, { FC, Suspense } from 'react';
+import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { Desktop, Mobile } from '../ResponsiveContainers';
 import { BREAKPOINT } from '../../utils/constants';
+import { SUBSCRIBE, SET_USER } from '../../graphql/user/mutations';
+import { useMutation } from 'react-apollo';
+import { isValidEmail } from '../../utils/string';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Cta'));
@@ -140,9 +143,21 @@ type Props = {}
 const Subscribe: FC<Props> = () => {
     const { t } = useTranslation();
 
-    const subscribe = () => {
+    const [email, setEmail] = useState("");
+    const [subscribe] = useMutation(SUBSCRIBE, { variables: { email } });
+    const [showError] = useMutation(SET_USER, { variables: { user: { showError: t('homepage.subscribe.error') } } });
+    const [showSuccess] = useMutation(SET_USER, { variables: { user: { showSuccess: t('homepage.subscribe.success') } } });
 
-    };
+    const doSubscribe = async () => {
+        try {
+            if (!isValidEmail(email)) throw new Error("");
+            const response = await subscribe();
+            if (response.data.subscribe.status) showSuccess();
+            else showError();
+        } catch (e) {
+            showError();
+        }
+    }
 
     return <Suspense fallback={<Loader />}>
         <>
@@ -155,9 +170,9 @@ const Subscribe: FC<Props> = () => {
                     <Notifications>{t('homepage.subscribe.notifications')}</Notifications>
                     <Title>{t('homepage.subscribe.title')}</Title>
                     <InputGroup>
-                        <input placeholder={t('homepage.subscribe.mail')} type="email" />
+                        <input value={email} onChange={$evt => setEmail($evt.target.value)} placeholder={t('homepage.subscribe.mail')} type="email" />
                         <CtaWrapper>
-                            <Cta filled={true} text={t('homepage.subscribe.button')} action={subscribe} />
+                            <Cta filled={true} text={t('homepage.subscribe.button')} action={doSubscribe} />
                         </CtaWrapper>
                     </InputGroup>
                     <Text>{t('homepage.subscribe.text')}</Text>
@@ -173,7 +188,7 @@ const Subscribe: FC<Props> = () => {
                     <InputGroup>
                         <input placeholder={t('homepage.subscribe.mail')} type="email" />
                         <CtaWrapper>
-                            <Cta filled={true} text={t('homepage.subscribe.button')} action={subscribe} />
+                            <Cta filled={true} text={t('homepage.subscribe.button')} action={doSubscribe} />
                         </CtaWrapper>
                     </InputGroup>
                     <Text>{t('homepage.subscribe.text')}</Text>

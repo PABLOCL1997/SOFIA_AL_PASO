@@ -20,6 +20,10 @@ const Wrapper = styled.div`
     }
 `
 
+const Content = styled.div`
+    min-height: 100vh;
+`
+
 type Props = {
     page?: string
 }
@@ -47,9 +51,11 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
     return (
         <Suspense fallback={<Loader />}>
             <Wrapper className={page ? page : ''}>
-                <Header checkout={checkout} page={page}/>
-                {children}
-                <Footer page={page}/>
+                <Header checkout={checkout} page={page} />
+                <Content>
+                    {children}
+                </Content>
+                <Footer page={page} />
                 <Error />
                 <Success />
             </Wrapper>

@@ -218,7 +218,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             const response: any = await checkCoupon();
             setType(response.data.coupon.type);
             if (response.data.coupon.type === '%') {
-                setDiscount(parseFloat(String(totalAmount * (response.data.coupon.discount_amount / 100))).toFixed(2));
+                setDiscount(parseFloat(String(Number(totalAmount.replace(',', '.')) * (response.data.coupon.discount_amount / 100))).toFixed(2));
             } else {
                 setDiscount(String(response.data.coupon.discount_amount));
             }
@@ -253,7 +253,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             </Rows>
             <Subtotal>
                 <b>{t('checkout.ticket.subtotal')}</b>
-                <b>Bs. {totalAmount.replace('.', ',')}</b>
+                <b>Bs. {totalAmount}</b>
             </Subtotal>
             <Shipping>
                 <span>{t('checkout.ticket.delivery')}</span>
@@ -274,7 +274,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             <Line />
             <Total>
                 <b>{t('checkout.ticket.total')}</b>
-                <b>Bs. {String(totalAmount - parseFloat(discount)).replace('.', ',')}</b>
+                <b>Bs. {String(Number(totalAmount.replace(',', '.')) - parseFloat(discount)).replace('.', ',')}</b>
             </Total>
             <CtaWrapper>
                 {!processing && <Cta filled={true} text={t('checkout.ticket.send')} action={order} />}

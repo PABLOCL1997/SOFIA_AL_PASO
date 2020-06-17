@@ -18,6 +18,16 @@ mutation Login($email: String!, $password: String!) {
 }
 `
 
+export const SUBSCRIBE = gql`
+mutation Subscribe($email: String!) {
+    subscribe (
+        email: $email
+    ) {
+        status
+    }
+}
+`
+
 export const RECOVER = gql`
 mutation Recover($email: String!) {
     recover (

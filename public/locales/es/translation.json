@@ -53,7 +53,9 @@
             "title": "Quieres conocer nuestras ofertas y novedades?",
             "mail": "Ingresa tu mail",
             "button": "suscríbete",
-            "text": "Producimos alimentos sanos y nutritivos en armonía con el medio ambiente y la comunidad, innovando constantemente para mejorar la calidad de vida de nuestros consumidores."
+            "text": "Producimos alimentos sanos y nutritivos en armonía con el medio ambiente y la comunidad, innovando constantemente para mejorar la calidad de vida de nuestros consumidores.",
+            "error": "No se pudo realizar la acción, intente nuevamente.",
+            "success": "Se realizo la acción con éxito"
         },
         "recipes": {
             "title": "Nuestras recetas",
