@@ -113,7 +113,7 @@ const CategorySlider: FC<Props> = () => {
     const { loading, data } = useQuery(GET_CATEGORIES, {});
     const { data: userData } = useQuery(GET_USER, {});
 
-    const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
+    const [loadProducts, { loading: loadingProducts }] = useLazyQuery(GET_PRODUCTS, {
         variables: { category_id: selected, limit: 8, offset: 0, city: userData.userInfo.length ? userData.userInfo[0].cityKey : '' },
         fetchPolicy: 'cache-and-network',
         onCompleted: (d) => setProducts(d.products.rows)
@@ -166,7 +166,7 @@ const CategorySlider: FC<Props> = () => {
                     }
                 </CategoryMobileList>}
             </CategoryMobile>
-            <ProductSlider products={products} />
+            {!loadingProducts && <ProductSlider products={products} />}
             <CtaWrapper>
                 <Cta action={seeAll} text={t('homepage.categoryslider.seeall')} filled={true} />
             </CtaWrapper>
