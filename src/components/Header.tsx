@@ -246,6 +246,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
         logout();
         token.delete();
         setOpen(false);
+        history.push('/')
     };
 
     const showCart = () => {

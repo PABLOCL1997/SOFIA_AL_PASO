@@ -63,7 +63,7 @@ const MyAccount: FC<Props> = () => {
 
     useEffect(() => {
         document.title = MY_ACCOUNT_TITLE;
-        if (!token.get()) history.push('/')
+        if (token.get() === 'null') history.push('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

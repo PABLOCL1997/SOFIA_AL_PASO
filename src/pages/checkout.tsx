@@ -175,14 +175,16 @@ const Checkout: FC<Props> = () => {
                     const response = await createOrder();
                     if (orderData.payment && orderData.payment.method === 'todotix') {
                         getTodotixLink({ variables: { orderIds: response.data.createOrder.map((co: any) => co.entity_id) } });
+                        setProcessing(false);
                     } else {
                         setResult(response.data.createOrder.map((co: any) => ({ entity_id: co.entity_id, increment_id: co.increment_id })));
                         emptyCart();
+                        setProcessing(false);
                     }
                 } catch (e) {
                     showError();
+                    setProcessing(false);
                 }
-                setProcessing(false);
             })();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,6 +206,7 @@ const Checkout: FC<Props> = () => {
             items.push(JSON.stringify({
                 entity_id: product.entity_id,
                 sku: product.sku,
+                category: product.category_name.toLowerCase().trim(),
                 name: product.name,
                 price: product.price,
                 quantity: product.qty,
