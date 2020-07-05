@@ -1,7 +1,7 @@
 import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { KeyValue } from "../utils/string";
+import { cities, KeyValue } from "../utils/string";
 import { BREAKPOINT } from "../utils/constants";
 import { useMutation, useQuery, useLazyQuery } from "react-apollo";
 import { SET_USER } from "../graphql/user/mutations";
@@ -143,13 +143,6 @@ const CityModal: FC<Props> = () => {
     }
   });
 
-  const cities: Array<KeyValue> = [
-    { key: "CB", value: "Cochabamba" },
-    { key: "LP", value: "La Paz" },
-    { key: "SC", value: "Santa Cruz" },
-    { key: "EA", value: "El Alto" }
-  ];
-
   const changeCity = (c: KeyValue) => {
     setCity({
       cityKey: c.key,
@@ -159,12 +152,17 @@ const CityModal: FC<Props> = () => {
   };
 
   const setDefaultAddress = (address: AddressType) => {
+    let c: KeyValue | undefined = cities.find(
+      (c: KeyValue) => c.value === address.city
+    );
     setUser({
       variables: {
         user: {
           defaultAddressId: address.id,
           defaultAddressLabel: address.street,
-          openCityModal: false
+          openCityModal: false,
+          cityKey: c?.key,
+          cityName: c?.value
         }
       }
     });

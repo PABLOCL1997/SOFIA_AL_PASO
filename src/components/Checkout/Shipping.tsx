@@ -2,10 +2,12 @@ import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
+import { cities, KeyValue } from "../../utils/string";
 import { setLatLng } from "../../utils/googlemaps";
-import { useQuery } from "react-apollo";
+import { useQuery, useMutation } from "react-apollo";
 import { DETAILS, GET_USER } from "../../graphql/user/queries";
 import { AddressType } from "../../graphql/user/type";
+import { SET_USER } from "../../graphql/user/mutations";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -81,6 +83,9 @@ const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
     padding: 12px 20px;
     border: 0;
     margin-top: 10px;
+    &.error {
+      border: 1px solid var(--red);
+    }
   }
 `;
 
@@ -161,9 +166,11 @@ const SelectWrapper = styled.div`
 
 type Props = {
   updateOrder: Function;
+  orderData: any;
+  billingChange: any;
 };
 
-const Shipping: FC<Props> = ({ updateOrder }) => {
+const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
   const { t } = useTranslation();
   const [inputs, setInputs] = useState<any>({
     addressType: t("checkout.delivery.street")
@@ -173,13 +180,32 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
   const { data: userData } = useQuery(DETAILS, {
     fetchPolicy: "network-only"
   });
+  const [setUser] = useMutation(SET_USER);
 
   const onChange = (key: string, value: string | number | null) => {
+    if (key.indexOf("phone") >= 0 && String(value).length > 8)
+      value = String(value).substring(0, 8);
     setInputs({
       ...inputs,
       [key]: value
     });
-    if (key === "city" && value) setLatLng(String(value));
+    if (key === "city" && value) {
+      setLatLng(String(value));
+      let c: KeyValue | undefined = cities.find(
+        (c: KeyValue) => c.value === value
+      );
+      if (c) {
+        setUser({
+          variables: {
+            user: {
+              cityKey: c.key,
+              cityName: c.value,
+              openCityModal: false
+            }
+          }
+        });
+      }
+    }
   };
 
   const selectAddress = (address: AddressType) => {
@@ -207,9 +233,20 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
   ];
 
   const options: { [key: string]: Array<string> } = {
-    city: ["Cochabamba", "El Alto", "La Paz", "Santa Cruz"],
+    city: cities.map((c: KeyValue) => c.value),
     home_type: ["Casa", "Departamento"]
   };
+
+  useEffect(() => {
+    if (!Object.keys(billingChange).length) return;
+    let obj = { ...inputs };
+    ["firstname", "lastname", "nit"].forEach((key: string) => {
+      if (billingChange[key]) {
+        obj[key] = billingChange[key];
+      }
+    });
+    setInputs(obj);
+  }, [billingChange]);
 
   useEffect(() => {
     if (
@@ -267,6 +304,7 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
             "firstname",
             "lastname",
             "phone",
+            "phone2",
             "nit",
             "city",
             "street",
@@ -275,6 +313,8 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
             "home_type",
             "apt_number",
             "building_name",
+            "zone",
+            "neighborhood",
             "reference"
           ].map((key: string) => {
             return (
@@ -282,7 +322,10 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
                 <label>{t("checkout.delivery." + key)}</label>
                 {options[key] && (
                   <SelectWrapper>
-                    <select onChange={(evt) => onChange(key, evt.target.value)}>
+                    <select
+                      name={`shipping-${key}`}
+                      onChange={(evt) => onChange(key, evt.target.value)}
+                    >
                       <option value="">{t("checkout.delivery." + key)}</option>
                       {options[key].map((opt: string) => (
                         <option key={opt}>{opt}</option>
@@ -302,9 +345,17 @@ const Shipping: FC<Props> = ({ updateOrder }) => {
                 )}
                 {key !== "street" && !options[key] && (
                   <input
+                    name={`shipping-${key}`}
+                    value={inputs[key] || ""}
                     onChange={(evt) => onChange(key, evt.target.value)}
-                    pattern={key === "phone" || key === "nit" ? "[0-9]*" : ""}
-                    type={key === "phone" || key === "nit" ? "number" : "text"}
+                    pattern={
+                      key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""
+                    }
+                    type={
+                      key.indexOf("phone") >= 0 || key === "nit"
+                        ? "number"
+                        : "text"
+                    }
                     placeholder={t("checkout.delivery." + key)}
                   />
                 )}

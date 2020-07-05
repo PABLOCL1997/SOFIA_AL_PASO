@@ -131,6 +131,7 @@ const Checkout: FC<Props> = () => {
   const [userData, setUserData] = useState({});
   const [order, setOrder] = useState<OrderData>();
   const [orderData, setOrderData] = useState<any>({});
+  const [billingChange, setBillingChange] = useState<any>({});
   const [result, setResult] = useState<
     Array<{ entity_id: string; increment_id: string }>
   >([]);
@@ -271,6 +272,70 @@ const Checkout: FC<Props> = () => {
           })
         );
       });
+
+    document.querySelectorAll(`.error`).forEach((input: any) => {
+      input?.classList.remove("error");
+    });
+
+    let missingField = false;
+    ["firstname", "lastname", "email", "nit"].forEach((key: string) => {
+      if (!orderData.billing[key] && !missingField) {
+        missingField = true;
+        const input = document.querySelector(`[name="billing-${key}"]`);
+        if (input) {
+          input.classList.add("error");
+          window.scrollTo({
+            top: (input as any).offsetTop - 170,
+            behavior: "smooth"
+          });
+        }
+        showError({
+          variables: {
+            user: {
+              showError: t("checkout.missing_field", {
+                field: t("checkout.billing." + key)
+              })
+            }
+          }
+        });
+      }
+    });
+
+    if (!missingField && !orderData.shipping.id) {
+      [
+        "firstname",
+        "lastname",
+        "nit",
+        "phone",
+        "address",
+        "home_type",
+        "apt_number"
+      ].forEach((key: string) => {
+        if (!orderData.shipping[key] && !missingField) {
+          missingField = true;
+          const input = document.querySelector(`[name="shipping-${key}"]`);
+          if (input) {
+            input.classList.add("error");
+            window.scrollTo({
+              top: (input as any).offsetTop - 170,
+              behavior: "smooth"
+            });
+          }
+          showError({
+            variables: {
+              user: {
+                showError: t("checkout.missing_field", {
+                  field: t("checkout.delivery." + key)
+                })
+              }
+            }
+          });
+        }
+      });
+    }
+
+    if (missingField) return;
+
     setOrder({
       discount_amount: parseFloat(orderData.coupon.discount),
       discount_type: orderData.coupon.type,
@@ -289,7 +354,7 @@ const Checkout: FC<Props> = () => {
         lastname: orderData.billing.lastname,
         fax: orderData.billing.nit,
         email: orderData.billing.email,
-        telephone: orderData.billing.phone,
+        telephone: orderData.shipping.phone2,
         country_id: "BO",
         city:
           localUserData &&
@@ -313,7 +378,9 @@ const Checkout: FC<Props> = () => {
           orderData.shipping.number || ""
         } ${orderData.shipping.home_type || ""} ${
           orderData.shipping.apt_number || ""
-        } ${orderData.shipping.building_name || ""}`,
+        } ${orderData.shipping.building_name || ""} ${
+          orderData.shipping.zone || ""
+        } ${orderData.shipping.neighborhood || ""}`,
         city: orderData.shipping.city,
         region: orderData.shipping.reference,
         country_id: "BO",
@@ -327,7 +394,7 @@ const Checkout: FC<Props> = () => {
   };
 
   const updateOrderData = (key: string, values: any) => {
-    console.log(key, values);
+    if (key === "billing") setBillingChange(values);
     setOrderData({
       ...orderData,
       [key]: values
@@ -351,7 +418,11 @@ const Checkout: FC<Props> = () => {
                   <Steps>
                     <Billing updateOrder={updateOrderData} />
                     <Line />
-                    <Shipping updateOrder={updateOrderData} />
+                    <Shipping
+                      updateOrder={updateOrderData}
+                      orderData={orderData}
+                      billingChange={billingChange}
+                    />
                     <Line />
                     <Payment updateOrder={updateOrderData} />
                   </Steps>

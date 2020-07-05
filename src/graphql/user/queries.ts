@@ -1,83 +1,91 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const GET_USER = gql`
-query GetUserInfo {
+  query GetUserInfo {
     userInfo @client
-}
-`
+  }
+`;
+
+export const CHECK_TOKEN = gql`
+  query CheckToken {
+    checkToken {
+      status
+    }
+  }
+`;
 
 export const DETAILS = gql`
-query Details {
+  query Details {
     details {
+      id
+      firstname
+      lastname
+      email
+      nit
+      phone
+      addressId
+      addresses {
         id
         firstname
         lastname
-        email
         nit
+        street
+        city
         phone
-        addressId
-        addresses {
-            id
-            firstname
-            lastname
-            nit
-            street
-            city
-            phone
-            reference
-            latitude
-            longitude
-        }
+        reference
+        latitude
+        longitude
+      }
     }
-}
-`
+  }
+`;
 
 export const ORDERS = gql`
-query Orders {
+  query Orders {
     orders {
-        id
-        incrementId
-        createdAt
-        status
-        total
+      id
+      incrementId
+      createdAt
+      status
+      total
     }
-}
-`
+  }
+`;
 
 export const ORDER = gql`
-query Order($orderId: Int!) {
+  query Order($orderId: Int!) {
     order(orderId: $orderId) {
-        id
-        incrementId
-        createdAt
-        status
-        billingFirstname
-        billingLastname
-        billingEmail
-        billingNit
-        shippingFirstname
-        shippingLastname
-        shippingPhone
-        shippingNit
-        shippingStreet
-        shippingCity
-        shippingReference
-        items {
-            itemId
-            name
-            price
-        }
-        subtotal
-        shippingPrice
-        total
+      id
+      incrementId
+      createdAt
+      status
+      billingFirstname
+      billingLastname
+      billingEmail
+      billingNit
+      shippingFirstname
+      shippingLastname
+      shippingPhone
+      shippingNit
+      shippingStreet
+      shippingCity
+      shippingReference
+      items {
+        itemId
+        name
+        price
+      }
+      subtotal
+      shippingPrice
+      total
     }
-}
-`
+  }
+`;
 
 export const ORDER_STATUS = gql`
-query SofiawsOrderStatus($incremendId: String!) {
+  query SofiawsOrderStatus($incremendId: String!) {
     sofiawsOrderStatus(incremendId: $incremendId) {
-        status
+      status
     }
-}
-`
+  }
+`;

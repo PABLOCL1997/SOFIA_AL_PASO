@@ -2,13 +2,19 @@ import React, { FC, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
-import { useMutation, useQuery } from "react-apollo";
+import { useMutation, useQuery, useLazyQuery } from "react-apollo";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
-import { GET_CART_ITEMS, GET_TOTAL, GET_QTY } from "../graphql/cart/queries";
+import {
+  GET_CART_ITEMS,
+  GET_TOTAL,
+  GET_QTY,
+  CHECK_CART
+} from "../graphql/cart/queries";
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../graphql/products/type";
 import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
+import { GET_PRODUCT } from "../graphql/products/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -323,6 +329,25 @@ const AuthModal: FC<Props> = () => {
     variables: { product: { ...action.product } }
   });
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
+  const [shouldExecute, executeNewCartQuery] = useState(false);
+  const { data: newCart } = useQuery(CHECK_CART, {
+    variables: {
+      cart: JSON.stringify(
+        data.cartItems.map((p: ProductType) => ({
+          entity_id: p.entity_id,
+          qty: p.qty
+        }))
+      ),
+      city: userData && userData.userInfo.length && userData.userInfo[0].cityKey
+    },
+    fetchPolicy: "network-only",
+    skip: !shouldExecute
+  });
+  const [showSuccess] = useMutation(SET_USER, {
+    variables: { user: { showSuccess: t("cart.change_msg") } }
+  });
+
+  const totalAmount = GET_TOTAL(data.cartItems);
 
   const updateItem = (_qty: number, _product: ProductType) => {
     setAction({
@@ -366,6 +391,30 @@ const AuthModal: FC<Props> = () => {
   };
 
   useEffect(() => {
+    if (newCart && newCart.checkCart) {
+      (async () => {
+        let cartItems = JSON.parse(newCart.checkCart.cart);
+        for (let i = 0; i < cartItems.length; i++) {
+          let elem: ProductType = data.cartItems.find(
+            (p: ProductType) => p.entity_id === cartItems[i].entity_id
+          );
+          if (cartItems[i].qty === 0) {
+            await deleteItem({
+              variables: { product: { ...elem } }
+            });
+          } else if (cartItems[i].qty !== elem.qty) {
+            await addItem({
+              variables: { product: { ...elem, qty: elem.qty, replace: true } }
+            });
+          }
+        }
+        showSuccess();
+        executeNewCartQuery(false);
+      })();
+    }
+  }, [newCart]);
+
+  useEffect(() => {
     doAction(action);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [action]);
@@ -375,7 +424,23 @@ const AuthModal: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const totalAmount = GET_TOTAL(data.cartItems);
+  useEffect(() => {
+    if (history.location.pathname.indexOf("checkout") >= 0) {
+      if (parseFloat(totalAmount.replace(",", ".")) < 200) {
+        history.push("/");
+      }
+    }
+  }, [totalAmount]);
+
+  useEffect(() => {
+    const _w: any = window;
+    if (userData && userData.userInfo.length) {
+      if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
+        executeNewCartQuery(true);
+      }
+      _w.currentCity = userData.userInfo[0].cityName;
+    }
+  }, [userData]);
 
   return (
     <Suspense fallback={<Loader />}>

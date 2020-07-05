@@ -1,354 +1,360 @@
 {
-    "header": {
-        "login": "Ingresar",
-        "logout": "Salir",
-        "account": "Mi cuenta",
-        "home": "Home",
-        "products": "Productos",
-        "faq": "Preguntas frecuentes",
-        "slogan": "En Sofía se confía."
+  "header": {
+    "login": "Ingresar",
+    "logout": "Salir",
+    "account": "Mi cuenta",
+    "home": "Home",
+    "products": "Productos",
+    "faq": "Preguntas frecuentes",
+    "slogan": "En Sofía se confía."
+  },
+  "footer": {
+    "text": "Siempre hemos estado cerca y hoy lo estamos aún mas, comprometidos con tu familia y la seguridad alimentaria del país",
+    "copy": "Sofia {{year}} - Todos los derechos reservados",
+    "slogan": "En Sofía se confía.",
+    "contact": "Para consultas, comunícate con nosotros:",
+    "phone": "Teléfono",
+    "mail": "Correo"
+  },
+  "homepage": {
+    "hero": {
+      "text": "¿Qué te llevamos hoy?",
+      "city_select": "Selecciona la ciudad de entrega",
+      "product_search": "¿Qué producto buscas?",
+      "search": "buscar"
     },
-    "footer": {
-        "text": "Siempre hemos estado cerca y hoy lo estamos aún mas, comprometidos con tu familia y la seguridad alimentaria del país",
-        "copy": "Sofia {{year}} - Todos los derechos reservados",
-        "slogan": "En Sofía se confía.",
-        "contact": "Para consultas, comunícate con nosotros:",
-        "phone": "Teléfono",
-        "mail": "Correo"
+    "categoryslider": {
+      "all": "Todos",
+      "seeall": "Ver todos"
     },
-    "homepage": {
-        "hero": {
-            "text": "¿Qué te llevamos hoy?",
-            "city_select": "Selecciona la ciudad de entrega",
-            "product_search": "¿Qué producto buscas?",
-            "search": "buscar"
-        },
-        "categoryslider": {
-            "all": "Todos",
-            "seeall": "Ver todos"
-        },
-        "benefits": {
-            "title": "Los mejores beneficios",
-            "text": "Nuestra tienda te conviene, porque nos preocupamos por darte el mejor servicio.",
-            "delivery": {
-                "title": "Envío a domicilio",
-                "text": "Hacé tu orden y obtenela dentro de 48hs hábiles en tu hogar."
-            },
-            "payment": {
-                "title": "Pagá como más te convenga",
-                "text": "Paga online, con tarjeta o efectivo cuando recibas tu pedido."
-            },
-            "order": {
-                "title": "Pedido mínimo, envío gratis",
-                "text": "Tira de costilla de cerdo congelado en bandeja"
-            }
-        },
-        "promotions": {
-            "title": "Nuestras promociones",
-            "seeall": "Ver todas"
-        },
-        "subscribe": {
-            "store": "Tienda",
-            "notifications": "NOTIFICACIONES Y OFERTAS",
-            "title": "Quieres conocer nuestras ofertas y novedades?",
-            "mail": "Ingresa tu mail",
-            "button": "suscríbete",
-            "text": "Producimos alimentos sanos y nutritivos en armonía con el medio ambiente y la comunidad, innovando constantemente para mejorar la calidad de vida de nuestros consumidores.",
-            "error": "No se pudo realizar la acción, intente nuevamente.",
-            "success": "Se realizo la acción con éxito"
-        },
-        "recipes": {
-            "title": "Nuestras recetas",
-            "seeall": "Ver nuestras recetas"
-        }
+    "benefits": {
+      "title": "Los mejores beneficios",
+      "text": "Nuestra tienda te conviene, porque nos preocupamos por darte el mejor servicio.",
+      "delivery": {
+        "title": "Envío a domicilio",
+        "text": "Hacé tu orden y obtenela dentro de 48hs hábiles en tu hogar."
+      },
+      "payment": {
+        "title": "Pagá como más te convenga",
+        "text": "Paga online, con tarjeta o efectivo cuando recibas tu pedido."
+      },
+      "order": {
+        "title": "Pedido mínimo, envío gratis",
+        "text": "Sofía Tienda es el primer sitio donde podés comprar carne por kilo online."
+      }
     },
-    "itembox": {
-        "add": "Agregar",
-        "price_label": "Precio estimado"
+    "promotions": {
+      "title": "Nuestras promociones",
+      "seeall": "Ver todas"
     },
-    "citymodal": {
-        "title": "¿A qué ciudad enviamos tu pedido?",
-        "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:",
-        "title_alt": "¿A qué dirección enviamos tu pedido?",
-        "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:"
+    "subscribe": {
+      "store": "Tienda",
+      "notifications": "NOTIFICACIONES Y OFERTAS",
+      "title": "Quieres conocer nuestras ofertas y novedades?",
+      "mail": "Ingresa tu mail",
+      "button": "suscribite",
+      "text": "Producimos alimentos sanos y nutritivos en armonía con el medio ambiente y la comunidad, innovando constantemente para mejorar la calidad de vida de nuestros consumidores.",
+      "error": "No se pudo realizar la acción, intente nuevamente.",
+      "success": "Se realizo la acción con éxito"
     },
-    "products": {
-        "filter_side_bar": {
-            "title": "Nuestros productos",
-            "all": "Todas las categorías",
-            "new": "nuevo",
-            "freedelivery": {
-                "title": "Envío es gratuito dentro de las 48 horas hábiles",
-                "text": ""
-            },
-            "product_count": "{{count}} Productos encontrados"
-        },
-        "product_list": {
-            "search_product": "Buscar producto",
-            "search": "Buscar",
-            "order_by": "Ordenar por",
-            "weight": "Peso",
-            "price": "Precio",
-            "no_results": "No se encontraron resultados con los criterios de busqueda actuales."
-        }
-    },
-    "product": {
-        "continue_shopping": "Seguir comprando",
-        "categories": "CATEGORÍAS",
-        "add": "Agregar",
-        "delivery": {
-            "title": "Envío es gratuito dentro de las 48 horas hábiles",
-            "text": "Los envíos se realizan de lunes a viernes"
-        },
-        "warranty": {
-            "title": "100% GARANTÍA DE CALIDAD",
-            "text": "Los productos más frescos para tu familia."
-        },
-        "disclaimer": "",
-        "related": {
-            "title": "También te recomendamos",
-            "see": "Ver"
-        },
-        "modal": {
-            "text": "El producto ha sido añadido a tu cesta.",
-            "buttontext": "Ir a pagar"
-        }
-    },
-    "auth_modal": {
-        "success": "Se realizo la acción con éxito",
-        "error": "No se pudo realizar la acción, intente nuevamente.",
-        "login": {
-            "title": "Iniciar sesión",
-            "email": "Email",
-            "password": "Contraseña",
-            "forget_password": "Olvidé mi contraseña",
-            "button": "Ingresar",
-            "google": {
-                "text": "Ingresar con",
-                "network": "Google"
-            },
-            "facebook": {
-                "text": "Ingresar con",
-                "network": "Facebook"
-            },
-            "disclaimer": {
-                "no_account": "Todavía no tenés cuenta?",
-                "sign_up": "Registrate!"
-            }
-        },
-        "sign_up": {
-            "title": "Registrarme",
-            "email": "Ingresa tu email",
-            "password": "Ingresá una contraseña",
-            "r_password": "Reingresá la contraseña",
-            "button": "registrarme",
-            "google": {
-                "text": "Ingresar con",
-                "network": "Google"
-            },
-            "facebook": {
-                "text": "Ingresar con",
-                "network": "Facebook"
-            },
-            "disclaimer": {
-                "account": "Ya tenés cuenta?",
-                "login": "Inicia sesión!"
-            }
-        },
-        "forgot_password": {
-            "title": "Recuperar contraseña",
-            "subtitle": "Te enviaremos las instrucciones al mail para que puedas recuperar tu contraseña",
-            "email": "Ingresa tu mail",
-            "button": "Enviar",
-            "back": "Volver",
-            "message": {
-                "title": "¡Listo!",
-                "subtitle": "Revisa tu mail y continúa desde allí",
-                "button": "Volver al inicio",
-                "disclaimer": {
-                    "no_message": "¿No lo recibiste?",
-                    "retry": "Volver a enviar"
-                }
-            }
-        },
-        "reset_password": {
-            "title": "Nueva contraseña",
-            "subtitle": "Ingresá una nueva contraseña para tu cuenta",
-            "email": "Ingresa tu email",
-            "password": "Ingresá una contraseña",
-            "r_password": "Reingresá la contraseña",
-            "button": "Confirmar"
-        }
-    },
-    "cart": {
-        "title": "Carrito",
-        "items": "items",
-        "subtotal": "Subtotal",
-        "disclaimer": "",
-        "empty": "Vaciar carrito",
-        "pay": "Ir a pagar",
-        "under_budget": "El valor  mínimo para la compra es de Bs. 200. Por favor agrega mas productos"
-    },
-    "checkout": {
-        "todotix_error": "La orden fue creada correctamente, pero no se pudo obtener el link de pago",
-        "error": "No se pudo generar la orden",
-        "title": "Check out",
-        "modify_cart": "Modificar carrito",
-        "billing": {
-            "title": "1  Datos para facturación",
-            "firstname": "Nombre",
-            "lastname": "Apellido",
-            "email": "Email",
-            "nit": "NIT/*Carnet identidad",
-            "other_person": "Facturar a otra persona",
-            "to_me": "Facturarme a mi"
-        },
-        "delivery": {
-            "title": "2. Datos para la entrega",
-            "time": "aprox. {{day}} entre las {{from}} y {{to}}",
-            "other_address": "Enviar a otra dirección",
-            "firstname": "Nombre",
-            "lastname": "Apellido",
-            "phone": "*Teléfono",
-            "nit": "NIT/*Carnet identidad",
-            "city": "Ciudad",
-            "street": "Calle",
-            "avenue": "Avenida",
-            "address": "*Dirección",
-            "number": "Número",
-            "home_type": "*Tipo de vivienda",
-            "apt_number": "*Número de departamento",
-            "building_name": "Nombre del edificio",
-            "reference": "Referencia",
-            "map": {
-                "title": "Ubica el punto correcto en el mapa",
-                "pin": "Debes mover el pin hasta tu dirección",
-                "geo": "Encontrar mi ubicación"
-            }
-        },
-        "payment": {
-            "title": "3. Método de pago",
-            "cashondelivery": "Efectivo en domicilio",
-            "checkmo": "Con tarjeta en domicilio",
-            "todotix": "Pago Online",
-            "bs_only": "*Sólo en Bolivianos",
-            "home": "Pago en mi domicilio",
-            "add": "Agregar otra",
-            "card_modal": {
-                "title": "Agregar tarjeta",
-                "name_placeholder": "Nombre y Apellido",
-                "exp_date_placeholder": "MM/AA",
-                "cvv_placeholder": "CVV",
-                "number": "Número de la tarjeta",
-                "name": "Nombre cmo figura en la tarjeta",
-                "exp_date": "Fecha de expiración",
-                "cvv": "Código CVV",
-                "add": "Agregar"
-            }
-        },
-        "ticket": {
-            "title": "Mi pedido",
-            "subtotal": "Subtotal",
-            "delivery": "Envío",
-            "coupon": {
-                "ask": "¿Tienes un cupón?",
-                "placeholder": "Cupón de descuento",
-                "add": "canjear",
-                "delete": "ELIMINAR",
-                "error": "El cupón ingresado no es válido"
-            },
-            "discount": "Descuento",
-            "total": "Total",
-            "send": "Enviar pedido"
-        }
-    },
-    "thankyou": {
-        "title": "¡Gracias por su compra!",
-        "subtitle": "Tu número de compra es #{{increment_id}}.",
-        "mail": "Usted recibirá un Email confirmando el pedido con los detalles de su orden.",
-        "time": "Su pedido será entregado dentro de las próximas 48 hrs, de Lunes a Viernes.",
-        "phone": "Nuestro servicio de atención al cliente se pondrá en contacto con usted en caso de haber algún inconveniente o variante en su compra.",
-        "client": {
-            "title": "Estimado cliente:",
-            "text": "Le recordamos que estamos con alta demanda de productos y su pedido puede variar dependiendo de la disponibilidad de los mismos. Disculpe las molestias que esto pueda ocasionar.",
-            "thanks": "¡Gracias por confiar en Sofía!"
-        },
-        "go_home": "Volver al inicio"
-    },
-    "account": {
-        "success": "Se realizo la acción con éxito",
-        "error": "No se pudo realizar la acción, intente nuevamente.",
-        "empty_city": "Complete el campo ciudad",
-        "empty_reference": "Complete el campo referencia",
-        "empty_street": "Complete el campo dirección",
-        "sidebar": {
-            "welcome": "Bienvenido",
-            "personal_info": "Datos personales",
-            "history": "Historial de ordenes"
-        },
-        "title": "Mi cuenta",
-        "edit": "Editar",
-        "save": "Guardar",
-        "data": "Datos",
-        "firstname": "Nombre",
-        "lastname": "Apellido",
-        "email": "Email",
-        "nit": "NIT/*Carnet identidad",
-        "phone": "Teléfono",
-        "password": "Contraseña",
-        "addresses": "Direcciones",
-        "newaddress": "+ Agregar dirección",
-        "modal": {
-            "title": "Agregar dirección de entrega",
-            "street": "Ingresa la dirección",
-            "city": "Seleccionar ciudad",
-            "reference": "Referencia",
-            "add": "Agregar"
-        },
-        "orders": {
-            "title": "Historial de órdenes",
-            "see": "Ver",
-            "date": "Fecha",
-            "number": "Número de orden",
-            "value": "Valor",
-            "status": "Estado",
-            "no_results": "No has realizado órdenes aún.",
-            "labels": {
-                "pending": "Pendiente",
-                "canceled": "Cancelado"
-            }
-        },
-        "order": {
-            "back": "Volver",
-            "title": "Orden #{{increment_id}}",
-            "billing": {
-                "title": "Datos de facturación",
-                "billingFirstname": "Nombre",
-                "billingLastname": "Apellido",
-                "billingEmail": "Email",
-                "billingNit": "NIT/Carnet identidad"
-            },
-            "shipping": {
-                "title": "Datos de envío",
-                "shippingFirstname": "Nombre",
-                "shippingLastname": "Apellido",
-                "shippingPhone": "*Teléfono",
-                "shippingNit": "NIT/*Carnet identidad",
-                "shippingStreet": "Calle",
-                "shippingCity": "Ciudad",
-                "shippingReference": "Referencia"
-            },
-            "detail": "Detalle",
-            "subtotal": "Subtotal",
-            "shippingPrice": "Envío",
-            "total": "Total"
-        }
-    },
-    "faq": {
-        "title": "¿Cómo podemos ayudarte?",
-        "footer": {
-            "title": "¿No encontraste lo que buscabas?",
-            "contact": "Envianos un mail a <a href='mailto:info@sofia.com.bo'>info@sofia.com.bo</a>"
-        }
+    "recipes": {
+      "title": "Nuestras recetas",
+      "seeall": "Ver nuestras recetas"
     }
+  },
+  "itembox": {
+    "add": "Agregar",
+    "price_label": "Precio estimado"
+  },
+  "citymodal": {
+    "title": "¿A qué ciudad enviamos tu pedido?",
+    "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:",
+    "title_alt": "¿A qué dirección enviamos tu pedido?",
+    "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:"
+  },
+  "products": {
+    "filter_side_bar": {
+      "title": "Nuestros productos",
+      "all": "Todas las categorías",
+      "new": "nuevo",
+      "freedelivery": {
+        "title": "Envío gratuito dentro de las 48 horas hábiles",
+        "text": ""
+      },
+      "product_count": "{{count}} Productos encontrados"
+    },
+    "product_list": {
+      "search_product": "Buscar producto",
+      "search": "Buscar",
+      "order_by": "Ordenar por",
+      "weight": "Peso",
+      "price": "Precio",
+      "no_results": "No se encontraron resultados con los criterios de busqueda actuales."
+    }
+  },
+  "product": {
+    "continue_shopping": "Seguir comprando",
+    "categories": "CATEGORÍAS",
+    "add": "Agregar",
+    "delivery": {
+      "title": "Envío es gratuito dentro de las 48 horas hábiles",
+      "text": "Los envíos se realizan de lunes a viernes"
+    },
+    "warranty": {
+      "title": "100% GARANTÍA DE CALIDAD",
+      "text": "Los productos más frescos para tu familia."
+    },
+    "disclaimer": "",
+    "related": {
+      "title": "También te recomendamos",
+      "see": "Ver"
+    },
+    "modal": {
+      "text": "El producto ha sido añadido a tu cesta.",
+      "buttontext": "Ir a pagar"
+    }
+  },
+  "auth_modal": {
+    "success": "Se realizo la acción con éxito",
+    "error": "No se pudo realizar la acción, intente nuevamente.",
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Email",
+      "password": "Contraseña",
+      "forget_password": "Olvidé mi contraseña",
+      "button": "Ingresar",
+      "google": {
+        "text": "Ingresar con",
+        "network": "Google"
+      },
+      "facebook": {
+        "text": "Ingresar con",
+        "network": "Facebook"
+      },
+      "disclaimer": {
+        "no_account": "Todavía no tenés cuenta?",
+        "sign_up": "Regístrate!"
+      }
+    },
+    "sign_up": {
+      "title": "Registrarme",
+      "email": "Ingresa tu email",
+      "password": "Ingresá una contraseña",
+      "r_password": "Reingresá la contraseña",
+      "button": "registrarme",
+      "google": {
+        "text": "Ingresar con",
+        "network": "Google"
+      },
+      "facebook": {
+        "text": "Ingresar con",
+        "network": "Facebook"
+      },
+      "disclaimer": {
+        "account": "Ya tenés cuenta?",
+        "login": "Inicia sesión!"
+      }
+    },
+    "forgot_password": {
+      "title": "Recuperar contraseña",
+      "subtitle": "Te enviaremos las instrucciones al mail para que puedas recuperar tu contraseña",
+      "email": "Ingresa tu mail",
+      "button": "Enviar",
+      "back": "Volver",
+      "message": {
+        "title": "¡Listo!",
+        "subtitle": "Revisa tu mail y continúa desde allí",
+        "button": "Volver al inicio",
+        "disclaimer": {
+          "no_message": "¿No lo recibiste?",
+          "retry": "Volver a enviar"
+        }
+      }
+    },
+    "reset_password": {
+      "title": "Nueva contraseña",
+      "subtitle": "Ingresá una nueva contraseña para tu cuenta",
+      "email": "Ingresa tu email",
+      "password": "Ingresá una contraseña",
+      "r_password": "Reingresá la contraseña",
+      "button": "Confirmar"
+    }
+  },
+  "cart": {
+    "title": "Carrito",
+    "items": "items",
+    "subtotal": "Subtotal",
+    "disclaimer": "",
+    "empty": "Vaciar carrito",
+    "pay": "Ir a pagar",
+    "under_budget": "El valor  mínimo para la compra es de Bs. 200. Por favor agrega mas productos",
+    "change_msg": "Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
+    "add_msg": "Producto agregado al carrito"
+  },
+  "checkout": {
+    "missing_field": "Por favor complete el campo {{field}}",
+    "todotix_error": "La orden fue creada correctamente, pero no se pudo obtener el link de pago",
+    "error": "No se pudo generar la orden",
+    "title": "Check out",
+    "modify_cart": "Modificar carrito",
+    "billing": {
+      "title": "1  Datos para facturación",
+      "firstname": "Nombre",
+      "lastname": "Apellido",
+      "email": "Email",
+      "nit": "NIT/*Carnet identidad",
+      "other_person": "Facturar a otra persona",
+      "to_me": "Facturarme a mi"
+    },
+    "delivery": {
+      "title": "2. Datos para la entrega",
+      "time": "aprox. {{day}} entre las {{from}} y {{to}}",
+      "other_address": "Enviar a otra dirección",
+      "firstname": "Nombre",
+      "lastname": "Apellido",
+      "phone": "*Teléfono",
+      "phone2": "Teléfono Alternativo",
+      "nit": "NIT/*Carnet identidad",
+      "city": "Ciudad",
+      "street": "Calle",
+      "avenue": "Avenida",
+      "address": "*Nombre de calle",
+      "number": "Número de calle",
+      "home_type": "*Tipo de vivienda",
+      "apt_number": "*Número de departamento",
+      "building_name": "Nombre del edificio",
+      "zone": "Zona",
+      "neighborhood": "Barrio",
+      "reference": "Referencia",
+      "map": {
+        "title": "Ubica el punto correcto en el mapa",
+        "pin": "Debes mover el pin hasta tu dirección",
+        "geo": "Encontrar mi ubicación"
+      }
+    },
+    "payment": {
+      "title": "3. Método de pago",
+      "cashondelivery": "Efectivo en domicilio",
+      "checkmo": "Con tarjeta en domicilio",
+      "todotix": "Pago Online",
+      "bs_only": "*Sólo en Bolivianos",
+      "home": "Pago en mi domicilio",
+      "add": "Agregar otra",
+      "card_modal": {
+        "title": "Agregar tarjeta",
+        "name_placeholder": "Nombre y Apellido",
+        "exp_date_placeholder": "MM/AA",
+        "cvv_placeholder": "CVV",
+        "number": "Número de la tarjeta",
+        "name": "Nombre cmo figura en la tarjeta",
+        "exp_date": "Fecha de expiración",
+        "cvv": "Código CVV",
+        "add": "Agregar"
+      }
+    },
+    "ticket": {
+      "title": "Mi pedido",
+      "subtotal": "Subtotal",
+      "delivery": "Envío",
+      "coupon": {
+        "ask": "¿Tienes un cupón?",
+        "placeholder": "Cupón de descuento",
+        "add": "canjear",
+        "delete": "ELIMINAR",
+        "error": "El cupón ingresado no es válido"
+      },
+      "discount": "Descuento",
+      "total": "Total",
+      "send": "Enviar pedido"
+    }
+  },
+  "thankyou": {
+    "title": "¡Gracias por su compra!",
+    "subtitle": "Tu número de compra es #{{increment_id}}.",
+    "mail": "Usted recibirá un Email confirmando el pedido con los detalles de su orden.",
+    "time": "Su pedido será entregado dentro de las próximas 48 hrs, de Lunes a Viernes.",
+    "phone": "Nuestro servicio de atención al cliente se pondrá en contacto con usted en caso de haber algún inconveniente o variante en su compra.",
+    "client": {
+      "title": "Estimado cliente:",
+      "text": "Le recordamos que estamos con alta demanda de productos y su pedido puede variar dependiendo de la disponibilidad de los mismos. Disculpe las molestias que esto pueda ocasionar.",
+      "thanks": "¡Gracias por confiar en Sofía!"
+    },
+    "go_home": "Volver al inicio"
+  },
+  "account": {
+    "success": "Se realizo la acción con éxito",
+    "error": "No se pudo realizar la acción, intente nuevamente.",
+    "empty_city": "Complete el campo ciudad",
+    "empty_reference": "Complete el campo referencia",
+    "empty_street": "Complete el campo dirección",
+    "sidebar": {
+      "welcome": "Bienvenido",
+      "personal_info": "Datos personales",
+      "history": "Historial de ordenes"
+    },
+    "title": "Mi cuenta",
+    "edit": "Editar",
+    "save": "Guardar",
+    "data": "Datos",
+    "firstname": "Nombre",
+    "lastname": "Apellido",
+    "email": "Email",
+    "nit": "NIT/*Carnet identidad",
+    "phone": "Teléfono",
+    "password": "Contraseña",
+    "addresses": "Direcciones",
+    "newaddress": "+ Agregar dirección",
+    "modal": {
+      "title": "Agregar dirección de entrega",
+      "street": "Ingresa la dirección",
+      "city": "Seleccionar ciudad",
+      "reference": "Referencia",
+      "add": "Agregar"
+    },
+    "orders": {
+      "title": "Historial de órdenes",
+      "see": "Ver",
+      "date": "Fecha",
+      "number": "Número de orden",
+      "value": "Valor",
+      "status": "Estado",
+      "no_results": "No has realizado órdenes aún.",
+      "labels": {
+        "pending": "Pendiente",
+        "canceled": "Cancelado"
+      }
+    },
+    "order": {
+      "back": "Volver",
+      "title": "Orden #{{increment_id}}",
+      "billing": {
+        "title": "Datos de facturación",
+        "billingFirstname": "Nombre",
+        "billingLastname": "Apellido",
+        "billingEmail": "Email",
+        "billingNit": "NIT/Carnet identidad"
+      },
+      "shipping": {
+        "title": "Datos de envío",
+        "shippingFirstname": "Nombre",
+        "shippingLastname": "Apellido",
+        "shippingPhone": "*Teléfono",
+        "shippingNit": "NIT/*Carnet identidad",
+        "shippingStreet": "Calle",
+        "shippingCity": "Ciudad",
+        "shippingReference": "Referencia"
+      },
+      "detail": "Detalle",
+      "subtotal": "Subtotal",
+      "shippingPrice": "Envío",
+      "total": "Total"
+    }
+  },
+  "faq": {
+    "title": "¿Cómo podemos ayudarte?",
+    "footer": {
+      "title": "¿No encontraste lo que buscabas?",
+      "contact": "Envianos un mail a <a href='mailto:info@sofia.com.bo'>info@sofia.com.bo</a>"
+    }
+  }
 }

@@ -125,6 +125,7 @@ const Billing: FC<Props> = ({ updateOrder }) => {
             <InputGroup key={key}>
               <label>{t("checkout.billing." + key)}</label>
               <input
+                name={`billing-${key}`}
                 value={(inputs as any)[key] || ""}
                 onChange={(evt) => onChange(key, evt.target.value)}
                 pattern={key === "nit" ? "[0-9]*" : ""}
