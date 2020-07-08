@@ -1,10 +1,5 @@
-import React, { Suspense, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useHistory
-} from "react-router-dom";
+import React, { Suspense } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import "./Reset.css";
 import DelayedWrapper from "./components/DelayedWrapper";

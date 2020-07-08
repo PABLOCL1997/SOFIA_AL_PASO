@@ -246,6 +246,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
       }
     });
     setInputs(obj);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billingChange]);
 
   useEffect(() => {

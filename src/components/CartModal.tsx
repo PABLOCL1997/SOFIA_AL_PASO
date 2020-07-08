@@ -2,7 +2,7 @@ import React, { FC, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
-import { useMutation, useQuery, useLazyQuery } from "react-apollo";
+import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
 import {
@@ -14,7 +14,6 @@ import {
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../graphql/products/type";
 import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
-import { GET_PRODUCT } from "../graphql/products/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -425,6 +424,7 @@ const AuthModal: FC<Props> = () => {
         executeNewCartQuery(false);
       })();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCart]);
 
   useEffect(() => {

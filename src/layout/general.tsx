@@ -72,6 +72,7 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
       token.delete();
       history.push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
