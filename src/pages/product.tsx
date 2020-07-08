@@ -44,7 +44,9 @@ const ContinueArrow = React.lazy(() =>
     /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
   )
 );
-// const Close = React.lazy(() => import(/* webpackChunkName: "Close" */'../components/Images/Close'));
+const Close = React.lazy(() =>
+  import(/* webpackChunkName: "Close" */ "../components/Images/Close")
+);
 
 const Header = styled.div`
   padding: var(--padding);
@@ -334,6 +336,21 @@ const DiscountPrice = styled.span`
   text-decoration: line-through;
 `;
 
+const CloseWrapper = styled.div`
+  cursor: pointer;
+  flex: 1;
+  svg {
+    margin-top: 0;
+    margin-left: 5px;
+    path {
+      stroke: var(--red);
+    }
+  }
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
 type Props = {
   inlineProdname?: String;
   oldUrl?: String;
@@ -381,7 +398,9 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
     }
   });
   const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showSuccess: t("cart.add_msg") } }
+    variables: {
+      user: { showModal: t("cart.add_msg", { product: product.name }) }
+    }
   });
 
   const addAndGo = () => {
@@ -416,6 +435,11 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
       <DelayedWrapper noHeader={true}>
         <div className="main-container">
           <Header>
+            {oldUrl && (
+              <CloseWrapper onClick={proceed}>
+                <Close />
+              </CloseWrapper>
+            )}
             <HeaderLink onClick={proceed}>
               <span>{t("product.continue_shopping")}</span>
               <ContinueArrow />

@@ -8,8 +8,11 @@
     "faq": "Preguntas frecuentes",
     "slogan": "En Sofía se confía."
   },
+  "modal": {
+    "close": "Cerrar"
+  },
   "footer": {
-    "text": "Siempre hemos estado cerca y hoy lo estamos aún mas, comprometidos con tu familia y la seguridad alimentaria del país",
+    "text": "Siempre hemos estado cerca y hoy lo estamos aún más, comprometidos con tu familia y la seguridad alimentaria del país",
     "copy": "Sofia {{year}} - Todos los derechos reservados",
     "slogan": "En Sofía se confía.",
     "contact": "Para consultas, comunícate con nosotros:",
@@ -188,8 +191,8 @@
     "empty": "Vaciar carrito",
     "pay": "Ir a pagar",
     "under_budget": "El valor  mínimo para la compra es de Bs. 200. Por favor agrega mas productos",
-    "change_msg": "Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
-    "add_msg": "Producto agregado al carrito"
+    "change_msg": "Cambiaste la ciudad|Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
+    "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito"
   },
   "checkout": {
     "missing_field": "Por favor complete el campo {{field}}",

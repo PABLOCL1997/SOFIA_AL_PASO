@@ -344,7 +344,7 @@ const AuthModal: FC<Props> = () => {
     skip: !shouldExecute
   });
   const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showSuccess: t("cart.change_msg") } }
+    variables: { user: { showModal: t("cart.change_msg") } }
   });
 
   const totalAmount = GET_TOTAL(data.cartItems);
@@ -404,11 +404,24 @@ const AuthModal: FC<Props> = () => {
             });
           } else if (cartItems[i].qty !== elem.qty) {
             await addItem({
-              variables: { product: { ...elem, qty: elem.qty, replace: true } }
+              variables: {
+                product: {
+                  ...cartItems[i],
+                  replace: true
+                }
+              }
             });
           }
         }
         showSuccess();
+        let new_total = cartItems.reduce((sum: number, i: any) => {
+          return sum + (i.qty === 0 ? 0 : i.price * i.qty);
+        }, 0);
+        if (history.location.pathname.indexOf("checkout") >= 0) {
+          if (new_total < 200) {
+            history.push("/");
+          }
+        }
         executeNewCartQuery(false);
       })();
     }
@@ -424,13 +437,13 @@ const AuthModal: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (history.location.pathname.indexOf("checkout") >= 0) {
-      if (parseFloat(totalAmount.replace(",", ".")) < 200) {
-        history.push("/");
-      }
-    }
-  }, [totalAmount]);
+  // useEffect(() => {
+  //   if (history.location.pathname.indexOf("checkout") >= 0) {
+  //     if (parseFloat(totalAmount.replace(",", ".")) < 200) {
+  //       history.push("/");
+  //     }
+  //   }
+  // }, [totalAmount]);
 
   useEffect(() => {
     const _w: any = window;

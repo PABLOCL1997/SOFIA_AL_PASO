@@ -182,7 +182,9 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     variables: { user: { openLoginModal: true } }
   });
   const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showSuccess: t("cart.add_msg") } }
+    variables: {
+      user: { showModal: t("cart.add_msg", { product: product.name }) }
+    }
   });
 
   const goToProduct = () => {

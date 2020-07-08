@@ -16,6 +16,9 @@ const Error = React.lazy(() =>
 const Success = React.lazy(() =>
   import(/* webpackChunkName: "Success" */ "../components/Success")
 );
+const Modal = React.lazy(() =>
+  import(/* webpackChunkName: "ModalMessage" */ "../components/ModalMessage")
+);
 const Header = React.lazy(() =>
   import(/* webpackChunkName: "Header" */ "../components/Header")
 );
@@ -100,6 +103,7 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
         <Footer page={page} />
         <Error />
         <Success />
+        <Modal />
       </Wrapper>
     </Suspense>
   );

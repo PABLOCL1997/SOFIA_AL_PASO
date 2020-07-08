@@ -163,6 +163,7 @@ const Checkout: FC<Props> = () => {
 
   useEffect(() => {
     document.title = CHECKOUT_TITLE;
+    (window as any).orderData = {};
     let params = new URLSearchParams(location.search);
     if (params.get("orderIds") && params.get("transaction_id")) {
       (async () => {
@@ -395,10 +396,11 @@ const Checkout: FC<Props> = () => {
 
   const updateOrderData = (key: string, values: any) => {
     if (key === "billing") setBillingChange(values);
-    setOrderData({
-      ...orderData,
+    (window as any).orderData = {
+      ...(window as any).orderData,
       [key]: values
-    });
+    };
+    setOrderData((window as any).orderData);
   };
 
   return (
