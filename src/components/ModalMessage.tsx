@@ -71,7 +71,7 @@ type Props = {};
 
 const ModalMessage: FC<Props> = () => {
   const { t } = useTranslation();
-  const { data: userData } = useQuery(GET_USER, {});
+  const { data } = useQuery(GET_USER, {});
   const [hideModal] = useMutation(SET_USER, {
     variables: { user: { showModal: "" } }
   });
@@ -85,21 +85,22 @@ const ModalMessage: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <ModalCourtain
         className={
-          (!userData.userInfo.length || userData.userInfo[0].showModal) &&
-          "visible"
+          data.userInfo.length && data.userInfo[0].showModal && "visible"
         }
       >
-        <Modal>
-          <Title>{userData.userInfo[0].showModal.split("|")[0]}</Title>
-          <Text>{userData.userInfo[0].showModal.split("|")[1]}</Text>
-          <CtaWrapper>
-            <Cta
-              filled={true}
-              text={t("modal.close")}
-              action={() => hideModal()}
-            />
-          </CtaWrapper>
-        </Modal>
+        {data.userInfo.length && data.userInfo[0].showModal && (
+          <Modal>
+            <Title>{data.userInfo[0].showModal.split("|")[0]}</Title>
+            <Text>{data.userInfo[0].showModal.split("|")[1]}</Text>
+            <CtaWrapper>
+              <Cta
+                filled={true}
+                text={t("modal.close")}
+                action={() => hideModal()}
+              />
+            </CtaWrapper>
+          </Modal>
+        )}
       </ModalCourtain>
     </Suspense>
   );
