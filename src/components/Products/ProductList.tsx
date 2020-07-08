@@ -177,7 +177,7 @@ const ProductModal = styled.div`
     background: white;
     height: calc(100vh - 60px);
     width: calc(100% - 100px);
-    max-width: 1000px;
+    max-width: 1100px;
     overflow: auto;
     border-radius: 20px;
     .main-container {

@@ -1,49 +1,61 @@
-import React, { FC, Suspense, useState } from 'react';
-import styled from 'styled-components';
+import React, { FC, Suspense, useState } from "react";
+import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
-import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from '../../graphql/categories/type';
-import { BREAKPOINT } from '../../utils/constants';
+import { useTranslation } from "react-i18next";
+import {
+  CategoryType,
+  SubCategoryLvl3Type,
+  SubCategoryLvl4Type
+} from "../../graphql/categories/type";
+import { BREAKPOINT } from "../../utils/constants";
 
-import { toLink } from '../../utils/string';
+import { toLink } from "../../utils/string";
 
-const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
-const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
-const Paw = React.lazy(() => import(/* webpackChunkName: "Paw" */'../Images/Paw'));
-const FreeDelivery = React.lazy(() => import(/* webpackChunkName: "FreeDelivery" */'../Images/FreeDelivery'));
-const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */'../Images/Chevron'));
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "../Loader")
+);
+const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
+const Paw = React.lazy(() =>
+  import(/* webpackChunkName: "Paw" */ "../Images/Paw")
+);
+const FreeDelivery = React.lazy(() =>
+  import(/* webpackChunkName: "FreeDelivery" */ "../Images/FreeDelivery")
+);
+const Chevron = React.lazy(() =>
+  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
+);
 
 const Container = styled.div`
-    position: relative;
+  position: relative;
+  button {
+    cursor: default;
+    width: 100%;
+    text-align: left;
+    padding: 10px 30px;
+    svg {
+      display: none;
+    }
+    span {
+      font-family: MullerBold;
+      font-size: 14px;
+      line-height: 14px;
+    }
+  }
+  @media screen and (max-width: ${BREAKPOINT}) {
     button {
-        cursor: default;
-        width: 100%;
-        text-align: left;
-        padding: 10px 30px;
+      cursor: pointer;
+    }
+    > div:first-child {
+      position: relative;
+      z-index: 3;
+      button {
         svg {
-            display: none;
+          display: block;
         }
-        span {
-            font-family: MullerBold;
-            font-size: 14px;
-            line-height: 14px;
-        }
+      }
     }
-    @media screen and (max-width: ${BREAKPOINT}) {
-        button {
-            cursor: pointer;
-        }
-        > div:first-child {
-            position: relative;
-            z-index: 3;
-            button {
-                svg {
-                    display: block;
-                }
-            }
-        }
-    }
-`
+  }
+`;
 
 const CategoryList = styled.ul<{ open: boolean }>`
     background: var(--white);
@@ -57,181 +69,242 @@ const CategoryList = styled.ul<{ open: boolean }>`
         width: 100%;
         top: 0;
         padding-top: 60px;
-        display: ${props => props.open ? 'block' : 'none'}
+        display: ${(props) => (props.open ? "block" : "none")}
     }
 }
-`
+`;
 
-const Category = styled.li<{ selected: boolean, key?: number }>`
-    position: relative;
-    padding: 15px 30px;
-    cursor: pointer;
+const Category = styled.li<{ selected: boolean; key?: number }>`
+  position: relative;
+  padding: 15px 30px;
+  cursor: pointer;
+  font-family: MullerBold;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${(props) => (props.selected ? "var(--red)" : "var(--black)")};
+  &:before {
+    content: "";
+    display: block;
+    left: 0;
+    top: 5px;
+    height: 30px;
+    position: absolute;
+    border-left: 3px solid
+      ${(props) => (props.selected ? "var(--yellow)" : "transparent")};
+  }
+  span {
+    font-family: MullerBold;
+  }
+`;
+
+const CategoryPet = styled.li<{ selected: boolean; key?: number }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid var(--yellow);
+  border-radius: 20px;
+  position: relative;
+  top: 25px;
+  padding: 25px 30px;
+  b {
     font-family: MullerBold;
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: ${props => props.selected ? 'var(--red)' : 'var(--black)'};
-    &:before {
-        content: "";
-        display: block;
-        left: 0;
-        top: 5px;
-        height: 30px;
-        position: absolute;
-        border-left: 3px solid ${props => props.selected ? 'var(--yellow)' : 'transparent'};
-    }
-    span {
-        font-family: MullerBold;
-    }
-`
-
-const CategoryPet = styled.li<{ selected: boolean, key?: number }>`
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    border: 1px solid var(--yellow);
-    border-radius: 20px;
-    position: relative;
-    top: 25px;
-    padding: 25px 30px;
-    b {
-        font-family: MullerBold;
-        font-size: 12px;
-        line-height: 12px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--red);
-        margin: 0 5px 0 10px;
-    }
-    span {
-        font-size: 10px;
-        line-height: 10px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--red);
-    }
-`
+    color: var(--red);
+    margin: 0 5px 0 10px;
+  }
+  span {
+    font-size: 10px;
+    line-height: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+`;
 
 const DeliveryBox = styled.div`
-    margin-top: 50px;
-    @media screen and (max-width: ${BREAKPOINT}) {
-        display: none;
-    }
-`
+  margin-top: 50px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`;
 
 const Title = styled.div`
-    display: flex;
-    align-items: center;
-    span {
-        font-size: 12px;
-        line-height: 15px;
-        text-transform: uppercase;
-        color: var(--black);
-        margin-left: 10px;
-        flex: 1;
-    }
-`
+  display: flex;
+  align-items: center;
+  span {
+    font-size: 12px;
+    line-height: 15px;
+    text-transform: uppercase;
+    color: var(--black);
+    margin-left: 10px;
+    flex: 1;
+  }
+`;
 
 const Text = styled.div`
-    font-family: MullerMedium;
-    font-size: 14px;
-    line-height: 18px;
-    color: var(--black);
-    margin: 20px 0;
-`
+  font-family: MullerMedium;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--black);
+  margin: 20px 0;
+`;
 
 const ProductsFound = styled.div`
-    font-family: MullerBold;
-    font-size: 14px;
-    line-height: 14px;
-    letter-spacing: 0.01em;
-    color: var(--m-gray);
-    @media screen and (max-width: ${BREAKPOINT}) {
-        display: none;
-    }
-`
+  font-family: MullerBold;
+  font-size: 14px;
+  line-height: 14px;
+  letter-spacing: 0.01em;
+  color: var(--m-gray);
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`;
 
-const SubCategory = styled.div<{ selected: boolean, key?: number }>`
-    padding-left: 30px;
-    padding: 20px 30px 0;
-    span {
-        font-family: MullerBold;
-    }
-`
+const SubCategory = styled.div<{ selected: boolean; key?: number }>`
+  padding-left: 30px;
+  padding: 20px 30px 0;
+  span {
+    font-family: MullerBold;
+  }
+`;
 
 type Props = {
-    category: string | undefined,
-    subcategory: string | undefined,
-    lastlevel: string | undefined,
-    count: number,
-    categories: Array<CategoryType>
-}
+  category: string | undefined;
+  subcategory: string | undefined;
+  lastlevel: string | undefined;
+  count: number;
+  categories: Array<CategoryType>;
+};
 
-const FilterSideBar: FC<Props> = ({ category, count, categories, subcategory, lastlevel }) => {
-    const { t } = useTranslation();
-    const history = useHistory();
-    const MascotasId = 354;
-    const [open, setOpen] = useState(false);
+const FilterSideBar: FC<Props> = ({
+  category,
+  count,
+  categories,
+  subcategory,
+  lastlevel
+}) => {
+  const { t } = useTranslation();
+  const history = useHistory();
+  const MascotasId = 354;
+  const [open, setOpen] = useState(false);
 
-    const navigate = (cat: CategoryType, s3cat?: SubCategoryLvl3Type, s4cat?: SubCategoryLvl4Type) => {
-        if (cat.entity_id === 0) {
-            history.push(`/productos/`);
-        } else {
-            let link = `/productos/${toLink(cat.name)}`;
-            if (s3cat) link = `${link}/${toLink(s3cat.name)}`;
-            if (s4cat) link = `${link}/${toLink(s4cat.name)}`;
-            console.log(link)
-            history.push(link);
-        }
-        setOpen(false);
+  const navigate = (
+    cat: CategoryType,
+    s3cat?: SubCategoryLvl3Type,
+    s4cat?: SubCategoryLvl4Type
+  ) => {
+    if (cat.entity_id === 0) {
+      history.push(`/productos/`);
+    } else {
+      let link = `/productos/${toLink(cat.name)}`;
+      if (s3cat) link = `${link}/${toLink(s3cat.name)}`;
+      if (s4cat) link = `${link}/${toLink(s4cat.name)}`;
+      history.push(link);
     }
+    setOpen(false);
+  };
 
-    const compare = (cat: CategoryType, s3cat?: SubCategoryLvl3Type, s4cat?: SubCategoryLvl4Type) => {
-        let is = category === toLink(cat.name);
-        if (s3cat) is = is && subcategory === toLink(s3cat.name);
-        if (s4cat) is = is && lastlevel === toLink(s4cat.name);
-        return is;
-    }
+  const compare = (
+    cat: CategoryType,
+    s3cat?: SubCategoryLvl3Type,
+    s4cat?: SubCategoryLvl4Type
+  ) => {
+    let is = category === toLink(cat.name);
+    if (s3cat) is = is && subcategory === toLink(s3cat.name);
+    if (s4cat) is = is && lastlevel === toLink(s4cat.name);
+    return is;
+  };
 
-    return <Suspense fallback={<Loader />}>
-        <Container>
-            <Cta icon={<Chevron />} hover={false} text={t('products.filter_side_bar.title')} action={() => setOpen(!open)} filled={true} />
-            <CategoryList open={open}>
-                <Category onClick={() => navigate({ entity_id: 0, name: '', level: 0, parent_id: 0 })} selected={!category || category === ''}>{t('products.filter_side_bar.all')}</Category>
-                {categories.length && categories.filter((row: CategoryType) => row.entity_id !== MascotasId).map((row: CategoryType) =>
-                    <Category selected={compare(row)} key={row.entity_id}>
-                        <span onClick={() => navigate(row)}>{row.name}</span>
-                        {compare(row) && row.subcategories && !!row.subcategories.length && row.subcategories.map((s3row: SubCategoryLvl3Type) =>
-                            <SubCategory selected={compare(row, s3row)} key={s3row.entity_id}>
-                                <span onClick={() => navigate(row, s3row)}>{s3row.name}</span>
-                                {compare(row, s3row) && s3row.subcategories && !!s3row.subcategories.length && s3row.subcategories.map((s4row: SubCategoryLvl4Type) =>
-                                    <SubCategory selected={compare(row, s3row, s4row)} key={s4row.entity_id}>
-                                        <span onClick={() => navigate(row, s3row, s4row)}>{s4row.name}</span>
-                                    </SubCategory>
-                                )}
-                            </SubCategory>
-                        )}
-                    </Category>)
-                }
-                {categories.length && categories.filter((row: CategoryType) => row.entity_id === MascotasId).map((row: CategoryType) =>
-                    <CategoryPet onClick={() => navigate(row)} selected={category === toLink(row.name)} key={row.entity_id}>
-                        <Paw />
-                        <b>{row.name}</b>
-                        <span>- {t('products.filter_side_bar.new')}!</span>
-                    </CategoryPet>)
-                }
-            </CategoryList>
-            <DeliveryBox>
-                <Title>
-                    <FreeDelivery />
-                    <span>{t('products.filter_side_bar.freedelivery.title')}</span>
-                </Title>
-                <Text>{/*t('products.filter_side_bar.freedelivery.text')*/}</Text>
-            </DeliveryBox>
-            <ProductsFound>{t('products.filter_side_bar.product_count', { count })}</ProductsFound>
-        </Container>
+  return (
+    <Suspense fallback={<Loader />}>
+      <Container>
+        <Cta
+          icon={<Chevron />}
+          hover={false}
+          text={t("products.filter_side_bar.title")}
+          action={() => setOpen(!open)}
+          filled={true}
+        />
+        <CategoryList open={open}>
+          <Category
+            onClick={() =>
+              navigate({ entity_id: 0, name: "", level: 0, parent_id: 0 })
+            }
+            selected={!category || category === ""}
+          >
+            {t("products.filter_side_bar.all")}
+          </Category>
+          {categories.length &&
+            categories
+              .filter((row: CategoryType) => row.entity_id !== MascotasId)
+              .map((row: CategoryType) => (
+                <Category selected={compare(row)} key={row.entity_id}>
+                  <span onClick={() => navigate(row)}>{row.name}</span>
+                  {compare(row) &&
+                    row.subcategories &&
+                    !!row.subcategories.length &&
+                    row.subcategories.map((s3row: SubCategoryLvl3Type) => (
+                      <SubCategory
+                        selected={compare(row, s3row)}
+                        key={s3row.entity_id}
+                      >
+                        <span onClick={() => navigate(row, s3row)}>
+                          {s3row.name}
+                        </span>
+                        {compare(row, s3row) &&
+                          s3row.subcategories &&
+                          !!s3row.subcategories.length &&
+                          s3row.subcategories.map(
+                            (s4row: SubCategoryLvl4Type) => (
+                              <SubCategory
+                                selected={compare(row, s3row, s4row)}
+                                key={s4row.entity_id}
+                              >
+                                <span
+                                  onClick={() => navigate(row, s3row, s4row)}
+                                >
+                                  {s4row.name}
+                                </span>
+                              </SubCategory>
+                            )
+                          )}
+                      </SubCategory>
+                    ))}
+                </Category>
+              ))}
+          {categories.length &&
+            categories
+              .filter((row: CategoryType) => row.entity_id === MascotasId)
+              .map((row: CategoryType) => (
+                <CategoryPet
+                  onClick={() => navigate(row)}
+                  selected={category === toLink(row.name)}
+                  key={row.entity_id}
+                >
+                  <Paw />
+                  <b>{row.name}</b>
+                  <span>- {t("products.filter_side_bar.new")}!</span>
+                </CategoryPet>
+              ))}
+        </CategoryList>
+        <DeliveryBox>
+          <Title>
+            <FreeDelivery />
+            <span>{t("products.filter_side_bar.freedelivery.title")}</span>
+          </Title>
+          <Text>{/*t('products.filter_side_bar.freedelivery.text')*/}</Text>
+        </DeliveryBox>
+        <ProductsFound>
+          {t("products.filter_side_bar.product_count", { count })}
+        </ProductsFound>
+      </Container>
     </Suspense>
-}
+  );
+};
 
 export default FilterSideBar;

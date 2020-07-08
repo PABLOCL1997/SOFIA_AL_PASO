@@ -1,42 +1,25 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const GET_PRODUCTS = gql`
-query Products($category_id: Int!, $limit: Int!, $offset: Int!, $onsale: Boolean, $order: String, $search: String, $city: String!) {
+  query Products(
+    $category_id: Int!
+    $limit: Int!
+    $offset: Int!
+    $onsale: Boolean
+    $order: String
+    $search: String
+    $city: String!
+  ) {
     products(
-        category_id: $category_id, 
-        limit: $limit, 
-        offset: $offset,
-        onsale: $onsale,
-        search: $search,
-        city: $city,
-        order: $order
+      category_id: $category_id
+      limit: $limit
+      offset: $offset
+      onsale: $onsale
+      search: $search
+      city: $city
+      order: $order
     ) {
-        rows {
-            entity_id
-            name
-            sku
-            image
-            size
-            price
-            fullprice
-            unit
-            category_name
-            special_price
-            stock
-        }
-        count
-    }
-}
-`
-
-export const GET_PRODUCT = gql`
-query Product($name: String!, $city: String!, $categories: Boolean, $related: Boolean) {
-    product(
-        name: $name,
-        city: $city,
-        categories: $categories,
-        related: $related
-    ) {
+      rows {
         entity_id
         name
         sku
@@ -48,20 +31,55 @@ query Product($name: String!, $city: String!, $categories: Boolean, $related: Bo
         category_name
         special_price
         stock
-        description
-        categories {
-            entity_id
-            name
-            level
-        }
-        related {
-            entity_id
-            name
-            image
-            price
-            fullprice
-            unit
-        }
+      }
+      count
     }
-}
-`
+  }
+`;
+
+export const GET_PRODUCT = gql`
+  query Product(
+    $name: String!
+    $city: String!
+    $categories: Boolean
+    $related: Boolean
+  ) {
+    product(
+      name: $name
+      city: $city
+      categories: $categories
+      related: $related
+    ) {
+      entity_id
+      name
+      sku
+      image
+      size
+      price
+      fullprice
+      unit
+      category_name
+      special_price
+      stock
+      description
+      categories {
+        entity_id
+        name
+        level
+      }
+      related {
+        entity_id
+        name
+        sku
+        image
+        size
+        price
+        fullprice
+        unit
+        category_name
+        special_price
+        stock
+      }
+    }
+  }
+`;

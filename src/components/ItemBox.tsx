@@ -167,7 +167,7 @@ const Label = styled.div<{ visible?: boolean }>`
 
 type Props = {
   product: ProductType;
-  openModal: Function;
+  openModal?: Function;
 };
 
 const ItemBox: FC<Props> = ({ product, openModal }) => {
@@ -188,7 +188,10 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
   });
 
   const goToProduct = () => {
-    if (window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))) {
+    if (
+      !openModal ||
+      window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
+    ) {
       history.push(`/${toLink(product.name)}`);
     } else {
       openModal(product);
@@ -222,7 +225,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           </Label>
           <PriceBox>
             <Price>
-              Bs. {product.special_price.toFixed(2).replace(".", ",")}
+              Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}
             </Price>
             {discount > 0 && (
               <DiscountPrice>

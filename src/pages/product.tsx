@@ -355,9 +355,15 @@ type Props = {
   inlineProdname?: String;
   oldUrl?: String;
   closeModal?: Function;
+  openModal?: Function;
 };
 
-const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
+const Product: FC<Props> = ({
+  inlineProdname = "",
+  oldUrl,
+  closeModal,
+  openModal
+}) => {
   let { prodname } = useParams();
   prodname = fromLink(prodname || String(inlineProdname));
   const settings = {
@@ -535,7 +541,9 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal }) => {
               </Col2>
             </Wrapper>
           )}
-          {!!related.length && <RelatedProducts products={related} />}
+          {!!related.length && (
+            <RelatedProducts openModal={openModal} products={related} />
+          )}
         </div>
       </DelayedWrapper>
     </Suspense>

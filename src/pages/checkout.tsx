@@ -189,11 +189,13 @@ const Checkout: FC<Props> = () => {
           showError();
         }
       })();
-
-      getDetails();
     } else {
       if (data && !data.cartItems.length) history.push("/");
-      if (parseFloat(totalAmount.replace(",", ".")) < 200) history.push("/");
+      else if (parseFloat(totalAmount.replace(",", ".")) < 200)
+        history.push("/");
+      else {
+        getDetails();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -338,9 +340,11 @@ const Checkout: FC<Props> = () => {
     if (missingField) return;
 
     setOrder({
-      discount_amount: parseFloat(orderData.coupon.discount),
-      discount_type: orderData.coupon.type,
-      coupon_code: orderData.coupon.coupon,
+      discount_amount: parseFloat(
+        orderData.coupon ? orderData.coupon.discount : 0
+      ),
+      discount_type: orderData.coupon ? orderData.coupon.type : "",
+      coupon_code: orderData.coupon ? orderData.coupon.coupon : "",
       items: items,
       delivery_price: 0,
       customer_email: orderData.billing.email,

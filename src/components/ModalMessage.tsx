@@ -57,7 +57,6 @@ const Text = styled.p`
 `;
 
 const CtaWrapper = styled.div`
-  margin-left: 20px;
   button {
     padding: 10px 50px;
     text-transform: uppercase;

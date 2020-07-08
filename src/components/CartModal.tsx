@@ -489,9 +489,7 @@ const AuthModal: FC<Props> = () => {
                     <Image src={product.image}></Image>
                     <NameBox>
                       <Name>{product.name}</Name>
-                      <Units>
-                        {product.size} {product.unit}
-                      </Units>
+                      <Units>{product.size}</Units>
                     </NameBox>
                     <Qty>
                       <select

@@ -40,6 +40,10 @@ const SliderContainer = styled.div`
   .slick-arrow.slick-next > svg {
     right: -80px;
   }
+  .slick-prev:before,
+  .slick-next:before {
+    display: none;
+  }
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0 20px;
     .slick-dots {
@@ -78,7 +82,7 @@ const ProductModal = styled.div`
     background: white;
     height: calc(100vh - 60px);
     width: 100%;
-    max-width: 1000px;
+    max-width: 1100px;
     overflow: auto;
     border-radius: 20px;
     .main-container {
@@ -141,6 +145,7 @@ const ProductSlider: FC<Props> = ({ products }) => {
     setProduct(product);
     window.history.replaceState("", "", `/${toLink(product.name)}`);
     setOpen(true);
+    document.querySelector(".product-modal")?.scrollTo(0, 0);
   };
 
   return (
@@ -159,6 +164,7 @@ const ProductSlider: FC<Props> = ({ products }) => {
           <ProductModal>
             <div className="product-modal">
               <Product
+                openModal={openModal}
                 closeModal={() => setOpen(false)}
                 oldUrl={pathname}
                 inlineProdname={toLink(product.name)}
