@@ -73,9 +73,9 @@ const Box = styled.div`
       margin-left: 20px;
     }
   }
-  svg {
-    width: 74px;
-    height: 74px;
+  img {
+    width: 118px;
+    height: 118px;
   }
 `;
 
