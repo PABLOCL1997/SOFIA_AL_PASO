@@ -23,7 +23,7 @@ const Container = styled.div`
         }
     }
     @media screen and (max-width: ${BREAKPOINT}) {
-        background: url(/images/promotions_bg.png) no-repeat -400px center / 250%;
+        xbackground: url(/images/promotions_bg.png) no-repeat -400px center / 250%;
     }
 `
 
@@ -72,7 +72,6 @@ const Promotions: FC<Props> = () => {
 
     return <Suspense fallback={<Loader />}>
         <Container>
-            <img src="/images/promotions_bg.png" alt="promotions_bg" />
             <div className="main-container">
                 <Title>{t('homepage.promotions.title')}</Title>
                 <ProductSlider products={products} />

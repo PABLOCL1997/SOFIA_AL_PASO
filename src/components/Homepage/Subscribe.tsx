@@ -12,14 +12,13 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Cta'));
 const HeaderLogo = React.lazy(() => import(/* webpackChunkName: "HeaderLogo" */'../Images/HeaderLogo'));
 
 const Container = styled.div`
-    background: #fff url(/images/newsletter.png) top right no-repeat;
-    background-size: contain;
+    background: #ebebeb url(/images/salad.png) top right no-repeat;
+    background-size: 400px;
     width: calc(100% - 120px);
-    margin-left: 120px;
+    margin: auto;
     padding: 45px 95px;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
-    box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.06);
+    border-radius: 15px;
+    box-shadow: 25px 19px 0px #fecd00;
     @media screen and (min-width: ${BREAKPOINT}) and (max-width: 1300px) {
         background: none;
     }
@@ -192,7 +191,7 @@ const Subscribe: FC<Props> = () => {
                         </CtaWrapper>
                     </InputGroup>
                     <Text>{t('homepage.subscribe.text')}</Text>
-                    <Image src="/images/newsletter.png" alt="newsletter" />
+                    <Image src="/images/salad.png" alt="newsletter" />
                 </MobileContainer>
             </Mobile>
         </>

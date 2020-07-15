@@ -11,7 +11,7 @@ const RecipeItem = React.lazy(() => import(/* webpackChunkName: "RecipeItem" */'
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
 
 const Container = styled.div`
-    background: url(/images/recipes_bg.png) no-repeat top center / cover;
+    background: url(/images/bg.jpg) no-repeat top center / cover;
     padding-bottom: 120px;
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 20px;
