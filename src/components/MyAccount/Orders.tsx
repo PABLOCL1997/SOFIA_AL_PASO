@@ -398,7 +398,7 @@ const Orders: FC<Props> = () => {
   const [getOrder, { loading: orderLoading }] = useLazyQuery(ORDER, {
     variables: { orderId },
     fetchPolicy: "network-only",
-    onCompleted: (d) => {
+    onCompleted: d => {
       setOrder(d.order);
     }
   });
@@ -431,7 +431,7 @@ const Orders: FC<Props> = () => {
             {!loading &&
               orders &&
               !!orders.orders.length &&
-              orders.orders.map((order: UserOrder) => (
+              orders.orders.reverse().map((order: UserOrder) => (
                 <Body key={order.id}>
                   <span>
                     <button onClick={() => setOrderId(order.id)}>

@@ -138,7 +138,7 @@ const CityModal: FC<Props> = () => {
   });
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
-    onCompleted: (d) => {
+    onCompleted: d => {
       setInputs(d.details);
     }
   });
@@ -169,9 +169,13 @@ const CityModal: FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (data.userInfo.length && data.userInfo[0].cityKey) toggleCityModal();
-    if (data.userInfo.length) getDetails();
+    if (data.userInfo.length && !inputs.addresses?.length) getDetails();
+    else if (!!inputs.addresses?.length) setInputs({ addresses: [] });
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (data.userInfo.length && data.userInfo[0].cityKey) toggleCityModal();
   }, []);
 
   useEffect(() => {

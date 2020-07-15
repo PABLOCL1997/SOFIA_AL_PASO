@@ -5,6 +5,7 @@ import { BREAKPOINT } from "../utils/constants";
 import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
+import { trackAddToCart, trackRemoveFromCart } from "../utils/dataLayer";
 import {
   GET_CART_ITEMS,
   GET_TOTAL,
@@ -371,9 +372,21 @@ const AuthModal: FC<Props> = () => {
 
   const doAction = async (action: Action) => {
     if (action.action === "add") {
+      if ((action.product?.qty ?? 0) < (action.qty || 0)) {
+        trackRemoveFromCart({
+          ...action.product,
+          qty: action.qty
+        } as ProductType);
+      } else {
+        trackAddToCart({ ...action.product, qty: action.qty } as ProductType);
+      }
       await addItem();
       setAction({});
     } else if (action.action === "delete") {
+      trackRemoveFromCart({
+        ...action.product,
+        qty: 0
+      } as ProductType);
       await deleteItem();
       setAction({});
       if (data && !data.cartItems.length) closeCartModal();
@@ -412,7 +425,8 @@ const AuthModal: FC<Props> = () => {
             });
           }
         }
-        showSuccess();
+        if (userData && userData.userInfo.length && userData.userInfo[0].id)
+          showSuccess();
         let new_total = cartItems.reduce((sum: number, i: any) => {
           return sum + (i.qty === 0 ? 0 : i.price * i.qty);
         }, 0);
@@ -494,7 +508,7 @@ const AuthModal: FC<Props> = () => {
                     <Qty>
                       <select
                         defaultValue={product.qty}
-                        onChange={(event) =>
+                        onChange={event =>
                           updateItem(Number(event.target.value), product)
                         }
                       >

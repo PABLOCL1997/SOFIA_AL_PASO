@@ -10,6 +10,7 @@ import { GET_CART_ITEMS, TODOTIX, GET_TOTAL } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
+import { trackOrder } from "../utils/dataLayer";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -140,7 +141,7 @@ const Checkout: FC<Props> = () => {
   const { data } = useQuery(GET_CART_ITEMS);
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
-    onCompleted: (d) => {
+    onCompleted: d => {
       setUserData(d.details);
     }
   });
@@ -206,6 +207,16 @@ const Checkout: FC<Props> = () => {
         try {
           setProcessing(true);
           const response = await createOrder();
+          response.data.createOrder.forEach((co: any) => {
+            trackOrder(
+              {
+                increment_id: co.increment_id,
+                total: parseFloat(totalAmount.replace(",", ".")),
+                coupon: orderData.coupon ? orderData.coupon.coupon : ""
+              },
+              data.cartItems
+            );
+          });
           if (orderData.payment && orderData.payment.method === "todotix") {
             getTodotixLink({
               variables: {

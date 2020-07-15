@@ -50,14 +50,14 @@ const CartModal = React.lazy(() =>
 
 const Wrapper = styled.div``;
 
-const Fixed = styled.div`
+const Fixed = styled.div<{ shadow: boolean }>`
   position: fixed;
   background: white;
   width: 100%;
   left: 0;
   top: 0;
   z-index: 3;
-  box-shadow: 0px -1px 52px rgba(0, 0, 0, 0.04);
+  box-shadow: ${props => (props.shadow ? "0 0 15px #ccc" : "")};
 `;
 
 const Container = styled.div`
@@ -105,7 +105,7 @@ const CartWrapper = styled.div<any>`
   position: relative;
   transition: all 0.2s linear;
   transform: scale(1);
-  animation: ${(props) => (props.big ? "pulse 1s infinite;" : "none")};
+  animation: ${props => (props.big ? "pulse 1s infinite;" : "none")};
   span {
     font-family: MullerBold;
     font-size: 8px;
@@ -221,7 +221,7 @@ const MobileMenu = styled.div<{ page?: string }>`
   justify-content: space-between;
   padding: 3px 25px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.07);
-  position: ${(props) => (props.page === "productpage" ? "fixed" : "")};
+  position: ${props => (props.page === "productpage" ? "fixed" : "")};
   top: 0;
   left: 0;
   width: 100%;
@@ -251,6 +251,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const history = useHistory();
   const [bigCart, setBigCart] = useState(false);
   const [open, setOpen] = useState(false);
+  const [shadow, setShadow] = useState(false);
   const { data } = useQuery(GET_CART_ITEMS);
   const { data: userData } = useQuery(GET_USER, {});
   const [toggleCityModal] = useMutation(SET_USER, {
@@ -265,6 +266,11 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const [logout] = useMutation(SET_USER, {
     variables: {
       user: {
+        cityKey: "",
+        cityName: "",
+        defaultAddressId: null,
+        defaultAddressLabel: "",
+        openCityModal: false,
         openLoginModal: false,
         isLoggedIn: false,
         id: null
@@ -343,11 +349,22 @@ const Header: FC<Props> = ({ checkout, page }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  const checkScroll = (e: Event) => {
+    setShadow(window.scrollY !== 0);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", checkScroll);
+    return () => {
+      window.removeEventListener("scroll", checkScroll);
+    };
+  }, []);
+
   return (
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Desktop>
-          <Fixed>
+          <Fixed shadow={shadow}>
             <div className="main-container">
               {!checkout && (
                 <Container>

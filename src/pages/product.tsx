@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { GET_PRODUCT } from "../graphql/products/queries";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { PRODUCT_TITLE } from "../meta";
+import { trackProduct, trackAddToCart } from "../utils/dataLayer";
 import { fromLink, toLink } from "../utils/string";
 import { ProductType } from "../graphql/products/type";
 import { CategoryType } from "../graphql/categories/type";
@@ -124,7 +125,7 @@ const Col2 = styled.div`
 
 const Image = styled.div<{ src: string }>`
   height: 354px;
-  background: url(${(props) => props.src}) no-repeat center center / contain;
+  background: url(${props => props.src}) no-repeat center center / contain;
 
   @media screen and (max-width: ${BREAKPOINT}) {
     height: 250px;
@@ -309,7 +310,7 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
   text-align: left;
   color: var(--font);
   padding: 5px 10px;
-  display: ${(props) => (props.visible ? "block" : "none")};
+  display: ${props => (props.visible ? "block" : "none")};
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 5px 0;
   }
@@ -322,7 +323,7 @@ const Label = styled.div<{ visible?: boolean }>`
   text-align: left;
   color: var(--font);
   padding: 0 10px 5px 0;
-  display: ${(props) => (props.visible ? "block" : "none")};
+  display: ${props => (props.visible ? "block" : "none")};
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 20px;
     line-height: 20px;
@@ -389,8 +390,9 @@ const Product: FC<Props> = ({
       related: true
     },
     fetchPolicy: "cache-and-network",
-    onCompleted: (d) => {
+    onCompleted: d => {
       setProduct(d.product);
+      trackProduct(d.product);
       if (d.product.categories) setCategories(d.product.categories);
       if (d.product.related) setRelated(d.product.related);
     }
@@ -411,6 +413,7 @@ const Product: FC<Props> = ({
 
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+      trackAddToCart({ ...product, categories: [], description: false, qty });
       addItem();
       showSuccess();
     } else {
@@ -505,7 +508,7 @@ const Product: FC<Props> = ({
                 <Toolbox>
                   <Qty>
                     <select
-                      onChange={(event) => setQty(Number(event.target.value))}
+                      onChange={event => setQty(Number(event.target.value))}
                     >
                       {[...(Array(21).keys() as any)]
                         .slice(1)

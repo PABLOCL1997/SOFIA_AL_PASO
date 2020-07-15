@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { toLink } from "../utils/string";
 import { ADD_ITEM } from "../graphql/cart/mutations";
+import { trackAddToCart } from "../utils/dataLayer";
 import { BREAKPOINT } from "../utils/constants";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
@@ -152,7 +153,7 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
   text-align: center;
   color: var(--font);
   padding: 5px 10px;
-  opacity: ${(props) => (props.visible ? 1 : 0)};
+  opacity: ${props => (props.visible ? 1 : 0)};
 `;
 
 const Label = styled.div<{ visible?: boolean }>`
@@ -162,7 +163,7 @@ const Label = styled.div<{ visible?: boolean }>`
   text-align: center;
   color: var(--font);
   padding: 5px 10px;
-  opacity: ${(props) => (props.visible ? 1 : 0)};
+  opacity: ${props => (props.visible ? 1 : 0)};
 `;
 
 type Props = {
@@ -200,6 +201,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
 
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+      trackAddToCart({ ...product, qty });
       addItem();
       showSuccess();
     } else {
@@ -238,7 +240,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           <Qty>
             <select
               defaultValue={1}
-              onChange={(event) => setQty(Number(event.target.value))}
+              onChange={event => setQty(Number(event.target.value))}
             >
               {[...(Array(21).keys() as any)]
                 .slice(1)
