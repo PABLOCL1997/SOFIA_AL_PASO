@@ -431,7 +431,8 @@ const Details: FC<Props> = () => {
       setAddressInputs({});
       closeAddressModal();
       getDetails();
-      showSuccess();
+      // showSuccess();
+      setTimeout(() => (window as any).location.reload(), 0);
     } catch (e) {
       showError();
     }
@@ -443,7 +444,8 @@ const Details: FC<Props> = () => {
       await deleteAddress();
       setAddressId(0);
       getDetails();
-      showSuccess();
+      // showSuccess();
+      setTimeout(() => (window as any).location.reload(), 0);
     } catch (e) {
       showError();
     }
