@@ -134,14 +134,16 @@ const CityModal: FC<Props> = () => {
   const [city, setCity] = useState<User>({});
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
   const [toggleCityModal] = useMutation(SET_USER, {
-    variables: { user: { openCityModal: false } }
+    variables: { user: { openCityModal: false } as User }
   });
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: d => {
+      setUserId(d.details.id);
       setInputs(d.details);
     }
   });
+  const [userId, setUserId] = useState(0);
 
   const changeCity = (c: KeyValue) => {
     setCity({
@@ -168,15 +170,57 @@ const CityModal: FC<Props> = () => {
     });
   };
 
+  const resetToDefaultCities = () => {
+    toggleCityModal({
+      variables: {
+        user: {
+          cityKey: "",
+          cityName: "",
+          openCityModal: true,
+          defaultAddressId: undefined,
+          defaultAddressLabel: ""
+        } as User
+      }
+    });
+  };
+
+  const showUserAddresses = () => {
+    toggleCityModal({
+      variables: {
+        user: {
+          cityKey: "",
+          cityName: "",
+          openCityModal: true
+        } as User
+      }
+    });
+  };
+
   useEffect(() => {
-    if (data.userInfo.length && !inputs.addresses?.length) getDetails();
-    else if (!!inputs.addresses?.length) setInputs({ addresses: [] });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
+    if (userId !== (userInfo.id ? userInfo.id : 0)) {
+      if ((userInfo.id ? userInfo.id : 0) > 0) {
+        getDetails();
+      } else {
+        setUserId(0);
+        setInputs({ addresses: [] });
+      }
+    }
   }, [data]);
 
   useEffect(() => {
-    if (data.userInfo.length && data.userInfo[0].cityKey) toggleCityModal();
+    const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
+    if (userInfo.cityKey) toggleCityModal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
+    if (userId > 0 && inputs.addresses?.length && !userInfo.defaultAddressId)
+      showUserAddresses();
+    else if (userId === 0 && !userInfo.cityKey) resetToDefaultCities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputs]);
 
   useEffect(() => {
     if (city.cityKey) setUser();

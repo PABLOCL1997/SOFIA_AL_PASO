@@ -406,6 +406,7 @@ const AuthModal: FC<Props> = () => {
     if (newCart && newCart.checkCart) {
       (async () => {
         let cartItems = JSON.parse(newCart.checkCart.cart);
+        let originalLength = data.cartItems.length;
         for (let i = 0; i < cartItems.length; i++) {
           let elem: ProductType = data.cartItems.find(
             (p: ProductType) => p.entity_id === cartItems[i].entity_id
@@ -425,7 +426,12 @@ const AuthModal: FC<Props> = () => {
             });
           }
         }
-        if (userData && userData.userInfo.length && userData.userInfo[0].id)
+        if (
+          userData &&
+          userData.userInfo.length &&
+          userData.userInfo[0].id &&
+          !!originalLength
+        )
           showSuccess();
         let new_total = cartItems.reduce((sum: number, i: any) => {
           return sum + (i.qty === 0 ? 0 : i.price * i.qty);
