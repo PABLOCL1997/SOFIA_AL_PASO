@@ -54,7 +54,7 @@ const Col2 = styled.div`
 const Text = styled.p`
     font-family: MullerBold;
     font-weight: bold;
-    padding: 40px 0;
+    padding: 40px 0 10px;
     font-size: 24px;
     line-height: 31px;
     letter-spacing: 0.015em;
@@ -65,7 +65,8 @@ const Copy = styled.p`
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.015em;
-    color: white;
+    color: var(--red);
+    margin-top: 10px;
 `
 
 const Line = styled.div`
@@ -124,11 +125,10 @@ const Footer: FC<Props> = ({ page }) => {
     return <Suspense fallback={<Loader />}>
         <Container page={page}>
             <div className="main-container">
-                <Col1>
-                    <HeaderLogoWhite />
+                <Col1>                    
                     <Text>{t('footer.text')}</Text>
+                    <HeaderLogoWhite />
                     <Copy className="copy">{t('footer.copy', { year: new Date().getFullYear() })}</Copy>
-                    <Line />
                 </Col1>
                 <Col2>
                     <Slogan>{t('footer.slogan')}</Slogan>

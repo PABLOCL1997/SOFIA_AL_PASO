@@ -63,7 +63,7 @@ const Fixed = styled.div<{ shadow: boolean }>`
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  padding: var(--padding);
+  padding: 12px 40px;
   align-items: center;
 `;
 

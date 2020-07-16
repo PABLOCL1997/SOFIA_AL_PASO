@@ -2,14 +2,14 @@ import React from 'react';
 
 const Mail = () => {
     return (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="24" cy="24" r="24" fill="#F1F1F1" />
-            <path d="M31.5 22.5L24 26.5L16.5 22.5V30.5C16.5 31.052 16.948 31.5 17.5 31.5H30.5C31.052 31.5 31.5 31.052 31.5 30.5V22.5Z" stroke="#E30613" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M18.5 21V16.5H29.5V21" stroke="#E30613" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M21.5 19.5H26.5" stroke="#E30613" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M21.5 22.5H26.5" stroke="#E30613" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-
+    	<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="26" x="0px" y="0px">
+			<g id="_x36_">
+				<path fill="#E11E26" d="M14.7,12.7c-0.2,0.1-0.3,0.1-0.5,0.1c-0.2,0-0.4,0-0.5-0.1L0.4,4.9C0.2,4.8,0,4.9,0,5.1V17
+		c0,1.2,1,2.2,2.2,2.2h23.9c1.2,0,2.2-1,2.2-2.2V5.1c0-0.2-0.2-0.4-0.4-0.3L14.7,12.7z"/>
+				<path fill="#E11E26" d="M14.8,10.2l13.4-7.9c0.1-0.1,0.2-0.2,0.1-0.3c-0.1-1.1-1.1-2-2.2-2H2.2C1.1,0,0.1,0.9,0,2c0,0.1,0,0.2,0.1,0.3
+		l13.4,7.9C13.9,10.5,14.4,10.5,14.8,10.2z"/>
+			</g>
+		</svg>
     );
 }
 export default Mail;
