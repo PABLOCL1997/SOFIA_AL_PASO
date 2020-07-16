@@ -47,7 +47,7 @@
       }
     },
     "promotions": {
-      "title": "Nuestras promociones",
+      "title": "Promociones",
       "seeall": "Ver todas"
     },
     "subscribe": {
@@ -61,8 +61,8 @@
       "success": "Se realizo la acción con éxito"
     },
     "recipes": {
-      "title": "Nuestras recetas",
-      "seeall": "Ver nuestras recetas"
+      "title": "Recetas",
+      "seeall": "Ver recetas"
     }
   },
   "itembox": {

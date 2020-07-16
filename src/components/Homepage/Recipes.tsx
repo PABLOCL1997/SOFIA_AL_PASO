@@ -46,7 +46,7 @@ const CtaWrapper = styled.div`
 
 const Grid = styled.div`
     display: flex;
-    max-width: 780px;
+    max-width: 990px;
     flex-wrap: wrap;
     margin: 0 auto;
     justify-content: space-between;
@@ -107,20 +107,6 @@ const recipesData: Array<RecipeType> = [
         mins: '25m',
         people: 4,
         link: 'https://www.sofia.com.bo/recetas/'
-    },
-    {
-        title: 'Pollo al horno',
-        difficulty: 'fácil',
-        mins: '60m',
-        people: 5,
-        link: 'https://www.sofia.com.bo/recetas/'
-    },
-    {
-        title: 'Pinchos de pollo',
-        difficulty: 'medio',
-        mins: '150m',
-        people: 2,
-        link: 'https://www.sofia.com.bo/recetas/'
     }
 ];
 
@@ -147,7 +133,7 @@ const Benefits: FC<Props> = () => {
                         {recipesData.map((r: RecipeType, index: number) => <RecipeItem key={index} index={index + 1} item={r} />)}
                     </Grid>
                     <CtaWrapper>
-                        <Cta blank={true} action={'https://www.sofia.com.bo/recetas/'} text={t('homepage.recipes.seeall')} />
+                        <Cta blank={true} action={'https://www.sofia.com.bo/recetas/'} text={t('homepage.recipes.seeall')} filled={true} />
                     </CtaWrapper>
                 </div>
             </Desktop>
@@ -160,7 +146,7 @@ const Benefits: FC<Props> = () => {
                         </Slider>
                     </SliderContainer>
                     <CtaWrapper>
-                        <Cta blank={true} action={'https://www.sofia.com.bo/recetas/'} text={t('homepage.recipes.seeall')} />
+                        <Cta blank={true} action={'https://www.sofia.com.bo/recetas/'} text={t('homepage.recipes.seeall')} filled={true} />
                     </CtaWrapper>
                 </div>
             </Mobile>

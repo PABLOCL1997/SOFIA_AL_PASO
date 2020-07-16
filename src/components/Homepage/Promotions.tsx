@@ -11,8 +11,14 @@ const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loade
 const ProductSlider = React.lazy(() => import(/* webpackChunkName: "ProductSlider" */'./ProductSlider'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
 
-const Container = styled.div`
+const Container = styled.div`    
     position: relative;
+    .productslider-wrapper {
+        .main-container {
+            background: var(--yellow);
+            border-radius: 20px;
+        }
+    }
     > img {
         position: absolute;
         top: -65px;
@@ -74,7 +80,9 @@ const Promotions: FC<Props> = () => {
         <Container>
             <div className="main-container">
                 <Title>{t('homepage.promotions.title')}</Title>
-                <ProductSlider products={products} />
+                <div className="productslider-wrapper">
+                    <ProductSlider products={products} />
+                </div>
                 <CtaWrapper>
                     <Cta action={seeAll} text={t('homepage.promotions.seeall')} filled={true} />
                 </CtaWrapper>

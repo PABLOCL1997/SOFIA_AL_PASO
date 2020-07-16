@@ -20,7 +20,6 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     background: url(/images/hero_img.jpg) no-repeat center center / cover;
-    border-radius: 20px;
     margin-top: 15px;
     position: relative;
 
@@ -37,18 +36,6 @@ const Container = styled.div`
         }
     }
 
-    &:before {
-        content: "";
-        display: block;
-        background: rgba(0, 0, 0, .2);
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        border-radius: 20px;
-    }
-
     > div {
         position: relative;
         z-index: 1;
@@ -60,12 +47,12 @@ const Container = styled.div`
 
 const Title = styled.h1`
     font-family: MullerBlack;
-    font-size: 56px;
-    line-height: 56px;
+    font-size: 48px;
+    line-height: 48px;
     text-align: center;
     letter-spacing: 0.025em;
     text-transform: uppercase;
-    color: white;
+    color: var(--black);
     margin: 30px 0;
     padding: 0;
     @media screen and (max-width: ${BREAKPOINT}) {
@@ -148,6 +135,7 @@ const ProductBox = styled.div`
 const CtaWrapper = styled.div`
     button {
         padding: 15px 50px;
+        margin-top: 30px;
         text-transform: uppercase;
         span {
             font-family: MullerBold;
@@ -173,7 +161,7 @@ const Hero: FC<Props> = () => {
     const [toggleCityModal] = useMutation(SET_USER, { variables: { user: { openCityModal: true } } });
 
     return <Suspense fallback={<Loader />}>
-        <div className="main-container">
+        <div>
             <Container>
                 <div>
                     <HeaderLogoWhite withSlogan={false} />
@@ -187,10 +175,10 @@ const Hero: FC<Props> = () => {
                         <ProductBox>
                             <input onChange={evt => setQ(evt.target.value)} type="text" placeholder={t('homepage.hero.product_search')} />
                         </ProductBox>
-                        <CtaWrapper>
-                            <Cta filled={true} text={t('homepage.hero.search')} action={() => history.push(`/productos?q=${toLink(q)}`)} />
-                        </CtaWrapper>
                     </SearchBox>
+                    <CtaWrapper>
+                        <Cta filled={true} text={t('homepage.hero.search')} action={() => history.push(`/productos?q=${toLink(q)}`)} />
+                    </CtaWrapper>
                 </div>
             </Container>
         </div>
