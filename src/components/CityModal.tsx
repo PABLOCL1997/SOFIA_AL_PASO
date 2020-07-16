@@ -206,6 +206,7 @@ const CityModal: FC<Props> = () => {
         setInputs({ addresses: [] });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {

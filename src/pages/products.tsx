@@ -9,7 +9,7 @@ import {
   SubCategoryLvl3Type,
   SubCategoryLvl4Type
 } from "../graphql/categories/type";
-import { OrderColums, ProductType } from "../graphql/products/type";
+import { OrderColums } from "../graphql/products/type";
 import { trackProductList } from "../utils/dataLayer";
 import { toLink, fromLink } from "../utils/string";
 import { BREAKPOINT } from "../utils/constants";

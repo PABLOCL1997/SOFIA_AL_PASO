@@ -1,9 +1,6 @@
-import React from 'react';
+import React from "react";
 
 const Wallet = () => {
-    const randomId = `Wallet-${(Math.random() * 100000000).toFixed(0)}`;
-    return (
-        <img className="benefit-icon" src="/images/wallet.png" />
-    );
-}
+  return <img className="benefit-icon" src="/images/wallet.png" alt="wallet" />;
+};
 export default Wallet;
