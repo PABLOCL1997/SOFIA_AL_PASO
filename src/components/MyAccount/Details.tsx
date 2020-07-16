@@ -337,7 +337,7 @@ const Details: FC<Props> = () => {
   const { data: userData } = useQuery(GET_USER, {});
   const [getDetails, { loading: userLoading }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
-    onCompleted: (d) => {
+    onCompleted: d => {
       setInputs(d.details);
     }
   });
@@ -364,6 +364,7 @@ const Details: FC<Props> = () => {
       ...addressInputs,
       [key]: value
     });
+    console.log(key, value);
     if (key === "city" && value) setLatLng(String(value));
   };
 
@@ -395,8 +396,8 @@ const Details: FC<Props> = () => {
       street: addressInputs.street,
       reference: addressInputs.reference,
       city: addressInputs.city,
-      latitude: (window as any).latitude,
-      longitude: (window as any).longitude,
+      latitude: String((window as any).latitude),
+      longitude: String((window as any).longitude),
       billing: 0,
       on: true
     });
@@ -512,7 +513,7 @@ const Details: FC<Props> = () => {
                   <input
                     readOnly={key === "email" || (key !== "key" && !editMode)}
                     value={(inputs as any)[key] || ""}
-                    onChange={(evt) => onChange(key, evt.target.value)}
+                    onChange={evt => onChange(key, evt.target.value)}
                     pattern={key === "phone" || key === "nit" ? "[0-9]*" : ""}
                     type={
                       key === "phone" || key === "nit"
@@ -568,7 +569,7 @@ const Details: FC<Props> = () => {
                 <InputGroup>
                   <input
                     value={addressInputs.street || ""}
-                    onChange={(evt) =>
+                    onChange={evt =>
                       onChangeAddress("street", evt.target.value)
                     }
                     type={"text"}
@@ -578,9 +579,7 @@ const Details: FC<Props> = () => {
                 <SelectWrapper>
                   <select
                     value={addressInputs.city || ""}
-                    onChange={(evt) =>
-                      onChangeAddress("city", evt.target.value)
-                    }
+                    onChange={evt => onChangeAddress("city", evt.target.value)}
                   >
                     <option value="">{t("checkout.delivery.city")}</option>
                     {options.city.map((opt: string) => (
@@ -592,7 +591,7 @@ const Details: FC<Props> = () => {
                 <InputGroup>
                   <input
                     value={addressInputs.reference || ""}
-                    onChange={(evt) =>
+                    onChange={evt =>
                       onChangeAddress("reference", evt.target.value)
                     }
                     type={"text"}

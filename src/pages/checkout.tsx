@@ -400,8 +400,8 @@ const Checkout: FC<Props> = () => {
         city: orderData.shipping.city,
         region: orderData.shipping.reference,
         country_id: "BO",
-        latitude: orderData.shipping.latitude,
-        longitude: orderData.shipping.longitude
+        latitude: String(orderData.shipping.latitude),
+        longitude: String(orderData.shipping.longitude)
       }),
       payment_method: orderData.payment
         ? orderData.payment.method
