@@ -47,7 +47,7 @@ const Title = styled.div`
 `;
 
 const Form = styled.div<{ hidden: boolean }>`
-  display: ${(props) => (props.hidden ? "none" : "grid")};
+  display: ${props => (props.hidden ? "none" : "grid")};
   grid-template-columns: 1fr 1fr;
   column-gap: 24px;
   row-gap: 30px;
@@ -68,7 +68,7 @@ const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
     text-transform: uppercase;
     color: var(--font);
     padding-left: 20px;
-    opacity: ${(props) => (props.withLabel ? "1" : "0")};
+    opacity: ${props => (props.withLabel ? "1" : "0")};
   }
   input {
     background: var(--whiter);
@@ -97,7 +97,7 @@ const Other = styled.button<{ margin: boolean }>`
   color: var(--red);
   border: 0;
   background: none;
-  margin: 20px 0 ${(props) => (props.margin ? "40px" : "0")};
+  margin: 20px 0 ${props => (props.margin ? "40px" : "0")};
   &:hover {
     opacity: 0.8;
   }
@@ -109,7 +109,7 @@ const CheckboxGroup = styled.div<{ red: boolean }>`
   margin-bottom: 20px;
   input {
     -webkit-appearance: none;
-    border: 2px solid var(--${(props) => (props.red ? "red" : "font")});
+    border: 2px solid var(--${props => (props.red ? "red" : "font")});
     border-radius: 4px;
     width: 20px;
     height: 20px;
@@ -270,7 +270,12 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
   }, [userData]);
 
   useEffect(() => {
-    if (!inputs.addressId) updateOrder("shipping", inputs);
+    if (!inputs.addressId)
+      updateOrder("shipping", {
+        ...inputs,
+        latitude: (window as any).latitude,
+        longitude: (window as any).longitude
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputs]);
 
@@ -325,7 +330,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
                   <SelectWrapper>
                     <select
                       name={`shipping-${key}`}
-                      onChange={(evt) => onChange(key, evt.target.value)}
+                      onChange={evt => onChange(key, evt.target.value)}
                     >
                       <option value="">{t("checkout.delivery." + key)}</option>
                       {options[key].map((opt: string) => (
@@ -348,7 +353,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
                   <input
                     name={`shipping-${key}`}
                     value={inputs[key] || ""}
-                    onChange={(evt) => onChange(key, evt.target.value)}
+                    onChange={evt => onChange(key, evt.target.value)}
                     pattern={
                       key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""
                     }

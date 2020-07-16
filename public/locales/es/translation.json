@@ -274,6 +274,8 @@
   "thankyou": {
     "title": "¡Gracias por su compra!",
     "subtitle": "Tu número de compra es #{{increment_id}}.",
+    "mulitple_subtitle": "Se generaron dos ordenes porque compraste alimento para mascotas y productos congelados.",
+    "multiple_subtitle_numbers": "Tus números de orden son: {{increment_ids}}",
     "mail": "Usted recibirá un Email confirmando el pedido con los detalles de su orden.",
     "time": "Su pedido será entregado dentro de las próximas 48 hrs, de Lunes a Viernes.",
     "phone": "Nuestro servicio de atención al cliente se pondrá en contacto con usted en caso de haber algún inconveniente o variante en su compra.",
