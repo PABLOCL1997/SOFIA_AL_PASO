@@ -385,7 +385,7 @@ const Details: FC<Props> = () => {
     let i = setInterval(() => {
       if ((window as any).map) {
         clearInterval(i);
-        if (address.latitude && address.latitude != "")
+        if (address.latitude && address.latitude !== "")
           setLatLng("", address.latitude, address.longitude);
         else setLatLng(address.city || "");
       }
