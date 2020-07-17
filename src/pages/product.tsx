@@ -469,12 +469,15 @@ const Product: FC<Props> = ({
               </Col1>
               <Col2>
                 <ProductTitle>{product.name}</ProductTitle>
-                <EstimatedPrice visible={product.unit !== "UNI"}>
-                  Bs. {product.fullprice.toFixed(2).replace(".", ",")}/
-                  {product.unit}
+                <EstimatedPrice visible={product.unit === "KGS"}>
+                  Bs.{" "}
+                  {(product.special_price * product.weight)
+                    .toFixed(2)
+                    .replace(".", ",")}
+                  /{product.unit}
                 </EstimatedPrice>
                 <PriceBox>
-                  <Label visible={product.unit !== "UNI"}>
+                  <Label visible={product.unit === "KGS"}>
                     {t("itembox.price_label")}:
                   </Label>
                   <Price>

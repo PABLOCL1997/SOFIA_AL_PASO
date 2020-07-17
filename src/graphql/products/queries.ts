@@ -28,6 +28,7 @@ export const GET_PRODUCTS = gql`
         price
         fullprice
         unit
+        weight
         category_name
         special_price
         stock
@@ -60,6 +61,7 @@ export const GET_PRODUCT = gql`
       unit
       category_name
       special_price
+      weight
       stock
       description
       categories {
