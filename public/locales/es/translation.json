@@ -224,7 +224,7 @@
       "address": "*Nombre de calle o avenida",
       "number": "Número de calle o avenida",
       "home_type": "*Tipo de vivienda",
-      "apt_number": "*Número de departamento",
+      "apt_number": "*Número de casa o departamento",
       "building_name": "Nombre del edificio",
       "zone": "Zona",
       "neighborhood": "Barrio / Urbanización",
@@ -311,10 +311,12 @@
     "newaddress": "+ Agregar dirección",
     "modal": {
       "title": "Agregar dirección de entrega",
+      "edit_title": "Editar dirección de entrega",
       "street": "Ingresa la dirección",
       "city": "Seleccionar ciudad",
       "reference": "Referencia",
-      "add": "Agregar"
+      "add": "Agregar",
+      "edit": "Editar"
     },
     "orders": {
       "title": "Historial de órdenes",

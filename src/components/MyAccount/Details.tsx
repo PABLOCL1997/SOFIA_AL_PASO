@@ -86,6 +86,10 @@ const AddressRow = styled.div`
 
 const Street = styled.div`
   flex: 1;
+  cursor: pointer;
+  &:hover {
+    color: var(--red);
+  }
 `;
 
 const DeleteWrapper = styled.div`
@@ -330,9 +334,10 @@ const Details: FC<Props> = () => {
   const [showError] = useMutation(SET_USER, {
     variables: { user: { showError: t("account.error") } }
   });
-  const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showSuccess: t("account.success") } }
-  });
+  const [setUser] = useMutation(SET_USER, {});
+  // const [showSuccess] = useMutation(SET_USER, {
+  //   variables: { user: { showSuccess: t("account.success") } }
+  // });
 
   const { data: userData } = useQuery(GET_USER, {});
   const [getDetails, { loading: userLoading }] = useLazyQuery(DETAILS, {
@@ -364,12 +369,70 @@ const Details: FC<Props> = () => {
       ...addressInputs,
       [key]: value
     });
-    console.log(key, value);
     if (key === "city" && value) setLatLng(String(value));
   };
 
   const removeAddress = (address: AddressType) => {
     setAddressId(address.id || 0);
+  };
+
+  const openEditModal = (address: AddressType) => {
+    toggleAddressModal();
+    setAddressInputs({
+      ...addressInputs,
+      ...address
+    });
+    let i = setInterval(() => {
+      if ((window as any).map) {
+        clearInterval(i);
+        if (address.latitude && address.latitude != "")
+          setLatLng("", address.latitude, address.longitude);
+        else setLatLng(address.city || "");
+      }
+    }, 10);
+  };
+
+  const editAddress = () => {
+    if (!addressInputs.street)
+      return showError({
+        variables: { user: { showError: t("account.empty_street") } }
+      });
+    if (!addressInputs.reference)
+      return showError({
+        variables: { user: { showError: t("account.empty_reference") } }
+      });
+    if (!addressInputs.city)
+      return showError({
+        variables: { user: { showError: t("account.empty_city") } }
+      });
+
+    if (
+      userData.userInfo.length &&
+      userData.userInfo[0] &&
+      addressInputs.id === userData.userInfo[0].defaultAddressId
+    ) {
+      setUser({
+        variables: {
+          user: { defaultAddressLabel: `${addressInputs.street}` }
+        }
+      });
+    }
+    setAddressArgs({
+      addressId: addressInputs.id,
+      firstname: inputs.firstname,
+      lastname: inputs.lastname,
+      email: inputs.email,
+      nit: inputs.nit,
+      telephone: inputs.phone,
+      password: "",
+      street: addressInputs.street,
+      reference: addressInputs.reference,
+      city: addressInputs.city,
+      latitude: String((window as any).latitude),
+      longitude: String((window as any).longitude),
+      billing: 0,
+      on: true
+    });
   };
 
   const addAddress = () => {
@@ -537,7 +600,9 @@ const Details: FC<Props> = () => {
             {inputs.addresses &&
               inputs.addresses.map((address: AddressType) => (
                 <AddressRow key={address.id}>
-                  <Street>{address.street}</Street>
+                  <Street onClick={() => openEditModal(address)}>
+                    {address.street}
+                  </Street>
                   <DeleteWrapper onClick={() => removeAddress(address)}>
                     <Delete />
                   </DeleteWrapper>
@@ -561,7 +626,11 @@ const Details: FC<Props> = () => {
         >
           <Modal>
             <Header>
-              <HeaderTitle>{t("account.modal.title")}</HeaderTitle>
+              <HeaderTitle>
+                {addressInputs.id
+                  ? t("account.modal.edit_title")
+                  : t("account.modal.title")}
+              </HeaderTitle>
               <CloseWrapper onClick={() => closeAddressModal()}>
                 <Close />
               </CloseWrapper>
@@ -604,13 +673,20 @@ const Details: FC<Props> = () => {
               {userData.userInfo.length &&
                 userData.userInfo[0].openAddressModal && <Map />}
               <CtaWrapper>
-                {!loading && (
-                  <Cta
-                    filled={true}
-                    text={t("account.modal.add")}
-                    action={addAddress}
-                  />
-                )}
+                {!loading &&
+                  (addressInputs.id ? (
+                    <Cta
+                      filled={true}
+                      text={t("account.modal.edit")}
+                      action={editAddress}
+                    />
+                  ) : (
+                    <Cta
+                      filled={true}
+                      text={t("account.modal.add")}
+                      action={addAddress}
+                    />
+                  ))}
                 {loading && (
                   <LoaderWrapper>
                     <img src="/images/loader.svg" alt="loader" />

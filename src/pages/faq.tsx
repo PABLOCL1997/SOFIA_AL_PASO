@@ -65,7 +65,7 @@ const Question = styled.div<{ active: boolean }>`
     line-height: 1.5em;
     letter-spacing: 0.01em;
     color: var(--black);
-    display: ${(props) => (props.active ? "block" : "none")};
+    display: ${props => (props.active ? "block" : "none")};
   }
 `;
 
@@ -128,7 +128,7 @@ const Faq: FC<Props> = () => {
       text: `Al finalizar tu orden recibirás un correo electrónico con un número de pedido, lo que significa que la orden está registrada.`
     },
     {
-      title: `¿Qué ocurre si hay un problema con mi orden o demora o no recibí confirmación?`,
+      title: `¿Qué ocurre si hay un problema con mi orden, si demora, o no recibí confirmación?`,
       text: `Puedes  comunicarte al 784 45000 o escribirnos a info@sofia.com.bo`
     },
     {
