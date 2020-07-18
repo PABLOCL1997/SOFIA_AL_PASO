@@ -515,7 +515,7 @@ const AuthModal: FC<Props> = () => {
                               .replace(".", ",")} KGS APROX.`
                           : product.name}
                       </Name>
-                      <Units>{product.size}</Units>
+                      <Units>&nbsp;</Units>
                     </NameBox>
                     <Qty>
                       <select
