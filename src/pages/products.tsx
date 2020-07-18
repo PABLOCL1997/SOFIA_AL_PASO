@@ -177,7 +177,7 @@ const Products: FC<Props> = () => {
     }
     setTimeout(() => setLoader(false), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, subcategory, lastlevel]);
+  }, [category, subcategory, lastlevel, data]);
 
   return (
     <Suspense fallback={<Loader />}>
