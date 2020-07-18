@@ -210,23 +210,27 @@ type Props = {
   products: Array<ProductType>;
   count: number;
   orderQuery: Function;
+  parentOrder: string;
 };
 
-const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
+const ProductList: FC<Props> = ({
+  products,
+  count,
+  orderQuery,
+  parentOrder
+}) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const query = new URLSearchParams(useLocation().search);
   const history = useHistory();
   const [oldUrl, setOldUrl] = useState("");
   const [search, setSearch] = useState(query.get("q"));
-  const [order, setOrder] = useState(OrderColums[0]);
   const [page, setPage] = useState(query.get("p") ? Number(query.get("p")) : 1);
   const [openOrder, setOpenOrder] = useState(false);
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState<ProductType | any>({});
 
   const selectItem = (item: string) => {
-    setOrder(item);
     setOpenOrder(false);
     orderQuery(item);
   };
@@ -296,7 +300,7 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
           <SelectBox>
             <Select onClick={() => setOpenOrder(!openOrder)}>
               <span>{t("products.product_list.order_by")}</span>
-              <b>{t("products.product_list." + order)}</b>
+              <b>{t("products.product_list." + parentOrder)}</b>
               <Chevron />
             </Select>
             {openOrder && (

@@ -207,6 +207,7 @@ const Products: FC<Props> = () => {
                   orderQuery={orderQuery}
                   products={products}
                   count={total}
+                  parentOrder={order}
                 />
               )}
             </Col2>
