@@ -92,6 +92,7 @@
       "order_by": "Ordenar por",
       "weight": "Peso",
       "price": "Precio",
+      "position": "Posición",
       "no_results": "No se encontraron resultados con los criterios de busqueda actuales."
     }
   },

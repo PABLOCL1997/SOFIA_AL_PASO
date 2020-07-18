@@ -147,20 +147,20 @@ const Pager = styled.div`
 `;
 
 const PageArrow = styled.div<{ allowed: boolean }>`
-  opacity: ${(props) => (props.allowed ? "1" : ".3")};
+  opacity: ${props => (props.allowed ? "1" : ".3")};
   margin: 0 10px;
-  cursor: ${(props) => (props.allowed ? "pointer" : "default")};
+  cursor: ${props => (props.allowed ? "pointer" : "default")};
 `;
 
 const Page = styled.div<{ selected: boolean }>`
-  font-family: ${(props) => (props.selected ? "MullerBold" : "MullerRegular")};
+  font-family: ${props => (props.selected ? "MullerBold" : "MullerRegular")};
   font-size: 12px;
   line-height: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: ${(props) => (props.selected ? "var(--red)" : "var(--font)")};
+  color: ${props => (props.selected ? "var(--red)" : "var(--font)")};
   margin: 5px;
-  cursor: ${(props) => (props.selected ? "default" : "pointer")};
+  cursor: ${props => (props.selected ? "default" : "pointer")};
 `;
 
 const ProductModal = styled.div`
@@ -281,10 +281,10 @@ const ProductList: FC<Props> = ({ products, count, orderQuery }) => {
             <input
               type="search"
               value={fromLink(search)}
-              onKeyUp={(evt) => {
+              onKeyUp={evt => {
                 if (evt.keyCode === 13) doSearch();
               }}
-              onChange={(evt) => setSearch(evt.target.value)}
+              onChange={evt => setSearch(evt.target.value)}
               placeholder={t("products.product_list.search_product")}
             />
             <Cta

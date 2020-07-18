@@ -1,6 +1,6 @@
 import { CategoryType } from "../categories/type";
 
-export const OrderColums = ["weight", "price"];
+export const OrderColums = ["position", "weight", "price"];
 
 export type ProductType = {
   entity_id: number;
