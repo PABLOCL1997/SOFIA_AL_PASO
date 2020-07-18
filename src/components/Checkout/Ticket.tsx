@@ -263,7 +263,12 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             data.cartItems.map((product: ProductType) => (
               <Row key={product.entity_id}>
                 <span>
-                  {product.qty} x {product.name}
+                  {product.qty} x{" "}
+                  {product.unit === "KGS"
+                    ? `${product.name} de ${Number(product.weight)
+                        .toFixed(2)
+                        .replace(".", ",")} KGS aprox.`
+                    : product.name}
                 </span>
                 <span>
                   Bs. {product.special_price.toFixed(2).replace(".", ",")}
@@ -289,7 +294,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             <InputBox>
               <input
                 value={coupon}
-                onChange={(evt) => setCoupon(evt.target.value)}
+                onChange={evt => setCoupon(evt.target.value)}
                 type="text"
                 placeholder={t("checkout.ticket.coupon.placeholder")}
               />

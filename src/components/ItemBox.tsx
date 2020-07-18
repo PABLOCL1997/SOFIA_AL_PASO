@@ -218,7 +218,13 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
         <Link onClick={goToProduct}>
           <Category>{product.category_name}</Category>
           <Image src={product.image.split(",")[0]}></Image>
-          <Title>{product.name}</Title>
+          <Title>
+            {product.unit === "KGS"
+              ? `${product.name} de ${Number(product.weight)
+                  .toFixed(2)
+                  .replace(".", ",")} KGS aprox.`
+              : product.name}
+          </Title>
           <EstimatedPrice visible={product.unit === "KGS"}>
             Bs.{" "}
             {(product.special_price * product.weight)

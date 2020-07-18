@@ -99,7 +99,13 @@ const RelatedProducts: FC<Props> = ({ product, openModal }) => {
       <Container>
         <Link>
           <Image src={product.image.split(",")[0]}></Image>
-          <Title>{product.name}</Title>
+          <Title>
+            {product.unit === "KGS"
+              ? `${product.name} de ${Number(product.weight)
+                  .toFixed(2)
+                  .replace(".", ",")} KGS aprox.`
+              : product.name}
+          </Title>
           <PriceBox>
             <Price>
               Bs. {product.price.toFixed(2).replace(".", ",")} {product.unit}

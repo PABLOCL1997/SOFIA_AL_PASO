@@ -468,7 +468,13 @@ const Product: FC<Props> = ({
                 </Slider>
               </Col1>
               <Col2>
-                <ProductTitle>{product.name}</ProductTitle>
+                <ProductTitle>
+                  {product.unit === "KGS"
+                    ? `${product.name} de ${Number(product.weight)
+                        .toFixed(2)
+                        .replace(".", ",")} KGS aprox.`
+                    : product.name}
+                </ProductTitle>
                 <EstimatedPrice visible={product.unit === "KGS"}>
                   Bs.{" "}
                   {(product.special_price * product.weight)

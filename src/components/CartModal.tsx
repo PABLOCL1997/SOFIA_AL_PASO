@@ -508,7 +508,13 @@ const AuthModal: FC<Props> = () => {
                   <Row key={product.entity_id}>
                     <Image src={product.image}></Image>
                     <NameBox>
-                      <Name>{product.name}</Name>
+                      <Name>
+                        {product.unit === "KGS"
+                          ? `${product.name} de ${Number(product.weight)
+                              .toFixed(2)
+                              .replace(".", ",")} KGS aprox.`
+                          : product.name}
+                      </Name>
                       <Units>{product.size}</Units>
                     </NameBox>
                     <Qty>
