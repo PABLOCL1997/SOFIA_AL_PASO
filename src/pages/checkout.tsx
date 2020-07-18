@@ -81,7 +81,7 @@ const Title = styled.div`
   }
   button {
     font-family: MullerMedium;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
     text-align: right;
     text-decoration-line: underline;

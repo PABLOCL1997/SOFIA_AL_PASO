@@ -20,8 +20,8 @@ const Container = styled.div``;
 
 const Title = styled.div`
   font-family: MullerMedium;
-  font-size: 24px;
-  line-height: 24px;
+  font-size: 40px;
+  line-height: 40px;
   color: var(--black);
   text-align: center;
   padding: 10px 20px;
