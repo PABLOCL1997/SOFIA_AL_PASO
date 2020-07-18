@@ -86,7 +86,9 @@ const Products: FC<Props> = () => {
   const [order, setOrder] = useState(OrderColums[0]);
   const [category_id, setCategoryId] = useState(0);
 
-  const { loading, data } = useQuery(GET_CATEGORIES, {});
+  const { loading, data } = useQuery(GET_CATEGORIES, {
+    fetchPolicy: "network-only"
+  });
   const { data: userData } = useQuery(GET_USER, {});
   const [loadProducts, { loading: loadingProds }] = useLazyQuery(GET_PRODUCTS, {
     variables: {
