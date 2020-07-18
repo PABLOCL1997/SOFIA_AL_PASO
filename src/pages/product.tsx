@@ -503,9 +503,12 @@ const Product: FC<Props> = ({
                 <Categories>
                   <span>{t("product.categories")}: </span>
                   {categories.map((cat: CategoryType, index: number) => (
-                    <Link key={index} to={`/productos/${toLink(cat.name)}`}>
-                      {cat.name}
-                    </Link>
+                    <span>
+                      <Link key={index} to={`/productos/${toLink(cat.name)}`}>
+                        {cat.name}
+                      </Link>
+                      {index === categories.length - 1 ? "" : ", "}
+                    </span>
                   ))}
                 </Categories>
                 <Toolbox>
