@@ -510,9 +510,9 @@ const AuthModal: FC<Props> = () => {
                     <NameBox>
                       <Name>
                         {product.unit === "KGS"
-                          ? `${product.name} de ${Number(product.weight)
+                          ? `${product.name} DE ${Number(product.weight)
                               .toFixed(2)
-                              .replace(".", ",")} KGS aprox.`
+                              .replace(".", ",")} KGS APROX.`
                           : product.name}
                       </Name>
                       <Units>{product.size}</Units>

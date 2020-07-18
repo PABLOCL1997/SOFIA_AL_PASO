@@ -220,9 +220,9 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           <Image src={product.image.split(",")[0]}></Image>
           <Title>
             {product.unit === "KGS"
-              ? `${product.name} de ${Number(product.weight)
+              ? `${product.name} DE ${Number(product.weight)
                   .toFixed(2)
-                  .replace(".", ",")} KGS aprox.`
+                  .replace(".", ",")} KGS APROX.`
               : product.name}
           </Title>
           <EstimatedPrice visible={product.unit === "KGS"}>

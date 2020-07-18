@@ -470,9 +470,9 @@ const Product: FC<Props> = ({
               <Col2>
                 <ProductTitle>
                   {product.unit === "KGS"
-                    ? `${product.name} de ${Number(product.weight)
+                    ? `${product.name} DE ${Number(product.weight)
                         .toFixed(2)
-                        .replace(".", ",")} KGS aprox.`
+                        .replace(".", ",")} KGS APROX.`
                     : product.name}
                 </ProductTitle>
                 <EstimatedPrice visible={product.unit === "KGS"}>
