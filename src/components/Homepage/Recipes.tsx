@@ -81,28 +81,28 @@ const SliderContainer = styled.div`
 
 const recipesData: Array<RecipeType> = [
     {
-        title: 'Arrollado de pollo',
+        title: 'Strogonoff de Pollo',
         difficulty: 'fácil',
         mins: '150m',
         people: 6,
         link: 'https://www.sofia.com.bo/recetas/'
     },
     {
-        title: 'Bife grillado de pollo',
+        title: 'Pork Belly',
         difficulty: 'fácil',
         mins: '40m',
         people: 4,
         link: 'https://www.sofia.com.bo/recetas/'
     },
     {
-        title: 'Pollo en crema de puerros',
+        title: 'Fondo de Pollo',
         difficulty: 'fácil',
         mins: '150m',
         people: 6,
         link: 'https://www.sofia.com.bo/recetas/'
     },
     {
-        title: 'Sandwich de pollo',
+        title: 'Cordon Bleu',
         difficulty: 'fácil',
         mins: '25m',
         people: 4,
