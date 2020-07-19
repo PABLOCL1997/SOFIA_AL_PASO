@@ -30,9 +30,14 @@ export const enableGmap = () => {
   };
   function getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        __initMap(position.coords.latitude, position.coords.longitude);
-      });
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          __initMap(position.coords.latitude, position.coords.longitude);
+        },
+        function () {
+          __initMap();
+        }
+      );
     } else {
       __initMap();
     }
@@ -41,6 +46,7 @@ export const enableGmap = () => {
     var i = setInterval(() => {
       if (document.getElementById("gmap") && google) {
         clearInterval(i);
+
         var uluru = {
           lat: lat || -16.5207007,
           lng: lng || -68.194118
