@@ -325,7 +325,10 @@ const Checkout: FC<Props> = () => {
         "home_type",
         "apt_number"
       ].forEach((key: string) => {
-        if (!orderData.shipping[key] && !missingField) {
+        if (
+          (!orderData.shipping[key] || !orderData.shipping[key].trim()) &&
+          !missingField
+        ) {
           missingField = true;
           const input = document.querySelector(`[name="shipping-${key}"]`);
           if (input) {
@@ -397,7 +400,13 @@ const Checkout: FC<Props> = () => {
         } ${orderData.shipping.building_name || ""} ${
           orderData.shipping.zone || ""
         } ${orderData.shipping.neighborhood || ""}`,
-        city: orderData.shipping.city,
+        city:
+          orderData.shipping.city ||
+          (localUserData &&
+          localUserData.userInfo &&
+          localUserData.userInfo.length
+            ? localUserData.userInfo[0].cityName
+            : "-"),
         region: orderData.shipping.reference,
         country_id: "BO",
         latitude: String(orderData.shipping.latitude),
