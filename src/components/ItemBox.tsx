@@ -194,6 +194,9 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
       window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
     ) {
       history.push(`/${toLink(product.name)}`);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 500);
     } else {
       openModal(product);
     }
