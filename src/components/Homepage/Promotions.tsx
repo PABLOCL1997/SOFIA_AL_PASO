@@ -17,6 +17,12 @@ const Container = styled.div`
         .main-container {
             background: var(--yellow);
             border-radius: 20px;
+
+            > div {
+                @media screen and (max-width: ${BREAKPOINT}) {
+                    padding-bottom: 20px;
+                }
+            }
         }
     }
     > img {

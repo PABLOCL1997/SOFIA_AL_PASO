@@ -70,8 +70,9 @@ const Title = styled.h2`
   line-height: 110%;
   text-align: center;
   color: var(--black);
-  min-height: 35px;
+  min-height: 52px;
   padding: 0 10px;
+  text-transform: uppercase;
   @media screen and (max-width: ${BREAKPOINT}) {
     height: auto;
   }
