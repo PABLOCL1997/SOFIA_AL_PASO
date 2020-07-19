@@ -76,6 +76,7 @@ export const GET_PRODUCT = gql`
         image
         size
         price
+        weight
         fullprice
         unit
         category_name

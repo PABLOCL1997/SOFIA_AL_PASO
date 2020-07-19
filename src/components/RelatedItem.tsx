@@ -90,9 +90,13 @@ const RelatedProducts: FC<Props> = ({ product, openModal }) => {
       openModal(product);
     } else {
       history.push(`/${toLink(product.name)}`);
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 500);
     }
   };
+
+  console.log(product);
 
   return (
     <Suspense fallback={<Loader />}>

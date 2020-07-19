@@ -334,6 +334,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
       userData.userInfo[0].openCartModal
     ) {
       document.body.style.overflow = "hidden";
+      document.body.style.maxHeight = "none";
     } else {
       document.body.removeAttribute("style");
     }
