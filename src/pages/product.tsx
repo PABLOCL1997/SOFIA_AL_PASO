@@ -477,7 +477,7 @@ const Product: FC<Props> = ({
                 </ProductTitle>
                 <EstimatedPrice visible={product.unit === "KGS"}>
                   Bs.{" "}
-                  {(product.special_price * product.weight)
+                  {(product.special_price / product.weight)
                     .toFixed(2)
                     .replace(".", ",")}
                   /{product.unit}
