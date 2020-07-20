@@ -133,7 +133,8 @@ const Image = styled.img`
     margin-bottom: -55px;
     @media screen and (max-width: ${BREAKPOINT}) {
         width: calc(100% - 30px);
-        margin-bottom: -80px;
+        max-width: 260px;
+        margin: 20px 0 10px;
     }
 `
 

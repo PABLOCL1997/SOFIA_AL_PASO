@@ -14,7 +14,7 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
 const Container = styled.div`    
     position: relative;
     .productslider-wrapper {
-        .main-container {
+        > .main-container {
             background: var(--yellow);
             border-radius: 20px;
 

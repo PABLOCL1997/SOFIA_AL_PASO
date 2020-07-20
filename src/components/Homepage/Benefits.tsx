@@ -76,6 +76,11 @@ const Box = styled.div`
   img {
     width: 118px;
     height: 118px;
+
+     @media screen and (max-width: ${BREAKPOINT}) {
+      width: 64px;
+      height: 64px;
+    }
   }
 `;
 
