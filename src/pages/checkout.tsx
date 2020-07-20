@@ -166,12 +166,12 @@ const Checkout: FC<Props> = () => {
     document.title = CHECKOUT_TITLE;
     (window as any).orderData = {};
     let params = new URLSearchParams(location.search);
-    if (params.get("orderIds") && params.get("transaction_id")) {
+    if (params.get("authorizationcs_id") && params.get("transaction_id")) {
       (async () => {
         try {
           const response = await pay({
             variables: {
-              parent_ids: params.get("orderIds"),
+              authorizationcs_id: params.get("authorizationcs_id"),
               last_trans_id: params.get("transaction_id")
             }
           });
@@ -381,10 +381,18 @@ const Checkout: FC<Props> = () => {
           localUserData.userInfo.length
             ? localUserData.userInfo[0].cityName
             : "-",
-        latitude: "-",
-        longitude: "-",
-        street: "-",
-        reference: "-"
+        latitude: String(orderData.shipping.latitude),
+        longitude: String(orderData.shipping.longitude),
+        street: orderData.shipping.id
+          ? orderData.shipping.street
+          : `${orderData.shipping.address || ""} ${
+              orderData.shipping.number || ""
+            } ${orderData.shipping.home_type || ""} ${
+              orderData.shipping.apt_number || ""
+            } ${orderData.shipping.building_name || ""} ${
+              orderData.shipping.zone || ""
+            } ${orderData.shipping.neighborhood || ""}`,
+        reference: orderData.shipping.reference
       }),
       envio: JSON.stringify({
         entity_id: orderData.shipping.id,
@@ -393,13 +401,15 @@ const Checkout: FC<Props> = () => {
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
         telephone: orderData.shipping.phone,
-        street: `${orderData.shipping.address || ""} ${
-          orderData.shipping.number || ""
-        } ${orderData.shipping.home_type || ""} ${
-          orderData.shipping.apt_number || ""
-        } ${orderData.shipping.building_name || ""} ${
-          orderData.shipping.zone || ""
-        } ${orderData.shipping.neighborhood || ""}`,
+        street: orderData.shipping.id
+          ? orderData.shipping.street
+          : `${orderData.shipping.address || ""} ${
+              orderData.shipping.number || ""
+            } ${orderData.shipping.home_type || ""} ${
+              orderData.shipping.apt_number || ""
+            } ${orderData.shipping.building_name || ""} ${
+              orderData.shipping.zone || ""
+            } ${orderData.shipping.neighborhood || ""}`,
         city:
           orderData.shipping.city ||
           (localUserData &&
