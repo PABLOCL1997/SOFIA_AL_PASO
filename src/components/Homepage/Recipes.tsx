@@ -66,7 +66,7 @@ const SliderContainer = styled.div`
     .slick-dots {
         bottom: -5px;
         li {
-            background: white;
+            background: var(--black);
             border-radius: 20px;
             width: 14px;
             height: 14px;
