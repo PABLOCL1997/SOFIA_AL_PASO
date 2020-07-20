@@ -72,7 +72,7 @@ const Logo = styled.div`
   cursor: pointer;
   @media screen and (max-width: ${BREAKPOINT}) {
     margin: 0 auto;
-    svg {
+    img {
       width: 48px !important;
     }
   }

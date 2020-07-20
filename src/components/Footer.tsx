@@ -37,7 +37,7 @@ const Container = styled.div<{ page?: string }>`
 const Col1 = styled.div`
   width: 50%;
   margin-right: 110px;
-  > svg {
+  > img {
     width: 80px;
   }
   @media screen and (max-width: ${BREAKPOINT}) {
