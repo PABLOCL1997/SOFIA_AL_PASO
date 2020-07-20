@@ -1,6 +1,7 @@
 import React, { FC, useState, Suspense, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { BREAKPOINT } from "../../utils/constants";
 import { useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { GET_USER, DETAILS } from "../../graphql/user/queries";
@@ -324,6 +325,7 @@ type AddressArgs = {
 
 const Details: FC<Props> = () => {
   const { t } = useTranslation();
+  const location = useLocation();
 
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -513,6 +515,15 @@ const Details: FC<Props> = () => {
       showError();
     }
   };
+
+  useEffect(() => {
+    if (location.search === "?na") {
+      window.history.pushState("", document.title, "/mi-cuenta");
+      setTimeout(() => {
+        toggleAddressModal();
+      }, 1000);
+    }
+  }, [location]);
 
   useEffect(() => {
     if (addressId > 0) callDeleteMutation();

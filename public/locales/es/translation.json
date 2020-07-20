@@ -73,7 +73,8 @@
     "title": "¿A qué ciudad enviamos tu pedido?",
     "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:",
     "title_alt": "¿A qué dirección enviamos tu pedido?",
-    "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:"
+    "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:",
+    "add_address": "Agregar una nueva dirección"
   },
   "products": {
     "filter_side_bar": {

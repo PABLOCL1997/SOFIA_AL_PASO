@@ -1,5 +1,6 @@
 import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cities, KeyValue } from "../utils/string";
 import { BREAKPOINT } from "../utils/constants";
@@ -17,6 +18,8 @@ const WorldPin = React.lazy(() =>
 const Close = React.lazy(() =>
   import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
+
+const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "./Cta"));
 
 const Courtain = styled.div<any>`
   position: fixed;
@@ -117,6 +120,13 @@ const RadionGroup = styled.div<any>`
   }
 `;
 
+const CtaWrapper = styled.div`
+  margin-top: 30px;
+  button {
+    padding: 15px 50px;
+  }
+`;
+
 type Props = {};
 
 type User = {
@@ -129,6 +139,7 @@ type User = {
 
 const CityModal: FC<Props> = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const { data } = useQuery(GET_USER, {});
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [city, setCity] = useState<User>({});
@@ -194,6 +205,11 @@ const CityModal: FC<Props> = () => {
         } as User
       }
     });
+  };
+
+  const addAddress = () => {
+    toggleCityModal();
+    history.push("/mi-cuenta?na");
   };
 
   useEffect(() => {
@@ -313,6 +329,13 @@ const CityModal: FC<Props> = () => {
                   </RadionGroup>
                 ))}
             </Radios>
+            <CtaWrapper>
+              <Cta
+                filled={true}
+                text={t("citymodal.add_address")}
+                action={addAddress}
+              />
+            </CtaWrapper>
           </Modal>
         )}
       </Courtain>
