@@ -278,6 +278,7 @@ const AuthModal: FC<Props> = () => {
 
   useEffect(() => {
     loginWithGoogle();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   useEffect(() => {

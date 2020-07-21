@@ -523,6 +523,7 @@ const Details: FC<Props> = () => {
         toggleAddressModal();
       }, 1000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   useEffect(() => {
