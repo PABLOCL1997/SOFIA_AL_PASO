@@ -28,6 +28,7 @@ export const GET_PRODUCTS = gql`
         price
         fullprice
         unit
+        useKGS
         weight
         category_name
         special_price
@@ -63,6 +64,7 @@ export const GET_PRODUCT = gql`
       special_price
       weight
       stock
+      useKGS
       description
       categories {
         entity_id
@@ -79,6 +81,7 @@ export const GET_PRODUCT = gql`
         weight
         fullprice
         unit
+        useKGS
         category_name
         special_price
         stock

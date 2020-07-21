@@ -223,22 +223,20 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           <Category>{product.category_name}</Category>
           <Image src={product.image.split(",")[0]}></Image>
           <Title>
-            {product.unit === "KGS"
+            {product.useKGS
               ? `${product.name} DE ${Number(product.weight)
                   .toFixed(2)
                   .replace(".", ",")} KGS APROX.`
               : product.name}
           </Title>
-          <EstimatedPrice visible={product.unit === "KGS"}>
+          <EstimatedPrice visible={product.useKGS}>
             Bs.{" "}
             {(product.special_price / product.weight)
               .toFixed(2)
               .replace(".", ",")}
-            /{product.unit}
+            / KGS
           </EstimatedPrice>
-          <Label visible={product.unit === "KGS"}>
-            {t("itembox.price_label")}
-          </Label>
+          <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
           <PriceBox>
             <Price>
               Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}

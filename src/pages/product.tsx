@@ -95,7 +95,7 @@ const Col1 = styled.div`
   width: calc(50% - 8px);
   margin-right: 16px;
   .slick-dots {
-    bottom: -5px;
+    bottom: -25px;
     li {
       background: var(--btn-background);
       box-shadow: 0 0 0 1px var(--black);
@@ -141,6 +141,7 @@ const ProductTitle = styled.h1`
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 20px;
     line-height: 20px;
+    margin-top: 30px;
   }
 `;
 
@@ -469,21 +470,21 @@ const Product: FC<Props> = ({
               </Col1>
               <Col2>
                 <ProductTitle>
-                  {product.unit === "KGS"
+                  {product.useKGS
                     ? `${product.name} DE ${Number(product.weight)
                         .toFixed(2)
                         .replace(".", ",")} KGS APROX.`
                     : product.name}
                 </ProductTitle>
-                <EstimatedPrice visible={product.unit === "KGS"}>
+                <EstimatedPrice visible={product.useKGS}>
                   Bs.{" "}
                   {(product.special_price / product.weight)
                     .toFixed(2)
                     .replace(".", ",")}
-                  /{product.unit}
+                  / KGS
                 </EstimatedPrice>
                 <PriceBox>
-                  <Label visible={product.unit === "KGS"}>
+                  <Label visible={product.useKGS}>
                     {t("itembox.price_label")}:
                   </Label>
                   <Price>

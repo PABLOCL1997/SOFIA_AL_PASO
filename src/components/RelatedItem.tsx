@@ -104,7 +104,7 @@ const RelatedProducts: FC<Props> = ({ product, openModal }) => {
         <Link>
           <Image src={product.image.split(",")[0]}></Image>
           <Title>
-            {product.unit === "KGS"
+            {product.useKGS
               ? `${product.name} DE ${Number(product.weight)
                   .toFixed(2)
                   .replace(".", ",")} KGS APROX.`

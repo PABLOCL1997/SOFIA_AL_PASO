@@ -406,16 +406,20 @@ const AuthModal: FC<Props> = () => {
     if (newCart && newCart.checkCart) {
       (async () => {
         let cartItems = JSON.parse(newCart.checkCart.cart);
-        let originalLength = data.cartItems.length;
+        let _oldItems = [...data.cartItems];
+        let originalLength = _oldItems.length;
+
+        await emptyCart();
+
         for (let i = 0; i < cartItems.length; i++) {
-          let elem: ProductType = data.cartItems.find(
+          let elem: ProductType = _oldItems.find(
             (p: ProductType) => p.entity_id === cartItems[i].entity_id
           );
           if (cartItems[i].qty === 0) {
             await deleteItem({
               variables: { product: { ...elem } }
             });
-          } else if (cartItems[i].qty !== elem.qty) {
+          } else {
             await addItem({
               variables: {
                 product: {
@@ -509,7 +513,7 @@ const AuthModal: FC<Props> = () => {
                     <Image src={product.image}></Image>
                     <NameBox>
                       <Name>
-                        {product.unit === "KGS"
+                        {product.useKGS
                           ? `${product.name} DE ${Number(product.weight)
                               .toFixed(2)
                               .replace(".", ",")} KGS APROX.`

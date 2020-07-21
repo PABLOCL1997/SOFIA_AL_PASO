@@ -26,6 +26,7 @@ const Product = React.lazy(() =>
 
 type Props = {
   products: Array<ProductType>;
+  useArrows?: boolean;
 };
 
 const SliderContainer = styled.div`
@@ -36,9 +37,15 @@ const SliderContainer = styled.div`
   }
   .slick-arrow.slick-prev > svg {
     left: -80px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+      left: -30px;
+    }
   }
   .slick-arrow.slick-next > svg {
     right: -80px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+      right: -30px;
+    }
   }
   .slick-prev:before,
   .slick-next:before {
@@ -96,7 +103,14 @@ const ProductModal = styled.div`
   }
 `;
 
-const ProductSlider: FC<Props> = ({ products }) => {
+const ItemContainer = styled.div`
+  @media screen and (max-width: ${BREAKPOINT}) {
+    width: 80%;
+    margin: 0 auto;
+  }
+`;
+
+const ProductSlider: FC<Props> = ({ products, useArrows }) => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState<ProductType | any>({});
@@ -125,8 +139,8 @@ const ProductSlider: FC<Props> = ({ products }) => {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          arrows: false,
-          dots: true
+          arrows: useArrows,
+          dots: !useArrows
         }
       },
       {
@@ -134,8 +148,8 @@ const ProductSlider: FC<Props> = ({ products }) => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: false,
-          dots: true
+          arrows: useArrows,
+          dots: !useArrows
         }
       }
     ]
@@ -155,7 +169,9 @@ const ProductSlider: FC<Props> = ({ products }) => {
           <Slider {...settings}>
             {products.map((product: ProductType) => (
               <div key={product.entity_id}>
-                <ItemBox openModal={openModal} product={product} />
+                <ItemContainer>
+                  <ItemBox openModal={openModal} product={product} />
+                </ItemContainer>
               </div>
             ))}
           </Slider>

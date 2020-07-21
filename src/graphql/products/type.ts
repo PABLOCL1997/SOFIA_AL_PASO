@@ -13,6 +13,7 @@ export type ProductType = {
   special_price: number;
   weight: number;
   unit: string;
+  useKGS: boolean;
   category_name: string;
   description?: string;
   categories?: Array<CategoryType>;

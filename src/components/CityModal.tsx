@@ -31,7 +31,7 @@ const Courtain = styled.div<any>`
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.2);
-  z-index: 2;
+  z-index: 4;
   &.visible {
     display: flex;
   }
@@ -291,6 +291,15 @@ const CityModal: FC<Props> = () => {
                 </RadionGroup>
               ))}
             </Radios>
+            {data.userInfo.length && data.userInfo[0].id && (
+              <CtaWrapper>
+                <Cta
+                  filled={true}
+                  text={t("citymodal.add_address")}
+                  action={addAddress}
+                />
+              </CtaWrapper>
+            )}
           </Modal>
         )}
         {inputs.addresses && !!inputs.addresses.length && (

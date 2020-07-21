@@ -83,22 +83,30 @@ export default async () => {
           if (queryResult) {
             let { cartItems } = queryResult;
             const item = cartItems.findIndex(
-              (p) => p.entity_id === product.entity_id
+              p => p.entity_id === product.entity_id
             );
             if (item >= 0) {
-              if (product.replace && cartItems[item].qty === product.qty)
+              if (
+                product.replace &&
+                cartItems[item].qty === product.qty &&
+                cartItems[item].special_price === product.special_price
+              )
                 return cartItems;
+
               if (!product.replace) {
                 product.qty = Number(product.qty) + Number(cartItems[item].qty);
-                product.price = Number(product.price);
-                product.fullprice = Number(product.fullprice);
-                product.special_price = Number(product.special_price);
               }
 
               cartItems.splice(item, 1);
             }
+
+            product.price = Number(product.price);
+            product.fullprice = Number(product.fullprice);
+            product.special_price = Number(product.special_price);
+
             cartItems = [...cartItems, product];
             cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems } });
+
             return cartItems;
           }
           return [];
@@ -108,7 +116,7 @@ export default async () => {
           if (queryResult) {
             let { cartItems } = queryResult;
             const item = cartItems.findIndex(
-              (p) => p.entity_id === product.entity_id
+              p => p.entity_id === product.entity_id
             );
             if (item >= 0) {
               cartItems.splice(item, 1);

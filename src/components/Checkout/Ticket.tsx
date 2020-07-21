@@ -264,7 +264,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
               <Row key={product.entity_id}>
                 <span>
                   {product.qty} x{" "}
-                  {product.unit === "KGS"
+                  {product.useKGS
                     ? `${product.name} DE ${Number(product.weight)
                         .toFixed(2)
                         .replace(".", ",")} KGS APROX.`
