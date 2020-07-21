@@ -437,7 +437,7 @@ const AuthModal: FC<Props> = () => {
           return sum + (i.qty === 0 ? 0 : i.price * i.qty);
         }, 0);
         if (history.location.pathname.indexOf("checkout") >= 0) {
-          if (new_total < 200) {
+          if (new_total < 50) {
             history.push("/");
           }
         }
@@ -494,7 +494,7 @@ const AuthModal: FC<Props> = () => {
               <Close />
             </CloseWrapper>
           </Header>
-          {parseFloat(totalAmount.replace(",", ".")) < 200 && (
+          {parseFloat(totalAmount.replace(",", ".")) < 50 && (
             <UnderBudget>{t("cart.under_budget")}</UnderBudget>
           )}
           <Items>
@@ -558,7 +558,7 @@ const AuthModal: FC<Props> = () => {
             <Disclaimer>{t("cart.disclaimer")}</Disclaimer>
             <Toolbox>
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
-              {parseFloat(totalAmount.replace(",", ".")) >= 200 && (
+              {parseFloat(totalAmount.replace(",", ".")) >= 50 && (
                 <CtaWrapper>
                   <Cta filled={true} text={t("cart.pay")} action={checkout} />
                 </CtaWrapper>

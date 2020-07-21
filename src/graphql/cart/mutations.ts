@@ -63,8 +63,16 @@ export const CREATE_ORDER = gql`
 `;
 
 export const PAY = gql`
-  mutation AddPayment($parent_ids: String!, $last_trans_id: String!) {
-    addPayment(parent_ids: $parent_ids, last_trans_id: $last_trans_id) {
+  mutation AddPayment(
+    $parent_ids: String!
+    $authorizationcs_id: String!
+    $last_trans_id: String!
+  ) {
+    addPayment(
+      parent_ids: $parent_ids
+      authorizationcs_id: $authorizationcs_id
+      last_trans_id: $last_trans_id
+    ) {
       entity_id
       increment_id
     }

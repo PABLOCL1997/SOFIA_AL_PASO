@@ -166,11 +166,16 @@ const Checkout: FC<Props> = () => {
     document.title = CHECKOUT_TITLE;
     (window as any).orderData = {};
     let params = new URLSearchParams(location.search);
-    if (params.get("authorizationcs_id") && params.get("transaction_id")) {
+    if (
+      params.get("orderIds") &&
+      params.get("authorizationcs_id") &&
+      params.get("transaction_id")
+    ) {
       (async () => {
         try {
           const response = await pay({
             variables: {
+              parent_ids: params.get("orderIds"),
               authorizationcs_id: params.get("authorizationcs_id"),
               last_trans_id: params.get("transaction_id")
             }
@@ -192,7 +197,7 @@ const Checkout: FC<Props> = () => {
       })();
     } else {
       if (data && !data.cartItems.length) history.push("/");
-      else if (parseFloat(totalAmount.replace(",", ".")) < 200)
+      else if (parseFloat(totalAmount.replace(",", ".")) < 50)
         history.push("/");
       else {
         getDetails();
