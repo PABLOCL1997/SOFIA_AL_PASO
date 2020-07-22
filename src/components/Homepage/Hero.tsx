@@ -37,6 +37,7 @@ const Container = styled.div`
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 40px 20px;
     min-height: auto;
+    background-position: 28% center;
     > div > img {
       width: 90px;
     }
@@ -64,7 +65,6 @@ const Title = styled.h1`
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 35px;
     line-height: 122%;
-    text-shadow: 0px 15px 48px rgba(221, 181, 12, 0.85);
   }
 `;
 
