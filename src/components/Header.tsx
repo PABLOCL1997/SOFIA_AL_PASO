@@ -311,7 +311,10 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const addressLabel = () => {
     if (userData.userInfo.length && userData.userInfo.length) {
       if (userData.userInfo[0].defaultAddressLabel)
-        return `${userData.userInfo[0].defaultAddressLabel}, Bolivia`;
+        return `${userData.userInfo[0].defaultAddressLabel.replace(
+          / \| /g,
+          " "
+        )}, Bolivia`;
       if (userData.userInfo[0].cityName)
         return `${userData.userInfo[0].cityName}, Bolivia`;
     }

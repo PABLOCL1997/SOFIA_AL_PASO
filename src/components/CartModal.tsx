@@ -372,6 +372,13 @@ const AuthModal: FC<Props> = () => {
 
   const doAction = async (action: Action) => {
     if (action.action === "add") {
+      if ((action.product?.stock ?? 0) < (action.qty || 0)) {
+        return showSuccess({
+          variables: {
+            user: { showModal: t("cart.no_stock", { qty: action.qty }) }
+          }
+        });
+      }
       if ((action.product?.qty ?? 0) < (action.qty || 0)) {
         trackRemoveFromCart({
           ...action.product,

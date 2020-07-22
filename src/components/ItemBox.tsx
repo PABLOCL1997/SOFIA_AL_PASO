@@ -205,9 +205,17 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
 
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      trackAddToCart({ ...product, qty });
-      addItem();
-      showSuccess();
+      if (product.stock < qty) {
+        showSuccess({
+          variables: {
+            user: { showModal: t("cart.no_stock", { qty }) }
+          }
+        });
+      } else {
+        trackAddToCart({ ...product, qty });
+        addItem();
+        showSuccess();
+      }
     } else {
       toggleLoginModal();
     }

@@ -414,9 +414,17 @@ const Product: FC<Props> = ({
 
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      trackAddToCart({ ...product, categories: [], description: false, qty });
-      addItem();
-      showSuccess();
+      if (product.stock < qty) {
+        showSuccess({
+          variables: {
+            user: { showModal: t("cart.no_stock", { qty }) }
+          }
+        });
+      } else {
+        trackAddToCart({ ...product, categories: [], description: false, qty });
+        addItem();
+        showSuccess();
+      }
     } else {
       if (closeModal) closeModal();
       toggleLoginModal();

@@ -94,6 +94,7 @@ const Map: FC<Props> = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
         setLatLng("", position.coords.latitude, position.coords.longitude);
+        if ((window as any).updateMapUsed) (window as any).updateMapUsed();
       });
     }
   };

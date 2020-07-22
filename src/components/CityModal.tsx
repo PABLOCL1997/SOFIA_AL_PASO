@@ -233,9 +233,19 @@ const CityModal: FC<Props> = () => {
 
   useEffect(() => {
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
-    if (userId > 0 && inputs.addresses?.length && !userInfo.defaultAddressId)
-      showUserAddresses();
-    else if (userId === 0 && !userInfo.cityKey) resetToDefaultCities();
+    if (userId > 0 && inputs.addresses?.length && !userInfo.defaultAddressId) {
+      // showUserAddresses();
+      const street = inputs?.addresses[0].street ?? "";
+      setUser({
+        variables: {
+          user: {
+            defaultAddressId: inputs.addresses[0].id,
+            defaultAddressLabel: street.replace(/ \| /g, " "),
+            openCityModal: false
+          }
+        }
+      });
+    } else if (userId === 0 && !userInfo.cityKey) resetToDefaultCities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputs]);
 
@@ -334,7 +344,7 @@ const CityModal: FC<Props> = () => {
                         )
                       }
                     />
-                    <label>{address.street}</label>
+                    <label>{address?.street?.replace(/ \| /g, " ")}</label>
                   </RadionGroup>
                 ))}
             </Radios>

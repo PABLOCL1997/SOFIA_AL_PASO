@@ -35,6 +35,9 @@ const SliderContainer = styled.div`
     position: absolute;
     top: -75px;
   }
+  .slick-arrow.slick-prev {
+    z-index: 3;
+  }
   .slick-arrow.slick-prev > svg {
     left: -80px;
     @media screen and (max-width: ${BREAKPOINT}) {
@@ -130,8 +133,8 @@ const ProductSlider: FC<Props> = ({ products, useArrows }) => {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
-          arrows: false,
-          dots: true
+          arrows: useArrows,
+          dots: !useArrows
         }
       },
       {

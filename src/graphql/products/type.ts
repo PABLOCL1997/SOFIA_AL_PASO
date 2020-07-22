@@ -12,6 +12,7 @@ export type ProductType = {
   fullprice: number;
   special_price: number;
   weight: number;
+  stock: number;
   unit: string;
   useKGS: boolean;
   category_name: string;

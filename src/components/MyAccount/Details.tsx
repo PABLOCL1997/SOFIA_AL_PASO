@@ -32,6 +32,9 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 const Chevron = React.lazy(() =>
   import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
 );
+const Switch = React.lazy(() =>
+  import(/* webpackChunkName: "Switch" */ "../Switch")
+);
 
 const Title = styled.div`
   display: flex;
@@ -111,7 +114,7 @@ const Form = styled.div`
   }
 `;
 
-const InputGroup = styled.div<{ key?: string }>`
+const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
   display: flex;
   flex-direction: column;
   label {
@@ -122,6 +125,7 @@ const InputGroup = styled.div<{ key?: string }>`
     text-transform: uppercase;
     color: var(--font);
     padding-left: 20px;
+    opacity: ${props => (props.withLabel ? "1" : "0")};
   }
   input {
     background: var(--whiter);
@@ -136,6 +140,9 @@ const InputGroup = styled.div<{ key?: string }>`
     padding: 12px 20px;
     border: 0;
     margin-top: 10px;
+    &.error {
+      border: 1px solid var(--red);
+    }
   }
 `;
 
@@ -330,7 +337,9 @@ const Details: FC<Props> = () => {
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
-  const [addressInputs, setAddressInputs] = useState<AddressType>({});
+  const [addressInputs, setAddressInputs] = useState<any>({
+    addressType: t("checkout.delivery.street")
+  });
   const [addressArgs, setAddressArgs] = useState<AddressArgs>({ on: false });
   const [addressId, setAddressId] = useState(0);
   const [showError] = useMutation(SET_USER, {
@@ -379,10 +388,25 @@ const Details: FC<Props> = () => {
   };
 
   const openEditModal = (address: AddressType) => {
+    console.log(address);
+
+    let street: Array<string> = [];
+    let phone: Array<string> = [];
+    if (address.street) street = address.street.split(" | ");
+    if (address.phone) phone = address.phone.split(" | ");
     toggleAddressModal();
     setAddressInputs({
       ...addressInputs,
-      ...address
+      ...address,
+      address: street[0] || "",
+      number: street[1] || "",
+      home_type: street[2] || "",
+      apt_number: street[3] || "",
+      building_name: street[4] || "",
+      zone: street[5] || "",
+      neighborhood: street[6] || "",
+      phone: phone[0] || "",
+      phone2: phone[1] || ""
     });
     let i = setInterval(() => {
       if ((window as any).map) {
@@ -394,19 +418,52 @@ const Details: FC<Props> = () => {
     }, 10);
   };
 
+  const validate = () => {
+    let missingField = false;
+
+    [
+      "firstname",
+      "lastname",
+      "nit",
+      "phone",
+      "address",
+      "home_type",
+      "apt_number",
+      "building_name",
+      "zone",
+      "neighborhood",
+      "reference"
+    ].forEach((key: string) => {
+      if (
+        (!addressInputs[key] || !addressInputs[key].trim()) &&
+        !missingField
+      ) {
+        missingField = true;
+        const input = document.querySelector(`[name="shipping-${key}"]`);
+        if (input) {
+          input.classList.add("error");
+          (document as any).getElementById("new-address-modal").scrollTo({
+            top: (input as any).offsetTop - 170,
+            behavior: "smooth"
+          });
+        }
+        showError({
+          variables: {
+            user: {
+              showError: t("checkout.missing_field", {
+                field: t("checkout.delivery." + key)
+              })
+            }
+          }
+        });
+      }
+    });
+
+    return !missingField;
+  };
+
   const editAddress = () => {
-    if (!addressInputs.street)
-      return showError({
-        variables: { user: { showError: t("account.empty_street") } }
-      });
-    if (!addressInputs.reference)
-      return showError({
-        variables: { user: { showError: t("account.empty_reference") } }
-      });
-    if (!addressInputs.city)
-      return showError({
-        variables: { user: { showError: t("account.empty_city") } }
-      });
+    if (!validate()) return;
 
     if (
       userData.userInfo.length &&
@@ -421,13 +478,21 @@ const Details: FC<Props> = () => {
     }
     setAddressArgs({
       addressId: addressInputs.id,
-      firstname: inputs.firstname,
-      lastname: inputs.lastname,
+      firstname: addressInputs.firstname,
+      lastname: addressInputs.lastname,
       email: inputs.email,
-      nit: inputs.nit,
-      telephone: inputs.phone,
+      nit: addressInputs.nit,
+      telephone: `${addressInputs.phone} | ${addressInputs.phone2}`,
       password: "",
-      street: addressInputs.street,
+      street: addressInputs.id
+        ? addressInputs.street
+        : `${addressInputs.address || ""} | ${addressInputs.number || ""} | ${
+            addressInputs.home_type || ""
+          } | ${addressInputs.apt_number || ""} | ${
+            addressInputs.building_name || ""
+          } | ${addressInputs.zone || ""} | ${
+            addressInputs.neighborhood || ""
+          }`,
       reference: addressInputs.reference,
       city: addressInputs.city,
       latitude: String((window as any).latitude),
@@ -438,27 +503,25 @@ const Details: FC<Props> = () => {
   };
 
   const addAddress = () => {
-    if (!addressInputs.street)
-      return showError({
-        variables: { user: { showError: t("account.empty_street") } }
-      });
-    if (!addressInputs.reference)
-      return showError({
-        variables: { user: { showError: t("account.empty_reference") } }
-      });
-    if (!addressInputs.city)
-      return showError({
-        variables: { user: { showError: t("account.empty_city") } }
-      });
+    if (!validate()) return;
+
     setAddressArgs({
       addressId: 0,
-      firstname: inputs.firstname,
-      lastname: inputs.lastname,
+      firstname: addressInputs.firstname,
+      lastname: addressInputs.lastname,
       email: inputs.email,
-      nit: inputs.nit,
-      telephone: inputs.phone,
+      nit: addressInputs.nit,
+      telephone: `${addressInputs.phone} | ${addressInputs.phone2}`,
       password: "",
-      street: addressInputs.street,
+      street: addressInputs.id
+        ? addressInputs.street
+        : `${addressInputs.address || ""} | ${addressInputs.number || ""} | ${
+            addressInputs.home_type || ""
+          } | ${addressInputs.apt_number || ""} | ${
+            addressInputs.building_name || ""
+          } | ${addressInputs.zone || ""} | ${
+            addressInputs.neighborhood || ""
+          }`,
       reference: addressInputs.reference,
       city: addressInputs.city,
       latitude: String((window as any).latitude),
@@ -468,7 +531,7 @@ const Details: FC<Props> = () => {
     });
   };
 
-  const edit = () => {
+  const editBilling = () => {
     setEditMode(false);
     setAddressArgs({
       addressId: inputs.addressId || 0,
@@ -546,6 +609,17 @@ const Details: FC<Props> = () => {
     city: cities.map((c: KeyValue) => c.value)
   };
 
+  const addressTypes = [
+    {
+      title: t("checkout.delivery.street"),
+      value: t("checkout.delivery.street")
+    },
+    {
+      title: t("checkout.delivery.avenue"),
+      value: t("checkout.delivery.avenue")
+    }
+  ];
+
   return (
     <Suspense fallback={<Loader />}>
       <>
@@ -563,7 +637,7 @@ const Details: FC<Props> = () => {
             </Button>
           )}
           {!loading && editMode && (
-            <Button onClick={edit}>
+            <Button onClick={editBilling}>
               <span>{t("account.save")}</span>
             </Button>
           )}
@@ -585,7 +659,7 @@ const Details: FC<Props> = () => {
                 "phone",
                 "password"
               ].map((key: string) => (
-                <InputGroup key={key}>
+                <InputGroup key={key} withLabel={true}>
                   <label>{t("account." + key)}</label>
                   <input
                     readOnly={key === "email" || (key !== "key" && !editMode)}
@@ -613,7 +687,7 @@ const Details: FC<Props> = () => {
               inputs.addresses.map((address: AddressType) => (
                 <AddressRow key={address.id}>
                   <Street onClick={() => openEditModal(address)}>
-                    {address.street}
+                    {address.street?.replace(/ \| /g, " ")}
                   </Street>
                   <DeleteWrapper onClick={() => removeAddress(address)}>
                     <Delete />
@@ -647,40 +721,79 @@ const Details: FC<Props> = () => {
                 <Close />
               </CloseWrapper>
             </Header>
-            <ModalContainer>
+            <ModalContainer id="new-address-modal">
               <Form>
-                <InputGroup>
-                  <input
-                    value={addressInputs.street || ""}
-                    onChange={evt =>
-                      onChangeAddress("street", evt.target.value)
-                    }
-                    type={"text"}
-                    placeholder={t("account.modal.street")}
-                  />
-                </InputGroup>
-                <SelectWrapper>
-                  <select
-                    value={addressInputs.city || ""}
-                    onChange={evt => onChangeAddress("city", evt.target.value)}
-                  >
-                    <option value="">{t("checkout.delivery.city")}</option>
-                    {options.city.map((opt: string) => (
-                      <option key={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <Chevron />
-                </SelectWrapper>
-                <InputGroup>
-                  <input
-                    value={addressInputs.reference || ""}
-                    onChange={evt =>
-                      onChangeAddress("reference", evt.target.value)
-                    }
-                    type={"text"}
-                    placeholder={t("account.modal.reference")}
-                  />
-                </InputGroup>
+                {[
+                  "firstname",
+                  "lastname",
+                  "phone",
+                  "phone2",
+                  "nit",
+                  "city",
+                  "street",
+                  "address",
+                  "number",
+                  "home_type",
+                  "apt_number",
+                  "building_name",
+                  "zone",
+                  "neighborhood",
+                  "reference"
+                ].map((key: string) => {
+                  return (
+                    <InputGroup withLabel={key !== "street"} key={key}>
+                      <label>{t("checkout.delivery." + key)}</label>
+                      {options[key] && (
+                        <SelectWrapper>
+                          <select
+                            name={`shipping-${key}`}
+                            onChange={evt =>
+                              onChangeAddress(key, evt.target.value)
+                            }
+                            value={addressInputs[key] || ""}
+                          >
+                            <option value="">
+                              {t("checkout.delivery." + key)}
+                            </option>
+                            {options[key].map((opt: string) => (
+                              <option key={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <Chevron />
+                        </SelectWrapper>
+                      )}
+                      {key === "street" && (
+                        <Switch
+                          changeOption={(value: string) =>
+                            onChangeAddress("addressType", value)
+                          }
+                          option={addressInputs.addressType}
+                          values={addressTypes}
+                        />
+                      )}
+                      {key !== "street" && !options[key] && (
+                        <input
+                          name={`shipping-${key}`}
+                          value={addressInputs[key] || ""}
+                          onChange={evt =>
+                            onChangeAddress(key, evt.target.value)
+                          }
+                          pattern={
+                            key.indexOf("phone") >= 0 || key === "nit"
+                              ? "[0-9]*"
+                              : ""
+                          }
+                          type={
+                            key.indexOf("phone") >= 0 || key === "nit"
+                              ? "number"
+                              : "text"
+                          }
+                          placeholder={t("checkout.delivery." + key)}
+                        />
+                      )}
+                    </InputGroup>
+                  );
+                })}
               </Form>
               {userData.userInfo.length &&
                 userData.userInfo[0].openAddressModal && <Map />}

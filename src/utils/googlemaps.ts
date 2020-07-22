@@ -77,6 +77,7 @@ export const enableGmap = () => {
         ) {
           var latLng = marker.latLng;
           updateLatLng(latLng.lat(), latLng.lng());
+          if ((window as any).updateMapUsed) (window as any).updateMapUsed();
         });
         updateLatLng(uluru.lat, uluru.lng);
       }

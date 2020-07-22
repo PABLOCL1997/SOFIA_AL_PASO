@@ -298,7 +298,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
                 onChange={() => selectAddress(address)}
               />
               <label onClick={() => selectAddress(address)}>
-                {address.street}
+                {address.street?.replace(/ \| /g, " ")}
               </label>
             </CheckboxGroup>
           ))}

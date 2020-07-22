@@ -192,11 +192,13 @@
     "disclaimer": "",
     "empty": "Vaciar carrito",
     "pay": "Ir a pagar",
-    "under_budget": "El valor  mínimo para la compra es de Bs. 200. Por favor agrega mas productos",
-    "change_msg": "Cambiaste la ciudad|Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
-    "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito"
+    "under_budget": "El valor  mínimo para la compra es de Bs. 50. Por favor agrega mas productos",
+    "change_msg": "Cambiaste la ciudad|Los productos que agregaste al carrito, para la ciudad seleccionada, no alcanzan el monto mínimo de Bs. 50",
+    "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito",
+    "no_stock": "No hay stock suficiente para agregar {{qty}} unidades al carrito"
   },
   "checkout": {
+    "move_map": "Por favor seleccione su ubicación en el mapa",
     "missing_field": "Por favor complete el campo {{field}}",
     "todotix_error": "La orden fue creada correctamente, pero no se pudo obtener el link de pago",
     "error": "No se pudo generar la orden",

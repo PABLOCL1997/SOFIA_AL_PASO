@@ -133,6 +133,7 @@ const Checkout: FC<Props> = () => {
   const [order, setOrder] = useState<OrderData>();
   const [orderData, setOrderData] = useState<any>({});
   const [billingChange, setBillingChange] = useState<any>({});
+  const [mapUsed, setMapUsed] = useState(false);
   const [result, setResult] = useState<
     Array<{ entity_id: string; increment_id: string }>
   >([]);
@@ -163,6 +164,7 @@ const Checkout: FC<Props> = () => {
   const totalAmount = GET_TOTAL(data.cartItems);
 
   useEffect(() => {
+    (window as any).updateMapUsed = () => setMapUsed(true);
     document.title = CHECKOUT_TITLE;
     (window as any).orderData = {};
     let params = new URLSearchParams(location.search);
@@ -320,6 +322,23 @@ const Checkout: FC<Props> = () => {
       }
     });
 
+    if (!mapUsed && !orderData.shipping.id) {
+      window.scrollTo({
+        top:
+          (document as any).getElementById("gmap").getBoundingClientRect().top +
+          (window as any).scrollY -
+          170,
+        behavior: "smooth"
+      });
+      return showError({
+        variables: {
+          user: {
+            showError: t("checkout.move_map")
+          }
+        }
+      });
+    }
+
     if (!missingField && !orderData.shipping.id) {
       [
         "firstname",
@@ -328,7 +347,11 @@ const Checkout: FC<Props> = () => {
         "phone",
         "address",
         "home_type",
-        "apt_number"
+        "apt_number",
+        "building_name",
+        "zone",
+        "neighborhood",
+        "reference"
       ].forEach((key: string) => {
         if (
           (!orderData.shipping[key] || !orderData.shipping[key].trim()) &&

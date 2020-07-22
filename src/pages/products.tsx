@@ -97,6 +97,7 @@ const Products: FC<Props> = () => {
       order,
       offset: offset,
       search: search,
+      onsale: category === "promociones",
       city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
     },
     fetchPolicy: "network-only",
@@ -137,6 +138,7 @@ const Products: FC<Props> = () => {
 
   useEffect(() => {
     setLoader(true);
+
     if (data && data.categories) {
       let entity_id = null;
 

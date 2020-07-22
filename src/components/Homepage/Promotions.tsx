@@ -84,7 +84,7 @@ const Promotions: FC<Props> = () => {
   });
 
   const seeAll = () => {
-    history.push(`/productos/promotions`);
+    history.push(`/productos/promociones`);
   };
 
   useEffect(() => {
