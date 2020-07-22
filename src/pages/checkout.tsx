@@ -343,9 +343,12 @@ const Checkout: FC<Props> = () => {
       [
         "firstname",
         "lastname",
-        "nit",
         "phone",
+        "phone2",
+        "nit",
+        "city",
         "address",
+        "number",
         "home_type",
         "apt_number",
         "building_name",
@@ -357,6 +360,11 @@ const Checkout: FC<Props> = () => {
           (!orderData.shipping[key] || !orderData.shipping[key].trim()) &&
           !missingField
         ) {
+          if (
+            key === "building_name" &&
+            orderData.shipping.home_type === "Casa"
+          )
+            return;
           missingField = true;
           const input = document.querySelector(`[name="shipping-${key}"]`);
           if (input) {

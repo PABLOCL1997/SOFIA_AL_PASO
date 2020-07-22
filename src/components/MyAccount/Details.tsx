@@ -336,6 +336,7 @@ const Details: FC<Props> = () => {
 
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [mapUsed, setMapUsed] = useState(false);
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [addressInputs, setAddressInputs] = useState<any>({
     addressType: t("checkout.delivery.street")
@@ -421,23 +422,48 @@ const Details: FC<Props> = () => {
   const validate = () => {
     let missingField = false;
 
-    [
+    if (!mapUsed && !addressInputs.id) {
+      window.scrollTo({
+        top:
+          (document as any).getElementById("gmap").getBoundingClientRect().top +
+          (window as any).scrollY -
+          170,
+        behavior: "smooth"
+      });
+      showError({
+        variables: {
+          user: {
+            showError: t("checkout.move_map")
+          }
+        }
+      });
+      return false;
+    }
+
+    let fields = [
       "firstname",
       "lastname",
-      "nit",
       "phone",
+      "phone2",
+      "nit",
+      "city",
       "address",
+      "number",
       "home_type",
       "apt_number",
       "building_name",
       "zone",
       "neighborhood",
       "reference"
-    ].forEach((key: string) => {
+    ];
+
+    fields.forEach((key: string) => {
       if (
         (!addressInputs[key] || !addressInputs[key].trim()) &&
         !missingField
       ) {
+        if (key === "building_name" && addressInputs.home_type === "Casa")
+          return;
         missingField = true;
         const input = document.querySelector(`[name="shipping-${key}"]`);
         if (input) {
@@ -600,13 +626,15 @@ const Details: FC<Props> = () => {
   }, [addressArgs]);
 
   useEffect(() => {
+    (window as any).updateMapUsed = () => setMapUsed(true);
     closeAddressModal();
     getDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const options: { [key: string]: Array<string> } = {
-    city: cities.map((c: KeyValue) => c.value)
+    city: cities.map((c: KeyValue) => c.value),
+    home_type: ["Casa", "Departamento"]
   };
 
   const addressTypes = [

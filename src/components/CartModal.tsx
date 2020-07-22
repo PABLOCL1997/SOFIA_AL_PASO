@@ -413,6 +413,7 @@ const AuthModal: FC<Props> = () => {
     if (newCart && newCart.checkCart) {
       (async () => {
         let cartItems = JSON.parse(newCart.checkCart.cart);
+        if (!cartItems.length) return;
         let _oldItems = [...data.cartItems];
         let originalLength = _oldItems.length;
 
@@ -437,21 +438,30 @@ const AuthModal: FC<Props> = () => {
             });
           }
         }
+
+        let new_total = cartItems.reduce((sum: number, i: any) => {
+          return sum + (i.qty === 0 ? 0 : i.price * i.qty);
+        }, 0);
+
         if (
           userData &&
           userData.userInfo.length &&
           userData.userInfo[0].id &&
           !!originalLength
-        )
-          showSuccess();
-        let new_total = cartItems.reduce((sum: number, i: any) => {
-          return sum + (i.qty === 0 ? 0 : i.price * i.qty);
-        }, 0);
-        if (history.location.pathname.indexOf("checkout") >= 0) {
-          if (new_total < 50) {
+        ) {
+          if (
+            history.location.pathname.indexOf("checkout") >= 0 &&
+            new_total < 50
+          ) {
             history.push("/");
+            showSuccess({
+              variables: { user: { showModal: t("cart.change_qty_msg") } }
+            });
+          } else {
+            showSuccess();
           }
         }
+
         executeNewCartQuery(false);
       })();
     }

@@ -29,19 +29,41 @@ const Container = styled.div`
 
 const Discount = styled.div`
   position: absolute;
-  top: -10px;
-  right: 20px;
-  background: var(--yellow);
+  top: -30px;
+  right: 8px;
+  background: var(--red);
   box-shadow: 0px 8px 29px rgba(254, 205, 0, 0.4);
   border-radius: 3px;
   font-family: MullerBold;
   font-size: 14px;
   line-height: 14px;
   display: flex;
-  align-items: center;
-  text-align: center;
+  align-items: flex-end;
+  text-align: left;
   color: var(--black);
   padding: 8px 10px;
+  div {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    &:first-child {
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 5px;
+      padding-bottom: 5px;
+    }
+    &:last-child {
+      padding-top: 5px;
+    }
+    span {
+      font-size: 8px;
+      font-weight: bold;
+      &:first-child {
+        line-height: 5px;
+        font-size: 12px;
+      }
+    }
+  }
 `;
 
 const Link = styled.div`
@@ -226,7 +248,15 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
   return (
     <Suspense fallback={<Loader />}>
       <Container>
-        {discount > 0 && <Discount>{Number(discount).toFixed(2)}%</Discount>}
+        {discount > 0 && (
+          <Discount>
+            <div>{Number(discount).toFixed(2)}</div>
+            <div>
+              <span>%</span>
+              <span>DSCTO</span>
+            </div>
+          </Discount>
+        )}
         <Link onClick={goToProduct}>
           <Category>{product.category_name}</Category>
           <Image src={product.image.split(",")[0]}></Image>

@@ -195,17 +195,17 @@ const CityModal: FC<Props> = () => {
     });
   };
 
-  const showUserAddresses = () => {
-    toggleCityModal({
-      variables: {
-        user: {
-          cityKey: "",
-          cityName: "",
-          openCityModal: true
-        } as User
-      }
-    });
-  };
+  // const showUserAddresses = () => {
+  //   toggleCityModal({
+  //     variables: {
+  //       user: {
+  //         cityKey: "",
+  //         cityName: "",
+  //         openCityModal: true
+  //       } as User
+  //     }
+  //   });
+  // };
 
   const addAddress = () => {
     toggleCityModal();
@@ -236,11 +236,17 @@ const CityModal: FC<Props> = () => {
     if (userId > 0 && inputs.addresses?.length && !userInfo.defaultAddressId) {
       // showUserAddresses();
       const street = inputs?.addresses[0].street ?? "";
+      const city = inputs?.addresses[0].city ?? "";
+      let c: KeyValue | undefined = cities.find(
+        (c: KeyValue) => c.value === city
+      );
       setUser({
         variables: {
           user: {
             defaultAddressId: inputs.addresses[0].id,
             defaultAddressLabel: street.replace(/ \| /g, " "),
+            cityKey: c ? c.key : "",
+            cityName: c ? c.value : "",
             openCityModal: false
           }
         }

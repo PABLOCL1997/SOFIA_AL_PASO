@@ -175,8 +175,8 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
   const [inputs, setInputs] = useState<any>({
     addressType: t("checkout.delivery.street")
   });
-  const [other, setOther] = useState(false);
   const { data: localData } = useQuery(GET_USER, {});
+  const [other, setOther] = useState(false);
   const { data: userData } = useQuery(DETAILS, {
     fetchPolicy: "network-only"
   });
@@ -200,7 +200,9 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
             user: {
               cityKey: c.key,
               cityName: c.value,
-              openCityModal: false
+              openCityModal: false,
+              defaultAddressId: null,
+              defaultAddressLabel: ""
             }
           }
         });
@@ -213,6 +215,22 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
       onChange("addressId", Number(address.id));
       updateOrder("shipping", address);
       setOther(false);
+      let c: KeyValue | undefined = cities.find(
+        (c: KeyValue) => c.value === address.city
+      );
+      if (c) {
+        setUser({
+          variables: {
+            user: {
+              cityKey: c.key,
+              cityName: c.value,
+              openCityModal: false,
+              defaultAddressId: address.id,
+              defaultAddressLabel: address.street
+            }
+          }
+        });
+      }
     }
   };
 
@@ -263,9 +281,10 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
       );
       if (_a) selectAddress(userData.details.addresses[_a]);
       else selectAddress(userData.details.addresses[0]);
-    } else if (userData && userData.details.addresses)
+    } /* if (userData && userData.details.addresses)
       selectAddress(userData.details.addresses[0]);
-    else setOther(true);
+    else */ else
+      setOther(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
@@ -331,6 +350,11 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
                     <select
                       name={`shipping-${key}`}
                       onChange={evt => onChange(key, evt.target.value)}
+                      value={
+                        key === "city" && localData.userInfo.length
+                          ? localData.userInfo[0].cityName
+                          : ""
+                      }
                     >
                       <option value="">{t("checkout.delivery." + key)}</option>
                       {options[key].map((opt: string) => (
