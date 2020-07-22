@@ -35,20 +35,20 @@
       "text": "Nuestra tienda te conviene, porque nos preocupamos por darte el mejor servicio.",
       "delivery": {
         "title": "Envío a domicilio",
-        "text": "Hacé tu orden y obtenela dentro de 48hs hábiles en tu hogar."
+        "text": "Hacé tu pedido y recibilo en la comodidad  de tu hogar dentro de las 48 hrs. hábiles."
       },
       "payment": {
         "title": "Pagá como más te convenga",
         "text": "Paga online, con tarjeta o efectivo cuando recibas tu pedido."
       },
       "order": {
-        "title": "Pedido mínimo, envío gratis",
-        "text": "Tienda Sofía es el primer sitio donde podés comprar carne por kilo online."
+        "title": "Envío sin costo",
+        "text": "Comprá en nuestra tienda virtual y recibí tus productos sin costo de transporte."
       }
     },
     "promotions": {
-      "title": "Promociones",
-      "seeall": "Ver todas"
+      "title": "Productos destacados",
+      "seeall": "Ver todos"
     },
     "subscribe": {
       "store": "Tienda",
@@ -102,7 +102,7 @@
     "categories": "CATEGORÍAS",
     "add": "Agregar",
     "delivery": {
-      "title": "Envío es gratuito dentro de las 48 horas hábiles",
+      "title": "Envío gratuito dentro de las 48 horas hábiles",
       "text": "Los envíos se realizan de lunes a viernes"
     },
     "warranty": {
