@@ -268,6 +268,7 @@ const CityModal: FC<Props> = () => {
           (!data.userInfo.length ||
             !data.userInfo[0].cityKey ||
             data.userInfo[0].openCityModal) &&
+          !data.userInfo[0].openAddressModal &&
           "visible"
         }
       >

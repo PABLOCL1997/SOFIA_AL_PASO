@@ -373,7 +373,7 @@ const Details: FC<Props> = () => {
   const checkDefaultAddress = (addresses: Array<AddressType>) => {
     const userInfo =
       userData && userData.userInfo.length ? userData.userInfo[0] : {};
-    if (!addresses.length && !userInfo.cityKey) {
+    if (!addresses.length && userInfo.defaultAddressId) {
       setUser({
         variables: {
           user: {
