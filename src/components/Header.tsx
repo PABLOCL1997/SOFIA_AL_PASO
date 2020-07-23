@@ -217,8 +217,7 @@ const MenuBottom = styled.div`
 
 const MobileMenu = styled.div<{ page?: string }>`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   padding: 3px 25px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.07);
   position: ${props => (props.page === "productpage" ? "fixed" : "")};
@@ -227,6 +226,13 @@ const MobileMenu = styled.div<{ page?: string }>`
   width: 100%;
   background: var(--white);
   z-index: 99;
+`;
+
+const MobileMenuHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
 `;
 
 const Separator = styled.div`
@@ -413,16 +419,22 @@ const Header: FC<Props> = ({ checkout, page }) => {
         </Desktop>
         <Mobile>
           <MobileMenu page={page}>
-            <CartWrapper onClick={showCart}>
-              <Cart />
-              <span>{GET_QTY(data.cartItems)}</span>
-            </CartWrapper>
-            <Logo onClick={goHome}>
-              <HeaderLogo />
-            </Logo>
-            <MenuWrapper onClick={() => setOpen(true)}>
-              <Menu />
-            </MenuWrapper>
+            <MobileMenuHeader>
+              <CartWrapper onClick={showCart}>
+                <Cart />
+                <span>{GET_QTY(data.cartItems)}</span>
+              </CartWrapper>
+              <Logo onClick={goHome}>
+                <HeaderLogo />
+              </Logo>
+              <MenuWrapper onClick={() => setOpen(true)}>
+                <Menu />
+              </MenuWrapper>
+            </MobileMenuHeader>
+            <Address onClick={() => toggleCityModal()}>
+              <Pin />
+              <span>{addressLabel()}</span>
+            </Address>
           </MobileMenu>
         </Mobile>
         <SideMenu className={open && "open"}>

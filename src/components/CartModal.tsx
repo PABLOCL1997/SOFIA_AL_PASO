@@ -370,12 +370,25 @@ const AuthModal: FC<Props> = () => {
     });
   };
 
+  const hasStock = () => {
+    let p = data.cartItems.find(
+      (p: ProductType) => p.entity_id === action.product?.entity_id
+    );
+
+    return (
+      (action.product?.stock ?? 0) >=
+      (action.qty || 0) + (p && p.qty ? p.qty : 0)
+    );
+  };
+
   const doAction = async (action: Action) => {
     if (action.action === "add") {
-      if ((action.product?.stock ?? 0) < (action.qty || 0)) {
+      if (!hasStock()) {
         return showSuccess({
           variables: {
-            user: { showModal: t("cart.no_stock", { qty: action.qty }) }
+            user: {
+              showModal: t("cart.no_stock", { qty: action.product?.stock ?? 0 })
+            }
           }
         });
       }

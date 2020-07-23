@@ -88,6 +88,7 @@ const Radios = styled.div`
 `;
 
 const RadionGroup = styled.div<any>`
+  display: flex;
   padding: 5px 10px;
   border-radius: 30px;
   margin-top: 10px;

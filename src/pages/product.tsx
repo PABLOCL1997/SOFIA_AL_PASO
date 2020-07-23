@@ -14,6 +14,7 @@ import { BREAKPOINT } from "../utils/constants";
 import { GET_USER } from "../graphql/user/queries";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { SET_USER } from "../graphql/user/mutations";
+import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -382,6 +383,7 @@ const Product: FC<Props> = ({
   const [categories, setCategories] = useState<Array<CategoryType>>([]);
   const [related, setRelated] = useState<Array<ProductType>>([]);
   const [qty, setQty] = useState<number>(1);
+  const { data } = useQuery(GET_CART_ITEMS);
   const { data: userData } = useQuery(GET_USER, {});
   const [loadProduct] = useLazyQuery(GET_PRODUCT, {
     variables: {
@@ -412,12 +414,20 @@ const Product: FC<Props> = ({
     }
   });
 
+  const hasStock = () => {
+    let p = data.cartItems.find(
+      (p: ProductType) => p.entity_id === product.entity_id
+    );
+
+    return product.stock >= qty + (p && p.qty ? p.qty : 0);
+  };
+
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      if (product.stock < qty) {
+      if (!hasStock()) {
         showSuccess({
           variables: {
-            user: { showModal: t("cart.no_stock", { qty }) }
+            user: { showModal: t("cart.no_stock", { qty: product.stock }) }
           }
         });
       } else {
@@ -446,7 +456,7 @@ const Product: FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const discount = (1 - product.special_price / product.price) * 100;
+  const discount = Math.round(1 - product.special_price / product.price) * 100;
 
   return (
     <Suspense fallback={<Loader />}>

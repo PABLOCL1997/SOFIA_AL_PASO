@@ -356,6 +356,7 @@ const Details: FC<Props> = () => {
     fetchPolicy: "network-only",
     onCompleted: d => {
       setInputs(d.details);
+      checkDefaultAddress(d.details.addresses);
     }
   });
   const [deleteAddress] = useMutation(REMOVE_ADDRESS, {
@@ -368,6 +369,43 @@ const Details: FC<Props> = () => {
   const [closeAddressModal] = useMutation(SET_USER, {
     variables: { user: { openAddressModal: false } }
   });
+
+  const checkDefaultAddress = (addresses: Array<AddressType>) => {
+    const userInfo =
+      userData && userData.userInfo.length ? userData.userInfo[0] : {};
+    if (!addresses.length) {
+      setUser({
+        variables: {
+          user: {
+            cityKey: "",
+            cityName: "",
+            openCityModal: true,
+            defaultAddressId: undefined,
+            defaultAddressLabel: ""
+          }
+        }
+      });
+    } else if (
+      !addresses.some((a: AddressType) => a.id === userInfo.defaultAddressId)
+    ) {
+      const street = addresses[0].street;
+      const city = addresses[0].city;
+      let c: KeyValue | undefined = cities.find(
+        (c: KeyValue) => c.value === city
+      );
+      setUser({
+        variables: {
+          user: {
+            defaultAddressId: addresses[0].id,
+            defaultAddressLabel: street?.replace(/ \| /g, " ") ?? "",
+            cityKey: c ? c.key : "",
+            cityName: c ? c.value : "",
+            openCityModal: false
+          }
+        }
+      });
+    }
+  };
 
   const onChange = (key: string, value: string) => {
     setInputs({
