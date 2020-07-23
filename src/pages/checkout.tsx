@@ -199,7 +199,7 @@ const Checkout: FC<Props> = () => {
       })();
     } else {
       if (data && !data.cartItems.length) history.push("/");
-      else if (parseFloat(totalAmount.replace(",", ".")) < 50)
+      else if (parseFloat(totalAmount.replace(",", ".")) < 100)
         history.push("/");
       else {
         getDetails();
