@@ -373,7 +373,7 @@ const Details: FC<Props> = () => {
   const checkDefaultAddress = (addresses: Array<AddressType>) => {
     const userInfo =
       userData && userData.userInfo.length ? userData.userInfo[0] : {};
-    if (!addresses.length) {
+    if (!addresses.length && !userInfo.cityKey) {
       setUser({
         variables: {
           user: {
@@ -386,6 +386,7 @@ const Details: FC<Props> = () => {
         }
       });
     } else if (
+      addresses.length &&
       !addresses.some((a: AddressType) => a.id === userInfo.defaultAddressId)
     ) {
       const street = addresses[0].street;
