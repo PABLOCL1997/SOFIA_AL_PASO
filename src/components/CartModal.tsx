@@ -163,8 +163,8 @@ const Items = styled.div`
 
   @media screen and (max-width: ${BREAKPOINT}) {
     max-width: calc(100% - 40px);
-    max-height: calc(100vh - 260px);
-    height: calc(100vh - 260px);
+    max-height: calc(100vh - 320px);
+    height: calc(100vh - 320px);
   }
 `;
 

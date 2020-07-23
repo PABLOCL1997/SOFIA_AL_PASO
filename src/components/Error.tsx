@@ -8,17 +8,18 @@ const Container = styled.span`
   position: fixed;
   background: var(--red);
   color: white;
-  bottom: 20px;
-  right: 20px;
+  bottom: 0;
+  right: 0;
   padding: 12px 50px 12px 15px;
-  border-left: 4px double white;
-  font-size: 14px;
+  border: 0;
+  font-size: 18px;
   box-shadow: 2px 2px 2px #e306137d;
-  transform: translateX(calc(100% + 20px));
+  transform: translateY(50px);
   transition: transform 0.3s linear;
   z-index: 5;
+  width: 100%;
   &.visible {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 `;
 
@@ -39,7 +40,7 @@ const Error: FC<Props> = () => {
     if (data.userInfo.length && data.userInfo[0].showError) {
       setTimeout(() => {
         hideError();
-      }, 6000);
+      }, 8000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
