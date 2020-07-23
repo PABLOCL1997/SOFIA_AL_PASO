@@ -540,7 +540,7 @@ const AuthModal: FC<Props> = () => {
                 )
                 .map((product: ProductType) => (
                   <Row key={product.entity_id}>
-                    <Image src={product.image}></Image>
+                    <Image src={product.image.split(",")[0]}></Image>
                     <NameBox>
                       <Name>
                         {product.useKGS
