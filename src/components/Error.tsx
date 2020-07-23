@@ -12,7 +12,8 @@ const Container = styled.span`
   right: 0;
   padding: 12px 50px 12px 15px;
   border: 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: bold;
   box-shadow: 2px 2px 2px #e306137d;
   transform: translateY(50px);
   transition: transform 0.3s linear;

@@ -218,7 +218,7 @@ const MenuBottom = styled.div`
 const MobileMenu = styled.div<{ page?: string }>`
   display: flex;
   flex-direction: column;
-  padding: 3px 25px;
+  padding: 20px 25px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.07);
   position: ${props => (props.page === "productpage" ? "fixed" : "")};
   top: 0;
