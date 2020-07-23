@@ -421,13 +421,13 @@ const Checkout: FC<Props> = () => {
         longitude: String(orderData.shipping.longitude),
         street: orderData.shipping.id
           ? orderData.shipping.street
-          : `${orderData.shipping.address || ""} ${
+          : `${orderData.shipping.address || ""} | ${
               orderData.shipping.number || ""
-            } ${orderData.shipping.home_type || ""} ${
+            } | ${orderData.shipping.home_type || ""} | ${
               orderData.shipping.apt_number || ""
-            } ${orderData.shipping.building_name || ""} ${
+            } | ${orderData.shipping.building_name || ""} | ${
               orderData.shipping.zone || ""
-            } ${orderData.shipping.neighborhood || ""}`,
+            } | ${orderData.shipping.neighborhood || ""}`,
         reference: orderData.shipping.reference
       }),
       envio: JSON.stringify({
@@ -439,13 +439,13 @@ const Checkout: FC<Props> = () => {
         telephone: orderData.shipping.phone,
         street: orderData.shipping.id
           ? orderData.shipping.street
-          : `${orderData.shipping.address || ""} ${
+          : `${orderData.shipping.address || ""} | ${
               orderData.shipping.number || ""
-            } ${orderData.shipping.home_type || ""} ${
+            } | ${orderData.shipping.home_type || ""} | ${
               orderData.shipping.apt_number || ""
-            } ${orderData.shipping.building_name || ""} ${
+            } | ${orderData.shipping.building_name || ""} | ${
               orderData.shipping.zone || ""
-            } ${orderData.shipping.neighborhood || ""}`,
+            } | ${orderData.shipping.neighborhood || ""}`,
         city:
           orderData.shipping.city ||
           (localUserData &&

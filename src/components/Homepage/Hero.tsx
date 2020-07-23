@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState } from "react";
+import React, { FC, Suspense, useState, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -167,6 +167,12 @@ const Hero: FC<Props> = () => {
     variables: { user: { openCityModal: true } }
   });
 
+  const search = ($evt: KeyboardEvent) => {
+    if ($evt.keyCode === 13) {
+      history.push(`/productos?q=${toLink(q)}`);
+    }
+  };
+
   return (
     <Suspense fallback={<Loader />}>
       <div>
@@ -183,6 +189,7 @@ const Hero: FC<Props> = () => {
               <ProductBox>
                 <input
                   onChange={evt => setQ(evt.target.value)}
+                  onKeyUp={search}
                   type="text"
                   placeholder={t("homepage.hero.product_search")}
                 />

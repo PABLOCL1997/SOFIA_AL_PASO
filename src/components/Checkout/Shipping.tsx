@@ -182,14 +182,18 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
   });
   const [setUser] = useMutation(SET_USER);
 
-  const onChange = (key: string, value: string | number | null) => {
+  const onChange = (
+    key: string,
+    value: string | number | null,
+    preventMap: boolean = false
+  ) => {
     if (key.indexOf("phone") >= 0 && String(value).length > 8)
       value = String(value).substring(0, 8);
     setInputs({
       ...inputs,
       [key]: value
     });
-    if (key === "city" && value) {
+    if (key === "city" && value && !preventMap) {
       setLatLng(String(value));
       let c: KeyValue | undefined = cities.find(
         (c: KeyValue) => c.value === value
@@ -254,6 +258,12 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
     city: cities.map((c: KeyValue) => c.value),
     home_type: ["Casa", "Departamento"]
   };
+
+  useEffect(() => {
+    if (localData.userInfo.length && other) {
+      onChange("city", localData.userInfo[0].cityName, true);
+    }
+  }, [other]);
 
   useEffect(() => {
     if (!Object.keys(billingChange).length) return;
@@ -350,11 +360,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
                     <select
                       name={`shipping-${key}`}
                       onChange={evt => onChange(key, evt.target.value)}
-                      value={
-                        key === "city" && localData.userInfo.length
-                          ? localData.userInfo[0].cityName
-                          : ""
-                      }
+                      value={inputs[key] || ""}
                     >
                       <option value="">{t("checkout.delivery." + key)}</option>
                       {options[key].map((opt: string) => (
