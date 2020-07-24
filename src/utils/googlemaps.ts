@@ -62,6 +62,8 @@ export const enableGmap = () => {
           animation: google.maps.Animation.DROP,
           position: uluru
         });
+        var geocoder = new google.maps.Geocoder();
+        var infowindow = new google.maps.InfoWindow();
         google.maps.event.addListener(window.map, "click", function (
           event: any
         ) {
@@ -70,18 +72,34 @@ export const enableGmap = () => {
           window.marker.setPosition(
             new google.maps.LatLng(currentLatitude, currentLongitude)
           );
+          showInfoWindow(geocoder, infowindow, {
+            lat: currentLatitude,
+            lng: currentLongitude
+          });
           updateLatLng(currentLatitude, currentLongitude);
         });
         google.maps.event.addListener(window.marker, "dragend", function (
           marker: any
         ) {
           var latLng = marker.latLng;
+          showInfoWindow(geocoder, infowindow, latLng);
           updateLatLng(latLng.lat(), latLng.lng());
           if ((window as any).updateMapUsed) (window as any).updateMapUsed();
         });
         updateLatLng(uluru.lat, uluru.lng);
       }
     }, 100);
+  }
+
+  function showInfoWindow(geocoder: any, infowindow: any, latLng: any) {
+    geocoder.geocode({ location: latLng }, (results: any, status: any) => {
+      if (status === "OK") {
+        if (results[0]) {
+          infowindow.setContent(results[0].formatted_address);
+          infowindow.open(window.map, window.marker);
+        }
+      }
+    });
   }
 
   function updateLatLng(currentLatitude: any, currentLongitude: any) {
