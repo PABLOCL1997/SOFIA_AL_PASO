@@ -330,6 +330,7 @@ const AuthModal: FC<Props> = () => {
   });
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [shouldExecute, executeNewCartQuery] = useState(false);
+  const [newCartEmpty, setNewCartEmpty] = useState(true);
   const { data: newCart } = useQuery(CHECK_CART, {
     variables: {
       cart: JSON.stringify(
@@ -423,15 +424,15 @@ const AuthModal: FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (newCart && newCart.checkCart) {
+    if (newCart && newCart.checkCart && !newCartEmpty) {
+      executeNewCartQuery(false);
+      setNewCartEmpty(true);
       (async () => {
         let cartItems = JSON.parse(newCart.checkCart.cart);
         if (!cartItems.length) return;
         let _oldItems = [...data.cartItems];
         let originalLength = _oldItems.length;
-
-        await emptyCart();
-
+        // await emptyCart();
         for (let i = 0; i < cartItems.length; i++) {
           let elem: ProductType = _oldItems.find(
             (p: ProductType) => p.entity_id === cartItems[i].entity_id
@@ -451,11 +452,9 @@ const AuthModal: FC<Props> = () => {
             });
           }
         }
-
         let new_total = cartItems.reduce((sum: number, i: any) => {
           return sum + (i.qty === 0 ? 0 : i.price * i.qty);
         }, 0);
-
         if (
           userData &&
           userData.userInfo.length &&
@@ -474,8 +473,6 @@ const AuthModal: FC<Props> = () => {
             showSuccess();
           }
         }
-
-        executeNewCartQuery(false);
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -500,10 +497,20 @@ const AuthModal: FC<Props> = () => {
   // }, [totalAmount]);
 
   useEffect(() => {
+    if (!newCartEmpty) {
+      executeNewCartQuery(true);
+    }
+  }, [newCartEmpty]);
+
+  useEffect(() => {
     const _w: any = window;
     if (userData && userData.userInfo.length) {
-      if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
-        executeNewCartQuery(true);
+      if (
+        _w.currentCity &&
+        _w.currentCity !== userData.userInfo[0].cityName &&
+        newCartEmpty
+      ) {
+        setNewCartEmpty(false);
       }
       _w.currentCity = userData.userInfo[0].cityName;
     }

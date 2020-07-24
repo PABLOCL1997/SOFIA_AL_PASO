@@ -55,6 +55,7 @@ const Header = styled.div`
   display: flex;
   justify-content: flex-end;
   @media screen and (max-width: ${BREAKPOINT}) {
+    margin-top: 30px;
     padding: 20px;
     justify-content: flex-start;
   }
