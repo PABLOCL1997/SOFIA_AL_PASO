@@ -17,6 +17,10 @@ export const setLatLng = (city: string, lat?: any, lng?: any) => {
   window.marker.setPosition(gll);
   window.latitude = lat;
   window.longitude = lng;
+  window.showInfoWindow(window.geocoder, window.infowindow, {
+    lat: lat,
+    lng: lng
+  });
 };
 
 export const enableGmap = () => {
@@ -62,8 +66,8 @@ export const enableGmap = () => {
           animation: google.maps.Animation.DROP,
           position: uluru
         });
-        var geocoder = new google.maps.Geocoder();
-        var infowindow = new google.maps.InfoWindow();
+        window.geocoder = new google.maps.Geocoder();
+        window.infowindow = new google.maps.InfoWindow();
         google.maps.event.addListener(window.map, "click", function (
           event: any
         ) {
@@ -72,7 +76,7 @@ export const enableGmap = () => {
           window.marker.setPosition(
             new google.maps.LatLng(currentLatitude, currentLongitude)
           );
-          showInfoWindow(geocoder, infowindow, {
+          window.showInfoWindow(window.geocoder, window.infowindow, {
             lat: currentLatitude,
             lng: currentLongitude
           });
@@ -82,7 +86,7 @@ export const enableGmap = () => {
           marker: any
         ) {
           var latLng = marker.latLng;
-          showInfoWindow(geocoder, infowindow, latLng);
+          window.showInfoWindow(window.geocoder, window.infowindow, latLng);
           updateLatLng(latLng.lat(), latLng.lng());
           if ((window as any).updateMapUsed) (window as any).updateMapUsed();
         });
@@ -91,7 +95,11 @@ export const enableGmap = () => {
     }, 100);
   }
 
-  function showInfoWindow(geocoder: any, infowindow: any, latLng: any) {
+  window.showInfoWindow = function (
+    geocoder: any,
+    infowindow: any,
+    latLng: any
+  ) {
     geocoder.geocode({ location: latLng }, (results: any, status: any) => {
       if (status === "OK") {
         if (results[0]) {
@@ -100,7 +108,7 @@ export const enableGmap = () => {
         }
       }
     });
-  }
+  };
 
   function updateLatLng(currentLatitude: any, currentLongitude: any) {
     window.latitude = currentLatitude.toFixed(7);
