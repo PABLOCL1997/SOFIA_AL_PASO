@@ -5,7 +5,8 @@ import { useHistory } from "react-router-dom";
 import { toLink } from "../../utils/string";
 import { BREAKPOINT } from "../../utils/constants";
 import { SET_USER } from "../../graphql/user/mutations";
-import { useMutation } from "react-apollo";
+import { useMutation, useQuery } from "react-apollo";
+import { GET_USER } from "../../graphql/user/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -163,6 +164,7 @@ const Hero: FC<Props> = () => {
   const { t } = useTranslation();
   const [q, setQ] = useState("");
   const history = useHistory();
+  const { data: userData } = useQuery(GET_USER, {});
   const [toggleCityModal] = useMutation(SET_USER, {
     variables: { user: { openCityModal: true } }
   });
@@ -171,6 +173,19 @@ const Hero: FC<Props> = () => {
     if ($evt.keyCode === 13) {
       history.push(`/productos?q=${toLink(q)}`);
     }
+  };
+
+  const addressLabel = () => {
+    if (userData.userInfo.length && userData.userInfo.length) {
+      if (userData.userInfo[0].defaultAddressLabel)
+        return `${userData.userInfo[0].defaultAddressLabel.replace(
+          / \| /g,
+          " "
+        )}, Bolivia`;
+      if (userData.userInfo[0].cityName)
+        return `${userData.userInfo[0].cityName}, Bolivia`;
+    }
+    return t("homepage.hero.city_select");
   };
 
   return (
@@ -183,7 +198,7 @@ const Hero: FC<Props> = () => {
             <SearchBox>
               <CitySelect onClick={() => toggleCityModal()}>
                 <Pin />
-                <span>{t("homepage.hero.city_select")}</span>
+                <span>{addressLabel()}</span>
                 <Chevron />
               </CitySelect>
               <ProductBox>

@@ -81,6 +81,7 @@ export const enableGmap = () => {
             lng: currentLongitude
           });
           updateLatLng(currentLatitude, currentLongitude);
+          if ((window as any).updateMapUsed) (window as any).updateMapUsed();
         });
         google.maps.event.addListener(window.marker, "dragend", function (
           marker: any
