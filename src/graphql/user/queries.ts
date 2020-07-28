@@ -74,6 +74,7 @@ export const ORDER = gql`
         itemId
         name
         price
+        qty
       }
       subtotal
       shippingPrice
