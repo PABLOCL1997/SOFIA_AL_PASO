@@ -536,7 +536,9 @@ const Orders: FC<Props> = () => {
                 {order.items &&
                   order.items.map((item: UserOrderItem) => (
                     <Item key={item.itemId}>
-                      <span>{String(item.name).toLowerCase()}</span>
+                      <span>
+                        {item.qty} x {String(item.name).toLowerCase()}
+                      </span>
                       <span>
                         Bs.{" "}
                         {Number(item.qty * item.price)
