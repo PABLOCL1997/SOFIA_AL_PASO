@@ -1,4 +1,4 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
+import React, { Suspense, FC, useEffect } from "react";
 import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
 import { TERMS_TITLE } from "../meta";

@@ -80,8 +80,6 @@ const ModalMessage: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const callback = () => {};
-
   return (
     <Suspense fallback={<Loader />}>
       <ModalCourtain

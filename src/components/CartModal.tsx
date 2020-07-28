@@ -500,6 +500,7 @@ const AuthModal: FC<Props> = () => {
     if (!newCartEmpty) {
       executeNewCartQuery(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCartEmpty]);
 
   useEffect(() => {
@@ -514,6 +515,7 @@ const AuthModal: FC<Props> = () => {
       }
       _w.currentCity = userData.userInfo[0].cityName;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
   return (

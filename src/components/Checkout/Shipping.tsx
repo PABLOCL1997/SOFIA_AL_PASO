@@ -263,6 +263,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
     if (localData.userInfo.length && other) {
       onChange("city", localData.userInfo[0].cityName, true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [other]);
 
   useEffect(() => {
