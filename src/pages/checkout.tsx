@@ -10,7 +10,7 @@ import { GET_CART_ITEMS, TODOTIX, GET_TOTAL } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
-import { trackOrder } from "../utils/dataLayer";
+import { trackOrder, initCheckout } from "../utils/dataLayer";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -203,6 +203,7 @@ const Checkout: FC<Props> = () => {
         history.push("/");
       else {
         getDetails();
+        initCheckout(parseFloat(totalAmount.replace(",", ".")), data.cartItems);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

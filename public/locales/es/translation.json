@@ -17,11 +17,12 @@
     "slogan": "En Sofía se confía.",
     "contact": "Para consultas, comunícate con nosotros:",
     "phone": "Teléfono",
-    "mail": "Correo"
+    "mail": "Correo",
+    "terms": "Términos y Condiciones"
   },
   "homepage": {
     "hero": {
-      "text": "¿Qué te llevamos hoy?",
+      "text": "¿Qué te llevamos?",
       "city_select": "Selecciona la ciudad de entrega",
       "product_search": "¿Qué producto buscas?",
       "search": "buscar"

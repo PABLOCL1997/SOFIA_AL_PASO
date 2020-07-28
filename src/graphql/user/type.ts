@@ -2,6 +2,7 @@ export type UserOrderItem = {
   itemId: number;
   name: string;
   price: number;
+  qty: number;
 };
 
 export type UserOrder = {

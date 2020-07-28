@@ -8,6 +8,7 @@ type TrackOrder = {
 
 export const trackProductList = (products: Array<ProductType>) => {
   (window as any).dataLayer.push({
+    event: "productList",
     ecommerce: {
       currencyCode: "BOB",
       impressions: products.map((p: ProductType, index: number) => ({
@@ -24,6 +25,7 @@ export const trackProductList = (products: Array<ProductType>) => {
 
 export const trackProduct = (p: ProductType) => {
   (window as any).dataLayer.push({
+    event: "productDetail",
     ecommerce: {
       detail: {
         products: [
@@ -82,8 +84,33 @@ export const trackRemoveFromCart = (p: ProductType) => {
   });
 };
 
+export const initCheckout = (total: number, products: Array<ProductType>) => {
+  (window as any).dataLayer.push({
+    event: "initiateCheckout ",
+    ecommerce: {
+      purchase: {
+        actionField: {
+          affiliation: "Tienda Sofía",
+          revenue: total,
+          tax: 0,
+          shipping: 0
+        },
+        products: products.map((p: ProductType, index: number) => ({
+          name: p.name,
+          id: p.entity_id,
+          price: (p.special_price || 0).toFixed(2),
+          brand: "Sofía",
+          category: p.category_name,
+          quantity: p.qty
+        }))
+      }
+    }
+  });
+};
+
 export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
   (window as any).dataLayer.push({
+    event: "purchase",
     ecommerce: {
       purchase: {
         actionField: {

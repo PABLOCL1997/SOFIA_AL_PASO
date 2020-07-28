@@ -271,7 +271,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
                     : product.name}
                 </span>
                 <span>
-                  Bs. {product.special_price.toFixed(2).replace(".", ",")}
+                  Bs.{" "}
+                  {Number((product?.qty ?? 0) * product.special_price)
+                    .toFixed(2)
+                    .replace(".", ",")}
                 </span>
               </Row>
             ))}

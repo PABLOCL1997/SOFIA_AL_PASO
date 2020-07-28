@@ -2,6 +2,7 @@ import React, { FC, Suspense } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
+import { Link } from "react-router-dom";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -76,6 +77,9 @@ const Copy = styled.p`
   letter-spacing: 0.015em;
   color: var(--red);
   margin-top: 10px;
+  a {
+    color: var(--red);
+  }
 `;
 const Slogan = styled.h2`
   font-family: MullerBold;
@@ -128,6 +132,9 @@ const Footer: FC<Props> = ({ page }) => {
             <HeaderLogoWhite />
             <Copy className="copy">
               {t("footer.copy", { year: new Date().getFullYear() })}
+            </Copy>
+            <Copy>
+              <Link to="/terminos-y-condiciones">{t("footer.terms")}</Link>
             </Copy>
           </Col1>
           <Col2>

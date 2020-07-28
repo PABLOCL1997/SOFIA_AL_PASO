@@ -25,6 +25,9 @@ const Checkout = React.lazy(() =>
 const Faq = React.lazy(() =>
   import(/* webpackChunkName: "Faq" */ "./pages/faq")
 );
+const Terms = React.lazy(() =>
+  import(/* webpackChunkName: "Terms" */ "./pages/terms")
+);
 
 const App = () => {
   return (
@@ -56,6 +59,15 @@ const App = () => {
               children={
                 <LayoutGeneral>
                   <Faq />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
+              path="/terminos-y-condiciones"
+              children={
+                <LayoutGeneral>
+                  <Terms />
                 </LayoutGeneral>
               }
             />

@@ -537,7 +537,12 @@ const Orders: FC<Props> = () => {
                   order.items.map((item: UserOrderItem) => (
                     <Item key={item.itemId}>
                       <span>{String(item.name).toLowerCase()}</span>
-                      <span>Bs. {item.price.toFixed(2).replace(".", ",")}</span>
+                      <span>
+                        Bs.{" "}
+                        {Number(item.qty * item.price)
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </span>
                     </Item>
                   ))}
                 <Subtotal>

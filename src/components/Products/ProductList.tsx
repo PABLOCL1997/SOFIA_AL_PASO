@@ -37,7 +37,13 @@ const Toolbox = styled.div`
   display: flex;
   align-items: center;
   @media screen and (max-width: ${BREAKPOINT}) {
-    display: none;
+    margin-top: 30px;
+    div:first-child {
+      margin-right: 0;
+    }
+    div:last-child {
+      display: none;
+    }
   }
 `;
 
@@ -236,7 +242,10 @@ const ProductList: FC<Props> = ({
   };
 
   const doSearch = () => {
-    history.push({ pathname, search: `?q=${toLink(search)}` });
+    history.push({
+      pathname: "/productos",
+      search: `q=${toLink(search)}`
+    });
   };
 
   const move = (fwd: boolean) => {
