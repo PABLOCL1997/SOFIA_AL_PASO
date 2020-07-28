@@ -431,7 +431,7 @@ const Orders: FC<Props> = () => {
             {!loading &&
               orders &&
               !!orders.orders.length &&
-              orders.orders.reverse().map((order: UserOrder) => (
+              orders.orders.map((order: UserOrder) => (
                 <Body key={order.id}>
                   <span>
                     <button onClick={() => setOrderId(order.id)}>
