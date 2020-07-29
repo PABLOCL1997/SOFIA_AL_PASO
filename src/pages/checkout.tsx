@@ -6,7 +6,12 @@ import { useTranslation } from "react-i18next";
 import { SET_USER } from "../graphql/user/mutations";
 import { BREAKPOINT } from "../utils/constants";
 import { CREATE_ORDER, EMPTY_CART, PAY } from "../graphql/cart/mutations";
-import { GET_CART_ITEMS, TODOTIX, GET_TOTAL } from "../graphql/cart/queries";
+import {
+  GET_CART_ITEMS,
+  TODOTIX,
+  GET_TOTAL,
+  GET_MIN_PRICE
+} from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
@@ -199,7 +204,9 @@ const Checkout: FC<Props> = () => {
       })();
     } else {
       if (data && !data.cartItems.length) history.push("/");
-      else if (parseFloat(totalAmount.replace(",", ".")) < 100)
+      else if (
+        parseFloat(totalAmount.replace(",", ".")) < GET_MIN_PRICE(userData)
+      )
         history.push("/");
       else {
         getDetails();

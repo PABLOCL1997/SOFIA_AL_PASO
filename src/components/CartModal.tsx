@@ -10,7 +10,8 @@ import {
   GET_CART_ITEMS,
   GET_TOTAL,
   GET_QTY,
-  CHECK_CART
+  CHECK_CART,
+  GET_MIN_PRICE
 } from "../graphql/cart/queries";
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../graphql/products/type";
@@ -537,8 +538,11 @@ const AuthModal: FC<Props> = () => {
               <Close />
             </CloseWrapper>
           </Header>
-          {parseFloat(totalAmount.replace(",", ".")) < 100 && (
-            <UnderBudget>{t("cart.under_budget")}</UnderBudget>
+          {parseFloat(totalAmount.replace(",", ".")) <
+            GET_MIN_PRICE(userData) && (
+            <UnderBudget>
+              {t("cart.under_budget", { min_price: GET_MIN_PRICE(userData) })}
+            </UnderBudget>
           )}
           <Items>
             {data &&
@@ -601,7 +605,8 @@ const AuthModal: FC<Props> = () => {
             <Disclaimer>{t("cart.disclaimer")}</Disclaimer>
             <Toolbox>
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
-              {parseFloat(totalAmount.replace(",", ".")) >= 100 && (
+              {parseFloat(totalAmount.replace(",", ".")) >=
+                GET_MIN_PRICE(userData) && (
                 <CtaWrapper>
                   <Cta filled={true} text={t("cart.pay")} action={checkout} />
                 </CtaWrapper>
