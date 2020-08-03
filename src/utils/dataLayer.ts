@@ -4,6 +4,7 @@ type TrackOrder = {
   increment_id: string;
   total: number;
   coupon: string;
+  email: string;
 };
 
 export const trackProductList = (products: Array<ProductType>) => {
@@ -84,7 +85,11 @@ export const trackRemoveFromCart = (p: ProductType) => {
   });
 };
 
-export const initCheckout = (total: number, products: Array<ProductType>) => {
+export const initCheckout = (
+  total: number,
+  email: string,
+  products: Array<ProductType>
+) => {
   (window as any).dataLayer.push({
     event: "initiateCheckout ",
     ecommerce: {
@@ -93,7 +98,8 @@ export const initCheckout = (total: number, products: Array<ProductType>) => {
           affiliation: "Tienda Sofía",
           revenue: total,
           tax: 0,
-          shipping: 0
+          shipping: 0,
+          email
         },
         products: products.map((p: ProductType, index: number) => ({
           name: p.name,
@@ -119,7 +125,8 @@ export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
           revenue: order.total, // Total transaction value (incl. tax and shipping)
           tax: 0,
           shipping: 0,
-          coupon: order.coupon
+          coupon: order.coupon,
+          email: order.email
         },
         products: products.map((p: ProductType, index: number) => ({
           name: p.name,

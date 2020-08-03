@@ -15,6 +15,7 @@ export type ProductType = {
   stock: number;
   unit: string;
   useKGS: boolean;
+  isNew: boolean;
   category_name: string;
   description?: string;
   categories?: Array<CategoryType>;

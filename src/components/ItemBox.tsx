@@ -30,7 +30,7 @@ const Container = styled.div`
 
 const Discount = styled.div`
   position: absolute;
-  top: -30px;
+  top: -25px;
   right: 8px;
   background: var(--red);
   box-shadow: 0px 8px 29px rgba(254, 205, 0, 0.4);
@@ -42,7 +42,7 @@ const Discount = styled.div`
   align-items: flex-end;
   text-align: left;
   color: var(--black);
-  padding: 8px 10px;
+  padding: 3px 4px 1px;
   div {
     display: flex;
     flex-direction: column;
@@ -69,6 +69,14 @@ const Discount = styled.div`
 
 const Link = styled.div`
   cursor: pointer;
+  position: relative;
+`;
+
+const NewLabel = styled.img`
+  position: absolute;
+  left: 0;
+  top: 25px;
+  width: 75px;
 `;
 
 const Category = styled.h3`
@@ -260,7 +268,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
       <Container>
         {discount > 0 && (
           <Discount>
-            <div>{Number(discount).toFixed(2)}</div>
+            <div>{Number(discount).toFixed(0)}</div>
             <div>
               <span>%</span>
               <span>DSCTO</span>
@@ -268,6 +276,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           </Discount>
         )}
         <Link onClick={goToProduct}>
+          {product.isNew && <NewLabel src="/images/new-label.png" />}
           <Category>{product.category_name}</Category>
           <Image src={product.image.split(",")[0]}></Image>
           <Title>

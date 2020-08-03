@@ -205,16 +205,25 @@ const Checkout: FC<Props> = () => {
     } else {
       if (data && !data.cartItems.length) history.push("/");
       else if (
-        parseFloat(totalAmount.replace(",", ".")) < GET_MIN_PRICE(userData)
+        parseFloat(totalAmount.replace(",", ".")) < GET_MIN_PRICE(localUserData)
       )
         history.push("/");
       else {
         getDetails();
-        initCheckout(parseFloat(totalAmount.replace(",", ".")), data.cartItems);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (userData && (userData as any).email) {
+      initCheckout(
+        parseFloat(totalAmount.replace(",", ".")),
+        (userData as any).email,
+        data.cartItems
+      );
+    }
+  }, [userData]);
 
   useEffect(() => {
     if (order) {
@@ -227,7 +236,8 @@ const Checkout: FC<Props> = () => {
               {
                 increment_id: co.increment_id,
                 total: parseFloat(totalAmount.replace(",", ".")),
-                coupon: orderData.coupon ? orderData.coupon.coupon : ""
+                coupon: orderData.coupon ? orderData.coupon.coupon : "",
+                email: orderData.billing ? orderData.billing.email : ""
               },
               data.cartItems
             );
