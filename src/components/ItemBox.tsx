@@ -261,7 +261,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     }
   };
 
-  const discount = Math.round(1 - product.special_price / product.price) * 100;
+  const discount = (1 - product.special_price / product.price) * 100;
 
   return (
     <Suspense fallback={<Loader />}>
