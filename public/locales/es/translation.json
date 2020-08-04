@@ -68,7 +68,8 @@
   },
   "itembox": {
     "add": "Agregar",
-    "price_label": "Precio estimado"
+    "price_label": "Precio estimado",
+    "new": "nuevo"
   },
   "citymodal": {
     "title": "¿A qué ciudad enviamos tu pedido?",

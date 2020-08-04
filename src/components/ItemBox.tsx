@@ -30,7 +30,7 @@ const Container = styled.div`
 
 const Discount = styled.div`
   position: absolute;
-  top: -25px;
+  top: -20px;
   right: 8px;
   background: var(--red);
   box-shadow: 0px 8px 29px rgba(254, 205, 0, 0.4);
@@ -48,9 +48,9 @@ const Discount = styled.div`
     flex-direction: column;
     color: white;
     &:first-child {
-      font-size: 18px;
+      font-size: 28px;
       font-weight: bold;
-      margin-right: 5px;
+      margin-right: 2px;
       padding-bottom: 5px;
     }
     &:last-child {
@@ -72,11 +72,20 @@ const Link = styled.div`
   position: relative;
 `;
 
-const NewLabel = styled.img`
+const NewLabel = styled.span`
   position: absolute;
   left: 0;
   top: 25px;
   width: 75px;
+  background: var(--red);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px 0px 3px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  border: 3px white double;
+  font-size: 14px;
 `;
 
 const Category = styled.h3`
@@ -276,7 +285,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           </Discount>
         )}
         <Link onClick={goToProduct}>
-          {product.isNew && <NewLabel src="/images/new-label.png" />}
+          {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
           <Category>{product.category_name}</Category>
           <Image src={product.image.split(",")[0]}></Image>
           <Title>
