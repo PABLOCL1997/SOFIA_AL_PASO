@@ -223,6 +223,7 @@ const Checkout: FC<Props> = () => {
         data.cartItems
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
   useEffect(() => {

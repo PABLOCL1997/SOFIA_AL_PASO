@@ -424,6 +424,12 @@ const AuthModal: FC<Props> = () => {
     history.push("/checkout");
   };
 
+  const showCityWarning = () => {
+    showSuccess({
+      variables: { user: { showModal: t("cart.city_warning") } }
+    });
+  };
+
   useEffect(() => {
     if (newCart && newCart.checkCart && !newCartEmpty) {
       executeNewCartQuery(false);
@@ -507,12 +513,9 @@ const AuthModal: FC<Props> = () => {
   useEffect(() => {
     const _w: any = window;
     if (userData && userData.userInfo.length) {
-      if (
-        _w.currentCity &&
-        _w.currentCity !== userData.userInfo[0].cityName &&
-        newCartEmpty
-      ) {
-        setNewCartEmpty(false);
+      if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
+        if (userData.userInfo[0].cityKey !== "SC") showCityWarning();
+        if (newCartEmpty) setNewCartEmpty(false);
       }
       _w.currentCity = userData.userInfo[0].cityName;
     }
