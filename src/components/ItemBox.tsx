@@ -207,6 +207,16 @@ const Label = styled.div<{ visible?: boolean }>`
   opacity: ${props => (props.visible ? 1 : 0)};
 `;
 
+const MaxUnits = styled.div`
+  font-size: 12px;
+  font-family: MullerBold;
+  line-height: 12px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--red);
+  text-transform: uppercase;
+`;
+
 type Props = {
   product: ProductType;
   openModal?: Function;
@@ -252,9 +262,28 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     return product.stock >= qty + (p && p.qty ? p.qty : 0);
   };
 
+  const isOverLimit = () => {
+    let p = data.cartItems.find(
+      (p: ProductType) => p.entity_id === product.entity_id
+    );
+
+    return (
+      product.maxPerUser > 0 &&
+      product.maxPerUser < qty + (p && p.qty ? p.qty : 0)
+    );
+  };
+
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      if (!hasStock()) {
+      if (isOverLimit()) {
+        showSuccess({
+          variables: {
+            user: {
+              showModal: t("cart.over_limit", { units: product.maxPerUser })
+            }
+          }
+        });
+      } else if (!hasStock()) {
         showSuccess({
           variables: {
             user: { showModal: t("cart.no_stock", { qty: product.stock }) }
@@ -295,6 +324,11 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
                   .replace(".", ",")} KGS APROX.`
               : product.name}
           </Title>
+          {product.maxPerUser > 0 && (
+            <MaxUnits>
+              {t("itembox.max_per_user", { units: product.maxPerUser })}
+            </MaxUnits>
+          )}
           <EstimatedPrice visible={product.useKGS}>
             Bs.{" "}
             {(product.special_price / product.weight)

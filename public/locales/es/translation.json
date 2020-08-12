@@ -69,7 +69,8 @@
   "itembox": {
     "add": "Agregar",
     "price_label": "Precio estimado",
-    "new": "nuevo"
+    "new": "nuevo",
+    "max_per_user": "Max. {{units}} unidades por cliente"
   },
   "citymodal": {
     "title": "¿A qué ciudad enviamos tu pedido?",
@@ -199,7 +200,8 @@
     "change_msg": "Cambiaste la ciudad|Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
     "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito",
     "no_stock": "El stock disponible es de {{qty}} unidades",
-    "city_warning": "Pedimos disculpas por la falta eventual de algunos productos en nuestro tienda virtual.\nLes agradecemos su comprensión."
+    "over_limit": "No se pueden agregar más de {{units}} unidades",
+    "city_warning": "Pedimos disculpas por la falta eventual de algunos productos en nuestra tienda virtual.\nLes agradecemos su comprensión."
   },
   "checkout": {
     "move_map": "Por favor seleccione su ubicación en el mapa",

@@ -383,9 +383,31 @@ const AuthModal: FC<Props> = () => {
     );
   };
 
+  const isOverLimit = () => {
+    let p = data.cartItems.find(
+      (p: ProductType) => p.entity_id === action.product?.entity_id
+    );
+
+    return (
+      (action.product?.maxPerUser ?? 0) > 0 &&
+      (action.product?.maxPerUser ?? 0) <
+        (action.qty || 0) + (p && p.qty ? p.qty : 0)
+    );
+  };
+
   const doAction = async (action: Action) => {
     if (action.action === "add") {
-      if (!hasStock()) {
+      if (isOverLimit()) {
+        showSuccess({
+          variables: {
+            user: {
+              showModal: t("cart.over_limit", {
+                units: action.product?.maxPerUser ?? 0
+              })
+            }
+          }
+        });
+      } else if (!hasStock()) {
         return showSuccess({
           variables: {
             user: {

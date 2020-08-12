@@ -423,9 +423,28 @@ const Product: FC<Props> = ({
     return product.stock >= qty + (p && p.qty ? p.qty : 0);
   };
 
+  const isOverLimit = () => {
+    let p = data.cartItems.find(
+      (p: ProductType) => p.entity_id === product.entity_id
+    );
+
+    return (
+      product.maxPerUser > 0 &&
+      product.maxPerUser < qty + (p && p.qty ? p.qty : 0)
+    );
+  };
+
   const addAndGo = () => {
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      if (!hasStock()) {
+      if (isOverLimit()) {
+        showSuccess({
+          variables: {
+            user: {
+              showModal: t("cart.over_limit", { units: product.maxPerUser })
+            }
+          }
+        });
+      } else if (!hasStock()) {
         showSuccess({
           variables: {
             user: { showModal: t("cart.no_stock", { qty: product.stock }) }

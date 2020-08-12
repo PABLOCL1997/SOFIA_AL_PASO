@@ -16,6 +16,7 @@ export type ProductType = {
   unit: string;
   useKGS: boolean;
   isNew: boolean;
+  maxPerUser: number;
   category_name: string;
   description?: string;
   categories?: Array<CategoryType>;
