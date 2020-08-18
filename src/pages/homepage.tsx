@@ -51,12 +51,12 @@ const Homepage: FC<Props> = () => {
 
   useEffect(() => {
     document.title = HOMEPAGE_TITLE;
-    if (
-      userData &&
-      userData.userInfo[0] &&
-      userData.userInfo[0].cityKey !== "SC"
-    )
-      setTimeout(() => showSuccess(), 1000);
+    // if (
+    //   userData &&
+    //   userData.userInfo[0] &&
+    //   userData.userInfo[0].cityKey !== "SC"
+    // )
+    //   setTimeout(() => showSuccess(), 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

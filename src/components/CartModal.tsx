@@ -536,7 +536,7 @@ const AuthModal: FC<Props> = () => {
     const _w: any = window;
     if (userData && userData.userInfo.length) {
       if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
-        if (userData.userInfo[0].cityKey !== "SC") showCityWarning();
+        // if (userData.userInfo[0].cityKey !== "SC") showCityWarning();
         if (newCartEmpty) setNewCartEmpty(false);
       }
       _w.currentCity = userData.userInfo[0].cityName;
