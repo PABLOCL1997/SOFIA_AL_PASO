@@ -512,8 +512,6 @@ const Checkout: FC<Props> = () => {
     if (items.length) setConfirmModalVisible(true);
   };
 
-  console.log(String(orderData.shipping ? orderData.shipping.street : ""));
-
   return (
     <Suspense fallback={<Loader />}>
       <Wrapper>
