@@ -210,6 +210,12 @@
     "error": "No se pudo generar la orden",
     "title": "Check out",
     "modify_cart": "Modificar carrito",
+    "confirmaddress": {
+      "title": "Confirmar dirección",
+      "message": "Se enviará el pedido a {{address}}",
+      "close": "Cancelar",
+      "confirm": "Confirmar"
+    },
     "billing": {
       "title": "1  Datos para facturación",
       "firstname": "Nombre",

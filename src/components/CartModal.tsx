@@ -390,15 +390,14 @@ const AuthModal: FC<Props> = () => {
 
     return (
       (action.product?.maxPerUser ?? 0) > 0 &&
-      (action.product?.maxPerUser ?? 0) <
-        (action.qty || 0) + (p && p.qty ? p.qty : 0)
+      (action.product?.maxPerUser ?? 0) < (action.qty || 0)
     );
   };
 
   const doAction = async (action: Action) => {
     if (action.action === "add") {
       if (isOverLimit()) {
-        showSuccess({
+        return showSuccess({
           variables: {
             user: {
               showModal: t("cart.over_limit", {

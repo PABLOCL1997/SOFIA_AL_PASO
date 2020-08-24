@@ -104,6 +104,7 @@ export const enableGmap = () => {
     geocoder.geocode({ location: latLng }, (results: any, status: any) => {
       if (status === "OK") {
         if (results[0]) {
+          window.formatted_address = results[0].formatted_address;
           infowindow.setContent(results[0].formatted_address);
           infowindow.open(window.map, window.marker);
         }

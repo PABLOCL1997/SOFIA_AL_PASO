@@ -1,4 +1,4 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
+import React, { Suspense, FC, useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from "../meta";
@@ -34,6 +34,11 @@ const Ticket = React.lazy(() =>
 );
 const Thanks = React.lazy(() =>
   import(/* webpackChunkName: "Thanks" */ "../components/Checkout/Thanks")
+);
+const ConfirmAddress = React.lazy(() =>
+  import(
+    /* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"
+  )
 );
 
 const Wrapper = styled.div`
@@ -139,6 +144,7 @@ const Checkout: FC<Props> = () => {
   const [orderData, setOrderData] = useState<any>({});
   const [billingChange, setBillingChange] = useState<any>({});
   const [mapUsed, setMapUsed] = useState(false);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(true);
   const [result, setResult] = useState<
     Array<{ entity_id: string; increment_id: string }>
   >([]);
@@ -284,7 +290,7 @@ const Checkout: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todotixData]);
 
-  const saveOrder = () => {
+  const validateOrder = () => {
     let items: Array<string> = [];
     data &&
       data.cartItems &&
@@ -349,13 +355,14 @@ const Checkout: FC<Props> = () => {
           170,
         behavior: "smooth"
       });
-      return showError({
+      showError({
         variables: {
           user: {
             showError: t("checkout.move_map")
           }
         }
       });
+      return [];
     }
 
     if (!missingField && !orderData.shipping.id) {
@@ -383,7 +390,7 @@ const Checkout: FC<Props> = () => {
             key === "building_name" &&
             orderData.shipping.home_type === "Casa"
           )
-            return;
+            return [];
           missingField = true;
           const input = document.querySelector(`[name="shipping-${key}"]`);
           if (input) {
@@ -406,7 +413,15 @@ const Checkout: FC<Props> = () => {
       });
     }
 
-    if (missingField) return;
+    if (missingField) return [];
+    return items;
+  };
+
+  const saveOrder = () => {
+    setConfirmModalVisible(false);
+    const items: Array<string> = validateOrder();
+
+    if (!items.length) return;
 
     setOrder({
       discount_amount: parseFloat(
@@ -492,9 +507,28 @@ const Checkout: FC<Props> = () => {
     setOrderData((window as any).orderData);
   };
 
+  const showConfirmAddress = () => {
+    const items: Array<string> | boolean = validateOrder();
+    if (items.length) setConfirmModalVisible(true);
+  };
+
+  console.log(String(orderData.shipping ? orderData.shipping.street : ""));
+
   return (
     <Suspense fallback={<Loader />}>
       <Wrapper>
+        <ConfirmAddress
+          address={
+            orderData.shipping &&
+            orderData.shipping.id &&
+            orderData.shipping.street
+              ? orderData.shipping.street.replace(/\|/g, " ")
+              : ""
+          }
+          visible={confirmModalVisible}
+          confirm={saveOrder}
+          cancel={() => setConfirmModalVisible(false)}
+        />
         <div className="main-container">
           {!result.length && (
             <CheckoutWrapper>
@@ -522,7 +556,7 @@ const Checkout: FC<Props> = () => {
                   <Ticket
                     processing={processing}
                     updateOrder={updateOrderData}
-                    order={saveOrder}
+                    order={showConfirmAddress}
                   />
                 </Col2>
               </Cols>
