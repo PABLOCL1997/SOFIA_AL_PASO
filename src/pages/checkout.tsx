@@ -144,7 +144,7 @@ const Checkout: FC<Props> = () => {
   const [orderData, setOrderData] = useState<any>({});
   const [billingChange, setBillingChange] = useState<any>({});
   const [mapUsed, setMapUsed] = useState(false);
-  const [confirmModalVisible, setConfirmModalVisible] = useState(true);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<
     Array<{ entity_id: string; increment_id: string }>
   >([]);
