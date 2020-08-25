@@ -212,7 +212,7 @@
     "modify_cart": "Modificar carrito",
     "confirmaddress": {
       "title": "Confirmar dirección",
-      "message": "Se enviará el pedido a {{address}}",
+      "message": "Se enviará el pedido a",
       "close": "Cancelar",
       "confirm": "Confirmar"
     },

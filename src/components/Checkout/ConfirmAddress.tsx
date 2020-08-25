@@ -1,11 +1,13 @@
 import React, { FC, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { BREAKPOINT } from "../../utils/constants";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
+const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../Map"));
 
 const ModalCourtain = styled.div`
   position: fixed;
@@ -32,7 +34,13 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 350px;
+  width: 600px;
+  > div {
+    width: 100%;
+  }
+  @media screen and (max-width: ${BREAKPOINT}) {
+    width: 350px;
+  }
 `;
 
 const Title = styled.h2`
@@ -50,11 +58,12 @@ const Text = styled.p`
   letter-spacing: 0.02em;
   color: var(--font);
   max-width: 400px;
-  margin-bottom: 30px;
 `;
 
 const CtaWrapper = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
   > div:last-child {
     margin-left: 10px;
   }
@@ -84,10 +93,14 @@ const ConfirmAddress: FC<Props> = ({ visible, confirm, address, cancel }) => {
           <Modal>
             <Title>{t("checkout.confirmaddress.title")}</Title>
             <Text>
-              {t("checkout.confirmaddress.message", {
-                address: address ? address : (window as any).formatted_address
-              })}
+              {t("checkout.confirmaddress.message")}&nbsp;
+              <span id="dynamicAddress">
+                {(window as any).formatted_address}
+              </span>
             </Text>
+            <Map />
+            <br />
+            <br />
             <CtaWrapper>
               <Cta
                 hover={false}

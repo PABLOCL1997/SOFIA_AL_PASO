@@ -451,8 +451,8 @@ const Checkout: FC<Props> = () => {
           localUserData.userInfo.length
             ? localUserData.userInfo[0].cityName
             : "-",
-        latitude: String(orderData.shipping.latitude),
-        longitude: String(orderData.shipping.longitude),
+        latitude: String((window as any).latitude),
+        longitude: String((window as any).longitude),
         street: orderData.shipping.id
           ? orderData.shipping.street
           : `${orderData.shipping.address || ""} | ${
@@ -489,8 +489,8 @@ const Checkout: FC<Props> = () => {
             : "-"),
         region: orderData.shipping.reference,
         country_id: "BO",
-        latitude: String(orderData.shipping.latitude),
-        longitude: String(orderData.shipping.longitude)
+        latitude: String((window as any).latitude),
+        longitude: String((window as any).longitude)
       }),
       payment_method: orderData.payment
         ? orderData.payment.method
@@ -510,6 +510,7 @@ const Checkout: FC<Props> = () => {
   const showConfirmAddress = () => {
     const items: Array<string> | boolean = validateOrder();
     if (items.length) setConfirmModalVisible(true);
+    // setConfirmModalVisible(true);
   };
 
   return (
@@ -545,6 +546,7 @@ const Checkout: FC<Props> = () => {
                       updateOrder={updateOrderData}
                       orderData={orderData}
                       billingChange={billingChange}
+                      confirmModalVisible={confirmModalVisible}
                     />
                     <Line />
                     <Payment updateOrder={updateOrderData} />

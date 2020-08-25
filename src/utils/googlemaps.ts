@@ -52,8 +52,8 @@ export const enableGmap = () => {
         clearInterval(i);
 
         var uluru = {
-          lat: lat || -16.5207007,
-          lng: lng || -68.194118
+          lat: parseFloat(window.latitude || lat || -16.5207007),
+          lng: parseFloat(window.longitude || lng || -68.194118)
         };
         window.map = new google.maps.Map(document.getElementById("gmap"), {
           zoom: 13,
@@ -91,6 +91,10 @@ export const enableGmap = () => {
           updateLatLng(latLng.lat(), latLng.lng());
           if ((window as any).updateMapUsed) (window as any).updateMapUsed();
         });
+        window.showInfoWindow(window.geocoder, window.infowindow, {
+          lat: uluru.lat,
+          lng: uluru.lng
+        });
         updateLatLng(uluru.lat, uluru.lng);
       }
     }, 100);
@@ -105,6 +109,8 @@ export const enableGmap = () => {
       if (status === "OK") {
         if (results[0]) {
           window.formatted_address = results[0].formatted_address;
+          let addressLabel = document.getElementById("dynamicAddress");
+          if (addressLabel) addressLabel.innerHTML = window.formatted_address;
           infowindow.setContent(results[0].formatted_address);
           infowindow.open(window.map, window.marker);
         }

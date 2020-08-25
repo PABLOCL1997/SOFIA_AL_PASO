@@ -168,9 +168,15 @@ type Props = {
   updateOrder: Function;
   orderData: any;
   billingChange: any;
+  confirmModalVisible: boolean;
 };
 
-const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
+const Shipping: FC<Props> = ({
+  updateOrder,
+  orderData,
+  billingChange,
+  confirmModalVisible
+}) => {
   const { t } = useTranslation();
   const [inputs, setInputs] = useState<any>({
     addressType: t("checkout.delivery.street")
@@ -223,6 +229,8 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
         (c: KeyValue) => c.value === address.city
       );
       if (c) {
+        (window as any).latitude = address.latitude;
+        (window as any).longitude = address.longitude;
         setUser({
           variables: {
             user: {
@@ -292,10 +300,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
       );
       if (_a) selectAddress(userData.details.addresses[_a]);
       else selectAddress(userData.details.addresses[0]);
-    } /* if (userData && userData.details.addresses)
-      selectAddress(userData.details.addresses[0]);
-    else */ else
-      setOther(true);
+    } else setOther(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
@@ -400,7 +405,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange }) => {
             );
           })}
         </Form>
-        {other && <Map />}
+        {other && !confirmModalVisible && <Map />}
       </Container>
     </Suspense>
   );
