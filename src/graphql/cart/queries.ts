@@ -15,7 +15,7 @@ export const GET_QTY = (cartItems: any) => {
 export const GET_TOTAL = (cartItems: any) => {
   return cartItems
     .reduce((sum: number, i: any) => {
-      return sum + i.price * i.qty;
+      return sum + (i.special_price ? i.special_price : i.price) * i.qty;
     }, 0)
     .toFixed(2)
     .replace(".", ",");

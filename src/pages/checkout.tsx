@@ -17,28 +17,32 @@ import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { trackOrder, initCheckout } from "../utils/dataLayer";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
 );
-const Billing = React.lazy(() =>
-  import(/* webpackChunkName: "Billing" */ "../components/Checkout/Billing")
+const Billing = React.lazy(
+  () =>
+    import(/* webpackChunkName: "Billing" */ "../components/Checkout/Billing")
 );
-const Shipping = React.lazy(() =>
-  import(/* webpackChunkName: "Shipping" */ "../components/Checkout/Shipping")
+const Shipping = React.lazy(
+  () =>
+    import(/* webpackChunkName: "Shipping" */ "../components/Checkout/Shipping")
 );
-const Payment = React.lazy(() =>
-  import(/* webpackChunkName: "Payment" */ "../components/Checkout/Payment")
+const Payment = React.lazy(
+  () =>
+    import(/* webpackChunkName: "Payment" */ "../components/Checkout/Payment")
 );
-const Ticket = React.lazy(() =>
-  import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket")
+const Ticket = React.lazy(
+  () => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket")
 );
-const Thanks = React.lazy(() =>
-  import(/* webpackChunkName: "Thanks" */ "../components/Checkout/Thanks")
+const Thanks = React.lazy(
+  () => import(/* webpackChunkName: "Thanks" */ "../components/Checkout/Thanks")
 );
-const ConfirmAddress = React.lazy(() =>
-  import(
-    /* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"
-  )
+const ConfirmAddress = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"
+    )
 );
 
 const Wrapper = styled.div`
@@ -301,7 +305,9 @@ const Checkout: FC<Props> = () => {
             sku: product.sku,
             category: product.category_name.toLowerCase().trim(),
             name: product.name,
-            price: product.price,
+            price: product.special_price
+              ? product.special_price
+              : product.price,
             quantity: product.qty,
             type_id: "simple",
             addQty: true,
