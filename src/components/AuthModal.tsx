@@ -14,18 +14,18 @@ import { googleLogin, facebookLogin } from "../utils/social";
 import { token as StoreToken } from "../utils/store";
 import { useParams, useHistory } from "react-router-dom";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
-const Google = React.lazy(() =>
-  import(/* webpackChunkName: "Google" */ "./Images/Google")
+const Google = React.lazy(
+  () => import(/* webpackChunkName: "Google" */ "./Images/Google")
 );
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "./Images/Close")
+const Close = React.lazy(
+  () => import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
-const Facebook = React.lazy(() =>
-  import(/* webpackChunkName: "Facebook" */ "./Images/Facebook")
+const Facebook = React.lazy(
+  () => import(/* webpackChunkName: "Facebook" */ "./Images/Facebook")
 );
 
 const ModalCourtain = styled.div`
@@ -235,14 +235,7 @@ const AuthModal: FC<Props> = () => {
   const [form, setForm] = useState<FormData>({ email: "" });
   const [loader, setLoader] = useState(false);
 
-  const [doSignUp] = useMutation(SIGN_UP, {
-    variables: {
-      email: form.email,
-      password: form.password,
-      firstname: form.firstname,
-      lastname: form.lastname
-    }
-  });
+  const [doSignUp] = useMutation(SIGN_UP);
   const [doLogin] = useMutation(LOGIN, {
     variables: { email: form.email, password: form.password }
   });
@@ -310,15 +303,16 @@ const AuthModal: FC<Props> = () => {
   }: FormData) => {
     try {
       setLoader(true);
-      setForm({
-        ...form,
-        email,
-        firstname,
-        lastname,
-        password,
-        network: true
+      const response = await doSignUp({
+        variables: {
+          ...form,
+          email,
+          firstname,
+          lastname,
+          password,
+          network: true
+        }
       });
-      const response = await doSignUp();
       setUser({
         openLoginModal: false,
         isLoggedIn: true,
@@ -345,7 +339,15 @@ const AuthModal: FC<Props> = () => {
       if (form.password === "" || form.password !== form.rpassword)
         throw new Error("error");
       setLoader(true);
-      const response = await doSignUp();
+      const response = await doSignUp({
+        variables: {
+          email: form.email,
+          password: form.password,
+          firstname: form.firstname,
+          lastname: form.lastname,
+          network: false
+        }
+      });
       setUser({
         openLoginModal: false,
         isLoggedIn: true,
