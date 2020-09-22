@@ -196,7 +196,7 @@
     "empty": "Vaciar carrito",
     "pay": "Ir a pagar",
     "under_budget": "El valor  mínimo para la compra es de Bs. {{min_price}}. Por favor agrega mas productos",
-    "change_qty_msg": "Cambiaste la ciudad|Los productos que agregaste al carrito, para la ciudad seleccionada, no alcanzan el monto mínimo de Bs. 150",
+    "change_qty_msg": "Cambiaste la ciudad|Los productos que agregaste al carrito, para la ciudad seleccionada, no alcanzan el monto mínimo de Bs. 100",
     "change_msg": "Cambiaste la ciudad|Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
     "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito",
     "no_stock": "El stock disponible es de {{qty}} unidades",
