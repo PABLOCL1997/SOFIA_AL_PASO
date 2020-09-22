@@ -12,7 +12,7 @@ export const fromLink = (str: string | null) => {
     ? str
         .split(/-/g)
         .map(
-          (word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`
+          word => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`
         )
         .join(" ")
     : "";
