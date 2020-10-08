@@ -179,6 +179,16 @@ const Checkout: FC<Props> = () => {
   const totalAmount = GET_TOTAL(data.cartItems);
 
   useEffect(() => {
+    if (
+      localUserData &&
+      localUserData.userInfo[0] &&
+      !localUserData.userInfo[0].isLoggedIn
+    ) {
+      (window as any).location = "/";
+    }
+  }, [localUserData]);
+
+  useEffect(() => {
     (window as any).updateMapUsed = () => setMapUsed(true);
     document.title = CHECKOUT_TITLE;
     (window as any).orderData = {};

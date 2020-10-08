@@ -12,11 +12,11 @@ import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
+const Chevron = React.lazy(
+  () => import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
 );
 
 const Container = styled.div`
@@ -274,29 +274,29 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
   };
 
   const addAndGo = () => {
-    if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      if (isOverLimit()) {
-        showSuccess({
-          variables: {
-            user: {
-              showModal: t("cart.over_limit", { units: product.maxPerUser })
-            }
+    // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+    if (isOverLimit()) {
+      showSuccess({
+        variables: {
+          user: {
+            showModal: t("cart.over_limit", { units: product.maxPerUser })
           }
-        });
-      } else if (!hasStock()) {
-        showSuccess({
-          variables: {
-            user: { showModal: t("cart.no_stock", { qty: product.stock }) }
-          }
-        });
-      } else {
-        trackAddToCart({ ...product, qty });
-        addItem();
-        showSuccess();
-      }
+        }
+      });
+    } else if (!hasStock()) {
+      showSuccess({
+        variables: {
+          user: { showModal: t("cart.no_stock", { qty: product.stock }) }
+        }
+      });
     } else {
-      toggleLoginModal();
+      trackAddToCart({ ...product, qty });
+      addItem();
+      showSuccess();
     }
+    // } else {
+    //   toggleLoginModal();
+    // }
   };
 
   const discount = (1 - product.special_price / product.price) * 100;

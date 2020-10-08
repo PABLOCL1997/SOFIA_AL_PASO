@@ -16,38 +16,41 @@ import DelayedWrapper from "../components/DelayedWrapper";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
 );
-const Slider = React.lazy(() =>
-  import(/* webpackChunkName: "Slider" */ "react-slick")
+const Slider = React.lazy(
+  () => import(/* webpackChunkName: "Slider" */ "react-slick")
 );
-const RelatedProducts = React.lazy(() =>
-  import(
-    /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
-  )
+const RelatedProducts = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
+    )
 );
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
+const Chevron = React.lazy(
+  () => import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
 );
-const Cta = React.lazy(() =>
-  import(/* webpackChunkName: "Cta" */ "../components/Cta")
+const Cta = React.lazy(
+  () => import(/* webpackChunkName: "Cta" */ "../components/Cta")
 );
-const FreeDelivery = React.lazy(() =>
-  import(
-    /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
-  )
+const FreeDelivery = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
+    )
 );
-const Quality = React.lazy(() =>
-  import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
+const Quality = React.lazy(
+  () => import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
 );
-const ContinueArrow = React.lazy(() =>
-  import(
-    /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
-  )
+const ContinueArrow = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
+    )
 );
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "../components/Images/Close")
+const Close = React.lazy(
+  () => import(/* webpackChunkName: "Close" */ "../components/Images/Close")
 );
 
 const Header = styled.div`
@@ -435,30 +438,30 @@ const Product: FC<Props> = ({
   };
 
   const addAndGo = () => {
-    if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      if (isOverLimit()) {
-        showSuccess({
-          variables: {
-            user: {
-              showModal: t("cart.over_limit", { units: product.maxPerUser })
-            }
+    // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+    if (isOverLimit()) {
+      showSuccess({
+        variables: {
+          user: {
+            showModal: t("cart.over_limit", { units: product.maxPerUser })
           }
-        });
-      } else if (!hasStock()) {
-        showSuccess({
-          variables: {
-            user: { showModal: t("cart.no_stock", { qty: product.stock }) }
-          }
-        });
-      } else {
-        trackAddToCart({ ...product, categories: [], description: false, qty });
-        addItem();
-        showSuccess();
-      }
+        }
+      });
+    } else if (!hasStock()) {
+      showSuccess({
+        variables: {
+          user: { showModal: t("cart.no_stock", { qty: product.stock }) }
+        }
+      });
     } else {
-      if (closeModal) closeModal();
-      toggleLoginModal();
+      trackAddToCart({ ...product, categories: [], description: false, qty });
+      addItem();
+      showSuccess();
     }
+    // } else {
+    //   if (closeModal) closeModal();
+    //   toggleLoginModal();
+    // }
   };
 
   const proceed = () => {

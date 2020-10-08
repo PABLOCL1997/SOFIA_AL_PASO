@@ -17,18 +17,18 @@ import { useHistory } from "react-router-dom";
 import { ProductType } from "../graphql/products/type";
 import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "./Images/Close")
+const Close = React.lazy(
+  () => import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
+const Chevron = React.lazy(
+  () => import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
 );
-const Delete = React.lazy(() =>
-  import(/* webpackChunkName: "Delete" */ "./Images/Delete")
+const Delete = React.lazy(
+  () => import(/* webpackChunkName: "Delete" */ "./Images/Delete")
 );
 
 const ModalCourtain = styled.div`
@@ -332,6 +332,9 @@ const AuthModal: FC<Props> = () => {
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [shouldExecute, executeNewCartQuery] = useState(false);
   const [newCartEmpty, setNewCartEmpty] = useState(true);
+  const [toggleLoginModal] = useMutation(SET_USER, {
+    variables: { user: { openLoginModal: true } }
+  });
   const { data: newCart } = useQuery(CHECK_CART, {
     variables: {
       cart: JSON.stringify(
@@ -442,7 +445,12 @@ const AuthModal: FC<Props> = () => {
 
   const checkout = () => {
     closeCartModal();
-    history.push("/checkout");
+    if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+      history.push("/checkout");
+    } else {
+      (window as any).navigateToCheckout = true;
+      toggleLoginModal();
+    }
   };
 
   const showCityWarning = () => {

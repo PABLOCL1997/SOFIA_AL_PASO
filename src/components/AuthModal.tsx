@@ -289,6 +289,7 @@ const AuthModal: FC<Props> = () => {
         id: response.data.login.id
       });
       StoreToken.set(response.data.login.token);
+      if ((window as any).navigateToCheckout) history.push("/checkout");
     } catch (e) {
       showError();
     }
@@ -320,6 +321,7 @@ const AuthModal: FC<Props> = () => {
       });
       StoreToken.set(response.data.signup.token);
       showSuccess();
+      if ((window as any).navigateToCheckout) history.push("/checkout");
     } catch (e) {
       showError();
     }
@@ -355,6 +357,7 @@ const AuthModal: FC<Props> = () => {
       });
       StoreToken.set(response.data.signup.token);
       showSuccess();
+      if ((window as any).navigateToCheckout) history.push("/checkout");
     } catch (e) {
       showError();
     }
@@ -389,6 +392,7 @@ const AuthModal: FC<Props> = () => {
   const closeModal = () => {
     setStep(Steps.Login);
     closeLoginModal();
+    (window as any).navigateToCheckout = false;
   };
 
   return (

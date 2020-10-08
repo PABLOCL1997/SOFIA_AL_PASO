@@ -10,42 +10,42 @@ import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { token } from "../utils/store";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
-const HeaderLogo = React.lazy(() =>
-  import(/* webpackChunkName: "HeaderLogo" */ "./Images/HeaderLogo")
+const HeaderLogo = React.lazy(
+  () => import(/* webpackChunkName: "HeaderLogo" */ "./Images/HeaderLogo")
 );
-const Pin = React.lazy(() =>
-  import(/* webpackChunkName: "Pin" */ "./Images/Pin")
+const Pin = React.lazy(
+  () => import(/* webpackChunkName: "Pin" */ "./Images/Pin")
 );
-const Cart = React.lazy(() =>
-  import(/* webpackChunkName: "Cart" */ "./Images/Cart")
+const Cart = React.lazy(
+  () => import(/* webpackChunkName: "Cart" */ "./Images/Cart")
 );
-const Menu = React.lazy(() =>
-  import(/* webpackChunkName: "Menu" */ "./Images/Menu")
+const Menu = React.lazy(
+  () => import(/* webpackChunkName: "Menu" */ "./Images/Menu")
 );
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "./Images/Close")
+const Close = React.lazy(
+  () => import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
-const Home = React.lazy(() =>
-  import(/* webpackChunkName: "Home" */ "./Images/Home")
+const Home = React.lazy(
+  () => import(/* webpackChunkName: "Home" */ "./Images/Home")
 );
-const Steak = React.lazy(() =>
-  import(/* webpackChunkName: "Steak" */ "./Images/Steak")
+const Steak = React.lazy(
+  () => import(/* webpackChunkName: "Steak" */ "./Images/Steak")
 );
-const Faq = React.lazy(() =>
-  import(/* webpackChunkName: "Faq" */ "./Images/Faq")
+const Faq = React.lazy(
+  () => import(/* webpackChunkName: "Faq" */ "./Images/Faq")
 );
-const CityModal = React.lazy(() =>
-  import(/* webpackChunkName: "CityModal" */ "./CityModal")
+const CityModal = React.lazy(
+  () => import(/* webpackChunkName: "CityModal" */ "./CityModal")
 );
-const AuthModal = React.lazy(() =>
-  import(/* webpackChunkName: "AuthModal" */ "./AuthModal")
+const AuthModal = React.lazy(
+  () => import(/* webpackChunkName: "AuthModal" */ "./AuthModal")
 );
-const CartModal = React.lazy(() =>
-  import(/* webpackChunkName: "CartModal" */ "./CartModal")
+const CartModal = React.lazy(
+  () => import(/* webpackChunkName: "CartModal" */ "./CartModal")
 );
 
 const Wrapper = styled.div``;
@@ -293,11 +293,11 @@ const Header: FC<Props> = ({ checkout, page }) => {
 
   const showCart = () => {
     setOpen(false);
-    if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      toggleCartModal();
-    } else {
-      toggleLoginModal();
-    }
+    // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
+    toggleCartModal();
+    // } else {
+    //   toggleLoginModal();
+    // }
   };
 
   const goHome = () => {
