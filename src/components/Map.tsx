@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
 import { enableGmap, setLatLng } from "../utils/googlemaps";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
-const Crosshair = React.lazy(() =>
-  import(/* webpackChunkName: "Crosshair" */ "./Images/Crosshair")
+const Crosshair = React.lazy(
+  () => import(/* webpackChunkName: "Crosshair" */ "./Images/Crosshair")
 );
 
 const MapContainer = styled.div`
@@ -92,10 +92,18 @@ const Map: FC<Props> = () => {
 
   const geoLocate = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        setLatLng("", position.coords.latitude, position.coords.longitude);
-        if ((window as any).updateMapUsed) (window as any).updateMapUsed();
-      });
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          setLatLng("", position.coords.latitude, position.coords.longitude);
+          if ((window as any).updateMapUsed) (window as any).updateMapUsed();
+        },
+        function (errors) {
+          console.log(errors);
+        },
+        {
+          timeout: 5000
+        }
+      );
     }
   };
 

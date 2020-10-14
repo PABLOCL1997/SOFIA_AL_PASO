@@ -9,14 +9,14 @@ import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER, DETAILS } from "../graphql/user/queries";
 import { UserType, AddressType } from "../graphql/user/type";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
-const WorldPin = React.lazy(() =>
-  import(/* webpackChunkName: "WorldPin" */ "./Images/WorldPin")
+const WorldPin = React.lazy(
+  () => import(/* webpackChunkName: "WorldPin" */ "./Images/WorldPin")
 );
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "./Images/Close")
+const Close = React.lazy(
+  () => import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "./Cta"));
@@ -188,7 +188,7 @@ const CityModal: FC<Props> = () => {
         user: {
           cityKey: "",
           cityName: "",
-          openCityModal: true,
+          openCityModal: false,
           defaultAddressId: undefined,
           defaultAddressLabel: ""
         } as User
@@ -227,8 +227,51 @@ const CityModal: FC<Props> = () => {
   }, [data]);
 
   useEffect(() => {
+    toggleCityModal();
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
-    if (userInfo.cityKey) toggleCityModal();
+    if (!userInfo.cityKey) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const latitude = "latitude=" + position.coords.latitude;
+            const longitude = "&longitude=" + position.coords.longitude;
+            const query = latitude + longitude + "&localityLanguage=es";
+            const Http = new XMLHttpRequest();
+            const bigdatacloud_api =
+              "https://api.bigdatacloud.net/data/reverse-geocode-client?" +
+              query;
+            Http.onreadystatechange = function () {
+              if (this.readyState == 4) {
+                if (this.status == 200) {
+                  const myObj = JSON.parse(this.responseText);
+                  if (myObj.principalSubdivision) {
+                    if (myObj.principalSubdivision.indexOf("Cochabamba") >= 0)
+                      changeCity(cities[0]);
+                    else if (myObj.principalSubdivision.indexOf("La Paz") >= 0)
+                      changeCity(cities[1]);
+                    else if (myObj.principalSubdivision.indexOf("El Alto") >= 0)
+                      changeCity(cities[2]);
+                    else changeCity(cities[2]);
+                  }
+                } else {
+                  changeCity(cities[2]);
+                }
+              }
+            };
+            Http.open("GET", bigdatacloud_api);
+            Http.send();
+          },
+          function (errors) {
+            changeCity(cities[2]);
+          },
+          {
+            timeout: 2000
+          }
+        );
+      } else {
+        changeCity(cities[2]);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -266,7 +309,7 @@ const CityModal: FC<Props> = () => {
       <Courtain
         className={
           (!data.userInfo.length ||
-            !data.userInfo[0].cityKey ||
+            // !data.userInfo[0].cityKey ||
             data.userInfo[0].openCityModal) &&
           !data.userInfo[0].openAddressModal &&
           "visible"

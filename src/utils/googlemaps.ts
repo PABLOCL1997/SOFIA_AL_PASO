@@ -40,6 +40,9 @@ export const enableGmap = () => {
         },
         function () {
           __initMap();
+        },
+        {
+          timeout: 5000
         }
       );
     } else {

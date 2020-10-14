@@ -5,8 +5,8 @@ import { useQuery, useMutation } from "react-apollo";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
 
@@ -74,6 +74,9 @@ const ModalMessage: FC<Props> = () => {
   const [hideModal] = useMutation(SET_USER, {
     variables: { user: { showModal: "" } }
   });
+  const [toggleCartModal] = useMutation(SET_USER, {
+    variables: { user: { openCartModal: true } }
+  });
 
   useEffect(() => {
     hideModal();
@@ -98,6 +101,20 @@ const ModalMessage: FC<Props> = () => {
                 action={() => hideModal()}
               />
             </CtaWrapper>
+            {data.userInfo[0].showModal.split("|")[0] ===
+              "Producto agregado" && (
+              <CtaWrapper>
+                <br />
+                <Cta
+                  filled={false}
+                  text={t("modal.cart")}
+                  action={() => {
+                    hideModal();
+                    toggleCartModal();
+                  }}
+                />
+              </CtaWrapper>
+            )}
           </Modal>
         )}
       </ModalCourtain>

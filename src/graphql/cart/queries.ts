@@ -6,7 +6,7 @@ export const GET_MIN_PRICE = (data: any) => {
   return userInfo.cityKey === "CO"
     ? 100
     : userInfo.cityKey === "SC"
-    ? 150
+    ? 200
     : 200;
 };
 
