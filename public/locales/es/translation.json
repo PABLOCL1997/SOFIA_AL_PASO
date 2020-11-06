@@ -18,7 +18,7 @@
     },
     "homepage": {
         "hero": {
-            "text": "¿Qué te llevamos hoy?",
+            "text": "¡Recibe en 24 horas!",
             "city_select": "Selecciona la ciudad de entrega",
             "product_search": "¿Qué producto buscas?",
             "search": "buscar"
@@ -32,7 +32,7 @@
             "text": "Nuestra tienda te conviene, porque nos preocupamos por darte el mejor servicio.",
             "delivery": {
                 "title": "Envío a domicilio",
-                "text": "Hacé tu orden y obtenela dentro de 48hs hábiles en tu hogar."
+                "text": "Hacé tu pedido hasta las 17:00 y recibilo en tu hogar al día siguiente."
             },
             "payment": {
                 "title": "Pagá como más te convenga",
@@ -92,8 +92,8 @@
         "categories": "CATEGORÍAS",
         "add": "Agregar",
         "delivery": {
-            "title": "Envío es gratuito dentro de las 48 horas hábiles",
-            "text": "Los envíos se realizan de lunes a viernes"
+            "title": "ENVÍO GRATIS AL DÍA SIGUIENTE",
+            "text": "Hacé tu pedido hasta las 17:00 de Lunes a Viernes y recibilo al día siguiente"
         },
         "warranty": {
             "title": "100% GARANTÍA DE CALIDAD",
