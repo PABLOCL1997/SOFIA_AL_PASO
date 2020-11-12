@@ -5,7 +5,7 @@ import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
 import { SET_USER } from "../graphql/user/mutations";
 import { BREAKPOINT } from "../utils/constants";
-import { CREATE_ORDER, EMPTY_CART, PAY } from "../graphql/cart/mutations";
+import { CREATE_ORDER, EMPTY_CART, PAY, SET_TEMP_CART } from "../graphql/cart/mutations";
 import {
   GET_CART_ITEMS,
   TODOTIX,
@@ -165,6 +165,7 @@ const Checkout: FC<Props> = () => {
   const [toggleCartModal] = useMutation(SET_USER, {
     variables: { user: { openCartModal: true } }
   });
+  const [setTempCart] = useMutation(SET_TEMP_CART);
   const [createOrder] = useMutation(CREATE_ORDER, {
     variables: {
       ...order
@@ -515,6 +516,25 @@ const Checkout: FC<Props> = () => {
   };
 
   const updateOrderData = (key: string, values: any) => {
+    if (key === 'billing' && values.email) {
+      setTempCart({
+        variables: {
+          email: values.email,
+          items: JSON.stringify({
+            firstname: values.firstname || '',
+            items: data.cartItems.map((product: ProductType) => {
+              return {
+                name: product.name || '',
+                image: product.image || '',
+                price: (product.special_price || 0),
+                qty: product.qty || 0
+              }
+            })
+          })
+        }
+      });
+    }
+
     if (key === "billing") setBillingChange(values);
     (window as any).orderData = {
       ...(window as any).orderData,

@@ -29,6 +29,14 @@ export const CHECK_COUPON = gql`
   }
 `;
 
+export const SET_TEMP_CART = gql`
+  mutation SetTempCart($email: String!, $items: String) {
+    setTempCart(email: $email, items: $items) {
+      status
+    }
+  }
+`;
+
 export const CREATE_ORDER = gql`
   mutation CreateOrder(
     $discount_amount: Float
