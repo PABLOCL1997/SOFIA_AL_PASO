@@ -63,9 +63,9 @@ const loadPage = async (res, meta = {}) => {
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
     res.send(
       data
-        .replace(/__OG_TITLE__/g, metadata.title)
-        .replace(/__OG_DESCRIPTION__/g, metadata.meta_description)
-        .replace(/__OG_IMAGE__/g, metadata.meta_keywords)
+        .replace(/__OG_TITLE__/g, metadata ? metadata.title : 'Tienda Sofia')
+        .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : 'Tienda Sofia')
+        .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
     )
   });
 };
