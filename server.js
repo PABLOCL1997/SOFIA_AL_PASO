@@ -71,7 +71,7 @@ const loadPage = async (res, meta = {}) => {
 };
 
 app.use(express.static(__dirname + "/build"));
-app.get("/", async (req, res) => await loadPage(res, { title: HOMEPAGE_TITLE, identifier:"sofia-homepage" }));
+app.get("/", (req, res) => loadPage(res, { title: HOMEPAGE_TITLE, identifier:"sofia-homepage" }));
 app.get("/productos", (req, res) => loadPage(res, { title: PRODUCTS_TITLE, identifier:"sofia-products" }));
 app.get("/preguntas-frecuentes", (req, res) =>  loadPage(res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
 app.get("/terminos-y-condiciones", (req, res) =>  loadPage(res, { title: TERMS_TITLE,  identifier: "sofia-tyc" }));
