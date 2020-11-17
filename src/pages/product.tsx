@@ -1,5 +1,5 @@
-import React, { Suspense, FC, useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { Suspense, FC, useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";

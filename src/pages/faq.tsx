@@ -127,7 +127,7 @@ const Faq: FC<Props> = () => {
     },
     {
       title: `¿Cuánto demora la entrega de los pedidos?`,
-      text: `Se entrega dentro de las 48 horas hábiles de lunes a viernes.`
+      text: `Se entrega dentro de las 24 horas hábiles de lunes a viernes.`
     },
     {
       title: `¿Cómo sé que mi pedido está registrado?`,

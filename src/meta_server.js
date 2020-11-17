@@ -6,5 +6,30 @@ module.exports = {
   MY_ACCOUNT_TITLE: "Tienda Sofia - Mi Cuenta",
   MY_ORDERS_TITLE: "Tienda Sofia - Mi Ordenes",
   FAQ_TITLE: "Tienda Sofia - Preguntas Frecuentes",
-  TERMS_TITLE: "Tienda Sofia - Términos y Condiciones"
+  TERMS_TITLE: "Tienda Sofia - Términos y Condiciones",
+  GET_METADATA: `
+  query Metadata($identifier: String!) {
+    metadata(identifier: $identifier){
+      page_id,
+      title,
+      meta_keywords,
+      meta_description,
+      identifier
+    } 
+  }`,
+  GET_PRODUCT_METADATA:`
+  query GetProductMetadata ($name: String!) {
+    product(
+      name: $name
+      city: "SC"
+      categories: false
+      related: false
+    ) {
+      entity_id
+      name
+      meta_title
+      meta_description
+    }
+  }
+`
 };

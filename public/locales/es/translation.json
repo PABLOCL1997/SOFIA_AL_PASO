@@ -86,7 +86,7 @@
       "all": "Todas las categorías",
       "new": "nuevo",
       "freedelivery": {
-        "title": "Envío gratuito dentro de las 48 horas hábiles",
+        "title": "Envío gratuito dentro de las 24 horas hábiles",
         "text": ""
       },
       "product_count": "{{count}} Productos encontrados"
