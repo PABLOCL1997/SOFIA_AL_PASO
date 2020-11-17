@@ -32,6 +32,8 @@ export const GET_PRODUCTS = gql`
             isNew
             maxPerUser
             weight
+            meta_title
+            meta_description
             category_name
             special_price
             stock
@@ -69,6 +71,8 @@ export const GET_PRODUCT = gql`
       useKGS
       isNew
       maxPerUser
+      meta_title
+      meta_description
       description
       categories {
         entity_id

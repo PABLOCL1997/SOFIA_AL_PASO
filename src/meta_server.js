@@ -27,6 +27,8 @@ module.exports = {
     ) {
       entity_id
       name
+      meta_title
+      meta_description
     }
   }
 `
