@@ -18,6 +18,8 @@ export type ProductType = {
   isNew: boolean;
   maxPerUser: number;
   category_name: string;
+  meta_title?:string,
+  meta_description?:string,
   description?: string;
   categories?: Array<CategoryType>;
   qty?: number;

@@ -1,6 +1,7 @@
 import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useHistory } from "react-router-dom";
+import { useQuery } from '@apollo/react-hooks'
 import { MY_ACCOUNT_TITLE } from '../meta';
 import DelayedWrapper from '../components/DelayedWrapper';
 import { BREAKPOINT } from '../utils/constants';

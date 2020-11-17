@@ -19,24 +19,26 @@ export const GET_PRODUCTS = gql`
       city: $city
       order: $order
     ) {
-      rows {
-        entity_id
-        name
-        sku
-        image
-        size
-        price
-        fullprice
-        unit
-        useKGS
-        isNew
-        maxPerUser
-        weight
-        category_name
-        special_price
-        stock
-      }
-      count
+        rows {
+            entity_id
+            name
+            sku
+            image
+            size
+            price
+            fullprice
+            unit
+            useKGS
+            isNew
+            maxPerUser
+            weight
+            meta_title
+            meta_description
+            category_name
+            special_price
+            stock
+        }
+        count
     }
   }
 `;
@@ -69,6 +71,8 @@ export const GET_PRODUCT = gql`
       useKGS
       isNew
       maxPerUser
+      meta_title
+      meta_description
       description
       categories {
         entity_id
