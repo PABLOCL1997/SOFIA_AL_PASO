@@ -391,12 +391,6 @@ const Checkout: FC<Props> = () => {
         "nit",
         "city",
         "address",
-        "number",
-        "home_type",
-        "apt_number",
-        "building_name",
-        "zone",
-        "neighborhood",
         "reference"
       ].forEach((key: string) => {
         if (
@@ -472,13 +466,7 @@ const Checkout: FC<Props> = () => {
         longitude: String((window as any).longitude),
         street: orderData.shipping.id
           ? orderData.shipping.street
-          : `${orderData.shipping.address || ""} | ${
-              orderData.shipping.number || ""
-            } | ${orderData.shipping.home_type || ""} | ${
-              orderData.shipping.apt_number || ""
-            } | ${orderData.shipping.building_name || ""} | ${
-              orderData.shipping.zone || ""
-            } | ${orderData.shipping.neighborhood || ""}`,
+          : `${orderData.shipping.address || ""}`,
         reference: orderData.shipping.reference
       }),
       envio: JSON.stringify({
@@ -490,13 +478,7 @@ const Checkout: FC<Props> = () => {
         telephone: orderData.shipping.phone,
         street: orderData.shipping.id
           ? orderData.shipping.street
-          : `${orderData.shipping.address || ""} | ${
-              orderData.shipping.number || ""
-            } | ${orderData.shipping.home_type || ""} | ${
-              orderData.shipping.apt_number || ""
-            } | ${orderData.shipping.building_name || ""} | ${
-              orderData.shipping.zone || ""
-            } | ${orderData.shipping.neighborhood || ""}`,
+          : `${orderData.shipping.address || ""}`,
         city:
           orderData.shipping.city ||
           (localUserData &&
