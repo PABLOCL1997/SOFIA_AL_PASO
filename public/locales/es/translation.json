@@ -132,6 +132,7 @@
       "password": "Contraseña",
       "forget_password": "Olvidé mi contraseña",
       "button": "Ingresar",
+      "error": "Correo electrónico o contraseña incorrecta. ¡Intentalo de nuevo por favor!",
       "google": {
         "text": "Ingresar con",
         "network": "Google"

@@ -199,6 +199,13 @@ const LoaderWrapper = styled.div`
     width: 50px;
   }
 `;
+const LoginError = styled.div`
+font-size: 12px;
+color: var(--red);
+max-width: 250px;
+margin-bottom: 15px;
+margin-left:-15px; 
+`;
 
 type Props = {};
 
@@ -234,6 +241,7 @@ const AuthModal: FC<Props> = () => {
   const [user, setUser] = useState<User>({});
   const [form, setForm] = useState<FormData>({ email: "" });
   const [loader, setLoader] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
   const [doSignUp] = useMutation(SIGN_UP);
   const [doLogin] = useMutation(LOGIN, {
@@ -282,6 +290,7 @@ const AuthModal: FC<Props> = () => {
   const login = async () => {
     try {
       setLoader(true);
+      setLoginError(false)
       const response: any = await doLogin();
       setUser({
         openLoginModal: false,
@@ -291,7 +300,7 @@ const AuthModal: FC<Props> = () => {
       StoreToken.set(response.data.login.token);
       if ((window as any).navigateToCheckout) history.push("/checkout");
     } catch (e) {
-      showError();
+      setLoginError(true)
     }
     setLoader(false);
   };
@@ -391,6 +400,7 @@ const AuthModal: FC<Props> = () => {
 
   const closeModal = () => {
     setStep(Steps.Login);
+    setLoginError(false);
     closeLoginModal();
     (window as any).navigateToCheckout = false;
   };
@@ -403,6 +413,7 @@ const AuthModal: FC<Props> = () => {
           "visible"
         }
       >
+
         {step === Steps.Login && (
           <Modal>
             {loader && (
@@ -414,6 +425,12 @@ const AuthModal: FC<Props> = () => {
               <Close />
             </CloseWrapper>
             <Title>{t("auth_modal.login.title")}</Title>
+
+            { loginError ?
+            (<LoginError>
+              {t("auth_modal.login.error")}
+            </LoginError>)
+            : "" }
             <input
               type="email"
               onKeyUp={evt => {
