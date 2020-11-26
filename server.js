@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 const GraphQLClient = require("graphql-request").GraphQLClient
+const redirectMiddleware = require('./src/redirect')
 const client = new GraphQLClient("http://localhost:4000/graphql")
 const port = process.env.PORT || 26235;
 
@@ -74,6 +75,7 @@ const loadPage = async (res, meta = {}) => {
   });
 };
 
+app.use(redirectMiddleware)
 app.get("/", (req, res) => loadPage(res, { title: HOMEPAGE_TITLE, identifier:"sofia-homepage" }));
 app.get("/productos", (req, res) => loadPage(res, { title: PRODUCTS_TITLE, identifier:"sofia-products" }));
 app.get("/preguntas-frecuentes", (req, res) =>  loadPage(res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
