@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 const GraphQLClient = require("graphql-request").GraphQLClient
+const redirectMiddleware = require('./src/redirect')
 const client = new GraphQLClient("http://localhost:4000/graphql")
 const port = process.env.PORT || 26235;
 
@@ -31,8 +32,8 @@ const fromLink = str => {
 
 const loadPage = async (res, meta = {}) => {
   let metadata = {
-    title:"Tienda Sofia",
-    meta_description:"Tienda Sofia",
+    title: meta.title || "Tienda Sofia",
+    meta_description: meta.title || "Tienda Sofia",
     meta_keywords: ""
   }
   // GET METADATA for pages that is a single product
@@ -42,8 +43,10 @@ const loadPage = async (res, meta = {}) => {
       const res = await client.request(GET_PRODUCT_METADATA, {
         name
       })
-      const { product: { meta_title, meta_description } } = res
-      metadata = { title: meta_title, meta_description , meta_keywords: ""  }
+      if (res.product && res.product.meta_title && res.product.meta_description ) {
+        const { product: { meta_title, meta_description } } = res
+        metadata = { title: meta_title, meta_description , meta_keywords: ""  }
+      }
     } catch (error) {
       console.log(error)
     }
@@ -54,7 +57,9 @@ const loadPage = async (res, meta = {}) => {
       const res = await client.request(GET_METADATA, {
         identifier: meta.identifier
       })
-      metadata = res.metadata
+      if (res.metadata && res.metadata.title && res.metadata.meta_description && res.metadata.meta_keywords) {
+        metadata = res.metadata
+      }
     } catch (error) {
       console.log(error)      
     }
@@ -63,14 +68,14 @@ const loadPage = async (res, meta = {}) => {
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
     res.send(
       data
-        .replace(/__OG_TITLE__/g, metadata ? metadata.title : 'Tienda Sofia')
-        .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : 'Tienda Sofia')
+        .replace(/__OG_TITLE__/g, metadata ? metadata.title : meta.title)
+        .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : '')
         .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
     )
   });
 };
 
-app.use(express.static(__dirname + "/build"));
+app.use(redirectMiddleware)
 app.get("/", (req, res) => loadPage(res, { title: HOMEPAGE_TITLE, identifier:"sofia-homepage" }));
 app.get("/productos", (req, res) => loadPage(res, { title: PRODUCTS_TITLE, identifier:"sofia-products" }));
 app.get("/preguntas-frecuentes", (req, res) =>  loadPage(res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
@@ -103,6 +108,7 @@ app.get("/:product", (req, res) =>
   loadPage(res, { title: `${PRODUCT_TITLE} ${fromLink(req.params.product)}`, prodName: req.params.product, identifier: "product" })
 );
 
-app.get("*", (req, res) => loadPage(res));
+app.use(express.static(__dirname + "/build"));
+app.get("*", (req, res) => loadPage(res, { title: "404"}));
 
 app.listen(port, () => console.log(`Webapp on ::${port}`));

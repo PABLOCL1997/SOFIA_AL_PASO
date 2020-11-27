@@ -132,6 +132,7 @@
       "password": "Contraseña",
       "forget_password": "Olvidé mi contraseña",
       "button": "Ingresar",
+      "error": "Correo electrónico o contraseña incorrecta. ¡Intentalo de nuevo por favor!",
       "google": {
         "text": "Ingresar con",
         "network": "Google"
@@ -238,7 +239,8 @@
       "city": "*Ciudad",
       "street": "Calle",
       "avenue": "Avenida",
-      "address": "*Nombre de calle o avenida",
+      "address_ph": "*Indicar Zona, Calle y Número",
+      "address": "*Dirección",
       "number": "*Número de calle o avenida",
       "home_type": "*Tipo de vivienda",
       "apt_number": "*Número de casa o departamento",
@@ -246,6 +248,7 @@
       "zone": "*Zona",
       "neighborhood": "*Barrio / Urbanización",
       "reference": "*Referencia",
+      "reference_ph": "*Indicar Edificio/Casa y otras Referencias",
       "map": {
         "title": "Ubica el punto correcto en el mapa",
         "pin": "Debes mover el pin hasta tu dirección",

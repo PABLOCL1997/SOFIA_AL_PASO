@@ -36,6 +36,12 @@ const Switch = React.lazy(() =>
   import(/* webpackChunkName: "Switch" */ "../Switch")
 );
 
+const gridSpan2CSS = {
+  gridColumn: "1 / span 2"
+} as React.CSSProperties
+
+const emptyCSS = {} as React.CSSProperties
+
 const Title = styled.div`
   display: flex;
   align-items: center;
@@ -484,15 +490,8 @@ const Details: FC<Props> = () => {
       "lastname",
       "phone",
       "phone2",
-      "nit",
       "city",
       "address",
-      "number",
-      "home_type",
-      "apt_number",
-      "building_name",
-      "zone",
-      "neighborhood",
       "reference"
     ];
 
@@ -549,15 +548,7 @@ const Details: FC<Props> = () => {
       nit: addressInputs.nit,
       telephone: `${addressInputs.phone} | ${addressInputs.phone2}`,
       password: "",
-      street: addressInputs.id
-        ? addressInputs.street
-        : `${addressInputs.address || ""} | ${addressInputs.number || ""} | ${
-            addressInputs.home_type || ""
-          } | ${addressInputs.apt_number || ""} | ${
-            addressInputs.building_name || ""
-          } | ${addressInputs.zone || ""} | ${
-            addressInputs.neighborhood || ""
-          }`,
+      street: addressInputs.address,
       reference: addressInputs.reference,
       city: addressInputs.city,
       latitude: String((window as any).latitude),
@@ -578,15 +569,7 @@ const Details: FC<Props> = () => {
       nit: addressInputs.nit,
       telephone: `${addressInputs.phone} | ${addressInputs.phone2}`,
       password: "",
-      street: addressInputs.id
-        ? addressInputs.street
-        : `${addressInputs.address || ""} | ${addressInputs.number || ""} | ${
-            addressInputs.home_type || ""
-          } | ${addressInputs.apt_number || ""} | ${
-            addressInputs.building_name || ""
-          } | ${addressInputs.zone || ""} | ${
-            addressInputs.neighborhood || ""
-          }`,
+      street: addressInputs.address,
       reference: addressInputs.reference,
       city: addressInputs.city,
       latitude: String((window as any).latitude),
@@ -795,20 +778,14 @@ const Details: FC<Props> = () => {
                   "lastname",
                   "phone",
                   "phone2",
-                  "nit",
                   "city",
-                  "street",
                   "address",
-                  "number",
-                  "home_type",
-                  "apt_number",
-                  "building_name",
-                  "zone",
-                  "neighborhood",
                   "reference"
                 ].map((key: string) => {
                   return (
-                    <InputGroup withLabel={key !== "street"} key={key}>
+                    <InputGroup withLabel={key !== "street"} key={key} 
+                    style={key === "reference" ? gridSpan2CSS : emptyCSS}
+                    >
                       <label>{t("checkout.delivery." + key)}</label>
                       {options[key] && (
                         <SelectWrapper>
@@ -829,6 +806,17 @@ const Details: FC<Props> = () => {
                           <Chevron />
                         </SelectWrapper>
                       )}
+                      {(key === "address" || key === "reference") && (
+                        <input
+                          name={`shipping-${key}`}
+                          value={addressInputs[key] || ""}
+                          onChange={evt =>
+                            onChangeAddress(key, evt.target.value)
+                          }
+                          type="text"
+                          placeholder={t("checkout.delivery." + key + "_ph")}
+                        />
+                      )}
                       {key === "street" && (
                         <Switch
                           changeOption={(value: string) =>
@@ -838,7 +826,11 @@ const Details: FC<Props> = () => {
                           values={addressTypes}
                         />
                       )}
-                      {key !== "street" && !options[key] && (
+                      {key !== "street" &&
+                      key !== "address" &&
+                      key !== "reference" &&
+                      !options[key] && 
+                      (
                         <input
                           name={`shipping-${key}`}
                           value={addressInputs[key] || ""}
