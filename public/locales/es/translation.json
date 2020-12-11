@@ -297,11 +297,11 @@
     "mulitple_subtitle": "Se generaron dos ordenes porque compraste alimento para mascotas y productos congelados.",
     "multiple_subtitle_numbers": "Tus números de orden son: {{increment_ids}}",
     "mail": "Usted recibirá un Email confirmando el pedido con los detalles de su orden.",
-    "time": "Su pedido será entregado dentro de las próximas 48 hrs, de Lunes a Viernes.",
+    "time": "Su pedido será entregado dentro de las próximas 24 hrs, de Lunes a Sábado (para pedidos realizados hasta las 17:00).",
     "phone": "Nuestro servicio de atención al cliente se pondrá en contacto con usted en caso de haber algún inconveniente o variante en su compra.",
     "client": {
       "title": "Estimado cliente:",
-      "text": "Le recordamos que estamos con alta demanda de productos y su pedido puede variar dependiendo de la disponibilidad de los mismos. Disculpe las molestias que esto pueda ocasionar.",
+      "text": "Recuerda que algunos de nuestros productos son vendidos por peso. El valor expresado es referencial, ya que el monto final a facturar puede variar de acuerdo al peso final de los artículos seleccionados al momento de preparar tu pedido.",
       "thanks": "¡Gracias por confiar en Sofía!"
     },
     "go_home": "Volver al inicio"
