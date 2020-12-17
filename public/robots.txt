@@ -1,3 +1,16 @@
-# https://www.robotstxt.org/robotstxt.html
+# Fri, 16 Dec 2020 08:00:47 GMT (build: Agus-rivera)
+# BO
+
 User-agent: *
-Disallow:
+
+Disallow: /wishlist/
+Disallow: /sales/guest/form/
+Disallow: /privacy-policy-cookie-restriction-mode
+Disallow: /mi-cuenta*
+Disallow: /customer/*
+Disallow: /checkout/*
+Disallow: /about-magento-demo-store
+Disallow: /catalogsearch/term/popular/
+Disallow: /catalog/seo_sitemap/category/
+
+Sitemap: https://tienda.sofia.com.bo/media/sitemap.xml
