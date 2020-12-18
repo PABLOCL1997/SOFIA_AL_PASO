@@ -503,7 +503,7 @@ const Product: FC<Props> = ({
                   {product.image
                     .split(",")
                     .map((img: string, index: number) => (
-                      <div key={index}>
+                      <div key={index + ' Index'}>
                         <Image src={img}></Image>
                       </div>
                     ))}
@@ -531,7 +531,7 @@ const Product: FC<Props> = ({
                   <Price>
                     Bs. {product.special_price.toFixed(2).replace(".", ",")}
                   </Price>
-                  {discount > 0 && (
+                  {product.special_price < product.price && (
                     <DiscountPrice>
                       Bs. {product.price.toFixed(2).replace(".", ",")}
                     </DiscountPrice>
@@ -551,7 +551,7 @@ const Product: FC<Props> = ({
                 <Categories>
                   <span>{t("product.categories")}: </span>
                   {categories.map((cat: CategoryType, index: number) => (
-                    <span>
+                    <span key={cat.name}>
                       <Link key={index} to={`/productos/${toLink(cat.name)}`}>
                         {cat.name}
                       </Link>
