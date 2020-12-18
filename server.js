@@ -71,6 +71,8 @@ const loadPage = async (res, meta = {}) => {
         .replace(/__OG_TITLE__/g, metadata ? metadata.title : meta.title)
         .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : '')
         .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
+        .replace(/__OG_H1__/g, metadata ? metadata.title : '')
+
     )
   });
 };
