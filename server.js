@@ -78,6 +78,7 @@ const loadPage = async (res, meta = {}) => {
 };
 
 app.use(redirectMiddleware)
+app.use(express.static(__dirname + "/build"));
 app.get("/", (req, res) => loadPage(res, { title: HOMEPAGE_TITLE, identifier:"sofia-homepage" }));
 app.get("/productos", (req, res) => loadPage(res, { title: PRODUCTS_TITLE, identifier:"sofia-products" }));
 app.get("/preguntas-frecuentes", (req, res) =>  loadPage(res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
@@ -110,7 +111,6 @@ app.get("/:product", (req, res) =>
   loadPage(res, { title: `${PRODUCT_TITLE} ${fromLink(req.params.product)}`, prodName: req.params.product, identifier: "product" })
 );
 
-app.use(express.static(__dirname + "/build"));
 app.get("*", (req, res) => loadPage(res, { title: "404"}));
 
 app.listen(port, () => console.log(`Webapp on ::${port}`));
