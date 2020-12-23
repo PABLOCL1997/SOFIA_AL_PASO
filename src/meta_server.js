@@ -12,8 +12,6 @@ module.exports = {
     metadata(identifier: $identifier){
       page_id,
       title,
-      meta_keywords,
-      meta_description,
       identifier
     } 
   }`,
@@ -27,8 +25,6 @@ module.exports = {
     ) {
       entity_id
       name
-      meta_title
-      meta_description
     }
   }
 `

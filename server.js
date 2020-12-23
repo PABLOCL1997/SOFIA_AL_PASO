@@ -36,34 +36,6 @@ const loadPage = async (res, meta = {}) => {
     meta_description: meta.title || "Tienda Sofia",
     meta_keywords: ""
   }
-  // GET METADATA for pages that is a single product
-  if ( meta.identifier && meta.identifier === "product") {
-    try {
-      const name = meta.prodName.toUpperCase().split(/-/g).join(" ")
-      const res = await client.request(GET_PRODUCT_METADATA, {
-        name
-      })
-      if (res.product && res.product.meta_title && res.product.meta_description ) {
-        const { product: { meta_title, meta_description } } = res
-        metadata = { title: meta_title, meta_description , meta_keywords: ""  }
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  // GET METADATA for pages that isn't a single product
-  if ( meta.identifier && meta.identifier !== "product" ) {
-    try {
-      const res = await client.request(GET_METADATA, {
-        identifier: meta.identifier
-      })
-      if (res.metadata && res.metadata.title && res.metadata.meta_description && res.metadata.meta_keywords) {
-        metadata = res.metadata
-      }
-    } catch (error) {
-      console.log(error)      
-    }
-  }
 
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
     res.send(
