@@ -16,15 +16,11 @@ module.exports = {
     } 
   }`,
   GET_PRODUCT_METADATA:`
-  query GetProductMetadata ($name: String!) {
-    product(
-      name: $name
-      city: "SC"
-      categories: false
-      related: false
-    ) {
-      entity_id
+  query productMetadata($name: String!) {
+    productMetadata(name:$name){
       name
+      meta_title
+      meta_description
     }
   }
 `
