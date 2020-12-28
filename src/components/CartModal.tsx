@@ -11,11 +11,15 @@ import {
   GET_TOTAL,
   GET_QTY,
   CHECK_CART,
-  GET_MIN_PRICE
+  GET_MIN_PRICE,
 } from "../graphql/cart/queries";
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../graphql/products/type";
 import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
+
+const ProductCart = React.lazy(
+  () => import(/* webpackChunkName: "ProductCart" */ "./ProductCart")
+);
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -45,6 +49,16 @@ const ModalCourtain = styled.div`
   justify-content: center;
   &.visible {
     display: flex;
+  }
+`;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  img {
+    width: 40px;
   }
 `;
 
@@ -78,34 +92,6 @@ const CloseWrapper = styled.div`
   }
   &:hover {
     opacity: 0.8;
-  }
-`;
-
-const Qty = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--yellow);
-  padding: 10px 0;
-  border-radius: 30px;
-  margin-right: 20px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-right: 0;
-  }
-  select {
-    cursor: pointer;
-    -webkit-appearance: none;
-    background: none;
-    border: 0;
-    width: 65px;
-    padding-left: 25px;
-    font-size: 12px;
-    line-height: 12px;
-  }
-  svg {
-    pointer-events: none;
-    position: absolute;
-    right: 10px;
   }
 `;
 
@@ -166,71 +152,6 @@ const Items = styled.div`
     max-width: calc(100% - 40px);
     max-height: calc(100vh - 320px);
     height: calc(100vh - 320px);
-  }
-`;
-
-const Row = styled.div`
-  display: grid;
-  grid-template-columns: 115px 1fr 95px 95px 100px 24px;
-  align-items: center;
-  padding: 20px 0;
-  border-bottom: 1px solid #ccc;
-  width: 100%;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    grid-template-columns: 115px 1fr 70px;
-  }
-`;
-
-const Image = styled.img`
-  width: 100px;
-  margin-right: 20px;
-`;
-
-const NameBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-right: 20px;
-  flex: 1;
-`;
-
-const Name = styled.h3`
-  font-family: MullerMedium;
-  font-size: 14px;
-  line-height: 14px;
-  color: var(--black);
-  margin-bottom: 5px;
-`;
-
-const Units = styled.span`
-  font-family: MullerMedium;
-  font-size: 12px;
-  line-height: 12px;
-  color: var(--font);
-  margin-right: 20px;
-`;
-
-const UnitPrice = styled.span`
-  font-family: MullerMedium;
-  font-size: 12px;
-  line-height: 12px;
-  color: var(--font);
-  margin-right: 5px;
-`;
-
-const Price = styled.span`
-  margin-right: 20px;
-  font-family: MullerMedium;
-  font-size: 16px;
-  line-height: 16px;
-`;
-
-const DeleteWrapper = styled.div`
-  cursor: pointer;
-  &:hover {
-    opacity: 0.8;
-  }
-  @media screen and (max-width: ${BREAKPOINT}) {
-    text-align: center;
   }
 `;
 
@@ -319,59 +240,61 @@ const AuthModal: FC<Props> = () => {
   const [action, setAction] = useState<Action>({});
   const { data: userData } = useQuery(GET_USER, {});
   const [closeCartModal] = useMutation(SET_USER, {
-    variables: { user: { openCartModal: false } }
+    variables: { user: { openCartModal: false } },
   });
   const [addItem] = useMutation(ADD_ITEM, {
     variables: {
-      product: { ...action.product, qty: action.qty, replace: true }
-    }
+      product: { ...action.product, qty: action.qty, replace: true },
+    },
   });
   const [deleteItem] = useMutation(DELETE_ITEM, {
-    variables: { product: { ...action.product } }
+    variables: { product: { ...action.product } },
   });
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [shouldExecute, executeNewCartQuery] = useState(false);
   const [newCartEmpty, setNewCartEmpty] = useState(true);
+  const [reloadModal, setReloadModal] = useState(false);
   const [toggleLoginModal] = useMutation(SET_USER, {
-    variables: { user: { openLoginModal: true } }
+    variables: { user: { openLoginModal: true } },
   });
   const { data: newCart } = useQuery(CHECK_CART, {
     variables: {
       cart: JSON.stringify(
         data.cartItems.map((p: ProductType) => ({
           entity_id: p.entity_id,
-          qty: p.qty
+          qty: p.qty,
         }))
       ),
-      city: userData && userData.userInfo.length && userData.userInfo[0].cityKey
+      city:
+        userData && userData.userInfo.length && userData.userInfo[0].cityKey,
     },
     fetchPolicy: "network-only",
-    skip: !shouldExecute
+    skip: !shouldExecute,
   });
   const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showModal: t("cart.change_msg") } }
+    variables: { user: { showModal: t("cart.change_msg") } },
   });
 
-  const totalAmount = GET_TOTAL(data.cartItems);
+  let totalAmount = GET_TOTAL(data.cartItems);
 
   const updateItem = (_qty: number, _product: ProductType) => {
     setAction({
       qty: _qty,
       product: _product,
-      action: "add"
+      action: "add",
     });
   };
 
   const removeRow = (_product: ProductType) => {
     setAction({
       product: _product,
-      action: "delete"
+      action: "delete",
     });
   };
 
   const empty = () => {
     setAction({
-      action: "empty"
+      action: "empty",
     });
   };
 
@@ -404,24 +327,26 @@ const AuthModal: FC<Props> = () => {
           variables: {
             user: {
               showModal: t("cart.over_limit", {
-                units: action.product?.maxPerUser ?? 0
-              })
-            }
-          }
+                units: action.product?.maxPerUser ?? 0,
+              }),
+            },
+          },
         });
       } else if (!hasStock()) {
         return showSuccess({
           variables: {
             user: {
-              showModal: t("cart.no_stock", { qty: action.product?.stock ?? 0 })
-            }
-          }
+              showModal: t("cart.no_stock", {
+                qty: action.product?.stock ?? 0,
+              }),
+            },
+          },
         });
       }
       if ((action.product?.qty ?? 0) < (action.qty || 0)) {
         trackRemoveFromCart({
           ...action.product,
-          qty: action.qty
+          qty: action.qty,
         } as ProductType);
       } else {
         trackAddToCart({ ...action.product, qty: action.qty } as ProductType);
@@ -431,7 +356,7 @@ const AuthModal: FC<Props> = () => {
     } else if (action.action === "delete") {
       trackRemoveFromCart({
         ...action.product,
-        qty: 0
+        qty: 0,
       } as ProductType);
       await deleteItem();
       setAction({});
@@ -453,12 +378,6 @@ const AuthModal: FC<Props> = () => {
     }
   };
 
-  const showCityWarning = () => {
-    showSuccess({
-      variables: { user: { showModal: t("cart.city_warning") } }
-    });
-  };
-
   useEffect(() => {
     if (newCart && newCart.checkCart && !newCartEmpty) {
       executeNewCartQuery(false);
@@ -475,16 +394,16 @@ const AuthModal: FC<Props> = () => {
           );
           if (cartItems[i].qty === 0) {
             await deleteItem({
-              variables: { product: { ...elem } }
+              variables: { product: { ...elem } },
             });
           } else {
             await addItem({
               variables: {
                 product: {
                   ...cartItems[i],
-                  replace: true
-                }
-              }
+                  replace: true,
+                },
+              },
             });
           }
         }
@@ -503,7 +422,7 @@ const AuthModal: FC<Props> = () => {
           ) {
             history.push("/");
             showSuccess({
-              variables: { user: { showModal: t("cart.change_qty_msg") } }
+              variables: { user: { showModal: t("cart.change_qty_msg") } },
             });
           } else {
             showSuccess();
@@ -524,13 +443,9 @@ const AuthModal: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   if (history.location.pathname.indexOf("checkout") >= 0) {
-  //     if (parseFloat(totalAmount.replace(",", ".")) < 200) {
-  //       history.push("/");
-  //     }
-  //   }
-  // }, [totalAmount]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloadModal]);
 
   useEffect(() => {
     if (!newCartEmpty) {
@@ -550,6 +465,33 @@ const AuthModal: FC<Props> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
+
+  const isStockAvaible = (
+    flag: number,
+    stockAvaible: Number,
+    updateItem: any
+  ) => {
+    console.log("show modal not stock", flag);
+    if (!flag) {
+      return showSuccess({
+        variables: {
+          user: {
+            showModal: t("cart.no_stock", {
+              qty: stockAvaible,
+            }),
+          },
+        },
+      });
+    } else {
+      data.cartItems.map((item: any, index: any) => {
+        if (item.name === updateItem.nameItem) {
+          data.cartItems[index].qty = updateItem.qtyItem;
+        }
+      });
+      totalAmount = GET_TOTAL(data.cartItems);
+      setReloadModal(!reloadModal);
+    }
+  };
 
   return (
     <Suspense fallback={<Loader />}>
@@ -572,63 +514,36 @@ const AuthModal: FC<Props> = () => {
           </Header>
           {parseFloat(totalAmount.replace(",", ".")) <
             GET_MIN_PRICE(userData) && (
-            <UnderBudget>
-              {t("cart.under_budget", { min_price: GET_MIN_PRICE(userData) })}
-            </UnderBudget>
-          )}
-          <Items>
-            {data &&
-              data.cartItems &&
-              data.cartItems
-                .sort(
-                  (a: ProductType, b: ProductType) => a.entity_id - b.entity_id
-                )
-                .map((product: ProductType) => (
-                  <Row key={product.entity_id}>
-                    <Image src={product.image.split(",")[0]}></Image>
-                    <NameBox>
-                      <Name>
-                        {product.useKGS
-                          ? `${product.name} DE ${Number(product.weight)
-                              .toFixed(2)
-                              .replace(".", ",")} KGS APROX.`
-                          : product.name}
-                      </Name>
-                      <Units>&nbsp;</Units>
-                    </NameBox>
-                    <Qty>
-                      <select
-                        defaultValue={product.qty}
-                        onChange={event =>
-                          updateItem(Number(event.target.value), product)
-                        }
-                      >
-                        {[...(Array(21).keys() as any)]
-                          .slice(1)
-                          .map((opt: any, index: number) => (
-                            <option key={index} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                      </select>
-                      <Chevron />
-                    </Qty>
-                    <UnitPrice>
-                      Bs. {product.special_price.toFixed(2).replace(".", ",")}{" "}
-                      c/u -
-                    </UnitPrice>
-                    <Price>
-                      Bs.{" "}
-                      {(product.special_price * (product.qty ? product.qty : 0))
-                        .toFixed(2)
-                        .replace(".", ",")}
-                    </Price>
-                    <DeleteWrapper onClick={() => removeRow(product)}>
-                      <Delete />
-                    </DeleteWrapper>
-                  </Row>
-                ))}
-          </Items>
+              <UnderBudget>
+                {t("cart.under_budget", { min_price: GET_MIN_PRICE(userData) })}
+              </UnderBudget>
+            )}
+
+          {data.cartItems.length > 0 ? (
+            <Items>
+              {data &&
+                data.cartItems &&
+                data.cartItems
+                  .sort(
+                    (a: ProductType, b: ProductType) =>
+                      a.entity_id - b.entity_id
+                  )
+                  .map((product: ProductType) => (
+                    <ProductCart
+                      product={product}
+                      // updateItem={updateItem}
+                      isStockAvaible={isStockAvaible}
+                      removeRow={removeRow}
+                    />
+                  ))}
+            </Items>
+          ) : (
+              <div>
+                <LoaderWrapper>
+                  <img src="/images/loader.svg" alt="loader" />
+                </LoaderWrapper>
+              </div>
+            )}
           <Totals>
             <Subtotal>{t("cart.subtotal")}</Subtotal>
             <Total>Bs. {totalAmount}</Total>
@@ -639,10 +554,10 @@ const AuthModal: FC<Props> = () => {
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
               {parseFloat(totalAmount.replace(",", ".")) >=
                 GET_MIN_PRICE(userData) && (
-                <CtaWrapper>
-                  <Cta filled={true} text={t("cart.pay")} action={checkout} />
-                </CtaWrapper>
-              )}
+                  <CtaWrapper>
+                    <Cta filled={true} text={t("cart.pay")} action={checkout} />
+                  </CtaWrapper>
+                )}
             </Toolbox>
           </Footer>
         </Modal>
