@@ -1,9 +1,5 @@
 const urls = [
     {
-        urlFrom: "/matambre-de-cerdo-congelado-en-bandeja",
-        urlTo: "/productos/cerdo/bandejas"
-    },
-    {
         urlFrom: "/pate-de-higado-de-pollo-de-100-grs",
         urlTo: "/pat%C3%A9-de-h%C3%ADgado-de-pollo-de-100-grs."
     },
