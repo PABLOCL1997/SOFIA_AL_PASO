@@ -177,6 +177,10 @@ const CategorySlider: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
+  const inStockProducts = () => {
+    return products.filter((p: { stock: number; }) => p.stock > 0);
+  };
+
   let categoryName = t("homepage.categoryslider.all");
   if (selected > 0) {
     categoryName = data.categories.find(
@@ -236,7 +240,7 @@ const CategorySlider: FC<Props> = () => {
           </LoaderWrapper>
         )}
         {!loadingProducts && !!products.length && (
-          <ProductSlider products={products} />
+          <ProductSlider products={inStockProducts()} />
         )}
         <CtaWrapper>
           <Cta
