@@ -358,6 +358,20 @@ const CloseWrapper = styled.div`
   }
 `;
 
+const OutOfStock = styled.span`
+  font-family: MullerBold;
+  color: var(--red);
+  border: 1px solid var(--red);
+  padding: 10px 100px;
+  border-radius: 30px;
+  align-items: center;
+  text-aling: center;
+  margin: 0 auto;
+  font-family: MullerMedium;
+  font-size: 16px;
+  line-height: 16px;
+`;
+
 type Props = {
   inlineProdname?: String;
   oldUrl?: String;
@@ -513,8 +527,8 @@ const Product: FC<Props> = ({
                 <ProductTitle>
                   {product.useKGS
                     ? `${product.name} DE ${Number(product.weight)
-                        .toFixed(2)
-                        .replace(".", ",")} KGS APROX.`
+                      .toFixed(2)
+                      .replace(".", ",")} KGS APROX.`
                     : product.name}
                 </ProductTitle>
                 <EstimatedPrice visible={product.useKGS}>
@@ -559,27 +573,36 @@ const Product: FC<Props> = ({
                     </span>
                   ))}
                 </Categories>
-                <Toolbox>
-                  <Qty>
-                    <select
-                      onChange={event => setQty(Number(event.target.value))}
-                    >
-                      {[...(Array(21).keys() as any)]
-                        .slice(1)
-                        .map((opt: any, index: number) => (
-                          <option key={index} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                    </select>
-                    <Chevron />
-                  </Qty>
-                  <Cta
-                    filled={true}
-                    text={t("product.add")}
-                    action={addAndGo}
-                  />
-                </Toolbox>
+                {
+                  product.stock > 0 ?
+                    <Toolbox>
+                      <Qty>
+                        <select
+                          onChange={event => setQty(Number(event.target.value))}
+                        >
+                          {[...(Array(21).keys() as any)]
+                            .slice(1)
+                            .map((opt: any, index: number) => (
+                              <option key={index} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                        </select>
+                        <Chevron />
+                      </Qty>
+                      <Cta
+                        filled={true}
+                        text={t("product.add")}
+                        action={addAndGo}
+                      />
+                    </Toolbox>
+                    :
+                    <Toolbox>
+                      <OutOfStock>
+                        Temporalmente sin stock
+                      </OutOfStock>
+                    </Toolbox>
+                }
                 <DeliveryBox>
                   <FreeDelivery />
                   <Title>
