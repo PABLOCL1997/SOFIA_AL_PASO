@@ -134,6 +134,266 @@ const urls = [
     {
         urlFrom: "/pack-chorizo-de-res-con-salsa",
         urlTo: "/"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/bife-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/chuleta-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/cochinillo-tipo-segoviano",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/costilla-peque-a-de-cerdo-con-cuero-a-granel",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/lechon-entero",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/lomo-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/lomo-peque-o-de-cerdo-congelado-a-granel",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/matambre-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/medallones-de-lomito-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/pork-belly-de-cerdo-congelado-en-bandeja-as",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/pork-belly-de-cerdo-en-tira-a-granel",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/punta-de-s-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/tira-de-costilla-de-cerdo-congelado-en-bandeja",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/tira-de-costilla-de-cerdo-congelado-premium",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/tira-de-costillar-a-granel-as",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-cerdo/tira-de-costillar-congelado-a-granel",
+        urlTo: "/productos/cerdo"
+    },
+    {
+        urlFrom: "/carne-de-pavo/piernas-de-pavo-congelado-en-bandeja",
+        urlTo: "/productos/pavo"
+    },
+    {
+        urlFrom: "/conservas/p-u-durazno-al-jugo-820-grs",
+        urlTo: "/productos/conservas"
+    },
+    {
+        urlFrom: "/conservas/p-u-lomitos-de-atun-en-aceite-vegetal-x-170-grs",
+        urlTo: "/productos/conservas"
+    },
+    {
+        urlFrom: "/conservas/pack-atun-en-agua",
+        urlTo: "/productos/conservas"
+    },
+    {
+        urlFrom: "/embutidos-premium/chorizo-kaiser-kostlich-skin",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/embutidos-premium/jamon-de-cerdo-tipo-aleman-kostlich-skin",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/embutidos-premium/picada-de-salame-kostlich",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/embutidos-premium/salchicha-bock-kostlich-skin",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/embutidos-premium/salchicha-de-cerdo-kostlich-skin",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/embutidos-premium/salchicha-de-pavo-kostlich-skin",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/embutidos/chorizo-churrasquero",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/chorizo-churrasquero-al-vacio-de-1-kg",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/chorizo-de-res-a-granel",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/chorizo-de-res-picante-al-vacio-de-1-kg",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/chorizo-parrillero-a-granel",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/chorizo-tipo-argentino-a-granel",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/mini-salchicha-de-res-al-vacio-20-und",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/mini-salchicha-frankfurt-10-cm-al-vacio-20-und",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/p-u-mortadela-jamonada-vacio-200-grs",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pack-chorizo-churrasquero-con-salsa",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pack-chorizo-de-res-con-salsa",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pack-chorizo-parrillero-con-salsa",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pack-frankfurt-xl-san-juan-con-salsa",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pack-peque-o-san-juan",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pack-res-san-juan-con-salsa",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pate-de-higado-de-cerdo-de-100-grs",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pate-de-higado-de-cerdo-promocional-de-240-grs",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pate-de-higado-de-pollo-de-100-grs",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/pu-mortadela-primavera-vacio-200-grs",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/salchicha-viena-a-granel",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/embutidos/salchicha-viena-a-granel-del-pelar",
+        urlTo: "/productos/embutidos"
+    },
+    {
+        urlFrom: "/fiambres/chorizo-espanol-al-vacio-de-200-grs",
+        urlTo: "/productos/fiambres"
+    },
+    {
+        urlFrom: "/fiambres/p-u-queso-de-cerdo-al-vacio-250-grs",
+        urlTo: "/productos/fiambres"
+    },
+    {
+        urlFrom: "/fiambres/salame-feteado-al-vacio-de-100-grs",
+        urlTo: "/productos/fiambres"
+    },
+    {
+        urlFrom: "/fiambres/tocino-de-cerdo-ahumado-al-vacio-500-grs",
+        urlTo: "/productos/fiambres"
+    },
+    {
+        urlFrom: "/preparados/chicharron-de-cerdo-1-kg",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/cordon-bleu-en-caja-de-600-grs",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/desmenuzado-de-pavo",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/filetitos-pimienta-cayena",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/filetitos-salsa-soya-y-limon",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/nuggets-dinos-500-grs-en-caja",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/nuggets-patitas-350-grs-en-caja",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/p-u-tubo-hamb-113-res-grill-sofia-12x113-grs",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/p-u-tubo-hamb-56-res-express-sofia-12x56-grs",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/pack-2-milanesas-americana-res",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/pack-3-milanesas-americana-cordon-bleu",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/roast-beef",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/sandwich-de-chola",
+        urlTo: "/productos/preparados"
+    },
+    {
+        urlFrom: "/preparados/silpancho-de-res-en-caja",
+        urlTo: "/productos/preparados"
     }
 ]
 

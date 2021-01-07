@@ -345,6 +345,8 @@
       "number": "Número de orden",
       "value": "Valor",
       "status": "Estado",
+      "actions": "Acciones",
+      "button":"Repetir",
       "no_results": "No has realizado órdenes aún.",
       "labels": {
         "pending": "Pendiente",

@@ -314,7 +314,7 @@ const Checkout: FC<Props> = () => {
           JSON.stringify({
             entity_id: product.entity_id,
             sku: product.sku,
-            category: product.category_name.toLowerCase().trim(),
+            category: product.category_name ? product.category_name.toLowerCase().trim() : "",
             name: product.name,
             price: product.special_price
               ? product.special_price
@@ -458,8 +458,8 @@ const Checkout: FC<Props> = () => {
         country_id: "BO",
         city:
           localUserData &&
-          localUserData.userInfo &&
-          localUserData.userInfo.length
+            localUserData.userInfo &&
+            localUserData.userInfo.length
             ? localUserData.userInfo[0].cityName
             : "-",
         latitude: String((window as any).latitude),
@@ -482,8 +482,8 @@ const Checkout: FC<Props> = () => {
         city:
           orderData.shipping.city ||
           (localUserData &&
-          localUserData.userInfo &&
-          localUserData.userInfo.length
+            localUserData.userInfo &&
+            localUserData.userInfo.length
             ? localUserData.userInfo[0].cityName
             : "-"),
         region: orderData.shipping.reference,
@@ -537,8 +537,8 @@ const Checkout: FC<Props> = () => {
         <ConfirmAddress
           address={
             orderData.shipping &&
-            orderData.shipping.id &&
-            orderData.shipping.street
+              orderData.shipping.id &&
+              orderData.shipping.street
               ? orderData.shipping.street.replace(/\|/g, " ")
               : ""
           }
