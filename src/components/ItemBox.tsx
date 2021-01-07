@@ -217,6 +217,19 @@ const MaxUnits = styled.div`
   text-transform: uppercase;
 `;
 
+const OutOfStock = styled.span`
+  font-family: MullerBold;
+  border: 0;
+  color: var(--black);
+  padding: 11px 20px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  margin-left: 10px;
+  font-size: 10px;
+  line-height: 10px;
+  text-transform: uppercase;
+`;
+
 type Props = {
   product: ProductType;
   openModal?: Function;
@@ -320,8 +333,8 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           <Title>
             {product.useKGS
               ? `${product.name} DE ${Number(product.weight)
-                  .toFixed(2)
-                  .replace(".", ",")} KGS APROX.`
+                .toFixed(2)
+                .replace(".", ",")} KGS APROX.`
               : product.name}
           </Title>
           {product.maxPerUser > 0 && (
@@ -348,24 +361,31 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             )}
           </PriceBox>
         </Link>
-        <Pill>
-          <Qty>
-            <select
-              defaultValue={1}
-              onChange={event => setQty(Number(event.target.value))}
-            >
-              {[...(Array(21).keys() as any)]
-                .slice(1)
-                .map((opt: any, index: number) => (
-                  <option key={index} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-            </select>
-            <Chevron />
-          </Qty>
-          <Add onClick={addAndGo}>{t("itembox.add")}</Add>
-        </Pill>
+        {
+          product.stock > 0 ?
+            <Pill>
+              <Qty>
+                <select
+                  defaultValue={1}
+                  onChange={event => setQty(Number(event.target.value))}
+                >
+                  {[...(Array(21).keys() as any)]
+                    .slice(1)
+                    .map((opt: any, index: number) => (
+                      <option key={index} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                </select>
+                <Chevron />
+              </Qty>
+              <Add onClick={addAndGo}>{t("itembox.add")}</Add>
+            </Pill>
+            :
+            <Pill>
+              <OutOfStock>TEMPORALMENTE SIN STOCK</OutOfStock>
+            </Pill>
+        }
       </Container>
     </Suspense>
   );

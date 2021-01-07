@@ -3,18 +3,24 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { ORDERS, ORDER } from "../../graphql/user/queries";
 import { BREAKPOINT } from "../../utils/constants";
-import { useQuery, useLazyQuery } from "react-apollo";
+import { useQuery, useLazyQuery, useMutation } from "react-apollo";
 import { UserOrder, UserOrderItem } from "../../graphql/user/type";
 import { toLocalDate } from "../../utils/date";
+import { ADD_ITEM } from "../../graphql/cart/mutations";
+import { SET_USER } from "../../graphql/user/mutations";
+import { GET_PRODUCT } from "../../graphql/products/queries";
+import { GET_USER } from "../../graphql/user/queries";
+import { ProductType } from "../../graphql/products/type";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
+const Loader = React.lazy(
+  () => import(/* webpackChunkName: "Loader" */ "../Loader")
 );
-const Eye = React.lazy(() =>
-  import(/* webpackChunkName: "Eye" */ "../Images/Eye")
+const Eye = React.lazy(
+  () => import(/* webpackChunkName: "Eye" */ "../Images/Eye")
 );
-const ContinueArrow = React.lazy(() =>
-  import(/* webpackChunkName: "ContinueArrow" */ "../Images/ContinueArrow")
+const ContinueArrow = React.lazy(
+  () =>
+    import(/* webpackChunkName: "ContinueArrow" */ "../Images/ContinueArrow")
 );
 
 const Title = styled.div`
@@ -40,7 +46,7 @@ const Grid = styled.div`
 
 const Row = styled.div`
   display: grid;
-  grid-template-columns: 55px 100px 1fr 120px 140px;
+  grid-template-columns: 45px 80px 120px 80px 100px 100px;
   @media screen and (max-width: ${BREAKPOINT}) {
     display: none;
   }
@@ -57,8 +63,9 @@ const Head = styled.div`
 
 const Body = styled.div`
   display: grid;
-  grid-template-columns: 55px 100px 1fr 120px 140px;
+  grid-template-columns: 45px 80px 120px 80px 100px 100px;
   padding: 20px 0;
+  min-width: 575px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.11);
   @media screen and (max-width: ${BREAKPOINT}) {
     grid-template-columns: 1fr 1fr 1fr;
@@ -384,29 +391,93 @@ const LoaderWrapperBig = styled.div`
     width: 50px;
   }
 `;
+const borderRedRounded = {
+  color: "#fff",
+  background: "#E30613",
+  borderRadius: "5px",
+  paddingLeft: "10px",
+  paddingRight: "10px",
+  border: "1px solid #E30613",
+} as React.CSSProperties;
 
 type Props = {};
 
 const Orders: FC<Props> = () => {
   const { t } = useTranslation();
   const [orderId, setOrderId] = useState(0);
+  const [orderIdCart, setOrderIdCart] = useState(0);
   const [order, setOrder] = useState<UserOrder | any>({});
+  const [orderCart, setOrderCart] = useState<UserOrder | any>({});
+  const [rOrder, setROrder] = useState<any>({});
+  const [rOrderId, setROrderId] = useState<any>({});
+  const [addItem] = useMutation(ADD_ITEM);
+  const [toggleCartModal] = useMutation(SET_USER, {});
+  const { data: userData } = useQuery(GET_USER, {});
+  // const [product, setProduct] = useState<ProductType | any>({});
+
+  const [itemsCart, setItemsCart] = useState<ProductType | any>([]);
+  const [itemSelectedCart, setItemSelectedCart] = useState({});
 
   const { data: orders, loading } = useQuery(ORDERS, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
+
   const [getOrder, { loading: orderLoading }] = useLazyQuery(ORDER, {
     variables: { orderId },
     fetchPolicy: "network-only",
-    onCompleted: d => {
+    onCompleted: (d) => {
       setOrder(d.order);
-    }
+    },
+  });
+
+  const [getROrder, { loading: orderRLoading }] = useLazyQuery(ORDER, {
+    //variables: { orderId },
+    fetchPolicy: "network-only",
+    onCompleted: (d) => {
+      setROrder(d.order);
+    },
   });
 
   useEffect(() => {
     if (orderId) getOrder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
+
+  useEffect(() => {
+    if (rOrderId) {
+      getROrder({
+        variables: {
+          orderId: rOrderId,
+        },
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+  }, [rOrderId]);
+
+  useEffect(() => {
+    if (rOrder.items) {
+      const { items } = rOrder;
+      items.map((item: any) => {
+        addItem({
+          variables: {
+            product: {
+              entity_id: item.itemId,
+              name: item.name,
+              price: item.price,
+              qty: item.qty,
+              special_price: item.price,
+              sku: item.itemId,
+              fullprice: item.price,
+              category_name: item.category_name,
+              useKGS: false,
+              categories: [],
+              description: false,
+            },
+          },
+        });
+      });
+    }
+  }, [rOrder]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -422,6 +493,7 @@ const Orders: FC<Props> = () => {
               <Head>{t("account.orders.number")}</Head>
               <Head>{t("account.orders.value")}</Head>
               <Head>{t("account.orders.status")}</Head>
+              <Head>{t("account.orders.actions")}</Head>
             </Row>
             {loading && (
               <LoaderWrapper>
@@ -454,6 +526,23 @@ const Orders: FC<Props> = () => {
                     className={order.status.toLowerCase().replace(/ /g, "-")}
                   >
                     {order.status}
+                  </span>
+
+                  <span>
+                    <button
+                      style={borderRedRounded}
+                      onClick={() => {
+                        setROrderId(order.id);
+
+                        toggleCartModal({
+                          variables: {
+                            user: { openCartModal: true },
+                          },
+                        });
+                      }}
+                    >
+                      {t("account.orders.button")}
+                    </button>
                   </span>
                 </Body>
               ))}
@@ -492,7 +581,7 @@ const Orders: FC<Props> = () => {
                   "billingFirstname",
                   "billingLastname",
                   "billingEmail",
-                  "billingNit"
+                  "billingNit",
                 ].map((key: string) => (
                   <InputGroup key={key}>
                     <label>{t("account.order.billing." + key)}</label>
@@ -516,7 +605,7 @@ const Orders: FC<Props> = () => {
                   "shippingNit",
                   "shippingStreet",
                   "shippingCity",
-                  "shippingReference"
+                  "shippingReference",
                 ].map((key: string) => (
                   <InputGroup key={key}>
                     <label>{t("account.order.shipping." + key)}</label>
