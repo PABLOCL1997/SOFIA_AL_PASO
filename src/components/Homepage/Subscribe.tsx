@@ -137,6 +137,7 @@ const Image = styled.img`
         margin: 20px 0 10px;
     }
 `
+Image.displayName = 'ImageSuscribe'
 
 type Props = {}
 
@@ -192,7 +193,7 @@ const Subscribe: FC<Props> = () => {
                         </CtaWrapper>
                     </InputGroup>
                     <Text>{t('homepage.subscribe.text')}</Text>
-                    <Image src="/images/salad.png" alt="newsletter" />
+                    <Image className="lazyload"  data-src="/images/salad.png" alt="newsletter" />
                 </MobileContainer>
             </Mobile>
         </>

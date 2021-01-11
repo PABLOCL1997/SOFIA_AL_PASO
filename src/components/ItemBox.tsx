@@ -103,6 +103,7 @@ const Image = styled.img`
   margin: 0 auto;
   display: block;
 `;
+Image.displayName = 'ItemBoxImage'
 
 const Title = styled.h2`
   font-family: MullerMedium;
@@ -329,7 +330,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
         <Link onClick={goToProduct}>
           {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
           <Category>{product.category_name}</Category>
-          <Image src={product.image.split(",")[0]}></Image>
+          <Image data-src={product.image.split(",")[0]} className="lazyload"></Image>
           <Title>
             {product.useKGS
               ? `${product.name} DE ${Number(product.weight)

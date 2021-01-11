@@ -51,6 +51,7 @@ const Image = styled.img`
   width: 100px;
   margin-right: 20px;
 `;
+Image.displayName = 'ProductCartImage'
 
 const NameBox = styled.div`
   display: flex;
@@ -164,7 +165,7 @@ const ProductCart: FC<Props> = ({ product, removeRow, isStockAvaible }) => {
   return (
     <Row key={product.entity_id}>
       <Image
-        src={
+        className="lazyload"  data-src={
           product.image
             ? product.image.split(",")[0]
             : productCart?.image?.split(",")[0]

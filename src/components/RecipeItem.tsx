@@ -36,6 +36,7 @@ const Image = styled.img`
         height: 230px;
     }
 `
+Image.displayName = 'RecipeItemImage'
 
 const IconBox = styled.div`
     display: flex;
@@ -106,7 +107,7 @@ const RecipeItem: FC<Props> = ({ item, index }) => {
 
     return <Suspense fallback={<Loader />}>
         <Container href={item.link} target="_blank">
-            <Image src={`/images/recipes/recipe_${index}.jpg`} alt={item.title} />
+            <Image className="lazyload"  data-src={`/images/recipes/recipe_${index}.jpg`} alt={item.title} />
             <IconBox>
                 <Icon>
                     <Chart />
