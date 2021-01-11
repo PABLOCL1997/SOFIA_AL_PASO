@@ -32,7 +32,7 @@ const Terms = React.lazy(
 const App = () => {
   return (
     <Suspense fallback={<div />}>
-      <DelayedWrapper time={0}>
+      <DelayedWrapper time={2000}>
         <Router>
           <Switch>
             <Route
