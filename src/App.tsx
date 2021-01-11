@@ -4,35 +4,35 @@ import "./App.css";
 import "./Reset.css";
 import DelayedWrapper from "./components/DelayedWrapper";
 
-const LayoutGeneral = React.lazy(() =>
-  import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general")
+const LayoutGeneral = React.lazy(
+  () => import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general")
 );
-const Homepage = React.lazy(() =>
-  import(/* webpackChunkName: "Homepage" */ "./pages/homepage")
+const Homepage = React.lazy(
+  () => import(/* webpackChunkName: "Homepage" */ "./pages/homepage")
 );
-const MyAccount = React.lazy(() =>
-  import(/* webpackChunkName: "myaccount" */ "./pages/myaccount")
+const MyAccount = React.lazy(
+  () => import(/* webpackChunkName: "myaccount" */ "./pages/myaccount")
 );
-const Products = React.lazy(() =>
-  import(/* webpackChunkName: "Products" */ "./pages/products")
+const Products = React.lazy(
+  () => import(/* webpackChunkName: "Products" */ "./pages/products")
 );
-const Product = React.lazy(() =>
-  import(/* webpackChunkName: "Product" */ "./pages/product")
+const Product = React.lazy(
+  () => import(/* webpackChunkName: "Product" */ "./pages/product")
 );
-const Checkout = React.lazy(() =>
-  import(/* webpackChunkName: "Checkout" */ "./pages/checkout")
+const Checkout = React.lazy(
+  () => import(/* webpackChunkName: "Checkout" */ "./pages/checkout")
 );
-const Faq = React.lazy(() =>
-  import(/* webpackChunkName: "Faq" */ "./pages/faq")
+const Faq = React.lazy(
+  () => import(/* webpackChunkName: "Faq" */ "./pages/faq")
 );
-const Terms = React.lazy(() =>
-  import(/* webpackChunkName: "Terms" */ "./pages/terms")
+const Terms = React.lazy(
+  () => import(/* webpackChunkName: "Terms" */ "./pages/terms")
 );
 
 const App = () => {
   return (
     <Suspense fallback={<div />}>
-      <DelayedWrapper time={2000}>
+      <DelayedWrapper time={0}>
         <Router>
           <Switch>
             <Route
