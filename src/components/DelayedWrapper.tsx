@@ -28,7 +28,7 @@ type Props = {
 const DelayedWrapper: FC<Props> = ({
   children,
   noHeader = false,
-  time = 0
+  time = 1000
 }) => {
   const [show, setShow] = useState(false);
 
