@@ -31,7 +31,7 @@ type Props = {
 const CategoryBanner: FC<Props> = ({ category }) => {
     return <Suspense fallback={<Loader />}>
         <Root>
-            <img src={'/images/banner-' + category + '.jpg'} alt={'banner ' + category} />
+            <img className="lazyload"  data-src={'/images/banner-' + category + '.jpg'} alt={'banner ' + category} />
         </Root>
     </Suspense>
 }
