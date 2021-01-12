@@ -327,7 +327,6 @@ const ProductList: FC<Props> = ({
           <Grid>
             {products.map((product: ProductType) => (
               <ItemBox
-                openModal={openModal}
                 key={product.entity_id}
                 product={product}
               />

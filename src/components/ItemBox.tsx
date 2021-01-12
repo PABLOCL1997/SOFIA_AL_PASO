@@ -259,7 +259,6 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
       !openModal ||
       window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
     ) {
-      history.push(`/${toLink(product.name)}`);
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 500);
@@ -328,6 +327,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           </Discount>
         )}
         <Link onClick={goToProduct}>
+          <a href={`/${toLink(product.name)}`}>
           {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
           <Category>{product.category_name}</Category>
           <Image data-src={product.image.split(",")[0]} className="lazyload"></Image>
@@ -361,6 +361,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
               </DiscountPrice>
             )}
           </PriceBox>
+          </a>
         </Link>
         {
           product.stock > 0 ?
