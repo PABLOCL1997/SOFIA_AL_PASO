@@ -22,82 +22,102 @@
 @font-face {
     font-family: 'MullerBlack';
     src: URL('/font/MullerBlack.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerHairlineItalic';
     src: URL('/font/MullerHairlineItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerRegular';
     src: URL('/font/MullerRegular.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerBlackItalic';
     src: URL('/font/MullerBlackItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerHeavy';
     src: URL('/font/MullerHeavy.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerRegularItalic';
     src: URL('/font/MullerRegularItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerBold';
     src: URL('/font/MullerBold.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerHeavyItalic';
     src: URL('/font/MullerHeavyItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerThin';
     src: URL('/font/MullerThin.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerBoldItalic';
     src: URL('/font/MullerBoldItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerBoldItalic';
     src: URL('/font/MullerLight.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerThinItalic';
     src: URL('/font/MullerThinItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerExtraBold';
     src: URL('/font/MullerExtraBold.ttf') format('truetype');
+    font-display: swap;
 }  
 @font-face {
     font-family: 'MullerLightItalic';
     src: URL('/font/MullerLightItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerLightItalic';
     src: URL('/font/MullerUltraLight.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerExtraBoldItalic';
     src: URL('/font/MullerExtraBoldItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerMedium';
     src: URL('/font/MullerMedium.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerUltraLightItalic';
     src: URL('/font/MullerUltraLightItalic.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerHairline';
     src: URL('/font/MullerHairline.ttf') format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'MullerMediumItalic';
     src: URL('/font/MullerMediumItalic.ttf') format('truetype');
+    font-display: swap;
 }
 
 .main-container {
