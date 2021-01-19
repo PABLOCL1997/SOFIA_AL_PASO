@@ -15,7 +15,7 @@ const Header = styled.div`
   text-align: center;
   box-shadow: 0px -1px 52px rgba(0, 0, 0, 0.08);
 
-  h1 {
+  h2 {
     font-family: MullerMedium;
     font-size: 40px;
     line-height: 1.5em;
@@ -87,7 +87,7 @@ const Terms: FC<Props> = () => {
       <DelayedWrapper>
         <Header>
           <div className="main-container">
-            <h1>{t("footer.terms")}</h1>
+            <h2>{t("footer.terms")}</h2>
           </div>
         </Header>
         <div className="main-container">

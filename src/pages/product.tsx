@@ -137,7 +137,7 @@ const Image = styled.div<{ src: string }>`
   }
 `;
 
-const ProductTitle = styled.h1`
+const ProductTitle = styled.h2`
   font-family: MullerBold;
   font-size: 30px;
   line-height: 30px;

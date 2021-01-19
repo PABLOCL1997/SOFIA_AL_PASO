@@ -45,7 +45,7 @@ const emptyCSS = {} as React.CSSProperties
 const Title = styled.div`
   display: flex;
   align-items: center;
-  h1 {
+  h2 {
     font-family: MullerMedium;
     font-size: 24px;
     line-height: 24px;
@@ -674,7 +674,7 @@ const Details: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <>
         <Title>
-          <h1>{t("account.title")}</h1>
+          <h2>{t("account.title")}</h2>
           {loading && (
             <LoaderWrapper>
               <img src="/images/loader.svg" alt="loader" />

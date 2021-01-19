@@ -53,7 +53,7 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-family: MullerBlack;
   font-size: 48px;
   line-height: 48px;
