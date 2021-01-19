@@ -1,32 +1,41 @@
 import React, { Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import "./App.css";
 import "./Reset.css";
 import DelayedWrapper from "./components/DelayedWrapper";
 
-const LayoutGeneral = React.lazy(
-  () => import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general")
+const LayoutGeneral = React.lazy(() =>
+  import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general")
 );
-const Homepage = React.lazy(
-  () => import(/* webpackChunkName: "Homepage" */ "./pages/homepage")
+const Homepage = React.lazy(() =>
+  import(/* webpackChunkName: "Homepage" */ "./pages/homepage")
 );
-const MyAccount = React.lazy(
-  () => import(/* webpackChunkName: "myaccount" */ "./pages/myaccount")
+const MyAccount = React.lazy(() =>
+  import(/* webpackChunkName: "myaccount" */ "./pages/myaccount")
 );
-const Products = React.lazy(
-  () => import(/* webpackChunkName: "Products" */ "./pages/products")
+const Products = React.lazy(() =>
+  import(/* webpackChunkName: "Products" */ "./pages/products")
 );
-const Product = React.lazy(
-  () => import(/* webpackChunkName: "Product" */ "./pages/product")
+const Product = React.lazy(() =>
+  import(/* webpackChunkName: "Product" */ "./pages/product")
 );
-const Checkout = React.lazy(
-  () => import(/* webpackChunkName: "Checkout" */ "./pages/checkout")
+const Checkout = React.lazy(() =>
+  import(/* webpackChunkName: "Checkout" */ "./pages/checkout")
 );
-const Faq = React.lazy(
-  () => import(/* webpackChunkName: "Faq" */ "./pages/faq")
+const Faq = React.lazy(() =>
+  import(/* webpackChunkName: "Faq" */ "./pages/faq")
 );
-const Terms = React.lazy(
-  () => import(/* webpackChunkName: "Terms" */ "./pages/terms")
+const Terms = React.lazy(() =>
+  import(/* webpackChunkName: "Terms" */ "./pages/terms")
+);
+
+const Page404 = React.lazy(() =>
+  import(/* webpackChunkName: "Page404" */ "./components/Page404")
 );
 
 const App = () => {
@@ -37,6 +46,15 @@ const App = () => {
           <Switch>
             <Route
               exact
+              path="/404"
+              children={
+                <LayoutGeneral>
+                  <Page404 />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
               path="/"
               children={
                 <LayoutGeneral>
@@ -45,7 +63,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/password-reset/:token"
               children={
                 <LayoutGeneral>
@@ -54,7 +72,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/preguntas-frecuentes"
               children={
                 <LayoutGeneral>
@@ -63,7 +81,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/terminos-y-condiciones"
               children={
                 <LayoutGeneral>
@@ -72,7 +90,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/mi-cuenta"
               children={
                 <LayoutGeneral>
@@ -81,7 +99,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/mi-cuenta/ordenes"
               children={
                 <LayoutGeneral>
@@ -90,7 +108,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos"
               children={
                 <LayoutGeneral>
@@ -99,7 +117,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/checkout"
               children={
                 <LayoutGeneral>
@@ -108,7 +126,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos/:category"
               children={
                 <LayoutGeneral>
@@ -117,7 +135,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos/:category/:subcategory"
               children={
                 <LayoutGeneral>
@@ -126,7 +144,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos/:category/:subcategory/:lastlevel"
               children={
                 <LayoutGeneral>
@@ -135,7 +153,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/:prodname"
               children={
                 <LayoutGeneral page="productpage">
@@ -143,6 +161,15 @@ const App = () => {
                 </LayoutGeneral>
               }
             />
+            <Route
+              children={
+                <LayoutGeneral>
+                  <Page404 />
+                </LayoutGeneral>
+              }
+            />
+
+         
           </Switch>
         </Router>
       </DelayedWrapper>

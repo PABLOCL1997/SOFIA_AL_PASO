@@ -411,6 +411,9 @@ const Product: FC<Props> = ({
       related: true
     },
     fetchPolicy: "cache-and-network",
+    onError: d => {
+      history.push("/404")
+    },
     onCompleted: d => {
       setProduct(d.product);
       trackProduct(d.product);
