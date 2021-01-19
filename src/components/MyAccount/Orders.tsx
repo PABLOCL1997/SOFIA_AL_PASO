@@ -26,7 +26,7 @@ const ContinueArrow = React.lazy(
 const Title = styled.div`
   display: flex;
   align-items: center;
-  h1 {
+  h2 {
     font-family: MullerMedium;
     font-size: 24px;
     line-height: 24px;
@@ -483,7 +483,7 @@ const Orders: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <>
         <Title>
-          <h1>{t("account.orders.title")}</h1>
+          <h2>{t("account.orders.title")}</h2>
         </Title>
         {orderId === 0 && (
           <Grid>

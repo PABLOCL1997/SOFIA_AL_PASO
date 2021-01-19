@@ -30,7 +30,7 @@ const Title = styled.div`
   padding: 20px;
   text-align: center;
 
-  h1 {
+  h2 {
     font-family: MullerMedium;
     font-size: 48px;
     line-height: 48px;
@@ -140,7 +140,7 @@ const Thanks: FC<Props> = ({ orders }) => {
       <Container>
         <Title>
           <ThankCheck />
-          <h1>{t("thankyou.title")}</h1>
+          <h2>{t("thankyou.title")}</h2>
           <p dangerouslySetInnerHTML={{ __html: subtitle }}></p>
         </Title>
         <Grid>

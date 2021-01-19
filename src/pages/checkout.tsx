@@ -86,7 +86,7 @@ const Title = styled.div`
   @media screen and (max-width: ${BREAKPOINT}) {
     padding-right: 0;
   }
-  h1 {
+  h2 {
     flex: 1;
     font-family: MullerMedium;
     font-size: 32px;
@@ -550,7 +550,7 @@ const Checkout: FC<Props> = () => {
           {!result.length && (
             <CheckoutWrapper>
               <Title>
-                <h1>{t("checkout.title")}</h1>
+                <h2>{t("checkout.title")}</h2>
                 <button onClick={() => toggleCartModal()}>
                   {t("checkout.modify_cart")}
                 </button>
