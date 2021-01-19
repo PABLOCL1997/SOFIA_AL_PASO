@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";
-import { GET_PRODUCT } from "../graphql/products/queries";
+import { GET_PRODUCT, GET_PRODUCT_DETAIL } from "../graphql/products/queries";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { PRODUCT_TITLE } from "../meta";
 import { trackProduct, trackAddToCart } from "../utils/dataLayer";
@@ -167,6 +167,7 @@ const ProductText = styled.ul`
     }
   }
 `;
+ProductText.displayName = 'ProductText'
 
 const Categories = styled.div`
   margin: 25px 0;
@@ -416,8 +417,15 @@ const Product: FC<Props> = ({
       trackProduct(d.product);
       if (d.product.categories) setCategories(d.product.categories);
       if (d.product.related) setRelated(d.product.related);
+      loadProductDetail({
+        variables: {
+          name: prodname
+        }
+      })
     }
   });
+  const [loadProductDetail, {loading: loadingProdDetail, data: dataProdDetail}] =
+  useLazyQuery(GET_PRODUCT_DETAIL, { })
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } }
   });
@@ -552,7 +560,7 @@ const Product: FC<Props> = ({
                   )}
                 </PriceBox>
                 <ProductText>
-                  {product.description
+                  {!loadingProdDetail && dataProdDetail && dataProdDetail.productDetail
                     .split("\n")
                     .filter((line: string) => line.trim())
                     .map((line: string, index: number) => (
