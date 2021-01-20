@@ -50,7 +50,6 @@ const Homepage: FC<Props> = () => {
   });
 
   useEffect(() => {
-    document.title = HOMEPAGE_TITLE;
     // if (
     //   userData &&
     //   userData.userInfo[0] &&
