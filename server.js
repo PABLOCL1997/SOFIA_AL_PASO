@@ -38,29 +38,31 @@ const loadPage = async (req, res, meta = {}) => {
     meta_keywords: ""
   }
   // add link cano/prev/next if products
-  const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  let relCanon 
-  let relPrev
-  let relNext
-  relCanon = relPrev = relNext = fullUrl
+  const fullUrl = 'https://' + req.get('host') + req.originalUrl.split("?").shift();
+  let relCanon = `<link rel="canonical" href="${fullUrl}" />`
+  let relPrev = ""
+  let relNext = ""
+
   if(meta.rel) {
     const page = Number(req.query.p)
+    const baseUrl = 'https://' + req.get('host') + req.originalUrl.split("?").shift() 
 
     if (isNaN(Number(page))) {
-      const next = "&p=2"
-      relNext = fullUrl + next 
+      const next = "?p=2"
+      relNext = `<link rel="next" href="${baseUrl + next}" />`  
     }
     
     if (page == 1) {
       const next = page + 1
-      relNext = fullUrl.slice(0, -1) + next
+      relNext = `<link rel="next" href="${baseUrl + next}" />`
     }
     
     if (page >= 2) {
       const next = page + 1
       const prev = page - 1
-      relPrev = fullUrl.slice(0, -1) + prev
-      relNext = fullUrl.slice(0, -1) + next
+      relCanon = `<link rel="canonical" href="${baseUrl + '?p=' + page}" />`  
+      relPrev =  `<link rel="prev" href="${baseUrl + '?p=' + prev}" />`
+      relNext =  `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
   }
 
@@ -100,16 +102,14 @@ const loadPage = async (req, res, meta = {}) => {
         .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : '')
         .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
         .replace(/__OG_H1__/g, meta && !!meta.prodName ? String(meta.prodName).split(/-/g).join(" ").toUpperCase() : metadata.title)
-        .replace(/__REL_CANON__/g, relCanon)
-        .replace(/__REL_PREV__/g, relPrev)
-        .replace(/__REL_NEXT__/g, relNext)     
+        .replace(`<link rel="replace">`, meta.rel ? relCanon.concat(relPrev).concat(relNext) : relCanon)
     )
   });
 };
 
 app.use(redirectMiddleware)
-app.use(express.static(__dirname + "/build"));
 app.get("/", (req, res) => loadPage(req, res, { title: HOMEPAGE_TITLE, identifier: "sofia-homepage" }));
+app.use(express.static(__dirname + "/build"));
 app.get("/productos", (req, res) => loadPage(req, res, { title: PRODUCTS_TITLE, identifier: "sofia-products", rel: true }));
 app.get("/preguntas-frecuentes", (req, res) => loadPage(req, res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
 app.get("/terminos-y-condiciones", (req, res) => loadPage(req, res, { title: TERMS_TITLE, identifier: "sofia-tyc" }));
