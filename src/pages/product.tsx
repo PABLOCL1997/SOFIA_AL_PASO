@@ -509,13 +509,19 @@ const Product: FC<Props> = ({
   const discount = Math.round(1 - product.special_price / product.price) * 100;
 
   const toCatLink = (str: string | null, level: number) => {
-    let lowerCat: CategoryType | undefined = undefined;
-    let lowerCatStr = "";
-    if (level === 3) {
-      lowerCat = categories.find((c: CategoryType) => c.level === 2);
-      if (lowerCat) lowerCatStr = `${toLink(lowerCat.name)}/`;
+    let lvl2Cat: CategoryType | undefined = undefined;
+    let lvl2CatStr = "";
+    let lvl3Cat: CategoryType | undefined = undefined;
+    let lvl3CatStr = "";
+    if (level === 4) {
+      lvl3Cat = categories.find((c: CategoryType) => c.level === 3);
+      if (lvl3Cat) lvl3CatStr = `${toLink(lvl3Cat.name)}/`;
     }
-    return lowerCatStr + toLink(str);
+    if (level === 3) {
+      lvl2Cat = categories.find((c: CategoryType) => c.level === 2);
+      if (lvl2Cat) lvl2CatStr = `${toLink(lvl2Cat.name)}/`;
+    }
+    return lvl2CatStr + lvl3CatStr + toLink(str);
   };
 
   return (
