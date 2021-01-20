@@ -31,6 +31,7 @@ const fromLink = str => {
 };
 
 const loadPage = async (req, res, meta = {}) => {
+  let statusCode = 200
   let metadata = {
     title: meta.title || "Tienda Sofia",
     meta_description: meta.title || "Tienda Sofia",
@@ -70,6 +71,7 @@ const loadPage = async (req, res, meta = {}) => {
       const res = await client.request(GET_PRODUCT_METADATA, {
         name
       })
+      if (!res.productMetadata) statusCode = 404
       if (res.productMetadata && res.productMetadata.meta_title && res.productMetadata.meta_description) {
         const { productMetadata: { meta_title, meta_description } } = res
         metadata = { title: meta_title, meta_description, meta_keywords: "" }
@@ -92,7 +94,7 @@ const loadPage = async (req, res, meta = {}) => {
     }
   }
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
-    res.send(
+    res.status(statusCode).send(
       data
         .replace(/__OG_TITLE__/g, metadata ? metadata.title : meta.title)
         .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : '')
