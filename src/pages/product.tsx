@@ -1,5 +1,5 @@
-import React, { Suspense, FC, useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { Suspense, FC, useState, useEffect } from "react";
+import styled from "styled-components";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";
@@ -167,7 +167,7 @@ const ProductText = styled.ul`
     }
   }
 `;
-ProductText.displayName = 'ProductText'
+ProductText.displayName = "ProductText";
 
 const Categories = styled.div`
   margin: 25px 0;
@@ -413,7 +413,7 @@ const Product: FC<Props> = ({
     },
     fetchPolicy: "cache-and-network",
     onError: d => {
-      history.push("/404")
+      history.push("/404");
     },
     onCompleted: d => {
       setProduct(d.product);
@@ -424,11 +424,13 @@ const Product: FC<Props> = ({
         variables: {
           name: prodname
         }
-      })
+      });
     }
   });
-  const [loadProductDetail, {loading: loadingProdDetail, data: dataProdDetail}] =
-  useLazyQuery(GET_PRODUCT_DETAIL, { })
+  const [
+    loadProductDetail,
+    { loading: loadingProdDetail, data: dataProdDetail }
+  ] = useLazyQuery(GET_PRODUCT_DETAIL, {});
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } }
   });
@@ -506,6 +508,16 @@ const Product: FC<Props> = ({
 
   const discount = Math.round(1 - product.special_price / product.price) * 100;
 
+  const toCatLink = (str: string | null, level: number) => {
+    let lowerCat: CategoryType | undefined = undefined;
+    let lowerCatStr = "";
+    if (level === 3) {
+      lowerCat = categories.find((c: CategoryType) => c.level === 2);
+      if (lowerCat) lowerCatStr = `${toLink(lowerCat.name)}/`;
+    }
+    return lowerCatStr + toLink(str);
+  };
+
   return (
     <Suspense fallback={<Loader />}>
       <DelayedWrapper noHeader={true}>
@@ -528,7 +540,7 @@ const Product: FC<Props> = ({
                   {product.image
                     .split(",")
                     .map((img: string, index: number) => (
-                      <div key={index + ' Index'}>
+                      <div key={index + " Index"}>
                         <Image src={img}></Image>
                       </div>
                     ))}
@@ -538,8 +550,8 @@ const Product: FC<Props> = ({
                 <ProductTitle>
                   {product.useKGS
                     ? `${product.name} DE ${Number(product.weight)
-                      .toFixed(2)
-                      .replace(".", ",")} KGS APROX.`
+                        .toFixed(2)
+                        .replace(".", ",")} KGS APROX.`
                     : product.name}
                 </ProductTitle>
                 <EstimatedPrice visible={product.useKGS}>
@@ -563,57 +575,59 @@ const Product: FC<Props> = ({
                   )}
                 </PriceBox>
                 <ProductText>
-                  {!loadingProdDetail && dataProdDetail && dataProdDetail.productDetail
-                    .split("\n")
-                    .filter((line: string) => line.trim())
-                    .map((line: string, index: number) => (
-                      <li
-                        key={index}
-                        dangerouslySetInnerHTML={{ __html: line.trim() }}
-                      />
-                    ))}
+                  {!loadingProdDetail &&
+                    dataProdDetail &&
+                    dataProdDetail.productDetail
+                      .split("\n")
+                      .filter((line: string) => line.trim())
+                      .map((line: string, index: number) => (
+                        <li
+                          key={index}
+                          dangerouslySetInnerHTML={{ __html: line.trim() }}
+                        />
+                      ))}
                 </ProductText>
                 <Categories>
                   <span>{t("product.categories")}: </span>
                   {categories.map((cat: CategoryType, index: number) => (
                     <span key={cat.name}>
-                      <Link key={index} to={`/productos/${toLink(cat.name)}`}>
+                      <Link
+                        key={index}
+                        to={`/productos/${toCatLink(cat.name, cat.level)}`}
+                      >
                         {cat.name}
                       </Link>
                       {index === categories.length - 1 ? "" : ", "}
                     </span>
                   ))}
                 </Categories>
-                {
-                  product.stock > 0 ?
-                    <Toolbox>
-                      <Qty>
-                        <select
-                          onChange={event => setQty(Number(event.target.value))}
-                        >
-                          {[...(Array(21).keys() as any)]
-                            .slice(1)
-                            .map((opt: any, index: number) => (
-                              <option key={index} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
-                        </select>
-                        <Chevron />
-                      </Qty>
-                      <Cta
-                        filled={true}
-                        text={t("product.add")}
-                        action={addAndGo}
-                      />
-                    </Toolbox>
-                    :
-                    <Toolbox>
-                      <OutOfStock>
-                        Temporalmente sin stock
-                      </OutOfStock>
-                    </Toolbox>
-                }
+                {product.stock > 0 ? (
+                  <Toolbox>
+                    <Qty>
+                      <select
+                        onChange={event => setQty(Number(event.target.value))}
+                      >
+                        {[...(Array(21).keys() as any)]
+                          .slice(1)
+                          .map((opt: any, index: number) => (
+                            <option key={index} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                      </select>
+                      <Chevron />
+                    </Qty>
+                    <Cta
+                      filled={true}
+                      text={t("product.add")}
+                      action={addAndGo}
+                    />
+                  </Toolbox>
+                ) : (
+                  <Toolbox>
+                    <OutOfStock>Temporalmente sin stock</OutOfStock>
+                  </Toolbox>
+                )}
                 <DeliveryBox>
                   <FreeDelivery />
                   <Title>
