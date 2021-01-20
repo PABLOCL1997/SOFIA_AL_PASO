@@ -54,7 +54,7 @@ const loadPage = async (req, res, meta = {}) => {
     
     if (page == 1) {
       const next = page + 1
-      relNext = `<link rel="next" href="${baseUrl + next}" />`
+      relNext = `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
     
     if (page >= 2) {
