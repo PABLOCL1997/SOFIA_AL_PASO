@@ -16,19 +16,12 @@ const {
   MY_ACCOUNT_TITLE,
   MY_ORDERS_TITLE,
   FAQ_TITLE,
-  TERMS_TITLE
+  TERMS_TITLE,
+  GET_CATEGORIES,
+  fromLink,
+  mapCategories,
+  search
 } = require("./src/meta_server");
-
-const fromLink = str => {
-  return str
-    ? str
-      .split(/-/g)
-      .map(
-        word => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`
-      )
-      .join(" ")
-    : "";
-};
 
 const loadPage = async (req, res, meta = {}) => {
   let statusCode = 200
@@ -43,18 +36,15 @@ const loadPage = async (req, res, meta = {}) => {
   let relPrev = ""
   let relNext = ""
 
+  if (meta.title === "404") statusCode = 404
+
   if(meta.rel) {
     const page = Number(req.query.p)
     const baseUrl = 'https://' + req.get('host') + req.originalUrl.split("?").shift() 
 
-    if (isNaN(Number(page))) {
+    if (isNaN(Number(page)) || page == 1) {
       const next = "?p=2"
       relNext = `<link rel="next" href="${baseUrl + next}" />`  
-    }
-    
-    if (page == 1) {
-      const next = page + 1
-      relNext = `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
     
     if (page >= 2) {
@@ -65,7 +55,29 @@ const loadPage = async (req, res, meta = {}) => {
       relNext =  `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
   }
+  if (req.params.category){
+    const categoryName = String(req.params.category)
+    try {
+      const res = await client.request(GET_CATEGORIES, {})
 
+      const catFound = search('name', categoryName, mapCategories(res.categories))
+      if (!catFound) statusCode = 404
+  
+      if (req.params.subcategory && statusCode != 404) {
+        const s3Name = String(req.params.subcategory)
+        const s3Found = search('name', s3Name, mapCategories(catFound.subcategories))
+        if (!s3Found) statusCode = 404
+  
+        if (req.params.lastlevel && statusCode != 404){
+          const s4Name = String(req.params.lastlevel)
+          const s4Found = search('name', s4Name, mapCategories(s3Found.subcategories))
+          if (!s4Found) statusCode = 404
+        }
+      }
+    }catch (err) {
+      console.log('err', err)
+    }
+  }
   // GET METADATA for pages that is a single product
   if (meta.identifier && meta.identifier === "product") {
     try {
@@ -80,25 +92,30 @@ const loadPage = async (req, res, meta = {}) => {
       }
     } catch (error) {
       console.log(error)
+      statusCode = 404
     }
   }
   // GET METADATA for pages that isn't a single product
   if (meta.identifier && meta.identifier !== "product") {
+
     try {
       const res = await client.request(GET_METADATA, {
         identifier: meta.identifier
       })
-      if (res.metadata && res.metadata.title && res.metadata.meta_description && res.metadata.meta_keywords) {
-        metadata = res.metadata
+      if (res.metadata && res.metadata.title && res.metadata.meta_description) {
+        metadata = {title: res.metadata.title, meta_description: res.metadata.meta_description, meta_keywords: ""}
       }
     } catch (error) {
       console.log(error)
     }
   }
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
-    res.status(statusCode).send(
+    if (meta.prodName != '404' && statusCode === 404) {
+      return res.redirect('/404')
+    }
+    return res.status(statusCode).send(
       data
-        .replace(/__OG_TITLE__/g, metadata ? metadata.title : meta.title)
+        .replace(/__OG_TITLE__/g, metadata.title)
         .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : '')
         .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
         .replace(/__OG_H1__/g, meta && !!meta.prodName ? String(meta.prodName).split(/-/g).join(" ").toUpperCase() : metadata.title)
