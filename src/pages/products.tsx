@@ -12,6 +12,7 @@ import {
 import { OrderColums } from "../graphql/products/type";
 import { trackProductList } from "../utils/dataLayer";
 import { toLink, fromLink } from "../utils/string";
+import * as stringUtils from "../utils/string"
 import { BREAKPOINT } from "../utils/constants";
 import { PRODUCTS_TITLE } from "../meta";
 import { GET_USER } from "../graphql/user/queries";
@@ -74,8 +75,12 @@ const LoaderWrapper = styled.div`
 type Props = {};
 const Products: FC<Props> = () => {
   const limit = 9;
-  const { category, subcategory, lastlevel } = useParams();
   const query = new URLSearchParams(useLocation().search);
+  const categoryName = useLocation().pathname
+  const [category, setCategory] = useState(categoryName ? categoryName.split('/').length >= 3 ? stringUtils.capitalizeFirstLetter(String(categoryName.split('/')[2].replace('-'," "))): "" : "")
+  const [subcategory, setSubCategory] = useState<any>(categoryName ?  categoryName.split('/').length >= 4 ? stringUtils.capitalizeFirstLetter(categoryName.split('/')[3].replace('-'," ")) : "": "")
+  const [lastlevel, setLastLevel] = useState<any>(categoryName ? categoryName.split('/').length >= 5 ? stringUtils.capitalizeFirstLetter(categoryName.split('/')[4]) : "" : "")
+
 
   const [loader, setLoader] = useState(true);
   const [products, setProducts] = useState([]);
@@ -91,15 +96,6 @@ const Products: FC<Props> = () => {
   });
   const { data: userData } = useQuery(GET_USER, {});
   const [loadProducts, { loading: loadingProds }] = useLazyQuery(GET_PRODUCTS, {
-    variables: {
-      category_id,
-      limit,
-      order,
-      offset: offset,
-      search: search,
-      onsale: category === "promociones",
-      city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
-    },
     fetchPolicy: "network-only",
     onCompleted: d => {
       trackProductList(d.products.rows);
@@ -120,7 +116,6 @@ const Products: FC<Props> = () => {
 
   useEffect(() => {
     setTitle();
-    loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -138,24 +133,24 @@ const Products: FC<Props> = () => {
 
   useEffect(() => {
     setLoader(true);
-
+    
     if (data && data.categories) {
       let entity_id = null;
-
+      
       let __category: any = data.categories.find(
-        (row: CategoryType) => toLink(row.name) === toLink(category || "")
+        (row: CategoryType) => row.name === category || "" 
       );
       if (__category) {
         if (subcategory) {
           let __subcategory: any = __category.subcategories.find(
             (row: SubCategoryLvl3Type) =>
-              toLink(row.name) === toLink(subcategory || "")
+              row.name === subcategory || ""
           );
           if (__subcategory) {
             if (lastlevel) {
               let __lastlevel: any = __subcategory.subcategories.find(
                 (row: SubCategoryLvl4Type) =>
-                  toLink(row.name) === toLink(lastlevel || "")
+                  row.name === lastlevel || ""
               );
               if (__lastlevel) entity_id = __lastlevel.entity_id;
             } else {
@@ -166,12 +161,23 @@ const Products: FC<Props> = () => {
           entity_id = __category.entity_id;
         }
       }
-
+      
       if (entity_id && entity_id !== category_id) {
         setCategoryId(entity_id);
       } else if (!entity_id) {
         setCategoryId(0);
       }
+      loadProducts({
+        variables: {
+          category_id: entity_id || 0,
+          limit,
+          order,
+          offset: offset,
+          search: search,
+          onsale: category === "promociones",
+          city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
+        },
+      });
       setTitle();
       setSearch("");
       setOffset(0);
@@ -190,6 +196,7 @@ const Products: FC<Props> = () => {
           )}
           <Wrapper>
             <Col1>
+            {data && (
               <FilterSideBar
                 categories={!loading && data ? data.categories : []}
                 category={category}
@@ -197,6 +204,7 @@ const Products: FC<Props> = () => {
                 lastlevel={lastlevel}
                 count={total}
               />
+            )}
             </Col1>
             <Col2>
               {(loader || loadingProds) && (

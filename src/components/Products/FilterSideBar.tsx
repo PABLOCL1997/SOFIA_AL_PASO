@@ -224,9 +224,9 @@ const FilterSideBar: FC<Props> = ({
     s3cat?: SubCategoryLvl3Type,
     s4cat?: SubCategoryLvl4Type
   ) => {
-    let is = category === toLink(cat.name);
-    if (s3cat) is = is && subcategory === toLink(s3cat.name);
-    if (s4cat) is = is && lastlevel === toLink(s4cat.name);
+    let is = category === cat.name;
+    if (s3cat) is = is && subcategory === s3cat.name;
+    if (s4cat) is = is && lastlevel === s4cat.name;
     return is;
   };
 
