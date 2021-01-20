@@ -513,11 +513,11 @@ const Product: FC<Props> = ({
     let lvl2CatStr = "";
     let lvl3Cat: CategoryType | undefined = undefined;
     let lvl3CatStr = "";
-    if (level === 4) {
+    if (level >= 4) {
       lvl3Cat = categories.find((c: CategoryType) => c.level === 3);
       if (lvl3Cat) lvl3CatStr = `${toLink(lvl3Cat.name)}/`;
     }
-    if (level === 3) {
+    if (level >= 3) {
       lvl2Cat = categories.find((c: CategoryType) => c.level === 2);
       if (lvl2Cat) lvl2CatStr = `${toLink(lvl2Cat.name)}/`;
     }
