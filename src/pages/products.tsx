@@ -187,6 +187,20 @@ const Products: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, subcategory, lastlevel, data]);
 
+  useEffect(()=>{
+    loadProducts({
+      variables: {
+        category_id,
+        limit,
+        order,
+        offset: offset,
+        search: search,
+        onsale: category === "promociones",
+        city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
+      },
+    });
+  }, [order, search])
+
   return (
     <Suspense fallback={<Loader />}>
       <DelayedWrapper>
