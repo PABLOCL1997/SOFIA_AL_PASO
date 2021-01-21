@@ -81,11 +81,11 @@ const Products: FC<Props> = () => {
   const [subcategory, setSubCategory] = useState<any>(categoryName ?  categoryName.split('/').length >= 4 ? stringUtils.capitalizeFirstLetter(categoryName.split('/')[3].replace('-'," ")) : "": "")
   const [lastlevel, setLastLevel] = useState<any>(categoryName ? categoryName.split('/').length >= 5 ? stringUtils.capitalizeFirstLetter(categoryName.split('/')[4]) : "" : "")
 
-
+  const pageNumber = parseInt(String(query.get("p")))
   const [loader, setLoader] = useState(true);
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(isNaN(pageNumber) || pageNumber == 1 ? 0 : (pageNumber-1)* limit);
   const [search, setSearch] = useState(query.get("q"));
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState(OrderColums[0]);
@@ -103,7 +103,6 @@ const Products: FC<Props> = () => {
       setTotal(d.products.count);
     }
   });
-
   const orderQuery = (column: string) => {
     setOrder(column);
   };
@@ -179,27 +178,11 @@ const Products: FC<Props> = () => {
         },
       });
       setTitle();
-      setSearch("");
-      setOffset(0);
       setPage(1);
     }
     setTimeout(() => setLoader(false), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, subcategory, lastlevel, data]);
-
-  useEffect(()=>{
-    loadProducts({
-      variables: {
-        category_id,
-        limit,
-        order,
-        offset: offset,
-        search: search,
-        onsale: category === "promociones",
-        city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
-      },
-    });
-  }, [order, search])
+  }, [category, subcategory, lastlevel, data, order, search]);
 
   return (
     <Suspense fallback={<Loader />}>
