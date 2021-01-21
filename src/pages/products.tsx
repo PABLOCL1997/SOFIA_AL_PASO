@@ -77,9 +77,9 @@ const Products: FC<Props> = () => {
   const limit = 9;
   const query = new URLSearchParams(useLocation().search);
   const categoryName = useLocation().pathname
-  const [category, setCategory] = useState(categoryName ? categoryName.split('/').length >= 3 ? stringUtils.capitalizeFirstLetter(String(categoryName.split('/')[2].replace('-'," "))): "" : "")
-  const [subcategory, setSubCategory] = useState<any>(categoryName ?  categoryName.split('/').length >= 4 ? stringUtils.capitalizeFirstLetter(categoryName.split('/')[3].replace('-'," ")) : "": "")
-  const [lastlevel, setLastLevel] = useState<any>(categoryName ? categoryName.split('/').length >= 5 ? stringUtils.capitalizeFirstLetter(categoryName.split('/')[4]) : "" : "")
+  const [category, setCategory] = useState(categoryName ? categoryName.split('/').length >= 3 ? categoryName.split('/')[2] : "" : "")
+  const [subcategory, setSubCategory] = useState<any>(categoryName ?  categoryName.split('/').length >= 4 ?categoryName.split('/')[3] : "": "")
+  const [lastlevel, setLastLevel] = useState<any>(categoryName ? categoryName.split('/').length >= 5 ?categoryName.split('/')[4] : "" : "")
 
 
   const [loader, setLoader] = useState(true);
@@ -138,19 +138,19 @@ const Products: FC<Props> = () => {
       let entity_id = null;
       
       let __category: any = data.categories.find(
-        (row: CategoryType) => row.name === category || "" 
+        (row: CategoryType) => toLink(row.name) === toLink(category) || "" 
       );
       if (__category) {
         if (subcategory) {
           let __subcategory: any = __category.subcategories.find(
             (row: SubCategoryLvl3Type) =>
-              row.name === subcategory || ""
+              toLink(row.name) === toLink(subcategory) || ""
           );
           if (__subcategory) {
             if (lastlevel) {
               let __lastlevel: any = __subcategory.subcategories.find(
                 (row: SubCategoryLvl4Type) =>
-                  row.name === lastlevel || ""
+                  toLink(row.name) === toLink(lastlevel) || ""
               );
               if (__lastlevel) entity_id = __lastlevel.entity_id;
             } else {
