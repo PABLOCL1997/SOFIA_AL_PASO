@@ -36,7 +36,9 @@ const loadPage = async (req, res, meta = {}) => {
   let relPrev = ""
   let relNext = ""
 
-  if (meta.title === "404") statusCode = 404
+  if (meta.title == "404"){
+    statusCode = 404
+  }
 
   if(meta.rel) {
     const page = Number(req.query.p)
@@ -55,7 +57,7 @@ const loadPage = async (req, res, meta = {}) => {
       relNext =  `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
   }
-  if (req.params.category){
+  if (req.params.category && meta.rel){
     const categoryName = String(req.params.category)
     try {
       const res = await client.request(GET_CATEGORIES, {})
@@ -110,9 +112,6 @@ const loadPage = async (req, res, meta = {}) => {
     }
   }
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
-    if (meta.prodName != '404' && statusCode === 404) {
-      return res.redirect('/404')
-    }
     return res.status(statusCode).send(
       data
         .replace(/__OG_TITLE__/g, metadata.title)
@@ -135,6 +134,7 @@ app.get("/mi-cuenta/ordenes", (req, res) =>
   loadPage(req, res, { title: MY_ORDERS_TITLE })
 );
 app.get("/checkout", (req, res) => loadPage(req, res, { title: CHECKOUT_TITLE, identifier: "sofia-checkout" }));
+app.get("/404", (req, res)=> loadPage(req, res, { title: "404" }))
 app.get("/productos/:category", (req, res) =>
   loadPage(req, res, {
     title: `${PRODUCTS_TITLE} - ${fromLink(req.params.category)}`,

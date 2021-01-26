@@ -1,6 +1,6 @@
 import React, { Suspense, FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { GET_CATEGORIES } from "../graphql/categories/queries";
 import { GET_PRODUCTS } from "../graphql/products/queries";
@@ -74,6 +74,7 @@ const LoaderWrapper = styled.div`
 
 type Props = {};
 const Products: FC<Props> = () => {
+  const history = useHistory()
   const limit = 9;
   const query = new URLSearchParams(useLocation().search);
   const categoryName = useLocation().pathname
@@ -160,7 +161,10 @@ const Products: FC<Props> = () => {
           entity_id = __category.entity_id;
         }
       }
-      
+      // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
+      if(!entity_id && !!(category || subcategory || lastlevel)) {
+        return history.push('/404')
+      }
       if (entity_id && entity_id !== category_id) {
         setCategoryId(entity_id);
       } else if (!entity_id) {
