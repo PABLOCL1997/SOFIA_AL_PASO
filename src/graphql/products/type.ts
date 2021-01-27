@@ -21,4 +21,5 @@ export type ProductType = {
   description?: string;
   categories?: Array<CategoryType>;
   qty?: number;
+  active?:number
 };
