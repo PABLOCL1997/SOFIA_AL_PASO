@@ -163,7 +163,7 @@ const Products: FC<Props> = () => {
       }
       // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
       if(!entity_id && !!(category || subcategory || lastlevel)) {
-        return history.push('/404')
+        return history.replace('/404')
       }
       if (entity_id && entity_id !== category_id) {
         setCategoryId(entity_id);
