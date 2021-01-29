@@ -24,6 +24,7 @@ const {
 } = require("./src/meta_server");
 
 const loadPage = async (req, res, meta = {}) => {
+  const PRODUCT = "product"
   let statusCode = 200
   let metadata = {
     title: meta.title || "Tienda Sofia",
@@ -60,36 +61,39 @@ const loadPage = async (req, res, meta = {}) => {
   if (req.params.category && meta.rel){
     const categoryName = String(req.params.category)
     try {
-      const res = await client.request(GET_CATEGORIES, {})
+      const response = await client.request(GET_CATEGORIES, {})
 
-      const catFound = search('name', categoryName, mapCategories(res.categories))
-      if (!catFound) statusCode = 404
+      const catFound = search('name', categoryName, mapCategories(response.categories))
+      if (!catFound) return res.status(404).redirect("/404")
   
       if (req.params.subcategory && statusCode != 404) {
         const s3Name = String(req.params.subcategory)
         const s3Found = search('name', s3Name, mapCategories(catFound.subcategories))
-        if (!s3Found) statusCode = 404
+        if (!s3Found) return res.status(404).redirect("/404")
   
         if (req.params.lastlevel && statusCode != 404){
           const s4Name = String(req.params.lastlevel)
           const s4Found = search('name', s4Name, mapCategories(s3Found.subcategories))
-          if (!s4Found) statusCode = 404
+          if (!s4Found) return res.status(404).redirect("/404")
         }
       }
     }catch (err) {
       console.log('err', err)
     }
   }
+
   // GET METADATA for pages that is a single product
-  if (meta.identifier && meta.identifier === "product") {
+  if (meta.identifier && meta.identifier === PRODUCT) {
     try {
       const name = meta.prodName.toUpperCase().split(/-/g).join(" ")
-      const res = await client.request(GET_PRODUCT_METADATA, {
+      const response = await client.request(GET_PRODUCT_METADATA, {
         name
       })
-      if (!res.productMetadata) statusCode = 404
-      if (res.productMetadata && res.productMetadata.meta_title && res.productMetadata.meta_description) {
-        const { productMetadata: { meta_title, meta_description } } = res
+      if (!response.productMetadata) {
+        return res.status(404).redirect("/404")
+      }
+      if (response.productMetadata && response.productMetadata.meta_title && response.productMetadata.meta_description) {
+        const { productMetadata: { meta_title, meta_description } } = response
         metadata = { title: meta_title, meta_description, meta_keywords: "" }
       }
     } catch (error) {
@@ -98,7 +102,7 @@ const loadPage = async (req, res, meta = {}) => {
     }
   }
   // GET METADATA for pages that isn't a single product
-  if (meta.identifier && meta.identifier !== "product") {
+  if (meta.identifier && meta.identifier !== PRODUCT) {
 
     try {
       const res = await client.request(GET_METADATA, {
