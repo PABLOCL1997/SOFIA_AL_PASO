@@ -161,6 +161,6 @@ app.get("/:product", (req, res) =>
   loadPage(req, res, { title: `${PRODUCT_TITLE} ${fromLink(req.params.product)}`, prodName: req.params.product, identifier: "product" })
 );
 
-app.get("*", (req, res) => loadPage(req, res, { title: "404" }));
+app.get("*", (req, res) => loadPage(req, res, { title: "" }));
 
 app.listen(port, () => console.log(`Webapp on ::${port}`));
