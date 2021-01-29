@@ -58,24 +58,28 @@ const loadPage = async (req, res, meta = {}) => {
       relNext =  `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
   }
-  if (meta.rel){
+  if (req.params.category && meta.rel){
     const categoryName = String(req.params.category)
     try {
       const response = await client.request(GET_CATEGORIES, {})
       if(!response.categories) return res.status(404).redirect("/404")
       const catFound = search('name', categoryName, mapCategories(response.categories))
-      if (!catFound) return res.status(404).redirect("/404")
+      if (!catFound) statusCode = 404
   
       if (req.params.subcategory && statusCode != 404) {
         const s3Name = String(req.params.subcategory)
         const s3Found = search('name', s3Name, mapCategories(catFound.subcategories))
-        if (!s3Found) return res.status(404).redirect("/404")
+        if (!s3Found) statusCode = 404
   
         if (req.params.lastlevel && statusCode != 404){
           const s4Name = String(req.params.lastlevel)
           const s4Found = search('name', s4Name, mapCategories(s3Found.subcategories))
-          if (!s4Found) return res.status(404).redirect("/404")
+          if (!s4Found) statusCode = 404
         }
+      }
+
+      if (statusCode == 404) {
+        return res.status(404).redirect("/404")
       }
     }catch (err) {
       console.log('err', err)
