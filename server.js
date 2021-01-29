@@ -58,11 +58,11 @@ const loadPage = async (req, res, meta = {}) => {
       relNext =  `<link rel="next" href="${baseUrl + '?p=' + next}" />`
     }
   }
-  if (req.params.category && meta.rel){
+  if (meta.rel){
     const categoryName = String(req.params.category)
     try {
       const response = await client.request(GET_CATEGORIES, {})
-
+      if(!response.categories) return res.status(404).redirect("/404")
       const catFound = search('name', categoryName, mapCategories(response.categories))
       if (!catFound) return res.status(404).redirect("/404")
   
@@ -79,6 +79,7 @@ const loadPage = async (req, res, meta = {}) => {
       }
     }catch (err) {
       console.log('err', err)
+      return res.status(404).redirect("/404")
     }
   }
 

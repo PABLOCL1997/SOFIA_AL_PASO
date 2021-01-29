@@ -413,7 +413,7 @@ const Product: FC<Props> = ({
     },
     fetchPolicy: "cache-and-network",
     onError: d => {
-      history.replace("/404");
+      // history.replace("/404");
     },
     onCompleted: d => {
       setProduct(d.product);
