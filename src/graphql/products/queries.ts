@@ -70,7 +70,6 @@ export const GET_PRODUCT = gql`
       isNew
       maxPerUser
       description
-      active
       categories {
         entity_id
         name
