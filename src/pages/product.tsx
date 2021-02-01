@@ -607,7 +607,7 @@ const Product: FC<Props> = ({
                     </span>
                   ))}
                 </Categories>
-                {product.stock > 0 && product.active ? (
+                {product.stock > 0 ? (
                   <Toolbox>
                     <Qty>
                       <select
