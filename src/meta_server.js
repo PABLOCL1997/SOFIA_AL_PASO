@@ -1,7 +1,10 @@
 module.exports = {
+  toLink: (str) => {
+    return str ? str.toLowerCase().replace(/ /g, "-") : "";
+  },
   mapCategories: (categories) => {
     return categories.map(sc => {
-      return {...sc, name: String(sc.name).toLowerCase().replaceAll(' ', '-')}})
+      return {...sc, name: String(sc.name).toLowerCase().replace(/ /g, "-")}})
   },
   capitalizeFirstLetter: (string) => {
     var splitStr = string.toLowerCase().split(' ');
