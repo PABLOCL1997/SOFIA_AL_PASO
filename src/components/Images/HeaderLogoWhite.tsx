@@ -1,15 +1,18 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import { LG } from "../../utils/constants";
 
 type Props = {
   withSlogan?: boolean;
 };
 
 const Image = styled.img`
-  width: 119px;
+  @media (max-width: ${LG}) {
+    height: auto !important;
+  }
 `;
 
 const HeaderLogoWhite: FC<Props> = () => {
-  return <Image src="/images/sofia-logo.png" />;
+  return <Image src="/images/sofia-logo.png" width="119px" height="83px" />;
 };
 export default HeaderLogoWhite;

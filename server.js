@@ -1,10 +1,12 @@
 const express = require("express");
+const compression = require('compression')
 const fs = require("fs");
 const app = express();
 const GraphQLClient = require("graphql-request").GraphQLClient
 const redirectMiddleware = require('./src/redirect')
 const client = new GraphQLClient("http://localhost:4000/graphql")
 const port = process.env.PORT || 26235;
+
 
 const {
   GET_METADATA,
@@ -23,6 +25,8 @@ const {
   mapCategories,
   search
 } = require("./src/meta_server");
+
+app.use(compression())
 
 const loadPage = async (req, res, meta = {}) => {
   const PRODUCT = "product"
@@ -172,5 +176,7 @@ app.get("/:product", (req, res) =>
 );
 
 app.get("*", (req, res) => loadPage(req, res, { title: "" }));
+
+
 
 app.listen(port, () => console.log(`Webapp on ::${port}`));
