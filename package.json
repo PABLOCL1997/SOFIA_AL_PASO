@@ -17,6 +17,7 @@
     "apollo-boost": "^0.4.7",
     "apollo-cache-persist": "^0.1.1",
     "apollo-link-context": "^1.0.19",
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "graphql-request": "^3.3.0",
