@@ -330,7 +330,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
           <a href={`/${toLink(product.name)}`}>
           {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
           <Category>{product.category_name}</Category>
-          <Image data-src={product.image.split(",")[0]} className="lazyload"></Image>
+          <Image data-src={product.image.split(",")[0]} height="200px" width="200px" className="lazyload"></Image>
           <Title>
             {product.useKGS
               ? `${product.name} DE ${Number(product.weight)

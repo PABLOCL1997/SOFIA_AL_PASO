@@ -131,7 +131,7 @@ const Benefits: FC<Props> = () => {
               </div>
             </Box>
             <Box>
-              <FreeShipping />
+              <FreeShipping  />
               <div>
                 <GridTitle>{t("homepage.benefits.order.title")}</GridTitle>
                 <GridText>{t("homepage.benefits.order.text")}</GridText>

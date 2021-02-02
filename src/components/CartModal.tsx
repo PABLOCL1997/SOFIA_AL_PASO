@@ -540,7 +540,7 @@ const AuthModal: FC<Props> = () => {
           ) : (
               <div>
                 <LoaderWrapper>
-                  <img src="/images/loader.svg" alt="loader" />
+                  <img src="/images/loader.svg"  width="50px" height="50px" alt="loader" />
                 </LoaderWrapper>
               </div>
             )}

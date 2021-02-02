@@ -418,7 +418,7 @@ const AuthModal: FC<Props> = () => {
           <Modal>
             {loader && (
               <LoaderWrapper>
-                <img src="/images/loader.svg" alt="loader" />
+                <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
               </LoaderWrapper>
             )}
             <CloseWrapper onClick={closeModal}>
@@ -485,7 +485,7 @@ const AuthModal: FC<Props> = () => {
           <Modal>
             {loader && (
               <LoaderWrapper>
-                <img src="/images/loader.svg" alt="loader" />
+                <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
               </LoaderWrapper>
             )}
             <CloseWrapper onClick={closeModal}>
@@ -550,7 +550,7 @@ const AuthModal: FC<Props> = () => {
           <Modal>
             {loader && (
               <LoaderWrapper>
-                <img src="/images/loader.svg" alt="loader" />
+                <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
               </LoaderWrapper>
             )}
             <CloseWrapper onClick={closeModal}>
@@ -581,7 +581,7 @@ const AuthModal: FC<Props> = () => {
           <Modal>
             {loader && (
               <LoaderWrapper>
-                <img src="/images/loader.svg" alt="loader" />
+                <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
               </LoaderWrapper>
             )}
             <CloseWrapper onClick={closeModal}>
@@ -612,7 +612,7 @@ const AuthModal: FC<Props> = () => {
           <Modal>
             {loader && (
               <LoaderWrapper>
-                <img src="/images/loader.svg" alt="loader" />
+                <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
               </LoaderWrapper>
             )}
             <CloseWrapper onClick={closeModal}>

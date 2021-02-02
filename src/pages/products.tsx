@@ -210,7 +210,7 @@ const Products: FC<Props> = () => {
             <Col2>
               {(loader || loadingProds) && (
                 <LoaderWrapper>
-                  <img src="/images/loader.svg" alt="loader" />
+                  <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
                 </LoaderWrapper>
               )}
               {!loader && !loadingProds && (

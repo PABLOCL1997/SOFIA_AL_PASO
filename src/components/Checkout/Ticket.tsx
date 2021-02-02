@@ -342,7 +342,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
           )}
           {processing && (
             <LoaderWrapper>
-              <img src="/images/loader.svg" alt="loader" />
+              <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
             </LoaderWrapper>
           )}
         </CtaWrapper>

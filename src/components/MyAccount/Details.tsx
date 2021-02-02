@@ -677,7 +677,7 @@ const Details: FC<Props> = () => {
           <h2>{t("account.title")}</h2>
           {loading && (
             <LoaderWrapper>
-              <img src="/images/loader.svg" alt="loader" />
+              <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
             </LoaderWrapper>
           )}
           {!loading && !editMode && (
@@ -694,7 +694,7 @@ const Details: FC<Props> = () => {
         </Title>
         {userLoading && !inputs.email && (
           <LoaderWrapperBig>
-            <img src="/images/loader.svg" alt="loader" />
+            <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
           </LoaderWrapperBig>
         )}
         {!userLoading && inputs.email && (
@@ -873,7 +873,7 @@ const Details: FC<Props> = () => {
                   ))}
                 {loading && (
                   <LoaderWrapper>
-                    <img src="/images/loader.svg" alt="loader" />
+                    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
                   </LoaderWrapper>
                 )}
               </CtaWrapper>
