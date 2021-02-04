@@ -326,7 +326,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             </div>
           </Discount>
         )}
-        
+
         <Link onClick={goToProduct}>
           <a href={`/${toLink(product.name)}`}>
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
@@ -334,7 +334,9 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
 
             {/*  <Image data-src={product.image.split(",")[0]}  className="lazyload"></Image> */}
 
-            <Image
+      
+
+            {/*    <Image
               height="200px"
               width="200px"
               srcSet={
@@ -342,18 +344,36 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
                 " 1x , " +
                 product.image.split(",")[0].slice(0, -4) +
                 "_708px.webp" +
-                " 2x" +
+                " 2x ," +
 
                 product.image.split(",")[0].slice(0, -4) +
                 "_708px.webp" +
                 " 3x"
               }
               src={product.image.split(",")[0]}
-            />
+            /> */}
 
-
- 
-
+            <picture>
+              <source
+                srcSet={
+                  product.image.split(",")[0].slice(0, -4) +
+                  "_708px.webp" +
+                  " 2x"
+                }
+                type="image/webp"
+              />
+              <source
+                srcSet={product.image.split(",")[0] + " 1x"}
+                type="image/jpeg"
+              />
+              <img
+                height="200px"
+                width="200px"
+                style={{ margin: "0 auto" }}
+                src={product.image.split(",")[0]}
+                alt={product.name}
+              />
+            </picture>
 
             <Title>
               {product.useKGS

@@ -562,23 +562,32 @@ const Product: FC<Props> = ({
                       >
                         {/*          <Image src={img}></Image>  */}
 
-                        {
+                        {/*       {
                           <img
+                          width="100px"
+                          height="100px"
+                     
                             srcSet={
                               img +
-                              " 1x , " +
+                              " 1x  ," +
+                              img.slice(0, -4)+"_708px.webp" +
+                              " 2x  ," +
                               img.slice(0, -4) +
                               "_708px.webp" +
-                              " 2x" +
-                              img.slice(0, -4) +
-                              "_708px.webp" +
-                              " 3x "
+                              " 3x"
                             }
                             src={img}
                           />
-                        }
+                        } */}
 
-                        
+                        <picture>
+                          <source
+                            srcSet={img.slice(0, -4) + "_708px.webp" + " 2x"}
+                            type="image/webp"
+                          />
+                          <source srcSet={img + " 1x"} type="image/jpeg" />
+                          <img src={img} alt={product.name} />
+                        </picture>
                       </div>
                     ))}
                 </Slider>
