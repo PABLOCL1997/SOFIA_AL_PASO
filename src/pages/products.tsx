@@ -178,7 +178,7 @@ const Products: FC<Props> = () => {
           offset: offset,
           search: search,
           onsale: category === "promociones",
-          city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
+          city: userData.userInfo.length ? userData?.userInfo[0]?.cityKey || "SC" : "SC"
         },
       });
       setTitle();
