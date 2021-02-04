@@ -16,41 +16,38 @@ import DelayedWrapper from "../components/DelayedWrapper";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "../components/Loader")
 );
-const Slider = React.lazy(
-  () => import(/* webpackChunkName: "Slider" */ "react-slick")
+const Slider = React.lazy(() =>
+  import(/* webpackChunkName: "Slider" */ "react-slick")
 );
-const RelatedProducts = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
-    )
+const RelatedProducts = React.lazy(() =>
+  import(
+    /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
+  )
 );
-const Chevron = React.lazy(
-  () => import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
+const Chevron = React.lazy(() =>
+  import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
 );
-const Cta = React.lazy(
-  () => import(/* webpackChunkName: "Cta" */ "../components/Cta")
+const Cta = React.lazy(() =>
+  import(/* webpackChunkName: "Cta" */ "../components/Cta")
 );
-const FreeDelivery = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
-    )
+const FreeDelivery = React.lazy(() =>
+  import(
+    /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
+  )
 );
-const Quality = React.lazy(
-  () => import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
+const Quality = React.lazy(() =>
+  import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
 );
-const ContinueArrow = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
-    )
+const ContinueArrow = React.lazy(() =>
+  import(
+    /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
+  )
 );
-const Close = React.lazy(
-  () => import(/* webpackChunkName: "Close" */ "../components/Images/Close")
+const Close = React.lazy(() =>
+  import(/* webpackChunkName: "Close" */ "../components/Images/Close")
 );
 
 const Header = styled.div`
@@ -94,6 +91,19 @@ const Wrapper = styled.div`
     flex-direction: column;
     padding: 20px;
   }
+
+  .slick-slide img {
+    margin: 0 auto;
+    width: 100%;
+    height: 354px;
+    object-fit: contain;
+
+    @media (max-width: ${BREAKPOINT}) {
+      object-fit: contain;
+      width: 100%;
+      height: 250px;
+    }
+  }
 `;
 
 const Col1 = styled.div`
@@ -128,7 +138,7 @@ const Col2 = styled.div`
   flex: 1;
 `;
 
-const Image = styled.div<{ src: string }>`
+const Image = styled.div<{ src: string; srcSet?: string }>`
   height: 354px;
   background: url(${props => props.src}) no-repeat center center / contain;
 
@@ -546,8 +556,29 @@ const Product: FC<Props> = ({
                   {product.image
                     .split(",")
                     .map((img: string, index: number) => (
-                      <div key={index + " Index"}>
-                        <Image src={img}></Image>
+                      <div
+                        key={index + " Index"}
+                        style={{ textAlign: "center" }}
+                      >
+                        {/*          <Image src={img}></Image>  */}
+
+                        {
+                          <img
+                            srcSet={
+                              img +
+                              " 1x , " +
+                              img.slice(0, -4) +
+                              "_708px.webp" +
+                              " 2x" +
+                              img.slice(0, -4) +
+                              "_708px.webp" +
+                              " 3x "
+                            }
+                            src={img}
+                          />
+                        }
+
+                        
                       </div>
                     ))}
                 </Slider>
