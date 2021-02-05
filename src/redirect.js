@@ -96,10 +96,6 @@ const urls = [
         urlTo: "/productos/cerdo/bandejas"
     },
     {
-        urlFrom: "/bife-en-bandeja",
-        urlTo: "/bife-en-bandeja"
-    },
-    {
         urlFrom: "/pack-grande-san-juan",
         urlTo: "/"
     },
