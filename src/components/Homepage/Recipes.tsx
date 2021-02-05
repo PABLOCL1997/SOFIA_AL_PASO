@@ -16,6 +16,19 @@ const Container = styled.div`
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 20px;
     }
+
+    @media only screen and ( -webkit-min-device-pixel-ratio: 1.3 ),
+       only screen and (    min--moz-device-pixel-ratio: 1.3 ),
+       only screen and (      -o-min-device-pixel-ratio: 2.6/2 ),
+       only screen and (         min-device-pixel-ratio: 1.3 ),
+       only screen and ( min-resolution: 124.8dpi ),
+       only screen and ( min-resolution: 1.3dppx ) {
+
+       
+           background: url( /images/bg.webp ) no-repeat top center / cover;
+       
+
+}
 `
 
 const Title = styled.div`
