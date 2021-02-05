@@ -19,7 +19,7 @@ const HeaderLogo: FC<Props> = () => {
     <Image
       width="83px"
       height="50px"
-      src="/images/sofia-logo.png"
+      src="/images/sofia-logo.svg"
       alt="Sofía"
     />
   );

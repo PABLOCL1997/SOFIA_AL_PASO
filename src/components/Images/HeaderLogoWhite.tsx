@@ -13,6 +13,6 @@ const Image = styled.img`
 `;
 
 const HeaderLogoWhite: FC<Props> = () => {
-  return <Image src="/images/sofia-logo.png" width="119px" height="83px" />;
+  return <Image src="/images/sofia-logo.svg" width="119px" height="83px" />;
 };
 export default HeaderLogoWhite;
