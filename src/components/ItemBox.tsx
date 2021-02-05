@@ -353,7 +353,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
               src={product.image.split(",")[0]}
             /> */}
 
-            <picture>
+            <picture className="lazyload">
               <source
                 srcSet={
                   product.image.split(",")[0].slice(0, -4) +
