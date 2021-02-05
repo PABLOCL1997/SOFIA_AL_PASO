@@ -25,7 +25,7 @@ const HeaderLogoWhite: FC<Props> = () => {
     <Container>
       <picture>
         <source srcSet={"/images/sofia-logo.webp 2x"} type="image/webp" />
-        <source srcSet={"/images/sofia-logo.png 2x"} type="image/jpeg" />
+        <source srcSet={"/images/sofia-logo.png 1x"} type="image/jpeg" />
         <img
           src={"/images/sofia-logo.png"}
           width="119px"
