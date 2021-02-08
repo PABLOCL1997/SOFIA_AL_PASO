@@ -327,6 +327,8 @@ const ProductList: FC<Props> = ({
             )}
           </SelectBox>
         </Toolbox>
+
+        
         {!!products.length && (
           <Grid>
             {products.map((product: ProductType) => (
