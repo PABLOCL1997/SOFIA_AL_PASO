@@ -332,44 +332,26 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
             <Category>{product.category_name}</Category>
 
-            {/*  <Image data-src={product.image.split(",")[0]}  className="lazyload"></Image> */}
-
-      
-
-            {/*    <Image
-              height="200px"
-              width="200px"
-              srcSet={
-                product.image.split(",")[0] +
-                " 1x , " +
-                product.image.split(",")[0].slice(0, -4) +
-                "_708px.webp" +
-                " 2x ," +
-
-                product.image.split(",")[0].slice(0, -4) +
-                "_708px.webp" +
-                " 3x"
-              }
-              src={product.image.split(",")[0]}
-            /> */}
+           
 
             <picture className="lazyload">
               <source
                 srcSet={
                   product.image.split(",")[0].slice(0, -4) +
-                  "_708px.webp" +
+                  "_200px.webp" +
                   " 2x"
                 }
                 type="image/webp"
               />
               <source
-                srcSet={product.image.split(",")[0] + " 1x"}
+                srcSet={product.image.split(",")[0].slice(0, -4) +
+                "_200px.jpg" + " 1x"}
                 type="image/jpeg"
               />
               <img
                 height="200px"
                 width="200px"
-                style={{ margin: "0 auto" }}
+                style={{ margin: "0 auto", display:"block" }}
                 src={product.image.split(",")[0]}
                 alt={product.name}
               />
