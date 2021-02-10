@@ -5,7 +5,12 @@ import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
 import { SET_USER } from "../graphql/user/mutations";
 import { BREAKPOINT } from "../utils/constants";
-import { CREATE_ORDER, EMPTY_CART, PAY, SET_TEMP_CART } from "../graphql/cart/mutations";
+import {
+  CREATE_ORDER,
+  EMPTY_CART,
+  PAY,
+  SET_TEMP_CART
+} from "../graphql/cart/mutations";
 import {
   GET_CART_ITEMS,
   TODOTIX,
@@ -315,7 +320,9 @@ const Checkout: FC<Props> = () => {
           JSON.stringify({
             entity_id: product.entity_id,
             sku: product.sku,
-            category: product.category_name ? product.category_name.toLowerCase().trim() : "",
+            category: product.category_name
+              ? product.category_name.toLowerCase().trim()
+              : "",
             name: product.name,
             price: product.special_price
               ? product.special_price
@@ -457,18 +464,21 @@ const Checkout: FC<Props> = () => {
         email: orderData.billing.email,
         telephone: orderData.shipping.phone2,
         country_id: "BO",
-        city:
+        city: escapeSingleQuote(
           localUserData &&
             localUserData.userInfo &&
             localUserData.userInfo.length
             ? localUserData.userInfo[0].cityName
-            : "-",
+            : "-"
+        ),
         latitude: String((window as any).latitude),
         longitude: String((window as any).longitude),
-        street: orderData.shipping.id
-          ? orderData.shipping.street
-          : `${orderData.shipping.address || ""}`,
-        reference: orderData.shipping.reference
+        street: escapeSingleQuote(
+          orderData.shipping.id
+            ? orderData.shipping.street
+            : `${orderData.shipping.address || ""}`
+        ),
+        reference: escapeSingleQuote(orderData.shipping.reference)
       }),
       envio: JSON.stringify({
         entity_id: orderData.shipping.id,
@@ -477,17 +487,20 @@ const Checkout: FC<Props> = () => {
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
         telephone: orderData.shipping.phone,
-        street: orderData.shipping.id
-          ? orderData.shipping.street
-          : `${orderData.shipping.address || ""}`,
-        city:
+        street: escapeSingleQuote(
+          orderData.shipping.id
+            ? orderData.shipping.street
+            : `${orderData.shipping.address || ""}`
+        ),
+        city: escapeSingleQuote(
           orderData.shipping.city ||
-          (localUserData &&
+            (localUserData &&
             localUserData.userInfo &&
             localUserData.userInfo.length
-            ? localUserData.userInfo[0].cityName
-            : "-"),
-        region: orderData.shipping.reference,
+              ? localUserData.userInfo[0].cityName
+              : "-")
+        ),
+        region: escapeSingleQuote(orderData.shipping.reference),
         country_id: "BO",
         latitude: String((window as any).latitude),
         longitude: String((window as any).longitude)
@@ -499,19 +512,19 @@ const Checkout: FC<Props> = () => {
   };
 
   const updateOrderData = (key: string, values: any) => {
-    if (key === 'billing' && values.email) {
+    if (key === "billing" && values.email) {
       setTempCart({
         variables: {
           email: values.email,
           items: JSON.stringify({
-            firstname: values.firstname || '',
+            firstname: values.firstname || "",
             items: data.cartItems.map((product: ProductType) => {
               return {
-                name: product.name || '',
-                image: product.image || '',
-                price: (product.special_price || 0),
+                name: product.name || "",
+                image: product.image || "",
+                price: product.special_price || 0,
                 qty: product.qty || 0
-              }
+              };
             })
           })
         }
@@ -538,8 +551,8 @@ const Checkout: FC<Props> = () => {
         <ConfirmAddress
           address={
             orderData.shipping &&
-              orderData.shipping.id &&
-              orderData.shipping.street
+            orderData.shipping.id &&
+            orderData.shipping.street
               ? orderData.shipping.street.replace(/\|/g, " ")
               : ""
           }
