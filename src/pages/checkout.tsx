@@ -16,6 +16,7 @@ import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { trackOrder, initCheckout } from "../utils/dataLayer";
+import { escapeSingleQuote } from "../utils/string";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -443,15 +444,15 @@ const Checkout: FC<Props> = () => {
       items: items,
       delivery_price: 0,
       customer_email: orderData.billing.email,
-      customer_firstname: orderData.billing.firstname,
-      customer_lastname: orderData.billing.lastname,
+      customer_firstname: escapeSingleQuote(orderData.billing.firstname),
+      customer_lastname: escapeSingleQuote(orderData.billing.lastname),
       facturacion: JSON.stringify({
         addressId:
           userData && (userData as any).addressId
             ? (userData as any).addressId
             : 0,
-        firstname: orderData.billing.firstname,
-        lastname: orderData.billing.lastname,
+        firstname: escapeSingleQuote(orderData.billing.firstname),
+        lastname: escapeSingleQuote(orderData.billing.lastname),
         fax: orderData.billing.nit,
         email: orderData.billing.email,
         telephone: orderData.shipping.phone2,
@@ -471,8 +472,8 @@ const Checkout: FC<Props> = () => {
       }),
       envio: JSON.stringify({
         entity_id: orderData.shipping.id,
-        firstname: orderData.shipping.firstname,
-        lastname: orderData.shipping.lastname,
+        firstname: escapeSingleQuote(orderData.shipping.firstname),
+        lastname: escapeSingleQuote(orderData.shipping.lastname),
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
         telephone: orderData.shipping.phone,

@@ -58,3 +58,7 @@ export const searchMultiple = (nameKey: string, nameValue: string, myArray: Arra
   }
   return res
 }
+
+export const escapeSingleQuote = (text: string): string => {
+  return text.replace(/'/g, "\\'")
+}
