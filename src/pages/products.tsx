@@ -170,6 +170,7 @@ const Products: FC<Props> = () => {
       } else if (!entity_id) {
         setCategoryId(0);
       }
+      entity_id = search && search.length > 0 ? 0 : entity_id 
       loadProducts({
         variables: {
           category_id: entity_id || 0,
