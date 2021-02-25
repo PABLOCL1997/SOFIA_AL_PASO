@@ -1,4 +1,9 @@
 module.exports = {
+  rewriteRequest: (req, newUrl) => {
+    req.originalUrl = newUrl
+    req.path = newUrl
+    return req
+  },
   toLink: (str) => {
     return str ? str.toLowerCase().replace(/ /g, "-") : "";
   },
