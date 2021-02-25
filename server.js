@@ -23,7 +23,8 @@ const {
   fromLink,
   toLink,
   mapCategories,
-  search
+  search,
+  rewriteRequest
 } = require("./src/meta_server");
 
 app.use(compression())
@@ -69,26 +70,32 @@ const loadPage = async (req, res, meta = {}) => {
       const response = await client.request(GET_CATEGORIES, {})
       if(!response.categories) return res.status(404).redirect("/404")
       const catFound = search('name', categoryName, mapCategories(response.categories))
-      if (!catFound) statusCode = 404
+      if (!catFound) {
+        statusCode = 404
+        req = rewriteRequest(req, '/404')
+      }
   
       if (req.params.subcategory && statusCode != 404) {
         const s3Name = toLink(String(req.params.subcategory))
         const s3Found = search('name', s3Name, mapCategories(catFound.subcategories))
-        if (!s3Found) statusCode = 404
+        if (!s3Found) {
+          statusCode = 404
+          req = rewriteRequest(req, '/404')
+
+        }
         
         if (req.params.lastlevel && statusCode != 404){
           const s4Name = toLink(String(req.params.lastlevel))
           const s4Found = search('name', s4Name, mapCategories(s3Found.subcategories))
-          if (!s4Found) statusCode = 404
+          if (!s4Found) {
+            statusCode = 404
+            req = rewriteRequest(req, '/404')
+          }
         }
       }
 
-      if (statusCode == 404) {
-        return res.status(404).redirect("/404")
-      }
     }catch (err) {
       console.log('err', err)
-      return res.status(404).redirect("/404")
     }
   }
 
@@ -100,7 +107,8 @@ const loadPage = async (req, res, meta = {}) => {
         name
       })
       if (!response.productMetadata) {
-        return res.status(404).redirect("/404")
+        statusCode = 404
+        req = rewriteRequest(req, '/404')
       }
       if (response.productMetadata && response.productMetadata.meta_title && response.productMetadata.meta_description) {
         const { productMetadata: { meta_title, meta_description } } = response
