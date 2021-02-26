@@ -390,12 +390,33 @@ const urls = [
     {
         urlFrom: "/preparados/silpancho-de-res-en-caja",
         urlTo: "/productos/preparados"
+    },
+    
+
+]
+
+const deepLinks = [
+    {
+        urlFrom: "/productos/embutidos",
+        urlTo: "/productos/embutidos-y-fiambres"
+    },
+    {
+        urlFrom: "/productos/fiambres",
+        urlTo: "/productos/embutidos-y-fiambres"
     }
 ]
+
 
 function redirectMiddleware ( req, res, next )
 {
     let match;
+    deepLinks.forEach( url => {
+        if (String(req.path).startsWith(url.urlFrom) && req.path !== url.urlTo ) {
+            match = url.urlFrom
+            res.redirect( url.urlTo )
+        }
+    } )
+
     urls.forEach( url =>
     {
         if ( req.path === url.urlFrom )
@@ -404,6 +425,7 @@ function redirectMiddleware ( req, res, next )
             res.redirect( url.urlTo )
         }
     } )
+
     if ( !match )
     {
         next()
