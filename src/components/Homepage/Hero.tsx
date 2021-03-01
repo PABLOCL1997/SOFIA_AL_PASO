@@ -28,7 +28,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: url(/images/b2c-nueva_home.jpg) no-repeat center center / cover;
+  background: url(/images/e-commerce_1_1.jpg) no-repeat center center / cover;
   margin-top: 15px;
   position: relative;
 
@@ -60,7 +60,7 @@ const Title = styled.h2`
   text-align: center;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--whiter);
   margin: 30px 0;
   padding: 0;
   @media screen and (max-width: ${BREAKPOINT}) {
