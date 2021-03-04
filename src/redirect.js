@@ -1,5 +1,201 @@
 const urls = [
     {
+        urlFrom: "/productos/listo-para-comer",
+        urlTo: "/productos/preparados/listo-para-comer"
+    },
+    {
+        urlFrom: "/productos/res",
+        urlTo: "/productos?q=res"
+    },
+    {
+        urlFrom: "/productos/vac%C3%ADo",
+        urlTo: "/productos?q=vacio"
+    },
+    {
+        urlFrom: "/productos/embutidos/jamones/barra",
+        urlTo: "/productos/embutidos-y-fiambres/jamones/barra"
+    },
+    {
+        urlFrom: "/productos/embutidos/chorizos/granel",
+        urlTo: "/productos/embutidos-y-fiambres/chorizos/granel"
+    },
+    {
+        urlFrom: "/productos/cortes",
+        urlTo: "/productos?q=cortes"
+    },
+    {
+        urlFrom: "/productos/entero",
+        urlTo: "/productos?q=entero"
+    },
+    {
+        urlFrom: "/fetaonewniet.html",
+        urlTo: "/"
+    },
+    {
+        urlFrom: "/papas--tradicional-2.5-kg-",
+        urlTo: "/papas--tradicional-2.5-kg-(9x9)"
+    },
+    {
+        urlFrom: "/costilla-peque%C3%B1a-con-cuero-a-granel-",
+        urlTo: "/costilla-con-cuero-a-granel"
+    },
+    {
+        urlFrom: "/productos/embutidos/jamones/vac%C3%ADo",
+        urlTo: "/productos/embutidos-y-fiambres/jamones/vac%C3%ADo"
+    },
+    {
+        urlFrom: "/mascotas",
+        urlTo: "/productos/mascotas"
+    },
+    {
+        urlFrom: "/productos/embutidos/mortadelas/vac%C3%ADo",
+        urlTo: "/productos/embutidos-y-fiambres/mortadelas/vac%C3%ADo"
+    },
+    {
+        urlFrom: "/productos/pavo/bandejas",
+        urlTo: "/productos/pavo"
+    },
+    {
+        urlFrom: "/productos/la-despensa",
+        urlTo: "/productos/conservas/la-despensa"
+    },
+    {
+        urlFrom: "/embutidos-premium",
+        urlTo: "/productos/embutidos-premium"
+    },
+    {
+        urlFrom: "/productos/embutidos/jamones",
+        urlTo: "/productos/embutidos-y-fiambres/jamones"
+    },
+    {
+        urlFrom: "/productos/chorizos",
+        urlTo: "/productos/embutidos-premium/chorizos"
+    },
+    {
+        urlFrom: "/pat%C3%A9-de-h%C3%ADgado-de-cerdo-de-100-grs.",
+        urlTo: "/pat%C3%A9-de-h%C3%ADgado-de-cerdo-de-100-grs"
+    },
+    {
+        urlFrom: "/contacts/",
+        urlTo: "/preguntas-frecuentes"
+    },
+    {
+        urlFrom: "/productos/yo-chef",
+        urlTo: "/productos/preparados/yo-chef"
+    },
+    {
+        urlFrom: "/productos/mortadelas",
+        urlTo: "/productos/embutidos-y-fiambres/mortadelas"
+    },
+    {
+        urlFrom: "/mortadela-de-pollo-vac%C3%ADo-de-200-grs.",
+        urlTo: "/mortadela-de-pollo-vac%C3%ADo-de-200-grs"
+    },
+    {
+        urlFrom: "/pat%C3%A9-de-h%C3%ADgado-de-pollo-de-100-grs.",
+        urlTo: "/pat%C3%A9-de-h%C3%ADgado-de-pollo-de-100-grs"
+    },
+    {
+        urlFrom: "/p-u-jamon-light-de-pollo-al-vacio-250-grs",
+        urlTo: "/jam%C3%B3n-light-de-pollo-al-vac%C3%ADo-250-grs"
+    },
+    {
+        urlFrom: "/productos/embutidos/pat%C3%A9s",
+        urlTo: "/productos/embutidos-y-fiambres/pat%C3%A9s"
+    },
+    {
+        urlFrom: "/productos/embutidos/salchichas",
+        urlTo: "/productos/embutidos-y-fiambres/salchichas"
+    },
+    {
+        urlFrom: "/carne-de-pavo",
+        urlTo: "/productos/pavo"
+    },
+    {
+        urlFrom: "/productos/jamones",
+        urlTo: "/productos/embutidos-y-fiambres/jamones"
+    },
+    {
+        urlFrom: "/cachorros-raza-mediana-grande-podium-23-k",
+        urlTo: "/cachorros-raza-mediana-grande-podium-23-kg"
+    },
+    {
+        urlFrom: "/productos/milanesas",
+        urlTo: "/productos/preparados/milanesas"
+    },
+    {
+        urlFrom: "/conservas",
+        urlTo: "/productos/conservas"
+    },
+    {
+        urlFrom: "/p-u-tubo-hamb-83-res-picana-sofia-12x83-grs",
+        urlTo: "/hamburguesas-de-res-pica%C3%B1a-(12-x-83-grs)"
+    },
+    {
+        urlFrom: "/productos/nuggets",
+        urlTo: "/productos/preparados/nuggets"
+    },
+    {
+        urlFrom: "/productos/embutidos/chorizos",
+        urlTo: "/productos/embutidos-y-fiambres/chorizos"
+    },
+    {
+        urlFrom: "/productos/granel",
+        urlTo: "/productos?q=granel"
+    },
+    {
+        urlFrom: "/productos/embutidos/chorizos/vac%C3%ADo",
+        urlTo: "/productos/embutidos-y-fiambres/chorizos/vac%C3%ADo"
+    },
+    {
+        urlFrom: "/productos/el-faro",
+        urlTo: "/productos/conservas/el-faro"
+    },
+    {
+        urlFrom: "/productos/hamburguesas",
+        urlTo: "/productos/preparados/hamburguesas"
+    },
+    {
+        urlFrom: "/embutidos",
+        urlTo: "/productos/embutidos-y-fiambres"
+    },
+    {
+        urlFrom: "/productos/bandejas",
+        urlTo: "/productos"
+    },
+    {
+        urlFrom: "/productos/embutidos/mortadelas",
+        urlTo: "/productos/embutidos-y-fiambres/mortadelas"
+    },
+    {
+        urlFrom: "/pavo-",
+        urlTo: "/productos/pavo"
+    },
+    {
+        urlFrom: "/productos/pat%C3%A9s",
+        urlTo: "/productos/embutidos-y-fiambres/patés"
+    },
+    {
+        urlFrom: "/productos/embutidos/salchichas/granel",
+        urlTo: "/productos/embutidos-y-fiambres/salchichas/granel"
+    },
+    {
+        urlFrom: "/productos/barra",
+        urlTo: "/productos?q=barra"
+    },
+    {
+        urlFrom: "/productos/embutidos/mortadelas/barra",
+        urlTo: "/productos/embutidos-y-fiambres/mortadelas/barra"
+    },
+    {
+        urlFrom: "/hoycblmsrb.html",
+        urlTo: "/"
+    },
+    {
+        urlFrom: "/productos/salchichas",
+        urlTo: "/productos/embutidos-y-fiambres/salchichas"
+    },
+    {
         urlFrom: "/pate-de-higado-de-pollo-de-100-grs",
         urlTo: "/pat%C3%A9-de-h%C3%ADgado-de-pollo-de-100-grs."
     },
@@ -404,21 +600,17 @@ const urls = [
 
 
 
-function redirectMiddleware ( req, res, next )
-{
+function redirectMiddleware(req, res, next) {
     let match;
 
-    urls.forEach( url =>
-    {
-        if ( req.path === url.urlFrom )
-        {
+    urls.forEach(url => {
+        if (req.path === url.urlFrom) {
             match = url.urlFrom
-            res.redirect( url.urlTo )
+            res.redirect(url.urlTo)
         }
-    } )
+    })
 
-    if ( !match )
-    {
+    if (!match) {
         next()
     }
 }
