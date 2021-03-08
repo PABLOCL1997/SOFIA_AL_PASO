@@ -268,10 +268,6 @@ const urls = [
         urlTo: "/productos?q=nuggets"
     },
     {
-        urlFrom: "/milanesa-cordon-bleu-4-unidades",
-        urlTo: "/milanesa-cordon-bleu-4-unidades"
-    },
-    {
         urlFrom: "/fiambres",
         urlTo: "/productos/fiambres"
     },
