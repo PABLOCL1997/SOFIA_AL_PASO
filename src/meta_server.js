@@ -79,5 +79,15 @@ module.exports = {
       }
     }
   }
-`
+  `,
+  GET_CATEGORY_META:`
+  query CategoryMetadata ($entity_id: Int!) {
+    categoryMetadata(entity_id:$entity_id){
+      name
+      meta_title
+      meta_description
+      meta_keywords
+    }
+  }
+  `
 };
