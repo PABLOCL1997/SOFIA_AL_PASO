@@ -20,6 +20,7 @@ const {
   FAQ_TITLE,
   TERMS_TITLE,
   GET_CATEGORIES,
+  GET_CATEGORY_META,
   fromLink,
   toLink,
   mapCategories,
@@ -65,11 +66,15 @@ const loadPage = async (req, res, meta = {}) => {
     }
   }
   if (req.params.category && meta.rel){
+    // determine de last level
+    let lastlevel
+
     const categoryName = toLink(String(req.params.category))
     try {
       const response = await client.request(GET_CATEGORIES, {})
       if(!response.categories) return res.status(404).redirect("/404")
       const catFound = search('name', categoryName, mapCategories(response.categories))
+      if (catFound) lastlevel = catFound
       if (!catFound) {
         statusCode = 404
         req = rewriteRequest(req, '/404')
@@ -78,6 +83,7 @@ const loadPage = async (req, res, meta = {}) => {
       if (req.params.subcategory && statusCode != 404) {
         const s3Name = toLink(String(req.params.subcategory))
         const s3Found = search('name', s3Name, mapCategories(catFound.subcategories))
+        if (s3Found) lastlevel = s3Found
         if (!s3Found) {
           statusCode = 404
           req = rewriteRequest(req, '/404')
@@ -87,13 +93,22 @@ const loadPage = async (req, res, meta = {}) => {
         if (req.params.lastlevel && statusCode != 404){
           const s4Name = toLink(String(req.params.lastlevel))
           const s4Found = search('name', s4Name, mapCategories(s3Found.subcategories))
+          if (s4Found) lastlevel = s4Found
           if (!s4Found) {
             statusCode = 404
             req = rewriteRequest(req, '/404')
           }
         }
       }
+      if (lastlevel && lastlevel.entity_id) {
+        const { entity_id } = lastlevel
+        const response = await client.request(GET_CATEGORY_META, { entity_id })
 
+        if (response.categoryMetadata && response.categoryMetadata.meta_title && response.categoryMetadata.meta_description) {
+          const { categoryMetadata: { meta_title, meta_description } } = response
+          metadata = { title: meta_title, meta_description, meta_keywords: "" }
+        }
+      }
     }catch (err) {
       console.log('err', err)
     }
