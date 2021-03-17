@@ -12,7 +12,8 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Cta'));
 const HeaderLogo = React.lazy(() => import(/* webpackChunkName: "HeaderLogo" */'../Images/HeaderLogo'));
 
 const Container = styled.div`
-    background: #ebebeb url(/images/salad.png) top right no-repeat;
+    position: relative;
+    background: #ebebeb;
     background-size: 400px;
     width: calc(100% - 120px);
     margin: auto;
@@ -129,9 +130,13 @@ const MobileContainer = styled.div`
 
 const Image = styled.img`
     transform: rotate(90deg);
-    width: calc(100% + 15px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
     margin-bottom: -55px;
     @media screen and (max-width: ${BREAKPOINT}) {
+        position: relative;
         width: calc(100% - 30px);
         max-width: 260px;
         margin: 20px 0 10px;
@@ -160,8 +165,7 @@ const Subscribe: FC<Props> = () => {
         }
     }
 
-    return <Suspense fallback={<Loader />}>
-        <>
+    return <>
             <Desktop>
                 <Container>
                     <LogoContainer>
@@ -177,6 +181,7 @@ const Subscribe: FC<Props> = () => {
                         </CtaWrapper>
                     </InputGroup>
                     <Text>{t('homepage.subscribe.text')}</Text>
+                    <Image className="lazyload"  data-src="/images/salad.png" alt="newsletter" />
                 </Container>
             </Desktop>
             <Mobile>
@@ -197,7 +202,6 @@ const Subscribe: FC<Props> = () => {
                 </MobileContainer>
             </Mobile>
         </>
-    </Suspense>
 }
 
 export default Subscribe;

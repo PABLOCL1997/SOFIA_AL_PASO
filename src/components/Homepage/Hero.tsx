@@ -28,7 +28,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: url(/images/e-commerce_1_1.jpg) no-repeat center center / cover;
+  background: #93531d no-repeat center center / cover;
   margin-top: 15px;
   position: relative;
 
@@ -158,6 +158,16 @@ const CtaWrapper = styled.div`
   }
 `;
 
+const Image = styled.img`
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+`
+
 type Props = {};
 
 const Hero: FC<Props> = () => {
@@ -192,6 +202,19 @@ const Hero: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <div>
         <Container>
+          <Image
+            data-sizes="auto"
+            src="/images/e-commerce_1_1_lq.jpg"
+            data-srcset="
+            /images/e-commerce_1_1_lq.jpg 220w,
+            /images/e-commerce_1_1_500.jpg 500w,
+            /images/e-commerce_1_1_700.jpg 700w,
+            /images/e-commerce_1_1_900.jpg 900w,
+            /images/e-commerce_1_1_1200.jpg 1200w,
+            /images/e-commerce_1_1_1400.jpg 1400w,
+            "
+            className="lazyload blur-up"
+          />
           <div>
             <HeaderLogoWhite withSlogan={false} />
             <Title>{t("homepage.hero.text")}</Title>

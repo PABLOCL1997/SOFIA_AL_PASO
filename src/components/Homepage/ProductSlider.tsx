@@ -166,7 +166,6 @@ const ProductSlider: FC<Props> = ({ products, useArrows }) => {
   };
 
   return (
-    <Suspense fallback={<Loader />}>
       <div className="main-container">
         <SliderContainer>
           <Slider {...settings}>
@@ -192,7 +191,6 @@ const ProductSlider: FC<Props> = ({ products, useArrows }) => {
           </ProductModal>
         )}
       </div>
-    </Suspense>
   );
 };
 
