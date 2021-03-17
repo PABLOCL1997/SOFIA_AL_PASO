@@ -5,11 +5,20 @@ const Container = styled.div`
     
 `
 
-const Button = styled.button<{ filled: boolean, hover: boolean }>`
+const Button = styled.button<{ filled: boolean, hover: boolean, active: boolean }>`
     border: 1px solid var(--red);
     background: ${props => props.filled ? 'var(--red)' : 'none'};
     color: ${props => props.filled ? 'var(--white)' : 'var(--red)'};
     box-shadow: ${props => props.filled ? 'var(--btn-shadow)' : '0 0'};
+    ${props => props.active ?  '' : `
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    ` }
+    
     padding: 5px 30px;
     border-radius: 30px;
     transition: all .2s linear;
@@ -67,16 +76,17 @@ type Props = {
     text: string,
     action: any,
     hover?: boolean,
-    icon?: any
+    icon?: any,
+    active?: boolean
 }
 
-const Cta: FC<Props> = ({ filled = false, text, action, blank = false, hover = true, icon = false }) => {
+const Cta: FC<Props> = ({ filled = false, text, action, blank = false, hover = true, icon = false, active = true }) => {
     return <Container>
         {blank ?
             <Link hover={hover} filled={filled} href={action} target="_blank">
                 <span>{text}</span>
             </Link> :
-            <Button hover={hover} filled={filled} onClick={action}>
+            <Button hover={hover} filled={filled} onClick={action} active={active}>
                 <span>{text}</span>
                 {icon}
             </Button>}

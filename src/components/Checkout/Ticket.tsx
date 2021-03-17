@@ -2,10 +2,11 @@ import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { CHECK_COUPON } from "../../graphql/cart/mutations";
-import { GET_CART_ITEMS, GET_TOTAL } from "../../graphql/cart/queries";
+import { GET_CART_ITEMS, GET_TOTAL, GET_MIN_PRICE } from "../../graphql/cart/queries";
 import { useQuery, useMutation } from "react-apollo";
 import { ProductType } from "../../graphql/products/type";
 import { SET_USER } from "../../graphql/user/mutations";
+import { GET_USER } from "../../graphql/user/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -196,6 +197,22 @@ const LoaderWrapper = styled.div`
   }
 `;
 
+const ErrorText = styled.div<{ margin: boolean }>`
+
+  font-family: MullerMedium;
+  font-size: 14px;
+  line-height: 14px;
+  text-decoration-line: none;
+  color: var(--red);
+  border: 0;
+  background: none;
+  margin: 20px 0 ${props => (props.margin ? "40px" : "0")};
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+
 type Props = {
   order: Function;
   updateOrder: Function;
@@ -210,6 +227,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
   const { data } = useQuery(GET_CART_ITEMS);
+  const { data: userData } = useQuery(GET_USER, {})
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     variables: { name: coupon }
   });
@@ -331,6 +349,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
         <CtaWrapper>
           {!processing && (
             <Cta
+              active={Number(totalAmount.replace(",", ".")) >= GET_MIN_PRICE(userData)}
               filled={true}
               text={t("checkout.ticket.send")}
               action={order}
@@ -342,6 +361,9 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             </LoaderWrapper>
           )}
         </CtaWrapper>
+        {Number(totalAmount.replace(",", ".")) < GET_MIN_PRICE(userData) && (
+          <ErrorText margin={false}>El valor mínimo para la compra es de Bs. {GET_MIN_PRICE(userData)}.</ErrorText>
+        )}
       </Container>
     </Suspense>
   );
