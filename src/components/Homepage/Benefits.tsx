@@ -110,7 +110,6 @@ const Benefits: FC<Props> = () => {
   const { t } = useTranslation();
 
   return (
-    <Suspense fallback={<Loader />}>
       <div className="main-container">
         <Container>
           <Title>{t("homepage.benefits.title")}</Title>
@@ -140,7 +139,6 @@ const Benefits: FC<Props> = () => {
           </Grid>
         </Container>
       </div>
-    </Suspense>
   );
 };
 

@@ -94,7 +94,6 @@ const Promotions: FC<Props> = () => {
   }, []);
 
   return (
-    <Suspense fallback={<Loader />}>
       <Container>
         <div className="main-container">
           <Title>{t("homepage.promotions.title")}</Title>
@@ -110,7 +109,6 @@ const Promotions: FC<Props> = () => {
           </CtaWrapper>
         </div>
       </Container>
-    </Suspense>
   );
 };
 

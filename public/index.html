@@ -12,12 +12,12 @@
     <meta property="og:title" content="__OG_TITLE__" />
     <meta property="og:description" content="__OG_DESCRIPTION__" />
     <meta property="og:image" content="__OG_IMAGE__" />
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script type="application/javascript" async defer src="https://apis.google.com/js/platform.js"></script>
     <meta
       name="google-signin-client_id"
       content="477197213348-fjk4p43702gn9t61jja26iqsj6j7j2of.apps.googleusercontent.com"
     />
-    <script>
+    <script type="application/javascript">
       window.fbAsyncInit = function () {
         FB.init({
           appId: "614067362874540",
@@ -27,20 +27,10 @@
         });
         FB.AppEvents.logPageView();
       };
-      (function (d, s, id) {
-        var js,
-          fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      })(document, "script", "facebook-jssdk");
     </script>
+    <script type="application/javascript" async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
     <!-- Google Tag Manager -->
-    <script>
+    <script type="application/javascript">
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });

@@ -162,7 +162,19 @@ const loadPage = async (req, res, meta = {}) => {
 
 app.use(redirectMiddleware)
 app.get("/", (req, res) => loadPage(req, res, { title: HOMEPAGE_TITLE, identifier: "sofia-homepage" }));
-app.use(express.static(__dirname + "/build"));
+app.use(express.static(__dirname + "/build", {
+  setHeaders: (res, path) => {
+    const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
+
+    if (path.endsWith('.html')) {
+      // All of the project's HTML files end in .html
+      res.setHeader('Cache-Control', 'no-cache');
+    } else if (hashRegExp.test(path)) {
+      // If the RegExp matched, then we have a versioned URL.
+      res.setHeader('Cache-Control', 'max-age=31536000');
+    }
+  },
+}));
 app.get("/productos", (req, res) => loadPage(req, res, { title: PRODUCTS_TITLE, identifier: "sofia-products", rel: true }));
 app.get("/preguntas-frecuentes", (req, res) => loadPage(req, res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
 app.get("/terminos-y-condiciones", (req, res) => loadPage(req, res, { title: TERMS_TITLE, identifier: "sofia-tyc" }));

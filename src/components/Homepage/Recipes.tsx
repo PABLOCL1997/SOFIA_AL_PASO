@@ -5,13 +5,14 @@ import { RecipeType } from '../RecipeItem';
 import { Desktop, Mobile } from '../ResponsiveContainers';
 import { BREAKPOINT } from '../../utils/constants';
 
+
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */'../Cta'));
 const RecipeItem = React.lazy(() => import(/* webpackChunkName: "RecipeItem" */'../RecipeItem'));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */'react-slick'));
 
 const Container = styled.div`
-    background: url(/images/bg.jpg) no-repeat top center / cover;
+    background: no-repeat top center / cover;
     padding-bottom: 120px;
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 20px;
@@ -124,9 +125,8 @@ const Benefits: FC<Props> = () => {
         slidesToScroll: 1
     };
 
-    return <Suspense fallback={<Loader />}>
-        <Container>
-            <Desktop>
+    return <Container>
+            <Desktop data-bg="/images/bg.jpg" className="lazyload">
                 <div className="main-container">
                     <Title>{t('homepage.recipes.title')}</Title>
                     <Grid>
@@ -151,7 +151,6 @@ const Benefits: FC<Props> = () => {
                 </div>
             </Mobile>
         </Container>
-    </Suspense>
 }
 
 export default Benefits;

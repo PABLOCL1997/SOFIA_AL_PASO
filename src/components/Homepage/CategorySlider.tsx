@@ -187,7 +187,6 @@ const CategorySlider: FC<Props> = () => {
   }
 
   return (
-    <Suspense fallback={<Loader />}>
       <div className="main-container">
         <CategoryList>
           <Category onClick={() => setSelected(0)} selected={selected === 0}>
@@ -250,7 +249,6 @@ const CategorySlider: FC<Props> = () => {
           </a>
         </CtaWrapper>
       </div>
-    </Suspense>
   );
 };
 
