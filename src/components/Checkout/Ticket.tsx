@@ -206,6 +206,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
   const { t } = useTranslation();
   const [type, setType] = useState("");
   const [discount, setDiscount] = useState("0");
+  const [discountAmount, setDiscountAmount] = useState<any>(0);
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
   const { data } = useQuery(GET_CART_ITEMS);
@@ -222,16 +223,11 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
       const response: any = await checkCoupon();
       setType(response.data.coupon.type);
       if (response.data.coupon.type === "%") {
-        setDiscount(
-          parseFloat(
-            String(
-              Number(totalAmount.replace(",", ".")) *
-                (response.data.coupon.discount_amount / 100)
-            )
-          ).toFixed(2)
-        );
+        setDiscount(parseFloat(String(Number(response.data.coupon.discount_amount))).toFixed(2));
+        setDiscountAmount(parseFloat(String(Number(totalAmount.replace(',','.') * response.data.coupon.discount_amount / 100))).toFixed(2))
       } else {
         setDiscount(String(response.data.coupon.discount_amount));
+        setDiscountAmount(String(response.data.coupon.discount_amount))
       }
       setCoupon(response.data.coupon.code);
     } catch (e) {
@@ -314,10 +310,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             </InputBox>
           )}
         </Coupon>
-        {Number(discount) > 0 && (
+        {Number(discountAmount) > 0 && (
           <Discount>
             <span>{t("checkout.ticket.discount")}</span>
-            <span>- Bs. {discount.replace(".", ",")}</span>
+            <span>- Bs. {discountAmount.replace(".", ",")}</span>
           </Discount>
         )}
         <Line />
@@ -327,7 +323,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             Bs.{" "}
             {String(
               Number(
-                Number(totalAmount.replace(",", ".")) - parseFloat(discount)
+                Number(totalAmount.replace(",", ".")) - parseFloat(discountAmount)
               ).toFixed(2)
             ).replace(".", ",")}
           </b>
