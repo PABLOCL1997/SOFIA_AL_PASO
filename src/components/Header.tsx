@@ -5,54 +5,65 @@ import styled from "styled-components";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_CART_ITEMS, GET_TOTAL, GET_QTY } from "../graphql/cart/queries";
 import { Desktop, Mobile } from "./ResponsiveContainers";
-import { BREAKPOINT } from "../utils/constants";
+import { BREAKPOINT, customStyles } from "../utils/constants";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { token } from "../utils/store";
+import Search from "./Images/Search";
+import {
+  IngresarWrap,
+  AddressHeader,
+  RightMenu
+} from "../styled-components/HeaderStyles";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "./Loader")
+import UserIcon from "../assets/images/profile-ingresar.svg";
+import CartImg from "../assets/images/Carrito.svg";
+import BuscarIcon from "../assets/images/buscar-zoom.svg";
+import BuscarIconRed from "../assets/images/buscar-zoom-red.svg";
+
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
-const HeaderLogo = React.lazy(
-  () => import(/* webpackChunkName: "HeaderLogo" */ "./Images/HeaderLogo")
+const HeaderLogo = React.lazy(() =>
+  import(/* webpackChunkName: "HeaderLogo" */ "./Images/HeaderLogo")
 );
-const Pin = React.lazy(
-  () => import(/* webpackChunkName: "Pin" */ "./Images/Pin")
+const Pin = React.lazy(() =>
+  import(/* webpackChunkName: "Pin" */ "./Images/Pin")
 );
-const Cart = React.lazy(
-  () => import(/* webpackChunkName: "Cart" */ "./Images/Cart")
+const Cart = React.lazy(() =>
+  import(/* webpackChunkName: "Cart" */ "./Images/Cart")
 );
-const Menu = React.lazy(
-  () => import(/* webpackChunkName: "Menu" */ "./Images/Menu")
+const Menu = React.lazy(() =>
+  import(/* webpackChunkName: "Menu" */ "./Images/Menu")
 );
-const Close = React.lazy(
-  () => import(/* webpackChunkName: "Close" */ "./Images/Close")
+const Close = React.lazy(() =>
+  import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
-const Home = React.lazy(
-  () => import(/* webpackChunkName: "Home" */ "./Images/Home")
+const Home = React.lazy(() =>
+  import(/* webpackChunkName: "Home" */ "./Images/Home")
 );
-const Steak = React.lazy(
-  () => import(/* webpackChunkName: "Steak" */ "./Images/Steak")
+const Steak = React.lazy(() =>
+  import(/* webpackChunkName: "Steak" */ "./Images/Steak")
 );
-const Faq = React.lazy(
-  () => import(/* webpackChunkName: "Faq" */ "./Images/Faq")
+const Faq = React.lazy(() =>
+  import(/* webpackChunkName: "Faq" */ "./Images/Faq")
 );
-const CityModal = React.lazy(
-  () => import(/* webpackChunkName: "CityModal" */ "./CityModal")
+const CityModal = React.lazy(() =>
+  import(/* webpackChunkName: "CityModal" */ "./CityModal")
 );
-const AuthModal = React.lazy(
-  () => import(/* webpackChunkName: "AuthModal" */ "./AuthModal")
+const AuthModal = React.lazy(() =>
+  import(/* webpackChunkName: "AuthModal" */ "./AuthModal")
 );
-const CartModal = React.lazy(
-  () => import(/* webpackChunkName: "CartModal" */ "./CartModal")
+const CartModal = React.lazy(() =>
+  import(/* webpackChunkName: "CartModal" */ "./CartModal")
 );
 
 const Wrapper = styled.div``;
 
 const Fixed = styled.div<{ shadow: boolean }>`
   position: fixed;
-  background: white;
+  background: ${customStyles.yellow};
   width: 100%;
   left: 0;
   top: 0;
@@ -61,19 +72,24 @@ const Fixed = styled.div<{ shadow: boolean }>`
 `;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: row;
+  /*  display: flex; */
+  /*  flex-direction: row; */
   padding: 12px 40px;
+  /*   align-items: center; */
+
+  display: grid;
+  grid-template-columns: 0.1fr 0.3fr 1fr 0.3fr 0fr 0.1fr;
   align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
 `;
 
 const Logo = styled.div`
-  margin-right: 60px;
+  margin-right: 30px;
   cursor: pointer;
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin: 0 auto;
     img {
-      width: 48px !important;
+      width: 60px !important;
     }
   }
 `;
@@ -224,7 +240,7 @@ const MobileMenu = styled.div<{ page?: string }>`
   top: 0;
   left: 0;
   width: 100%;
-  background: var(--white);
+  background: ${customStyles.yellow};
   z-index: 99;
 `;
 
@@ -247,6 +263,96 @@ const MenuListTools = styled.div`
   }
 `;
 
+const InputGroup = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  background: #ffffff;
+  border-radius: 44px;
+  margin-right: 15px;
+
+  height: 45px;
+  svg {
+    position: absolute;
+    left: 20px;
+    display: none;
+  }
+  input {
+    background: none;
+    border: 0;
+    padding: 15px 25px;
+    font-family: MullerBold;
+    font-size: 14px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.01em;
+    color: var(--black);
+    flex: 1;
+    &::placeholder {
+      color: ${customStyles.darkGrey};
+      font-size: 14px;
+      line-height: 20px;
+      font-family: MullerRegular;
+    }
+  }
+  button {
+    padding: 14px 40px;
+    position: relative;
+    height: 45px;
+
+    &:before {
+      content: "";
+      background: url(${BuscarIcon}) no-repeat center center / contain;
+      display: block;
+      width: 20px;
+      height: 20px;
+
+      position: absolute;
+      left: 15px;
+    }
+
+    &:hover {
+      &:before {
+        background: url(${BuscarIconRed}) no-repeat center center / contain;
+      }
+    }
+    span {
+      font-family: MullerBold;
+      font-size: 14px;
+      line-height: 20px;
+      text-transform: uppercase;
+
+      position: relative;
+      left: 10px;
+    }
+  }
+
+  @media (max-width: ${BREAKPOINT}) {
+    margin-right: 0;
+    margin-top: 15px;
+    
+
+    input {
+      padding: 0 25px;
+    }
+    span {
+      display: none;
+    }
+
+    button {
+      padding: 14px 18px;
+      height: 36px;
+      &:before {
+        width: 15px;
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
+    }
+  }
+`;
+
 type Props = {
   checkout: boolean;
   page?: string;
@@ -258,6 +364,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const [bigCart, setBigCart] = useState(false);
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
+  const [newQuery, setNewQuery] = useState("")
   const { data } = useQuery(GET_CART_ITEMS);
   const { data: userData } = useQuery(GET_USER, {});
   const [toggleCityModal] = useMutation(SET_USER, {
@@ -316,6 +423,9 @@ const Header: FC<Props> = ({ checkout, page }) => {
 
   const addressLabel = () => {
     if (userData.userInfo.length && userData.userInfo.length) {
+      if (userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
+        return `${userData.userInfo[0].defaultAddressLabel.split("|")[0]}, Bolivia`
+      }
       if (userData.userInfo[0].defaultAddressLabel)
         return `${userData.userInfo[0].defaultAddressLabel.replace(
           / \| /g,
@@ -363,6 +473,10 @@ const Header: FC<Props> = ({ checkout, page }) => {
     setShadow(window.scrollY !== 0);
   };
 
+  const handleSearch = () => {
+    history.push(`/productos?q=${newQuery}`)
+  }
+
   useEffect(() => {
     window.addEventListener("scroll", checkScroll);
     return () => {
@@ -381,21 +495,48 @@ const Header: FC<Props> = ({ checkout, page }) => {
                   <Logo onClick={goHome}>
                     <HeaderLogo />
                   </Logo>
-                  <Address onClick={() => toggleCityModal()}>
-                    <Pin />
-                    <span>{addressLabel()}</span>
-                  </Address>
+                  <AddressHeader>
+                    <Address onClick={() => toggleCityModal()}>
+                      <Pin />
+                      <span title={addressLabel()}>{addressLabel()}</span>
+                    </Address>
+                  </AddressHeader>
+                  <InputGroup>
+                    <Search />
+                    <input
+                      type="search"
+                      onKeyUp={evt => {
+                        if (evt.keyCode === 13) handleSearch()
+                      }}
+                      onChange={({ target: { value }}) => { setNewQuery(value)}}
+                      placeholder={t("products.product_list.search_product")}
+                    />
+                    <Cta
+                      filled={true}
+                      action={() => handleSearch()}
+                      text={t("products.product_list.search")}
+                    />
+                  </InputGroup>
+
                   {(!userData.userInfo.length ||
                     !userData.userInfo[0].isLoggedIn) && (
-                    <Cta text={t("header.login")} action={myAccount} />
+                    /*         <Cta text={t("header.login")} action={myAccount} /> */
+                    <IngresarWrap onClick={myAccount}>
+                      <img src={UserIcon} alt="login" />
+                      <span>{t("header.login")}</span>
+                    </IngresarWrap>
                   )}
-                  {userData.userInfo.length &&
-                    userData.userInfo[0].isLoggedIn && (
-                      <Cta text={t("header.account")} action={myAccount} />
-                    )}
-                  <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
+                  {userData.userInfo.length && userData.userInfo[0].isLoggedIn && (
+                    /*   <Cta text={t("header.account")} action={myAccount} /> */
+                    <IngresarWrap onClick={myAccount}>
+                      <img src={UserIcon} alt="my account" />
+                      <span>{t("header.account")}</span>
+                    </IngresarWrap>
+                  )}
+
+                  {/*    <Total>Bs. {GET_TOTAL(data.cartItems)}</Total> */}
                   <CartWrapper big={bigCart} onClick={showCart}>
-                    <Cart />
+                    <img src={CartImg} alt="" />
                     <span>{GET_QTY(data.cartItems)}</span>
                   </CartWrapper>
                   <MenuWrapper onClick={() => setOpen(true)}>
@@ -420,21 +561,48 @@ const Header: FC<Props> = ({ checkout, page }) => {
         <Mobile>
           <MobileMenu page={page}>
             <MobileMenuHeader>
-              <CartWrapper onClick={showCart}>
-                <Cart />
-                <span>{GET_QTY(data.cartItems)}</span>
-              </CartWrapper>
               <Logo onClick={goHome}>
                 <HeaderLogo />
               </Logo>
-              <MenuWrapper onClick={() => setOpen(true)}>
-                <Menu />
-              </MenuWrapper>
+              <RightMenu>
+                <MenuListTools>
+                  {(!userData.userInfo.length ||
+                    !userData.userInfo[0].isLoggedIn) && (
+                    <img src={UserIcon} alt="login" onClick={myAccount}/>
+                  )}
+                  {userData.userInfo.length && userData.userInfo[0].isLoggedIn && (
+                    <img src={UserIcon} alt="my account" onClick={myAccount}/>
+                  )}
+                </MenuListTools>
+                <CartWrapper onClick={showCart}>
+                  <img src={CartImg} alt="" />
+                  <span>{GET_QTY(data.cartItems)}</span>
+                </CartWrapper>
+                <MenuWrapper onClick={() => setOpen(true)}>
+                  <Menu />
+                </MenuWrapper>
+              </RightMenu>
             </MobileMenuHeader>
             <Address onClick={() => toggleCityModal()}>
               <Pin />
               <span>{addressLabel()}</span>
             </Address>
+            <InputGroup>
+              <Search />
+              <input
+                type="search"
+                onKeyUp={evt => {
+                  if (evt.keyCode === 13) handleSearch()
+                }}
+                onChange={({ target: { value }}) => { setNewQuery(value)}}
+                placeholder={t("products.product_list.search_product")}
+              />
+              <Cta
+                filled={true}
+                action={() => handleSearch()}
+                text={t("products.product_list.search")}
+              />
+            </InputGroup>
           </MobileMenu>
         </Mobile>
         <SideMenu className={open && "open"}>

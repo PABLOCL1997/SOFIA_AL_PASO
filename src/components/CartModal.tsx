@@ -11,28 +11,28 @@ import {
   GET_TOTAL,
   GET_QTY,
   CHECK_CART,
-  GET_MIN_PRICE,
+  GET_MIN_PRICE
 } from "../graphql/cart/queries";
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../graphql/products/type";
 import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
 
-const ProductCart = React.lazy(
-  () => import(/* webpackChunkName: "ProductCart" */ "./ProductCart")
+const ProductCart = React.lazy(() =>
+  import(/* webpackChunkName: "ProductCart" */ "./ProductCart")
 );
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
-const Close = React.lazy(
-  () => import(/* webpackChunkName: "Close" */ "./Images/Close")
+const Close = React.lazy(() =>
+  import(/* webpackChunkName: "Close" */ "./Images/Close")
 );
-const Chevron = React.lazy(
-  () => import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
+const Chevron = React.lazy(() =>
+  import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
 );
-const Delete = React.lazy(
-  () => import(/* webpackChunkName: "Delete" */ "./Images/Delete")
+const Delete = React.lazy(() =>
+  import(/* webpackChunkName: "Delete" */ "./Images/Delete")
 );
 
 const ModalCourtain = styled.div`
@@ -240,39 +240,38 @@ const AuthModal: FC<Props> = () => {
   const [action, setAction] = useState<Action>({});
   const { data: userData } = useQuery(GET_USER, {});
   const [closeCartModal] = useMutation(SET_USER, {
-    variables: { user: { openCartModal: false } },
+    variables: { user: { openCartModal: false } }
   });
   const [addItem] = useMutation(ADD_ITEM, {
     variables: {
-      product: { ...action.product, qty: action.qty, replace: true },
-    },
+      product: { ...action.product, qty: action.qty, replace: true }
+    }
   });
   const [deleteItem] = useMutation(DELETE_ITEM, {
-    variables: { product: { ...action.product } },
+    variables: { product: { ...action.product } }
   });
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [shouldExecute, executeNewCartQuery] = useState(false);
   const [newCartEmpty, setNewCartEmpty] = useState(true);
   const [reloadModal, setReloadModal] = useState(false);
   const [toggleLoginModal] = useMutation(SET_USER, {
-    variables: { user: { openLoginModal: true } },
+    variables: { user: { openLoginModal: true } }
   });
   const { data: newCart } = useQuery(CHECK_CART, {
     variables: {
       cart: JSON.stringify(
         data.cartItems.map((p: ProductType) => ({
           entity_id: p.entity_id,
-          qty: p.qty,
+          qty: p.qty
         }))
       ),
-      city:
-        userData && userData.userInfo.length && userData.userInfo[0].cityKey,
+      city: userData && userData.userInfo.length && userData.userInfo[0].cityKey
     },
     fetchPolicy: "network-only",
-    skip: !shouldExecute,
+    skip: !shouldExecute
   });
   const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showModal: t("cart.change_msg") } },
+    variables: { user: { showModal: t("cart.change_msg") } }
   });
 
   let totalAmount = GET_TOTAL(data.cartItems);
@@ -281,20 +280,20 @@ const AuthModal: FC<Props> = () => {
     setAction({
       qty: _qty,
       product: _product,
-      action: "add",
+      action: "add"
     });
   };
 
   const removeRow = (_product: ProductType) => {
     setAction({
       product: _product,
-      action: "delete",
+      action: "delete"
     });
   };
 
   const empty = () => {
     setAction({
-      action: "empty",
+      action: "empty"
     });
   };
 
@@ -327,26 +326,26 @@ const AuthModal: FC<Props> = () => {
           variables: {
             user: {
               showModal: t("cart.over_limit", {
-                units: action.product?.maxPerUser ?? 0,
-              }),
-            },
-          },
+                units: action.product?.maxPerUser ?? 0
+              })
+            }
+          }
         });
       } else if (!hasStock()) {
         return showSuccess({
           variables: {
             user: {
               showModal: t("cart.no_stock", {
-                qty: action.product?.stock ?? 0,
-              }),
-            },
-          },
+                qty: action.product?.stock ?? 0
+              })
+            }
+          }
         });
       }
       if ((action.product?.qty ?? 0) < (action.qty || 0)) {
         trackRemoveFromCart({
           ...action.product,
-          qty: action.qty,
+          qty: action.qty
         } as ProductType);
       } else {
         trackAddToCart({ ...action.product, qty: action.qty } as ProductType);
@@ -356,7 +355,7 @@ const AuthModal: FC<Props> = () => {
     } else if (action.action === "delete") {
       trackRemoveFromCart({
         ...action.product,
-        qty: 0,
+        qty: 0
       } as ProductType);
       await deleteItem();
       setAction({});
@@ -394,16 +393,16 @@ const AuthModal: FC<Props> = () => {
           );
           if (cartItems[i].qty === 0) {
             await deleteItem({
-              variables: { product: { ...elem } },
+              variables: { product: { ...elem } }
             });
           } else {
             await addItem({
               variables: {
                 product: {
                   ...cartItems[i],
-                  replace: true,
-                },
-              },
+                  replace: true
+                }
+              }
             });
           }
         }
@@ -422,10 +421,10 @@ const AuthModal: FC<Props> = () => {
           ) {
             history.push("/");
             showSuccess({
-              variables: { user: { showModal: t("cart.change_qty_msg") } },
+              variables: { user: { showModal: t("cart.change_qty_msg") } }
             });
           } else {
-            showSuccess();
+
           }
         }
       })();
@@ -477,10 +476,10 @@ const AuthModal: FC<Props> = () => {
         variables: {
           user: {
             showModal: t("cart.no_stock", {
-              qty: stockAvaible,
-            }),
-          },
-        },
+              qty: stockAvaible
+            })
+          }
+        }
       });
     } else {
       data.cartItems.map((item: any, index: any) => {
@@ -514,10 +513,10 @@ const AuthModal: FC<Props> = () => {
           </Header>
           {parseFloat(totalAmount.replace(",", ".")) <
             GET_MIN_PRICE(userData) && (
-              <UnderBudget>
-                {t("cart.under_budget", { min_price: GET_MIN_PRICE(userData) })}
-              </UnderBudget>
-            )}
+            <UnderBudget>
+              {t("cart.under_budget", { min_price: GET_MIN_PRICE(userData) })}
+            </UnderBudget>
+          )}
 
           {data.cartItems.length > 0 ? (
             <Items>
@@ -528,8 +527,9 @@ const AuthModal: FC<Props> = () => {
                     (a: ProductType, b: ProductType) =>
                       a.entity_id - b.entity_id
                   )
-                  .map((product: ProductType) => (
+                  .map((product: ProductType, i: number) => (
                     <ProductCart
+                      key={i}
                       product={product}
                       // updateItem={updateItem}
                       isStockAvaible={isStockAvaible}
@@ -538,12 +538,12 @@ const AuthModal: FC<Props> = () => {
                   ))}
             </Items>
           ) : (
-              <div>
-                <LoaderWrapper>
-                  <img src="/images/loader.svg"  width="50px" height="50px" alt="loader" />
-                </LoaderWrapper>
-              </div>
-            )}
+            <div>
+              <LoaderWrapper>
+                
+              </LoaderWrapper>
+            </div>
+          )}
           <Totals>
             <Subtotal>{t("cart.subtotal")}</Subtotal>
             <Total>Bs. {totalAmount}</Total>
@@ -554,10 +554,10 @@ const AuthModal: FC<Props> = () => {
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
               {parseFloat(totalAmount.replace(",", ".")) >=
                 GET_MIN_PRICE(userData) && (
-                  <CtaWrapper>
-                    <Cta filled={true} text={t("cart.pay")} action={checkout} />
-                  </CtaWrapper>
-                )}
+                <CtaWrapper>
+                  <Cta filled={true} text={t("cart.pay")} action={checkout} />
+                </CtaWrapper>
+              )}
             </Toolbox>
           </Footer>
         </Modal>

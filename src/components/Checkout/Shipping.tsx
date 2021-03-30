@@ -8,6 +8,8 @@ import { useQuery, useMutation } from "react-apollo";
 import { DETAILS, GET_USER } from "../../graphql/user/queries";
 import { AddressType } from "../../graphql/user/type";
 import { SET_USER } from "../../graphql/user/mutations";
+import StarIcon from "../../assets/images/star.svg";
+
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -169,30 +171,95 @@ const SelectWrapper = styled.div`
     }
   }
 `;
+const StarWrap = styled.div`
+  position: relative;
+  padding:0 0 2px 5px;
+
+  &:hover {
+    > div {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+`;
+
+const TooltipStar = styled.div`
+  text-align: center;
+
+  padding: 20px 10px;
+  width: 287px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 18px;
+
+  left: 50%;
+  margin-left: -141px;
+  right: 0;
+  top: 30px;
+
+  color: #1a1a1a;
+  position: absolute;
+
+  transition: all ease-out 0.2s;
+
+  opacity: 0;
+  visibility: hidden;
+
+  z-index: 2;
+
+  /* &.hover {
+    opacity: 1;
+    visibility: visible;
+  } */
+
+  &:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    margin-left: -10px;
+  }
+
+  @media (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`;
 
 type Props = {
   updateOrder: Function;
   orderData: any;
   billingChange: any;
   confirmModalVisible: boolean;
+  localUserData: any;
+  setOrderIsReady: Function;
 };
 
 const Shipping: FC<Props> = ({
   updateOrder,
   orderData,
   billingChange,
-  confirmModalVisible
+  confirmModalVisible,
+  localUserData,
+  setOrderIsReady
 }) => {
   const { t } = useTranslation();
   const [inputs, setInputs] = useState<any>({
     addressType: t("checkout.delivery.street")
   });
   const { data: localData } = useQuery(GET_USER, {});
+  const [showSuccess] = useMutation(SET_USER, {})
+
   const [other, setOther] = useState(false);
   const { data: userData } = useQuery(DETAILS, {
     fetchPolicy: "network-only"
   });
   const [setUser] = useMutation(SET_USER);
+
 
   const onChange = (
     key: string,
@@ -234,9 +301,26 @@ const Shipping: FC<Props> = ({
       let c: KeyValue | undefined = cities.find(
         (c: KeyValue) => c.value === address.city
       );
+
       if (c) {
         (window as any).latitude = address.latitude;
         (window as any).longitude = address.longitude;
+        const prev = localData?.userInfo[0]?.idPriceList || 0
+        const newVal = parseInt(address?.reference || "") || 0
+    
+        if (prev > 0 && newVal == 0) {
+          showSuccess({
+            variables: { user: { showModal: t("cart.change_employee") } }
+          });
+        } else {
+          if (localData?.userInfo[0]?.cityName !== address?.city) {
+            setOrderIsReady(true)
+            showSuccess({
+              variables: { user: { showModal: t("cart.change_msg") } }
+            });
+          }
+        }
+
         setUser({
           variables: {
             user: {
@@ -244,7 +328,8 @@ const Shipping: FC<Props> = ({
               cityName: c.value,
               openCityModal: false,
               defaultAddressId: address.id,
-              defaultAddressLabel: address.street
+              defaultAddressLabel: address.street,
+              idPriceList: address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? parseInt(address?.reference)  : 0
             }
           }
         });
@@ -338,14 +423,30 @@ const Shipping: FC<Props> = ({
                 value={address.id}
                 onChange={() => selectAddress(address)}
               />
-              <label onClick={() => selectAddress(address)}>
-                {address.street?.replace(/ \| /g, " ")}
-              </label>
+              {address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? (
+                <>
+                  <label onClick={() => selectAddress(address)}>
+                    {address.street?.split("|")[0]}
+                  </label>
+                  <StarWrap>
+                      <img src={StarIcon} alt="" />
+                    <TooltipStar>
+                      {t("account.tooltip_star_msg")}
+                    </TooltipStar>
+                  </StarWrap>
+                </>
+              ) :  (
+                <label onClick={() => selectAddress(address)}>
+                  {address.street?.replace(/ \| /g, " ")}
+                </label>
+              )}
             </CheckboxGroup>
           ))}
-        <Other margin={!!other} onClick={showOther}>
-          {t("checkout.delivery.other_address")}
-        </Other>
+
+          <Other margin={!!other} onClick={showOther}>
+            {t("checkout.delivery.other_address")}
+          </Other>
+
         <Form hidden={!other}>
           {[
             "firstname",

@@ -24,6 +24,7 @@ export const DETAILS = gql`
       nit
       phone
       addressId
+      employee
       addresses {
         id
         firstname

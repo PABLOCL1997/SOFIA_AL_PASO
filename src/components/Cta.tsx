@@ -17,8 +17,7 @@ const Button = styled.button<{ filled: boolean, hover: boolean, active: boolean 
     filter: alpha(opacity=65);
     -webkit-box-shadow: none;
     box-shadow: none;
-    ` }
-    
+    `}
     padding: 5px 30px;
     border-radius: 30px;
     transition: all .2s linear;

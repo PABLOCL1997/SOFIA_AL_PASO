@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";
+import { GET_B2E_PRODUCT } from "../graphql/products/queries";
 import { GET_PRODUCT, GET_PRODUCT_DETAIL } from "../graphql/products/queries";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { PRODUCT_TITLE } from "../meta";
@@ -16,41 +17,38 @@ import DelayedWrapper from "../components/DelayedWrapper";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "../components/Loader")
 );
-const Slider = React.lazy(
-  () => import(/* webpackChunkName: "Slider" */ "react-slick")
+const Slider = React.lazy(() =>
+  import(/* webpackChunkName: "Slider" */ "react-slick")
 );
-const RelatedProducts = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
-    )
+const RelatedProducts = React.lazy(() =>
+  import(
+    /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
+  )
 );
-const Chevron = React.lazy(
-  () => import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
+const Chevron = React.lazy(() =>
+  import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
 );
-const Cta = React.lazy(
-  () => import(/* webpackChunkName: "Cta" */ "../components/Cta")
+const Cta = React.lazy(() =>
+  import(/* webpackChunkName: "Cta" */ "../components/Cta")
 );
-const FreeDelivery = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
-    )
+const FreeDelivery = React.lazy(() =>
+  import(
+    /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
+  )
 );
-const Quality = React.lazy(
-  () => import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
+const Quality = React.lazy(() =>
+  import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
 );
-const ContinueArrow = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
-    )
+const ContinueArrow = React.lazy(() =>
+  import(
+    /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
+  )
 );
-const Close = React.lazy(
-  () => import(/* webpackChunkName: "Close" */ "../components/Images/Close")
+const Close = React.lazy(() =>
+  import(/* webpackChunkName: "Close" */ "../components/Images/Close")
 );
 
 const Header = styled.div`
@@ -94,6 +92,19 @@ const Wrapper = styled.div`
     flex-direction: column;
     padding: 20px;
   }
+
+  .slick-slide img {
+    margin: 0 auto;
+    width: 100%;
+    height: 354px;
+    object-fit: contain;
+
+    @media (max-width: ${BREAKPOINT}) {
+      object-fit: contain;
+      width: 100%;
+      height: 250px;
+    }
+  }
 `;
 
 const Col1 = styled.div`
@@ -128,7 +139,7 @@ const Col2 = styled.div`
   flex: 1;
 `;
 
-const Image = styled.div<{ src: string }>`
+const Image = styled.div<{ src: string; srcSet?: string }>`
   height: 354px;
   background: url(${props => props.src}) no-repeat center center / contain;
 
@@ -403,7 +414,25 @@ const Product: FC<Props> = ({
   const [related, setRelated] = useState<Array<ProductType>>([]);
   const [qty, setQty] = useState<number>(1);
   const { data } = useQuery(GET_CART_ITEMS);
-  const { data: userData } = useQuery(GET_USER, {});
+  const { data: userData } = useQuery(GET_USER, {
+    onCompleted: d => {
+      
+    }
+  });
+  const [loadProductFromList] = useLazyQuery(GET_B2E_PRODUCT, {
+    fetchPolicy: "network-only",
+    onCompleted: d => {
+      setProduct(d.productB2B);
+      trackProduct(d.productB2B);
+      if (d.productB2B.categories) setCategories(d.productB2B.categories);
+      if (d.productB2B.related) setRelated(d.productB2B.related);
+      loadProductDetail({
+        variables: {
+          name: prodname
+        }
+      });
+    }
+  })
   const [loadProduct] = useLazyQuery(GET_PRODUCT, {
     variables: {
       name: prodname,
@@ -499,10 +528,30 @@ const Product: FC<Props> = ({
       history.push("/productos");
     }
   };
-
+  useEffect(()=> {
+    if (userData) {
+      if (userData.userInfo[0].idPriceList > 0) {
+        loadProductFromList({
+          variables:{
+            name: prodname,
+            id_price_list: String(userData.userInfo[0].idPriceList),
+            city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
+          }
+        })
+      } else {
+        loadProduct({
+          variables: {
+            name: prodname,
+            city: (userData?.userInfo[0]?.cityKey) ? userData?.userInfo[0]?.cityKey : "SC",
+            categories: true,
+            related: true
+          }
+        });
+      }
+    }
+  }, [userData])
   useEffect(() => {
     document.title = `${PRODUCT_TITLE} ${prodname}`;
-    loadProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -546,8 +595,38 @@ const Product: FC<Props> = ({
                   {product.image
                     .split(",")
                     .map((img: string, index: number) => (
-                      <div key={index + " Index"}>
-                        <Image src={img}></Image>
+                      <div
+                        key={index + " Index"}
+                        style={{ textAlign: "center" }}
+                      >
+                        {/*          <Image src={img}></Image>  */}
+
+                        {/*       {
+                          <img
+                          width="100px"
+                          height="100px"
+                     
+                            srcSet={
+                              img +
+                              " 1x  ," +
+                              img.slice(0, -4)+"_708px.webp" +
+                              " 2x  ," +
+                              img.slice(0, -4) +
+                              "_708px.webp" +
+                              " 3x"
+                            }
+                            src={img}
+                          />
+                        } */}
+
+                        <picture>
+                          <source
+                            srcSet={img.slice(0, -4) + "_708px.webp" + " 2x"}
+                            type="image/webp"
+                          />
+                          <source srcSet={img + " 1x"} type="image/jpeg" />
+                          <img src={img} alt={product.name} />
+                        </picture>
                       </div>
                     ))}
                 </Slider>
