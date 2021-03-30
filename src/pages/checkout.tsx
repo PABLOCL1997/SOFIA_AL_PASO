@@ -142,6 +142,7 @@ type OrderData = {
   facturacion: string;
   envio: string;
   payment_method: string;
+  DIRECCIONID?: number;
 };
 
 const Checkout: FC<Props> = () => {
@@ -152,6 +153,7 @@ const Checkout: FC<Props> = () => {
   const [userData, setUserData] = useState({});
   const [order, setOrder] = useState<OrderData>();
   const [orderData, setOrderData] = useState<any>({});
+  const [orderIsReady, setOrderIsReady] = useState<boolean>(true);
   const [billingChange, setBillingChange] = useState<any>({});
   const [mapUsed, setMapUsed] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -160,6 +162,7 @@ const Checkout: FC<Props> = () => {
   >([]);
 
   const { data: localUserData } = useQuery(GET_USER, {});
+  const {data: userDetails} = useQuery(DETAILS, {})
   const { data } = useQuery(GET_CART_ITEMS);
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -313,6 +316,8 @@ const Checkout: FC<Props> = () => {
 
   const validateOrder = () => {
     let items: Array<string> = [];
+    const special_address = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+
     data &&
       data.cartItems &&
       data.cartItems.forEach((product: ProductType) => {
@@ -372,7 +377,7 @@ const Checkout: FC<Props> = () => {
       }
     });
 
-    if (!mapUsed && !orderData.shipping.id) {
+    if (!mapUsed && !orderData.shipping.id && !special_address) {
       window.scrollTo({
         top:
           (document as any).getElementById("gmap").getBoundingClientRect().top +
@@ -439,10 +444,11 @@ const Checkout: FC<Props> = () => {
   const saveOrder = () => {
     setConfirmModalVisible(false);
     const items: Array<string> = validateOrder();
-
+    const special_address = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
     if (!items.length) return;
 
     setOrder({
+      DIRECCIONID: special_address ? orderData.shipping.street.split("|")[1].replace(/ /g,"") : null,
       discount_amount: parseFloat(
         orderData.coupon ? orderData.coupon.discount : 0
       ),
@@ -454,8 +460,7 @@ const Checkout: FC<Props> = () => {
       customer_firstname: escapeSingleQuote(orderData.billing.firstname),
       customer_lastname: escapeSingleQuote(orderData.billing.lastname),
       facturacion: JSON.stringify({
-        addressId:
-          userData && (userData as any).addressId
+        addressId: userData && (userData as any).addressId
             ? (userData as any).addressId
             : 0,
         firstname: escapeSingleQuote(orderData.billing.firstname),
@@ -474,6 +479,7 @@ const Checkout: FC<Props> = () => {
         latitude: String((window as any).latitude),
         longitude: String((window as any).longitude),
         street: escapeSingleQuote(
+          special_address ? orderData.shipping.street.split("|")[0] :
           orderData.shipping.id
             ? orderData.shipping.street
             : `${orderData.shipping.address || ""}`
@@ -488,6 +494,7 @@ const Checkout: FC<Props> = () => {
         email: orderData.billing.email,
         telephone: orderData.shipping.phone,
         street: escapeSingleQuote(
+          special_address ? orderData.shipping.street.split("|")[0] :
           orderData.shipping.id
             ? orderData.shipping.street
             : `${orderData.shipping.address || ""}`
@@ -541,7 +548,15 @@ const Checkout: FC<Props> = () => {
 
   const showConfirmAddress = () => {
     const items: Array<string> | boolean = validateOrder();
-    if (items.length) setConfirmModalVisible(true);
+    let b2e = false
+    try {
+      b2e = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+    } catch (e) {
+      b2e = false
+    }
+    console.log('show', b2e, items.length )
+    if (!b2e && items.length) setConfirmModalVisible(true);
+    if (b2e && items.length) saveOrder();
     // setConfirmModalVisible(true);
   };
 
@@ -572,20 +587,31 @@ const Checkout: FC<Props> = () => {
               <Cols>
                 <Col1>
                   <Steps>
-                    <Billing updateOrder={updateOrderData} />
+                    <Billing updateOrder={updateOrderData} localUserData={localUserData} />
                     <Line />
                     <Shipping
                       updateOrder={updateOrderData}
                       orderData={orderData}
                       billingChange={billingChange}
                       confirmModalVisible={confirmModalVisible}
+                      localUserData={localUserData}
+                      setOrderIsReady={setOrderIsReady}
                     />
                     <Line />
-                    <Payment updateOrder={updateOrderData} />
+                    <Payment
+                      setOrderIsReady={setOrderIsReady}
+                      totalAmount={totalAmount}
+                      updateOrder={updateOrderData}
+                      userData={localUserData}
+                      userDetails={userDetails}
+                    />
                   </Steps>
                 </Col1>
                 <Col2>
                   <Ticket
+                    ready={orderIsReady}
+                    userDetails={userDetails}
+                    userData={localUserData}
                     processing={processing}
                     updateOrder={updateOrderData}
                     order={showConfirmAddress}

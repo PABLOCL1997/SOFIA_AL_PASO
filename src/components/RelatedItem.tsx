@@ -97,7 +97,7 @@ const RelatedProducts: FC<Props> = ({ product, openModal }) => {
     }
   };
 
-  console.log(product);
+
 
   return (
     <Suspense fallback={<Loader />}>

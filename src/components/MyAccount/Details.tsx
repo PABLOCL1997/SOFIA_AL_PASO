@@ -2,7 +2,7 @@ import React, { FC, useState, Suspense, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { BREAKPOINT } from "../../utils/constants";
+import { BREAKPOINT, XXL, XL } from "../../utils/constants";
 import { useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { GET_USER, DETAILS } from "../../graphql/user/queries";
 import { cities, KeyValue } from "../../utils/string";
@@ -14,6 +14,11 @@ import {
 } from "../../graphql/user/mutations";
 import { UserType, AddressType } from "../../graphql/user/type";
 import { setLatLng } from "../../utils/googlemaps";
+import EmployeeCard from "./EmployeeCard/EmployeeCard";
+import EmployeeModal from "../EmployeeModal";
+import StarIcon from "../../assets/images/star.svg";
+import LoginModal from "../LoginModal";
+import { GET_USER2E_DETAILS } from "../../graphql/b2e/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -38,9 +43,12 @@ const Switch = React.lazy(() =>
 
 const gridSpan2CSS = {
   gridColumn: "1 / span 2"
-} as React.CSSProperties
+} as React.CSSProperties;
 
-const emptyCSS = {} as React.CSSProperties
+const emptyCSS = {} as React.CSSProperties;
+const bold = {
+  "fontWeight": "bold"
+} as React.CSSProperties;
 
 const Title = styled.div`
   display: flex;
@@ -97,8 +105,112 @@ const AddressRow = styled.div`
 const Street = styled.div`
   flex: 1;
   cursor: pointer;
+
   &:hover {
     color: var(--red);
+  }
+`;
+
+const StreetSpan = styled.div`
+  display: flex;
+  align-items: center;
+  span {
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
+    display: inline-block;
+  }
+
+  img {
+    position: relative;
+    top: -2px;
+    margin-left: 5px;
+  }
+
+  @media (max-width: ${XXL}) {
+    span {
+      max-width: 300px;
+    }
+  }
+
+  @media (max-width: ${XL}) {
+    span {
+      max-width: unset;
+      white-space: unset;
+    }
+  }
+`;
+
+const StarWrap = styled.div`
+  position: relative;
+
+  &:hover {
+    > div {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+`;
+
+const TooltipStar = styled.div`
+  text-align: center;
+
+  padding: 20px 10px;
+  width: 287px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 18px;
+
+  left: 50%;
+  margin-left: -141px;
+  right: 0;
+  top: 30px;
+
+  color: #1a1a1a;
+  position: absolute;
+
+  transition: all ease-out 0.2s;
+
+  opacity: 0;
+  visibility: hidden;
+
+  z-index: 2;
+
+  /* &.hover {
+    opacity: 1;
+    visibility: visible;
+  } */
+
+  &:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    margin-left: -10px;
+  }
+
+  @media (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`;
+
+const TooltipMobile = styled.div`
+  background-color: transparent;
+  text-align: left;
+  font-size: 12px;
+  padding-top:5px;
+  max-width: 220px;
+  display: none;
+
+  @media (max-width: ${BREAKPOINT}) {
+    display: block !important;
   }
 `;
 
@@ -156,6 +268,7 @@ const NewAddress = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
+  margin-bottom: 20px;
   padding-top: 10px;
   button {
     font-family: MullerMedium;
@@ -168,6 +281,10 @@ const NewAddress = styled.div`
     &:hover {
       opacity: 0.8;
     }
+  }
+
+  @media (max-width: ${BREAKPOINT}) {
+    margin-top: 30px;
   }
 `;
 
@@ -349,6 +466,7 @@ const Details: FC<Props> = () => {
   });
   const [addressArgs, setAddressArgs] = useState<AddressArgs>({ on: false });
   const [addressId, setAddressId] = useState(0);
+  const [loginB2bOpen, setLoginB2bOpen] = useState(false)
   const [showError] = useMutation(SET_USER, {
     variables: { user: { showError: t("account.error") } }
   });
@@ -357,14 +475,23 @@ const Details: FC<Props> = () => {
   //   variables: { user: { showSuccess: t("account.success") } }
   // });
 
-  const { data: userData } = useQuery(GET_USER, {});
-  const [getDetails, { loading: userLoading }] = useLazyQuery(DETAILS, {
+  const { data: userData } = useQuery(GET_USER, {
+    onCompleted: d => console.log('data', d)
+  });
+  const [getDetails, { data: userDetails, loading: userLoading }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: d => {
+      getB2EDetails({
+        variables: {
+          nit: d.details.nit
+        }
+      })
       setInputs(d.details);
-      checkDefaultAddress(d.details.addresses);
+      // checkDefaultAddress(d.details.addresses);
     }
   });
+  const [getB2EDetails, { loading: loadingB2EDetails, data: b2eData }] = useLazyQuery(GET_USER2E_DETAILS, {
+  })
   const [deleteAddress] = useMutation(REMOVE_ADDRESS, {
     variables: { addressId }
   });
@@ -375,7 +502,10 @@ const Details: FC<Props> = () => {
   const [closeAddressModal] = useMutation(SET_USER, {
     variables: { user: { openAddressModal: false } }
   });
-
+  const toggleActivate = () => {
+    console.log(userData)
+    setLoginB2bOpen(true)
+  }
   const checkDefaultAddress = (addresses: Array<AddressType>) => {
     const userInfo =
       userData && userData.userInfo.length ? userData.userInfo[0] : {};
@@ -670,6 +800,10 @@ const Details: FC<Props> = () => {
     }
   ];
 
+  //MODAL CUENTA
+
+  const [show, setShowOpen] = useState(false);
+
   return (
     <Suspense fallback={<Loader />}>
       <>
@@ -677,7 +811,12 @@ const Details: FC<Props> = () => {
           <h2>{t("account.title")}</h2>
           {loading && (
             <LoaderWrapper>
-              <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+              <img
+                src="/images/loader.svg"
+                width="50px"
+                height="50px"
+                alt="loader"
+              />
             </LoaderWrapper>
           )}
           {!loading && !editMode && (
@@ -694,7 +833,12 @@ const Details: FC<Props> = () => {
         </Title>
         {userLoading && !inputs.email && (
           <LoaderWrapperBig>
-            <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+            <img
+              src="/images/loader.svg"
+              width="50px"
+              height="50px"
+              alt="loader"
+            />
           </LoaderWrapperBig>
         )}
         {!userLoading && inputs.email && (
@@ -720,8 +864,8 @@ const Details: FC<Props> = () => {
                       key === "phone" || key === "nit"
                         ? "number"
                         : key === "password"
-                        ? "password"
-                        : "text"
+                          ? "password"
+                          : "text"
                     }
                     placeholder={t("account." + key)}
                   />
@@ -736,23 +880,68 @@ const Details: FC<Props> = () => {
             {inputs.addresses &&
               inputs.addresses.map((address: AddressType) => (
                 <AddressRow key={address.id}>
-                  <Street onClick={() => openEditModal(address)}>
-                    {address.street?.replace(/ \| /g, " ")}
+                  <Street onClick={() => {
+                    if (address?.phone && address?.reference && address?.phone === address?.reference) return 0
+                    openEditModal(address)
+                  }}>
+                    <StreetSpan>
+
+                      {address?.phone && address?.reference && address?.phone === address?.reference && !isNaN(parseInt(address?.reference)) ? (
+                      <>
+                        <span title={address.street?.split("|")[0]} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS }>
+                          {" "}
+                          {address.street?.split("|")[0]}
+                        </span>
+                        <StarWrap>
+                          <img src={StarIcon} alt="" />
+                          <TooltipStar>
+                            {t("account.tooltip_star_msg")}
+                          </TooltipStar>
+                        </StarWrap>
+                      </>
+                      ): (
+                        <span title={address.street?.replace(/ \| /g, " ")} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS }>
+                        {" "}
+                        {address.street?.replace(/ \| /g, " ")}
+                      </span>
+                      )}
+
+                    </StreetSpan>
+
                   </Street>
+                  {address?.phone && address?.reference && address?.phone === address?.reference && !isNaN(parseInt(address?.reference)) ? '' :
                   <DeleteWrapper onClick={() => removeAddress(address)}>
                     <Delete />
                   </DeleteWrapper>
+                  }
                 </AddressRow>
               ))}
           </AddressWrapper>
         )}
-        {!userLoading && (
+        {!userLoading && (<>
           <NewAddress>
             <button onClick={() => toggleAddressModal()}>
               {t("account.newaddress")}
             </button>
           </NewAddress>
+
+        </>
         )}
+
+        {userDetails && (
+          <>
+            <EmployeeCard setShowOpen={setShowOpen} cuentaActiva={userDetails.details.employee} />
+
+            <EmployeeModal
+              show={show}
+              setShowOpen={setShowOpen}
+              setCuentaActiva={userDetails.details.employee}
+              userDetails={userDetails}
+              userData={userData}
+            />
+          </>
+        )}
+
         <ModalCourtain
           className={
             userData.userInfo.length &&
@@ -783,8 +972,10 @@ const Details: FC<Props> = () => {
                   "reference"
                 ].map((key: string) => {
                   return (
-                    <InputGroup withLabel={key !== "street"} key={key} 
-                    style={key === "reference" ? gridSpan2CSS : emptyCSS}
+                    <InputGroup
+                      withLabel={key !== "street"}
+                      key={key}
+                      style={key === "reference" ? gridSpan2CSS : emptyCSS}
                     >
                       <label>{t("checkout.delivery." + key)}</label>
                       {options[key] && (
@@ -827,29 +1018,28 @@ const Details: FC<Props> = () => {
                         />
                       )}
                       {key !== "street" &&
-                      key !== "address" &&
-                      key !== "reference" &&
-                      !options[key] && 
-                      (
-                        <input
-                          name={`shipping-${key}`}
-                          value={addressInputs[key] || ""}
-                          onChange={evt =>
-                            onChangeAddress(key, evt.target.value)
-                          }
-                          pattern={
-                            key.indexOf("phone") >= 0 || key === "nit"
-                              ? "[0-9]*"
-                              : ""
-                          }
-                          type={
-                            key.indexOf("phone") >= 0 || key === "nit"
-                              ? "number"
-                              : "text"
-                          }
-                          placeholder={t("checkout.delivery." + key)}
-                        />
-                      )}
+                        key !== "address" &&
+                        key !== "reference" &&
+                        !options[key] && (
+                          <input
+                            name={`shipping-${key}`}
+                            value={addressInputs[key] || ""}
+                            onChange={evt =>
+                              onChangeAddress(key, evt.target.value)
+                            }
+                            pattern={
+                              key.indexOf("phone") >= 0 || key === "nit"
+                                ? "[0-9]*"
+                                : ""
+                            }
+                            type={
+                              key.indexOf("phone") >= 0 || key === "nit"
+                                ? "number"
+                                : "text"
+                            }
+                            placeholder={t("checkout.delivery." + key)}
+                          />
+                        )}
                     </InputGroup>
                   );
                 })}
@@ -857,29 +1047,28 @@ const Details: FC<Props> = () => {
               {userData.userInfo.length &&
                 userData.userInfo[0].openAddressModal && <Map />}
               <CtaWrapper>
-                {!loading &&
-                  (addressInputs.id ? (
-                    <Cta
-                      filled={true}
-                      text={t("account.modal.edit")}
-                      action={editAddress}
-                    />
-                  ) : (
-                    <Cta
-                      filled={true}
-                      text={t("account.modal.add")}
-                      action={addAddress}
-                    />
-                  ))}
+                {!loading &&(
+                  <Cta
+                    filled={true}
+                    text={t("account.modal.add")}
+                    action={addAddress}
+                  />
+                )}
                 {loading && (
                   <LoaderWrapper>
-                    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+                    <img
+                      src="/images/loader.svg"
+                      width="50px"
+                      height="50px"
+                      alt="loader"
+                    />
                   </LoaderWrapper>
                 )}
               </CtaWrapper>
             </ModalContainer>
           </Modal>
         </ModalCourtain>
+
       </>
     </Suspense>
   );

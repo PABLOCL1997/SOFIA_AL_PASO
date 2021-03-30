@@ -128,9 +128,13 @@ const CategorySlider: FC<Props> = () => {
   const [selected, setSelected] = useState<number>(0);
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
-  const { loading, data } = useQuery(GET_CATEGORIES, {});
   const { data: userData } = useQuery(GET_USER, {});
-
+  const { loading, data } = useQuery(GET_CATEGORIES, {
+    variables: {
+      city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
+    }
+  });
+  
   const [
     loadProducts,
     { loading: loadingProducts, data: productsData }

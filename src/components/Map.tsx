@@ -105,11 +105,13 @@ const Map: FC<Props> = () => {
         }
       );
     }
-  };
+  }; 
 
   useEffect(() => {
     enableGmap();
   }, []);
+
+
 
   return (
     <Suspense fallback={<Loader />}>
@@ -117,10 +119,10 @@ const Map: FC<Props> = () => {
         <h2>{t("checkout.delivery.map.title")}</h2>
         <MapWrapper>
           <Pin>{t("checkout.delivery.map.pin")}</Pin>
-          <Geo onClick={geoLocate}>
+           <Geo onClick={geoLocate}>
             <Crosshair />
             <span>{t("checkout.delivery.map.geo")}</span>
-          </Geo>
+          </Geo> 
           <div id="gmap"></div>
         </MapWrapper>
       </MapContainer>

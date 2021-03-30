@@ -85,6 +85,7 @@
       "title": "Nuestros productos",
       "all": "Todas las categorías",
       "new": "nuevo",
+      "marcas": "Marcas",
       "freedelivery": {
         "title": "Envío gratuito dentro de las 24 horas hábiles",
         "text": ""
@@ -92,12 +93,15 @@
       "product_count": "{{count}} Productos encontrados"
     },
     "product_list": {
-      "search_product": "Buscar producto",
+      "search_product": "¿Qué producto buscas?",
       "search": "Buscar",
       "order_by": "Ordenar por",
+      "filter_by": "Filtrar por",
+      "brand": "Marca",
       "weight": "Peso",
       "price": "Precio",
       "position": "Posición",
+      "no_brands": "No hay filtros disponibles",
       "no_results": "No se encontraron resultados con los criterios de busqueda actuales."
     }
   },
@@ -188,7 +192,51 @@
       "password": "Ingresá una contraseña",
       "r_password": "Reingresá la contraseña",
       "button": "Confirmar"
+    },
+    "activate_account": {
+      "title": "Activar cuenta",
+      "client_code": "Código de cliente",
+      "question": "No conozco mi código",
+      "next": "Siguiente",
+      "know_code_text": "Tu código de cliente es el NIT (Número de Identificación Tributaria) o CI (Carnet de Identidad) con el cual normalmente haces pedidos.",
+      "know_code_text2": "Puedes contactarnos al 800124141 si tienes alguna consulta.",
+      "back": "Volver",
+      "step2_text": "Verifique que estos datos sean correctos:",
+      "company": "Empresa",
+      "contact": "Contacto",
+      "send_pin": "Enviar PIN",
+      "wrong_info": "¿Datos incorrectos?",
+      "re-enter_code": "Reingresar código",
+      "pin_question": "¿No recibiste el PIN?",
+      "send-again": "Reenviar",
+      "repeat_password": "Repetir contraseña",
+      "register": "Registrarme",
+      "account_success": "¡Cuenta activada con éxito!",
+      "account_success_text": "Para finalizar el registro, necesitamos que elija un email para asociar a la cuenta:",
+      "ready": "¡Listo!",
+      "ready_text": "Tu cuenta ha sido registrada. Ya podés disfrutar de los beneficios de compra para empresas:",
+      "ready_item_1": "Acceso a nuestro catálogo completo de productos.",
+      "ready_item_2": "Mejor seguimiento y control de tus pedidos.",
+      "ready_item_3": "Comprá en simples pasos y repetí pedidos anteriores.",
+      "start_shopping": "INICIAR COMPRA",
+      "mail_error": "Revisa que tu dirección esté bien escrita.",
+      "wrong_password": "Contraseña incorrecta. Vuelve a intentarlo o haz click en recuperar contraseña.",
+      "wrong_code": "Código incorrecto."   
     }
+  },
+
+  "employeeModal": {
+     "activar_cuenta": "Activar cuenta",
+     "carnet_de_identidad": "Carnet de identidad",
+     "enviar_pin": "ENVIAR PIN",
+     "carnet_incorrecto": "Carnet incorrecto.",
+     "no_recibiste_pin": "¿No recibiste el PIN?",
+     "reenviar": "Reenviar",
+     "pin_incorrecto": "PIN incorrecto",
+     "cuenta_activada": "Tu cuenta de empleado ya está activa",
+     "cuenta_activada_subtitulo": "¡Aprovecha descuentos exclusivos en nuestros productos!",
+     "siguiente": "SIGUIENTE",
+     "comenzar": "COMENZAR"
   },
   "cart": {
     "title": "Carrito",
@@ -200,6 +248,7 @@
     "under_budget": "El valor  mínimo para la compra es de Bs. {{min_price}}. Por favor agrega mas productos",
     "change_qty_msg": "Cambiaste la ciudad|Los productos que agregaste al carrito, para la ciudad seleccionada, no alcanzan el monto mínimo de Bs. 100",
     "change_msg": "Cambiaste la ciudad|Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
+    "change_employee": "Cambiaste de dirección|Como cambiaste la dirección de entrega ya no tenes el beneficio de empleado. El precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido.",
     "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito",
     "no_stock": "El stock disponible es de {{qty}} unidades",
     "over_limit": "No se pueden agregar más de {{units}} unidades",
@@ -312,6 +361,7 @@
     "empty_city": "Complete el campo ciudad",
     "empty_reference": "Complete el campo referencia",
     "empty_street": "Complete el campo dirección",
+    "tooltip_star_msg": "A esta dirección llegarán las compras que realices con los beneficios como empleado.",
     "sidebar": {
       "welcome": "Bienvenido",
       "personal_info": "Datos personales",

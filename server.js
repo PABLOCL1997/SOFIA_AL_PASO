@@ -71,7 +71,7 @@ const loadPage = async (req, res, meta = {}) => {
 
     const categoryName = toLink(String(req.params.category))
     try {
-      const response = await client.request(GET_CATEGORIES, {})
+      const response = await client.request(GET_CATEGORIES, { city: "SC" })
       if(!response.categories) return res.status(404).redirect("/404")
       const catFound = search('name', categoryName, mapCategories(response.categories))
       if (catFound) lastlevel = catFound

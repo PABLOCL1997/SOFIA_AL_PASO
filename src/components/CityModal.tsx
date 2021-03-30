@@ -8,6 +8,7 @@ import { useMutation, useQuery, useLazyQuery } from "react-apollo";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER, DETAILS } from "../graphql/user/queries";
 import { UserType, AddressType } from "../graphql/user/type";
+import StarIcon from "../assets/images/star.svg";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -88,7 +89,7 @@ const Radios = styled.div`
 `;
 
 const RadionGroup = styled.div<any>`
-  display: flex;
+  /* display: flex; */
   padding: 5px 10px;
   border-radius: 30px;
   margin-top: 10px;
@@ -127,6 +128,63 @@ const CtaWrapper = styled.div`
     padding: 15px 50px;
   }
 `;
+const StarWrap = styled.div`
+  position: relative;
+
+  &:hover {
+    > div {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+`;
+const TooltipStar = styled.div`
+  text-align: center;
+
+  padding: 20px 10px;
+  width: 287px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 18px;
+
+  left: 50%;
+  margin-left: -141px;
+  right: 0;
+  top: 30px;
+
+  color: #1a1a1a;
+  position: absolute;
+
+  transition: all ease-out 0.2s;
+
+  opacity: 0;
+  visibility: hidden;
+
+  z-index: 2;
+
+  /* &.hover {
+    opacity: 1;
+    visibility: visible;
+  } */
+
+  &:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    margin-left: -10px;
+  }
+
+  @media (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`;
+
 
 type Props = {};
 
@@ -136,6 +194,8 @@ type User = {
   openCityModal?: boolean;
   defaultAddressId?: number;
   defaultAddressLabel?: string;
+  employee?: string;
+  idPriceList?: number;
 };
 
 const CityModal: FC<Props> = () => {
@@ -145,30 +205,48 @@ const CityModal: FC<Props> = () => {
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [city, setCity] = useState<User>({});
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
+  const [showSuccess] = useMutation(SET_USER, {})
   const [toggleCityModal] = useMutation(SET_USER, {
     variables: { user: { openCityModal: false } as User }
   });
-  const [getDetails] = useLazyQuery(DETAILS, {
+  const [getDetails, {data: userDetails}] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: d => {
       setUserId(d.details.id);
       setInputs(d.details);
     }
   });
+  
   const [userId, setUserId] = useState(0);
 
   const changeCity = (c: KeyValue) => {
     setCity({
       cityKey: c.key,
       cityName: c.value,
-      openCityModal: false
+      openCityModal: false,
+      idPriceList: 0
     });
   };
 
-  const setDefaultAddress = (address: AddressType) => {
+  const setDefaultAddress = (address: any) => {
     let c: KeyValue | undefined = cities.find(
       (c: KeyValue) => c.value === address.city
     );
+
+    const prev = data?.userInfo[0]?.idPriceList || 0
+    const newVal = parseInt(address?.reference) || 0
+
+    if (prev > 0 && newVal == 0) {
+      showSuccess({
+        variables: { user: { showModal: t("cart.change_employee") } }
+      });
+    } else {
+      if (data?.userInfo[0]?.cityName !== address?.city) {
+        showSuccess({
+          variables: { user: { showModal: t("cart.change_msg") } }
+        });
+      }
+    }
     setUser({
       variables: {
         user: {
@@ -176,7 +254,8 @@ const CityModal: FC<Props> = () => {
           defaultAddressLabel: address.street,
           openCityModal: false,
           cityKey: c?.key,
-          cityName: c?.value
+          cityName: c?.value,
+          idPriceList: address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? parseInt(address?.reference) : 0 
         }
       }
     });
@@ -190,7 +269,8 @@ const CityModal: FC<Props> = () => {
           cityName: "",
           openCityModal: false,
           defaultAddressId: undefined,
-          defaultAddressLabel: ""
+          defaultAddressLabel: "",
+          idPriceList: 0
         } as User
       }
     });
@@ -291,7 +371,8 @@ const CityModal: FC<Props> = () => {
             defaultAddressLabel: street.replace(/ \| /g, " "),
             cityKey: c ? c.key : "",
             cityName: c ? c.value : "",
-            openCityModal: false
+            openCityModal: false,
+            idPriceList:  0
           }
         }
       });
@@ -380,7 +461,7 @@ const CityModal: FC<Props> = () => {
                       data.userInfo[0].defaultAddressId === address.id &&
                       "selected"
                     }
-                    onClick={() => setDefaultAddress(address)}
+                    onClick={() => setDefaultAddress({...address, idPriceList:0})}
                     key={address.id}
                   >
                     <input
@@ -395,7 +476,21 @@ const CityModal: FC<Props> = () => {
                         )
                       }
                     />
-                    <label>{address?.street?.replace(/ \| /g, " ")}</label>
+
+
+                    {address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? (
+                      <><label>{address?.street?.split("|")[0]}</label>
+
+                      <StarWrap>
+                        <img src={StarIcon} alt="" />
+                        <TooltipStar>
+                          {t("account.tooltip_star_msg")}
+                        </TooltipStar>
+                      </StarWrap>
+                    </>) : (
+                      <label>{address?.street?.replace(/ \| /g, " ")}</label>
+
+                    ) }
                   </RadionGroup>
                 ))}
             </Radios>

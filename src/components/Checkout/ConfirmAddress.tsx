@@ -24,6 +24,11 @@ const ModalCourtain = styled.div`
   &.visible {
     display: flex;
   }
+
+
+  @media(min-width:${BREAKPOINT}){
+    display: none;
+  }
 `;
 
 const Modal = styled.div`

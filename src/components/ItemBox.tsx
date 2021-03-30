@@ -12,11 +12,11 @@ import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "./Loader")
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "./Loader")
 );
-const Chevron = React.lazy(
-  () => import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
+const Chevron = React.lazy(() =>
+  import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
 );
 
 const Container = styled.div`
@@ -103,7 +103,7 @@ const Image = styled.img`
   margin: 0 auto;
   display: block;
 `;
-Image.displayName = 'ItemBoxImage'
+Image.displayName = "ItemBoxImage";
 
 const Title = styled.h2`
   font-family: MullerMedium;
@@ -326,68 +326,93 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
             </div>
           </Discount>
         )}
+
         <Link onClick={goToProduct}>
           <a href={`/${toLink(product.name)}`}>
-          {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
-          <Category>{product.category_name}</Category>
-          <Image data-src={product.image.split(",")[0]} height="200px" width="200px" className="lazyload"></Image>
-          <Title>
-            {product.useKGS
-              ? `${product.name} DE ${Number(product.weight)
-                .toFixed(2)
-                .replace(".", ",")} KGS APROX.`
-              : product.name}
-          </Title>
-          {product.maxPerUser > 0 && (
-            <MaxUnits>
-              {t("itembox.max_per_user", { units: product.maxPerUser })}
-            </MaxUnits>
-          )}
-          <EstimatedPrice visible={product.useKGS}>
-            Bs.{" "}
-            {(product.special_price / product.weight)
-              .toFixed(2)
-              .replace(".", ",")}
-            / KGS
-          </EstimatedPrice>
-          <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
-          <PriceBox>
-            <Price>
-              Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}
-            </Price>
-            {discount > 0 && (
-              <DiscountPrice>
-                Bs. {product.price.toFixed(2).replace(".", ",")}
-              </DiscountPrice>
+            {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
+            <Category>{product.category_name}</Category>
+
+           
+
+            <picture className="lazyload">
+              <source
+                srcSet={
+                  product.image.split(",")[0].slice(0, -4) +
+                  "_200px.webp" +
+                  " 2x"
+                }
+                type="image/webp"
+              />
+              <source
+                srcSet={product.image.split(",")[0].slice(0, -4) +
+                "_200px.jpg" + " 1x"}
+                type="image/jpeg"
+              />
+              <img
+                height="200px"
+                width="200px"
+                style={{ margin: "0 auto", display:"block" }}
+                src={product.image.split(",")[0]}
+                alt={product.name}
+              />
+            </picture>
+
+            <Title>
+              {product.useKGS
+                ? `${product.name} DE ${Number(product.weight)
+                    .toFixed(2)
+                    .replace(".", ",")} KGS APROX.`
+                : product.name}
+            </Title>
+            {product.maxPerUser > 0 && (
+              <MaxUnits>
+                {t("itembox.max_per_user", { units: product.maxPerUser })}
+              </MaxUnits>
             )}
-          </PriceBox>
+            <EstimatedPrice visible={product.useKGS}>
+              Bs.{" "}
+              {(product.special_price / product.weight)
+                .toFixed(2)
+                .replace(".", ",")}
+              / KGS
+            </EstimatedPrice>
+            <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
+            <PriceBox>
+              <Price>
+                Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}
+              </Price>
+              {discount > 0 && (
+                <DiscountPrice>
+                  Bs. {product.price.toFixed(2).replace(".", ",")}
+                </DiscountPrice>
+              )}
+            </PriceBox>
           </a>
         </Link>
-        {
-          product.stock > 0 ?
-            <Pill>
-              <Qty>
-                <select
-                  defaultValue={1}
-                  onChange={event => setQty(Number(event.target.value))}
-                >
-                  {[...(Array(21).keys() as any)]
-                    .slice(1)
-                    .map((opt: any, index: number) => (
-                      <option key={index} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                </select>
-                <Chevron />
-              </Qty>
-              <Add onClick={addAndGo}>{t("itembox.add")}</Add>
-            </Pill>
-            :
-            <Pill>
-              <OutOfStock>TEMPORALMENTE SIN STOCK</OutOfStock>
-            </Pill>
-        }
+        {product.stock > 0 ? (
+          <Pill>
+            <Qty>
+              <select
+                defaultValue={1}
+                onChange={event => setQty(Number(event.target.value))}
+              >
+                {[...(Array(21).keys() as any)]
+                  .slice(1)
+                  .map((opt: any, index: number) => (
+                    <option key={index} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+              </select>
+              <Chevron />
+            </Qty>
+            <Add onClick={addAndGo}>{t("itembox.add")}</Add>
+          </Pill>
+        ) : (
+          <Pill>
+            <OutOfStock>TEMPORALMENTE SIN STOCK</OutOfStock>
+          </Pill>
+        )}
       </Container>
     </Suspense>
   );

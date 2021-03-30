@@ -39,7 +39,7 @@ const Col1 = styled.div`
   width: 50%;
   margin-right: 110px;
   > img {
-    width: 80px;
+ /*    width: 80px; */
   }
   @media screen and (max-width: ${BREAKPOINT}) {
     width: 100%;

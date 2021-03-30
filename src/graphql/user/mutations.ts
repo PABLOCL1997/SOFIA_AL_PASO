@@ -136,3 +136,9 @@ mutation RemoveAddress($addressId: Int!) {
     }
   }
 `
+
+export const SET_EMPLOYEE = gql`
+  mutation setEmployee($customer_id: Int!, $value: Int) {
+    setEmployee(customer_id:$customer_id, value:$value)
+  }
+`
