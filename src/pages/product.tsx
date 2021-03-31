@@ -620,11 +620,11 @@ const Product: FC<Props> = ({
                         } */}
 
                         <picture>
-                          <source
-                            srcSet={img.slice(0, -4) + "_708px.webp" + " 2x"}
-                            type="image/webp"
-                          />
-                          <source srcSet={img + " 1x"} type="image/jpeg" />
+                          {/* <source
+                            srcSet={img}
+                            type="image"
+                          /> */}
+                          {/* <source srcSet={img + " 1x"} type="image/jpeg" /> */}
                           <img src={img} alt={product.name} />
                         </picture>
                       </div>
