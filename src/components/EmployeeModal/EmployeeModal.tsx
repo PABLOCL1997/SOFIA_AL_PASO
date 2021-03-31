@@ -82,17 +82,15 @@ const EmployeeModal: FC<Props> = ({
       setPin5("");
       setPin6("");
       setLoader(false)
-    }
-  })
-  useEffect(()=>{
-    if (userB2E && userB2E.getB2EUserDetails.id_Cliente && userB2E.getB2EUserDetails.nombre && userB2E.getB2EUserDetails.celular ) {
+    },
+    onCompleted: d => {    
       setEmpresa({ empresa: userB2E.getB2EUserDetails.nombre, numero: userB2E.getB2EUserDetails.celular })
-      setSteps(3);
       start(userB2E.getB2EUserDetails.celular)
       setLoader(false)
     }
-  },[userB2E])
-  const [empresa, setEmpresa] = useState<any>({ });
+  })
+
+  const [empresa, setEmpresa] = useState<any>();
 
   const [pin1, setPin1] = useState<any>("");
   const [pin2, setPin2] = useState<any>("");
@@ -103,6 +101,14 @@ const EmployeeModal: FC<Props> = ({
   const [pinError, setPinError] = useState(false);
   const [pinValue, setPinValue] = useState<string>("")
 
+  const pinConfig = {
+    placeholder:"",
+    type:"tel",
+    maxLength:1,
+    pattern:"[0-9]*",
+    autoComplete:"off",
+    pinError:pinError
+  }
   let [counter, setCounter] = useState(59);
 
   const handleChange = (evt: {
@@ -174,7 +180,6 @@ const EmployeeModal: FC<Props> = ({
       }
 
       await axios.post(`${authyUrl}/start/${register.data.user.id}`)
-      // setSteps(3);
     } catch (error) {
       // showError()
     }
@@ -187,19 +192,17 @@ const EmployeeModal: FC<Props> = ({
 
       if(!empresa && !empresa.authyId) return false
 
-      const verifyCode = await axios.post(`${authyUrl}/verify`, {
+      await axios.post(`${authyUrl}/verify`, {
         authyId: empresa.authyId,
         token: pinValue
       })
       setLoader(false)
       return true
-      setSteps(4);
     } catch (error) {
       setLoader(false)
       setPinError(true)
       return false
     }
-    setLoader(false)
   }
   useEffect(() => {
     if (show && steps === 3) {
@@ -226,6 +229,13 @@ const EmployeeModal: FC<Props> = ({
       setPinValue(pin1 + pin2 + pin3 + pin4 + pin5 + pin6)
     }
   }, [pin1, pin2, pin3, pin4, pin5, pin6])
+
+  useEffect(() => {
+    if(empresa && empresa.authyId) {
+      setSteps(3);
+    }
+
+  },[empresa])
 
   return (
     <Wrapper>
@@ -336,16 +346,14 @@ const EmployeeModal: FC<Props> = ({
               </Fragment>
             )}
 
-            {steps === 3 && empresa && empresa.numero && (
+            {steps === 3 && (
               <Fragment>
                 <Title marginBottom={"30px"}>
                   {t("employeeModal.activar_cuenta")}
                 </Title>
 
                 <SmallText>
-                  Por favor, ingrese el código que enviamos al teléfono{" "}
-                  {empresa.numero.slice(0, 3)}
-                  {"******"} {empresa.numero.slice(empresa.numero.length - 3)}{" "}
+                  Por favor, ingrese el código que enviamos al teléfono
                 </SmallText>
 
                 <Counter>
@@ -363,124 +371,84 @@ const EmployeeModal: FC<Props> = ({
                   {pin2 === "" && pin1 !== "" ? (
                     <>
                       <InputCode
-                        placeholder=""
-                        type="tel"
-                        maxLength={1}
-                        pattern="[0-9]*"
+                        {...pinConfig}
                         name="first"
                         onChange={handleChangePin1}
                         value={pin1}
                         autoFocus
                         className={pin1 !== "" ? "filled" : ""}
-                        autoComplete="off"
-                        pinError={pinError}
                       />
                     </>
                   ) : (
                     <InputCode
-                      placeholder=""
-                      type="tel"
-                      maxLength={1}
-                      pattern="[0-9]*"
+                      {...pinConfig}
                       name="first"
                       onChange={handleChangePin1}
                       value={pin1}
                       className={pin1 !== "" ? "filled" : ""}
-                      autoComplete="off"
-                      pinError={pinError}
                     />
                   )}
 
                   {pin1 !== "" && pin3 === "" ? (
                     <>
                       <InputCode
-                        placeholder=""
-                        type="tel"
-                        maxLength={1}
-                        pattern="[0-9]*"
+                        {...pinConfig}
                         name="second"
                         onChange={handleChangePin2}
                         value={pin2}
                         autoFocus
                         className={pin2 !== "" ? "filled" : ""}
-                        autoComplete="off"
-                        pinError={pinError}
                       />
                     </>
                   ) : (
                     <InputCode
-                      placeholder=""
-                      type="tel"
-                      maxLength={1}
-                      pattern="[0-9]*"
+                      {...pinConfig}
                       name="second"
                       onChange={handleChangePin2}
                       value={pin2}
                       className={pin2 !== "" ? "filled" : ""}
-                      autoComplete="off"
-                      pinError={pinError}
                     />
                   )}
 
                   {pin1 !== "" && pin2 !== "" && pin4 === "" ? (
                     <>
                       <InputCode
-                        placeholder=""
-                        type="tel"
-                        maxLength={1}
-                        pattern="[0-9]*"
+                        {...pinConfig}
                         name="third"
                         onChange={handleChangePin3}
                         value={pin3}
                         className={pin3 !== "" ? "filled" : ""}
                         autoFocus
-                        autoComplete="off"
-                        pinError={pinError}
                       />
                     </>
                   ) : (
                     <InputCode
-                      placeholder=""
-                      type="tel"
-                      maxLength={1}
-                      pattern="[0-9]*"
+                      {...pinConfig}
                       name="third"
                       onChange={handleChangePin3}
                       className={pin3 !== "" ? "filled" : ""}
                       value={pin3}
-                      autoComplete="off"
-                      pinError={pinError}
                     />
                   )}
 
                   {pin1 !== "" && pin2 !== "" && pin3 !== "" && pin5 === "" ? (
                     <>
                       <InputCode
-                        placeholder=""
-                        type="tel"
-                        maxLength={1}
-                        pattern="[0-9]*"
+                        {...pinConfig}
                         name="four"
                         onChange={handleChangePin4}
                         value={pin4}
                         className={pin4 !== "" ? "filled" : ""}
                         autoFocus
-                        autoComplete="off"
-                        pinError={pinError}
                       />
                     </>
                   ) : (
                     <InputCode
-                      placeholder=""
-                      type="tel"
-                      maxLength={1}
-                      pattern="[0-9]*"
+                      {...pinConfig}
                       name="four"
                       onChange={handleChangePin4}
                       className={pin4 !== "" ? "filled" : ""}
                       value={pin4}
-                      autoComplete="off"
-                      pinError={pinError}
                     />
                   )}
 
@@ -491,31 +459,21 @@ const EmployeeModal: FC<Props> = ({
                   pin6 === "" ? (
                     <>
                       <InputCode
-                        placeholder=""
-                        type="tel"
-                        maxLength={1}
-                        pattern="[0-9]*"
+                        {...pinConfig}
                         name="five"
                         onChange={handleChangePin5}
                         value={pin5}
                         className={pin5 !== "" ? "filled" : ""}
                         autoFocus
-                        autoComplete="off"
-                        pinError={pinError}
                       />
                     </>
                   ) : (
                     <InputCode
-                      placeholder=""
-                      type="tel"
-                      maxLength={1}
-                      pattern="[0-9]*"
+                      {...pinConfig}
                       name="five"
                       onChange={handleChangePin5}
                       className={pin5 !== "" ? "filled" : ""}
                       value={pin5}
-                      autoComplete="off"
-                      pinError={pinError}
                     />
                   )}
 
@@ -526,31 +484,21 @@ const EmployeeModal: FC<Props> = ({
                   pin5 !== "" ? (
                     <>
                       <InputCode
-                        placeholder=""
-                        type="tel"
-                        maxLength={1}
-                        pattern="[0-9]*"
+                        {...pinConfig}
                         name="six"
                         onChange={handleChangePin6}
                         value={pin6}
                         className={pin6 !== "" ? "filled" : ""}
                         autoFocus
-                        autoComplete="off"
-                        pinError={pinError}
                       />
                     </>
                   ) : (
                     <InputCode
-                      placeholder=""
-                      type="tel"
-                      maxLength={1}
-                      pattern="[0-9]*"
+                      {...pinConfig}
                       name="six"
                       onChange={handleChangePin6}
                       className={pin6 !== "" ? "filled" : ""}
                       value={pin6}
-                      autoComplete="off"
-                      pinError={pinError}
                     />
                   )}
                 </FourCodeInputs>

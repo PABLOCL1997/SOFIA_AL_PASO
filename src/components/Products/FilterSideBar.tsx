@@ -812,8 +812,9 @@ const FilterSideBar: FC<Props> = ({
                     >
                       {brands && brands.brands && brands.brands.length ? (
                         <>
-                          {brands.brands.map(
-                            ({ name, quantity }: any, index: number) => (
+                          {brands.brands
+                            .filter(({ quantity }: any) => quantity >= 0)
+                            .map(({ name, quantity }: any, index: number) => (
                               <div
                                 className="brand-link"
                                 key={index}
@@ -900,7 +901,9 @@ const FilterSideBar: FC<Props> = ({
           >
             {brands && brands.brands && brands.brands.length ? (
               <>
-                {brands.brands.map(({ name, quantity }: any, index: number) => (
+                {brands.brands
+                .filter(({ quantity }: any) => quantity >= 0)
+                .map(({ name, quantity }: any, index: number) => (
                   <div
                     className="brand-link"
                     key={index}
