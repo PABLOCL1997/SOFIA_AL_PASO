@@ -8,6 +8,14 @@ import {
   ImageContainer,
   LINK
 } from "../../styled-components/CategoryBannerStyles";
+import img1Mob from '../../assets/images/2-POST-BANNER-II-320X80_MARZO_PODIUM.png'
+import img1 from '../../assets/images/2-POST-BANNER-II-1124X100_MARZO_PODIUM.png'
+
+import img2Mob from '../../assets/images/banner-320x80.png'
+import img2 from '../../assets/images/banner-1124x100.png'
+
+import img3Mob from '../../assets/images/Kostlich-320x80.png'
+import img3 from '../../assets/images/Kostlich-1124x100.png'
 
 
 const Loader = React.lazy(() =>
@@ -36,9 +44,10 @@ const Root = styled.div`
 
 type Props = {
   category: string | undefined;
+  isMobile: Boolean | undefined;
 };
 
-const CategoryBanner: FC<Props> = ({ category }) => {
+const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
   const settings = {
     dots: true,
     infinite: false,
@@ -72,15 +81,37 @@ const CategoryBanner: FC<Props> = ({ category }) => {
       <Wrapper>
         <Slider {...settings}>
           <LINK
-            onMouseDown={handleMouseDown}
-            onClick={e => {
-              const variation = e.clientX - clientX;
-              if (variation > -10 && variation < 10) {
-                history.push(`/${history.location.pathname}`);
-              }
-            }}
+            // onMouseDown={handleMouseDown}
+            // onClick={e => {
+            //   const variation = e.clientX - clientX;
+            //   if (variation > -10 && variation < 10) {
+            //     history.push(`/${history.location.pathname}`);
+            //   }
+            // }}
           >
-            <ImageContainer bg={category}></ImageContainer>
+            <ImageContainer bg={isMobile ? img1Mob : img1 }></ImageContainer>
+          </LINK>
+          <LINK
+            // onMouseDown={handleMouseDown}
+            // onClick={e => {
+            //   const variation = e.clientX - clientX;
+            //   if (variation > -10 && variation < 10) {
+            //     history.push(`/${history.location.pathname}`);
+            //   }
+            // }}
+          >
+            <ImageContainer bg={isMobile ? img2Mob : img2 }></ImageContainer>
+          </LINK>
+          <LINK
+            // onMouseDown={handleMouseDown}
+            // onClick={e => {
+            //   const variation = e.clientX - clientX;
+            //   if (variation > -10 && variation < 10) {
+            //     history.push(`/${history.location.pathname}`);
+            //   }
+            // }}
+          >
+            <ImageContainer bg={isMobile ? img3Mob : img3 }></ImageContainer>
           </LINK>
         </Slider>
       </Wrapper>

@@ -82,17 +82,13 @@ const EmployeeModal: FC<Props> = ({
       setPin5("");
       setPin6("");
       setLoader(false)
-    },
-    onCompleted: d => {    
-      setEmpresa({ empresa: userB2E.getB2EUserDetails.nombre, numero: userB2E.getB2EUserDetails.celular })
-      start()
-      setLoader(false)
     }
   })
   useEffect(()=>{
     if (userB2E && userB2E.getB2EUserDetails.id_Cliente && userB2E.getB2EUserDetails.nombre && userB2E.getB2EUserDetails.celular ) {
-      
+      setEmpresa({ empresa: userB2E.getB2EUserDetails.nombre, numero: userB2E.getB2EUserDetails.celular })
       setSteps(3);
+      start(userB2E.getB2EUserDetails.celular)
       setLoader(false)
     }
   },[userB2E])
@@ -163,12 +159,12 @@ const EmployeeModal: FC<Props> = ({
     setPin6(pin6Valid);
   };
 
-  const start = async () => {
+  const start = async (cellphone: any) => {
     try {
       setLoader(true)
       const register = await axios.post(`${authyUrl}/register`,{
         country_code: "591",
-        cellphone: empresa.numero,
+        cellphone,
         email: userDetails.details.email,
       })
       if (register.data.user.id) {

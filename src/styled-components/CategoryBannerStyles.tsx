@@ -49,7 +49,7 @@ export const ImageContainer = styled.div<{ bg?: string }>`
   height: 100px;
   width: 100%;
 
-  background: url('/images/banner-${props => props.bg}.jpg') no-repeat
+  background: url('${props => props.bg}') no-repeat
     center center / cover;
 `;
 

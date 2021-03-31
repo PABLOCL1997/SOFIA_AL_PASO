@@ -281,6 +281,9 @@ const Products: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <div className="main-container">
         <Container>
+          <CategoryBanner isMobile={
+                window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
+          } category="all" />
           <BreadWrap>
             <BreadCrums
               isMobile={
