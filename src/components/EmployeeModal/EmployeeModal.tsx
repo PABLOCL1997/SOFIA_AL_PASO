@@ -96,10 +96,7 @@ const EmployeeModal: FC<Props> = ({
       setLoader(false)
     }
   },[userB2E])
-  const [empresa, setEmpresa] = useState<any>({
-    empresa: "Pollos Kiky, SRL",
-    numero: "78023322156"
-  });
+  const [empresa, setEmpresa] = useState<any>({ });
 
   const [pin1, setPin1] = useState<any>("");
   const [pin2, setPin2] = useState<any>("");
@@ -181,7 +178,7 @@ const EmployeeModal: FC<Props> = ({
       }
 
       await axios.post(`${authyUrl}/start/${register.data.user.id}`)
-      setSteps(3);
+      // setSteps(3);
     } catch (error) {
       // showError()
     }
@@ -636,6 +633,7 @@ const EmployeeModal: FC<Props> = ({
                     margin={"0 0 0 auto"}
                     onClick={() => {
                       setKnowCode(true);
+                      setSteps(3)
                     }}
                   >
                     {t("employeeModal.reenviar")}
