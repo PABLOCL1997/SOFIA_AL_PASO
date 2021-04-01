@@ -813,8 +813,8 @@ const FilterSideBar: FC<Props> = ({
                       {brands && brands.brands && brands.brands.length ? (
                         <>
                           {brands.brands
-                            .filter(({ quantity }: any) => quantity >= 0)
                             .map(({ name, quantity }: any, index: number) => (
+                              quantity > 0 ?  (
                               <div
                                 className="brand-link"
                                 key={index}
@@ -837,6 +837,7 @@ const FilterSideBar: FC<Props> = ({
                                   </div>
                                 </BrandItem>
                               </div>
+                              ) : ''
                             )
                           )}
                         </>
@@ -902,30 +903,32 @@ const FilterSideBar: FC<Props> = ({
             {brands && brands.brands && brands.brands.length ? (
               <>
                 {brands.brands
-                .filter(({ quantity }: any) => quantity >= 0)
                 .map(({ name, quantity }: any, index: number) => (
-                  <div
-                    className="brand-link"
-                    key={index}
-                    onClick={() => {
-                      setBrandSelected(name);
-                      handleBrandFilter(index);
-                    }}
-                  >
-                    <RadioBtn>
-                      {arrayBrand[index]?.toggle ? (
-                        <img src={BrandChecked} alt="" />
-                      ) : (
-                        <img src={BrandEmpty} alt="" />
-                      )}
-                    </RadioBtn>
-                    <BrandItem onClick={() => {}} selected={index}>
-                      <div>
-                        <h5>{name}</h5>
-                        <span>({quantity})</span>
-                      </div>
-                    </BrandItem>
-                  </div>
+                  quantity > 0 ? (
+                    <div
+                      className="brand-link"
+                      key={index}
+                      onClick={() => {
+                        setBrandSelected(name);
+                        handleBrandFilter(index);
+                      }}
+                    >
+                      <RadioBtn>
+                        {arrayBrand[index]?.toggle ? (
+                          <img src={BrandChecked} alt="" />
+                        ) : (
+                          <img src={BrandEmpty} alt="" />
+                        )}
+                      </RadioBtn>
+                      <BrandItem onClick={() => {}} selected={index}>
+                        <div>
+                          <h5>{name}</h5>
+                          <span>({quantity})</span>
+                        </div>
+                      </BrandItem>
+                    </div>
+
+                  ) : ''
                 ))}
               </>
             ) : (
