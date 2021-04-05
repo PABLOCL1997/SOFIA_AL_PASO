@@ -65,8 +65,8 @@ module.exports = {
   }
   `,
   GET_CATEGORIES:`
-  query Categories {
-    categories {
+  query Categories ($city: String!) {
+    categories (city:$city) {
       entity_id
       name
       subcategories {
