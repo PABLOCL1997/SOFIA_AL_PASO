@@ -510,6 +510,8 @@ const Header: FC<Props> = ({ checkout, page }) => {
                       }}
                       onChange={({ target: { value }}) => { setNewQuery(value)}}
                       placeholder={t("products.product_list.search_product")}
+                      name="product-search"
+                      autoComplete="off"
                     />
                     <Cta
                       filled={true}
@@ -596,6 +598,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
                 }}
                 onChange={({ target: { value }}) => { setNewQuery(value)}}
                 placeholder={t("products.product_list.search_product")}
+                name="product-search"
                 autoComplete="off"
               />
               <Cta

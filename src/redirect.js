@@ -590,8 +590,19 @@ const urls = [
     {
         urlFrom: "/productos/fiambres",
         urlTo: "/productos/embutidos-y-fiambres"
+    },
+    {
+        urlFrom: "/productos/preparados/yo-chef",
+        urlTo: "/productos/preparados/otros-preparados"
+    },
+    {
+        urlFrom: "/productos/conservas/el-faro",
+        urlTo: "/productos/conservas/at%C3%BAn"
+    },
+    {
+        urlFrom: "/productos/conservas/la-despensa",
+        urlTo: "/productos/conservas/duraznos"
     }
-
 ]
 
 
