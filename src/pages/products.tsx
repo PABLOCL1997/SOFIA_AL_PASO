@@ -156,39 +156,17 @@ const Products: FC<Props> = () => {
     if (query.get("q") !== search) {
       setOffset(0);
       setSearch(query.get("q"));
-      
     } 
     if (Number(query.get("p")) !== Number(page)) {
       setPage(Number(query.get("p")));
       let offset = Number(query.get("p")) - 1;
       setOffset((offset < 0 ? 0 : offset) * limit);
     }
-
-    if(query.get("marca")) {
-      if (!brand) {
-        setBrand(query.get("marca")?.split(',').map((brand: any)=> `'${brand}'`).join(','))
-      } else {
-        const marca = query.get("marca")?.split(',').map((brand: any)=> `'${brand}'`).join(',')
-        if (marca !== brand) {
-          setBrand(marca)
-        }
-      }
-      // setBrand(query.get("marca")?.split(',').map(brand=> `'${brand}'`).join(',') || null)
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-
   useEffect(() => {
     setLoader(true);
-    setBrand(
-      query
-        .get("marca")
-        ?.split(",")
-        .map((brand: any) => `'${brand}'`)
-        .join(",") || null
-    );
 
     if (data && data.categories) {
       let entity_id = null;
@@ -249,7 +227,7 @@ const Products: FC<Props> = () => {
             city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
             id_price_list: String(userData.userInfo[0].idPriceList),
             onsale: (category || _category) === "promociones",
-            brand: query.get("marca") ? brand : null
+            brand: brand
           }
         })
       } else {
@@ -264,7 +242,7 @@ const Products: FC<Props> = () => {
             city: userData.userInfo.length
               ? userData?.userInfo[0]?.cityKey || "SC"
               : "SC",
-            brand: query.get("marca") ? brand : null
+            brand: brand
           }
         });
       }
@@ -275,7 +253,7 @@ const Products: FC<Props> = () => {
     }
     setTimeout(() => setLoader(false), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, subcategory, lastlevel, data, order, search, brand, pageNumber]);
+  }, [category, subcategory, lastlevel, data, order, search, brand, offset]);
 
   return (
     <Suspense fallback={<Loader />}>

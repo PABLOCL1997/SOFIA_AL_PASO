@@ -7,10 +7,17 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { toLink } from "../utils/string";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { trackAddToCart } from "../utils/dataLayer";
-import { BREAKPOINT } from "../utils/constants";
+import { BREAKPOINT, customStyles } from "../utils/constants";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
+
+import DiscountIcon from "../assets/images/descuento.svg";
+import {
+  NewDiscount,
+  ProductLink,
+  BottomCard
+} from "../styled-components/ItemBoxStyles";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -22,9 +29,10 @@ const Chevron = React.lazy(() =>
 const Container = styled.div`
   position: relative;
   background: #ffffff;
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.06);
-  border-radius: 20px;
-  margin: 40px 10px;
+  /*   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.06); */
+  box-shadow: 0px 2px 9px rgb(0 0 0 / 9%);
+  border-radius: 16px;
+  margin: 20px 10px 15px;
   padding: 14px 10px 22px;
 `;
 
@@ -74,18 +82,27 @@ const Link = styled.div`
 
 const NewLabel = styled.span`
   position: absolute;
-  left: 0;
-  top: 25px;
-  width: 75px;
+  left: 5px;
+  top: 5px;
+  width: 65px;
   background: var(--red);
   color: white;
   font-weight: bold;
   text-align: center;
-  padding: 5px 0px 3px;
   text-transform: uppercase;
   border-radius: 20px;
   border: 3px white double;
-  font-size: 14px;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  z-index: 2;
+
+  border: 0;
+  border-radius: 4px;
+  background-color: ${customStyles.yellow};
+
+  color: ${customStyles.red};
+  font-family: MullerBold;
+  padding: 7px 0 5px;
 `;
 
 const Category = styled.h3`
@@ -108,12 +125,13 @@ Image.displayName = "ItemBoxImage";
 const Title = styled.h2`
   font-family: MullerMedium;
   font-size: 16px;
-  line-height: 110%;
-  text-align: center;
+  line-height: 20px;
+  text-align: left;
   color: var(--black);
-  min-height: 52px;
+  min-height: 90px;
   padding: 0 10px;
-  text-transform: uppercase;
+
+  margin-bottom: 15px;
   @media screen and (max-width: ${BREAKPOINT}) {
     height: auto;
   }
@@ -121,8 +139,14 @@ const Title = styled.h2`
 
 const PriceBox = styled.div`
   text-align: center;
-  margin: 0px 0 10px;
-  padding: 0 10px;
+  margin: 0;
+  padding: 0 10px 3px;
+
+  span {
+    display: block;
+    margin: 0;
+    text-align: left;
+  }
 `;
 
 const Price = styled.span`
@@ -133,10 +157,12 @@ const Price = styled.span`
 `;
 
 const DiscountPrice = styled.span`
-  color: var(--red);
-  font-size: 14px;
+  color: ${customStyles.darkGrey};
   margin-left: 5px;
   text-decoration: line-through;
+
+  font-size: 12px;
+  line-height: 16px;
 `;
 
 const Pill = styled.div`
@@ -192,18 +218,18 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
   font-family: MullerMedium;
   font-size: 12px;
   line-height: 12px;
-  text-align: center;
-  color: var(--font);
-  padding: 5px 10px;
+  text-align: left;
+  color: ${customStyles.black};
+  padding: 5px 0;
   opacity: ${props => (props.visible ? 1 : 0)};
 `;
 
 const Label = styled.div<{ visible?: boolean }>`
-  font-family: MullerBold;
+  font-family: MullerRegular;
   font-size: 12px;
   line-height: 12px;
   text-align: center;
-  color: var(--font);
+  color: #808080;
   padding: 5px 10px;
   opacity: ${props => (props.visible ? 1 : 0)};
 `;
@@ -318,24 +344,24 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
     <Suspense fallback={<Loader />}>
       <Container>
         {discount > 0 && (
-          <Discount>
+          /*  <Discount>
             <div>{Number(discount).toFixed(0)}</div>
             <div>
               <span>%</span>
               <span>DSCTO</span>
             </div>
-          </Discount>
+          </Discount> */
+          <NewDiscount>
+            <img src={DiscountIcon} alt="%" />
+          </NewDiscount>
         )}
 
         <Link onClick={goToProduct}>
-          <a href={`/${toLink(product.name)}`}>
+          <ProductLink href={`/${toLink(product.name)}`}>
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
-            <Category>{product.category_name}</Category>
-
-           
 
             <picture className="lazyload">
-              {/* <source
+              <source
                 srcSet={
                   product.image.split(",")[0].slice(0, -4) +
                   "_200px.webp" +
@@ -344,14 +370,17 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
                 type="image/webp"
               />
               <source
-                srcSet={product.image.split(",")[0].slice(0, -4) +
-                "_200px.jpg" + " 1x"}
+                srcSet={
+                  product.image.split(",")[0].slice(0, -4) +
+                  "_200px.jpg" +
+                  " 1x"
+                }
                 type="image/jpeg"
-              /> */}
+              />
               <img
                 height="200px"
                 width="200px"
-                style={{ margin: "0 auto", display:"block" }}
+                style={{ margin: "0 auto", display: "block" }}
                 src={product.image.split(",")[0]}
                 alt={product.name}
               />
@@ -363,31 +392,36 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
                     .toFixed(2)
                     .replace(".", ",")} KGS APROX.`
                 : product.name}
+              <EstimatedPrice visible={product.useKGS}>
+                (Bs.{" "}
+                {(product.special_price / product.weight)
+                  .toFixed(2)
+                  .replace(".", ",")}
+                / KGS)
+              </EstimatedPrice>
             </Title>
-            {product.maxPerUser > 0 && (
+            {/*  {product.maxPerUser > 0 && (
               <MaxUnits>
                 {t("itembox.max_per_user", { units: product.maxPerUser })}
               </MaxUnits>
-            )}
-            <EstimatedPrice visible={product.useKGS}>
-              Bs.{" "}
-              {(product.special_price / product.weight)
-                .toFixed(2)
-                .replace(".", ",")}
-              / KGS
-            </EstimatedPrice>
-            <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
-            <PriceBox>
-              <Price>
-                Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}
-              </Price>
-              {discount > 0 && (
-                <DiscountPrice>
-                  Bs. {product.price.toFixed(2).replace(".", ",")}
-                </DiscountPrice>
-              )}
-            </PriceBox>
-          </a>
+            )} */}
+
+            <BottomCard>
+              <PriceBox>
+                {discount > 0 && (
+                  <DiscountPrice>
+                    Bs. {product.price.toFixed(2).replace(".", ",")}
+                  </DiscountPrice>
+                )}
+
+                <Price>
+                  Bs.{" "}
+                  {(product.special_price || 0).toFixed(2).replace(".", ",")}
+                </Price>
+              </PriceBox>
+              <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
+            </BottomCard>
+          </ProductLink>
         </Link>
         {product.stock > 0 ? (
           <Pill>
