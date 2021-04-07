@@ -503,6 +503,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
                   </AddressHeader>
                   <InputGroup>
                     <Search />
+                    {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
                     <input
                       type="search"
                       onKeyUp={evt => {
@@ -511,7 +512,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
                       onChange={({ target: { value }}) => { setNewQuery(value)}}
                       placeholder={t("products.product_list.search_product")}
                       name="product-search"
-                      autoComplete="off"
+                      autoComplete="no-autocomplete"
                     />
                     <Cta
                       filled={true}
@@ -591,6 +592,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
             </Address>
             <InputGroup>
               <Search />
+              {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
               <input
                 type="search"
                 onKeyUp={evt => {
@@ -599,7 +601,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
                 onChange={({ target: { value }}) => { setNewQuery(value)}}
                 placeholder={t("products.product_list.search_product")}
                 name="product-search"
-                autoComplete="off"
+                autoComplete="no-autocomplete"
               />
               <Cta
                 filled={true}

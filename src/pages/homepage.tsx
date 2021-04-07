@@ -65,13 +65,13 @@ const Homepage: FC<Props> = () => {
           <Hero />
         </SectionWrapper>
         <SectionWrapper>
-          <CategorySlider />
+          <CategorySlider userData={userData} />
         </SectionWrapper>
         <SectionWrapper>
           <Benefits />
         </SectionWrapper>
         <SectionWrapper>
-          <Promotions />
+          <Promotions userData={userData} />
         </SectionWrapper>
         <SectionWrapper>
           <Subscribe />

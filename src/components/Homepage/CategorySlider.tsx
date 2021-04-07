@@ -1,14 +1,13 @@
 import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useQuery, useLazyQuery } from "@apollo/react-hooks";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { CategoryType } from "../../graphql/categories/type";
-import { GET_PRODUCTS } from "../../graphql/products/queries";
+import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../../graphql/products/queries";
 import { GET_CATEGORIES } from "../../graphql/categories/queries";
 import { useTranslation } from "react-i18next";
 import { toLink } from "../../utils/string";
 import { BREAKPOINT } from "../../utils/constants";
-import { GET_USER } from "../../graphql/user/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -120,37 +119,30 @@ const LoaderWrapper = styled.div`
   }
 `;
 
-type Props = {};
+type Props = {
+  userData: any;
+};
 
-const CategorySlider: FC<Props> = () => {
+const CategorySlider: FC<Props> = ({ userData }) => {
   const { t } = useTranslation();
-  const history = useHistory();
   const [selected, setSelected] = useState<number>(0);
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
-  const { data: userData } = useQuery(GET_USER, {});
   const { loading, data } = useQuery(GET_CATEGORIES, {
     variables: {
       city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
     }
   });
-  
-  const [
-    loadProducts,
-    { loading: loadingProducts, data: productsData }
-  ] = useLazyQuery(GET_PRODUCTS, {
-    variables: {
-      category_id: selected,
-      limit: 8,
-      offset: 0,
-      city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
-    },
-    fetchPolicy: "cache-and-network"
+  const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
+    onCompleted: d => setProducts(d.productsB2B.rows)
+  }) 
+  const [loadProducts,{ loading: loadingProducts, data: productsData }] = useLazyQuery(GET_PRODUCTS, {
+    onCompleted: d => setProducts(d.products.rows)
   });
 
   const seeAll = () => {
     if (selected === 0) {
-      return `/productos/`;
+      return `/productos`;
     } else {
       return `/productos/${toLink(
           data.categories.find(
@@ -166,16 +158,26 @@ const CategorySlider: FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (productsData) {
-      setProducts([]);
-      setTimeout(() => {
-        setProducts(productsData.products.rows);
-      }, 1000);
+    if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList > 0) {
+      loadProductsFromListing({
+        variables: {
+          category_id: selected,
+          limit: 9,
+          offset: 0,
+          city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
+          id_price_list: String(userData.userInfo[0].idPriceList),
+        }
+      })
+    } else {
+      loadProducts({
+        variables: {
+          category_id: selected,
+          limit: 9,
+          offset: 0,
+          city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC"
+        }
+      })
     }
-  }, [productsData]);
-
-  useEffect(() => {
-    loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
@@ -244,13 +246,13 @@ const CategorySlider: FC<Props> = () => {
           <ProductSlider products={inStockProducts()} />
         )}
         <CtaWrapper>
-          <a href={seeAll()}>
+          <Link to={seeAll()}>
           <Cta
             action={() => {}}
             text={t("homepage.categoryslider.seeall")}
             filled={true}
           />
-          </a>
+          </Link>
         </CtaWrapper>
       </div>
   );

@@ -417,8 +417,13 @@ const FilterSideBar: FC<Props> = ({
     newState[index].toggle = !newState[index].toggle;
     setArrayBrand(newState);
 
-    var toggleQty = arrayBrand.filter(item => item.toggle === true);
+    var toggleQty = arrayBrand.filter(({ toggle }: any) => toggle);
     setBrandsSelected(toggleQty.length);
+    if (toggleQty.length) {
+      setBrand(toggleQty.map(({ name }: any) => `'${name}'`).join(','))
+    } else {
+      setBrand(null)
+    }
   };
 
   const handleToggleOff = () => {
@@ -431,6 +436,7 @@ const FilterSideBar: FC<Props> = ({
 
     var toggleQty = arrayBrand.filter(item => item.toggle === true);
     setBrandsSelected(toggleQty.length);
+    setBrand(null)
   };
 
   useEffect(() => {
@@ -443,7 +449,7 @@ const FilterSideBar: FC<Props> = ({
       params.delete("marca");
     }
     const paramsParsed = params.toString().replaceAll("%2C", ",");
-
+    
     history.push({ search: paramsParsed });
   }, [arrayBrand]);
 

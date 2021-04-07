@@ -602,6 +602,10 @@ const urls = [
     {
         urlFrom: "/productos/conservas/la-despensa",
         urlTo: "/productos/conservas/duraznos"
+    },
+    {
+        urlFrom: "/productos/mascotas",
+        urlTo: "/productos/alimento-para-mascotas"
     }
 ]
 
