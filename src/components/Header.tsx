@@ -67,7 +67,7 @@ const Fixed = styled.div<{ shadow: boolean }>`
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 3;
+  z-index: 11;
   box-shadow: ${props => (props.shadow ? "0 0 15px #ccc" : "")};
 `;
 
@@ -594,14 +594,14 @@ const Header: FC<Props> = ({ checkout, page }) => {
               <Search />
               {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
               <input
-                type="search"
+                type="text"
                 onKeyUp={evt => {
                   if (evt.keyCode === 13) handleSearch()
                 }}
                 onChange={({ target: { value }}) => { setNewQuery(value)}}
                 placeholder={t("products.product_list.search_product")}
                 name="product-search"
-                autoComplete="no-autocomplete"
+                autoComplete="off"
               />
               <Cta
                 filled={true}
