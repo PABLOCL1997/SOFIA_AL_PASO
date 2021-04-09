@@ -192,7 +192,7 @@ const Products: FC<Props> = () => {
       }
       // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
       if (!entity_id && !!(category || subcategory || lastlevel)) {
-        if(category !== "promociones" || _category !== "promociones")  {
+        if((category !== "promociones" || _category !== "promociones") && (category !== "chiquidays" || _category !== "chiquidays") )  {
           return history.replace("/404");
         }
       }
