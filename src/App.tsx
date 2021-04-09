@@ -108,7 +108,7 @@ const App = () => {
               }
             />
             <Route
-              
+              exact
               path="/productos"
               children={
                 <LayoutGeneral>
@@ -126,7 +126,7 @@ const App = () => {
               }
             />
             <Route
-              
+              exact
               path="/productos/:category"
               children={
                 <LayoutGeneral>
@@ -135,7 +135,7 @@ const App = () => {
               }
             />
             <Route
-              
+              exact
               path="/productos/:category/:subcategory"
               children={
                 <LayoutGeneral>
@@ -144,7 +144,7 @@ const App = () => {
               }
             />
             <Route
-              
+              exact
               path="/productos/:category/:subcategory/:lastlevel"
               children={
                 <LayoutGeneral>

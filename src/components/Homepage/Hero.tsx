@@ -24,18 +24,20 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 
 const Container = styled.div`
   padding: 80px 20px 160px;
+
   min-height: 520px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: url(/images/b2c-nueva_home.jpg) no-repeat center center / cover;
-  margin-top: 15px;
+  background: #93531d no-repeat center center / cover;
+  margin-top:-40px;
   position: relative;
 
   > div > img {
     width: 140px;
   }
   @media screen and (max-width: ${BREAKPOINT}) {
+    margin-top:15px;
     padding: 40px 20px;
     min-height: auto;
     background-position: 28% center;
@@ -60,7 +62,7 @@ const Title = styled.h2`
   text-align: center;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--whiter);
   margin: 30px 0;
   padding: 0;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -158,6 +160,16 @@ const CtaWrapper = styled.div`
   }
 `;
 
+const Image = styled.img`
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+`
+
 type Props = {};
 
 const Hero: FC<Props> = () => {
@@ -192,6 +204,19 @@ const Hero: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <div>
         <Container>
+          <Image
+            data-sizes="auto"
+            src="/images/e-commerce_1_1_lq.jpg"
+            data-srcset="
+            /images/e-commerce_1_1_lq.jpg 220w,
+            /images/e-commerce_1_1_500.jpg 500w,
+            /images/e-commerce_1_1_700.jpg 700w,
+            /images/e-commerce_1_1_900.jpg 900w,
+            /images/e-commerce_1_1_1200.jpg 1200w,
+            /images/e-commerce_1_1_1400.jpg 1400w,
+            "
+            className="lazyload blur-up"
+          />
           <div>
             <HeaderLogoWhite withSlogan={false} />
             <Title>{t("homepage.hero.text")}</Title>

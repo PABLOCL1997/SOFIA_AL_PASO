@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { ProductType, OrderColums } from "../../graphql/products/type";
 import { toLink, fromLink } from "../../utils/string";
-import { BREAKPOINT } from "../../utils/constants";
+import { BREAKPOINT, customStyles } from "../../utils/constants";
+import { FiltersWrap, Results, Separador, OrderBy } from "../../styled-components/ProductsListStyles";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -34,8 +35,9 @@ const Product = React.lazy(() =>
 const Container = styled.div``;
 
 const Toolbox = styled.div`
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-top: 30px;
     div:first-child {
@@ -54,7 +56,7 @@ const InputGroup = styled.div`
   flex: 1;
   background: var(--f-gray);
   border-radius: 44px;
-  margin-right: 40px;
+  margin-right: 15px;
   svg {
     position: absolute;
     left: 20px;
@@ -89,13 +91,19 @@ const InputGroup = styled.div`
 const SelectBox = styled.div`
   position: relative;
   z-index: 2;
+
+  svg{
+    path{
+      stroke:var(--red);
+    }
+  }
 `;
 
 const Select = styled.div`
-  border: 1px solid var(--red);
+  
   box-sizing: border-box;
   border-radius: 44px;
-  padding: 12px 20px;
+  padding-top: 4px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -103,7 +111,7 @@ const Select = styled.div`
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
-    color: var(--font);
+    color: ${customStyles.black};
   }
   b {
     font-family: MullerBold;
@@ -148,8 +156,9 @@ const Pager = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0;
+  margin: 0 0 40px;
   flex-wrap: wrap;
+  justify-content:flex-start;
 `;
 Pager.displayName = 'Pager'
 
@@ -161,12 +170,12 @@ const PageArrow = styled.a<{ allowed: boolean }>`
 PageArrow.displayName = 'PageArrow'
 
 const Page = styled.a<{ selected: boolean }>`
-  font-family: ${props => (props.selected ? "MullerBold" : "MullerRegular")};
-  font-size: 12px;
-  line-height: 12px;
+  font-family: ${props => (props.selected ? "MullerRegular" : "MullerRegular")};
+  font-size: 16px;
+line-height: 20px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: ${props => (props.selected ? "var(--red)" : "var(--font)")};
+  color: ${props => (props.selected ? "var(--red)" : customStyles.black)};
   margin: 5px;
   cursor: ${props => (props.selected ? "default" : "pointer")};
 `;
@@ -215,18 +224,62 @@ const NoResults = styled.div`
   margin: 0 auto;
 `;
 
+const Brands = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 15px 15px;
+  display:none;
+
+`
+
+const Chip = styled.span`
+  position: relative;
+  padding: 5px 15px;
+  margin: 0px 10px 0px 10px;
+  border-radius: 10px;
+  background-color: var(--f-gray);
+`
+const Cross = styled.a`
+margin: 0px 15px 0px 15px;
+&:hover {
+  opacity: 1;
+}
+&:before, &:after {
+  position: absolute;
+  right: 10px;
+  content: ' ';
+  height: 14px;
+  width: 2px;
+  background-color: #333;
+}
+&:before {
+  transform: rotate(45deg);
+}
+&:after {
+  transform: rotate(-45deg);
+}
+`
+
+
 type Props = {
   products: Array<ProductType>;
   count: number;
+  offset: number;
+  limit: number;
   orderQuery: Function;
   parentOrder: string;
+  brands: any;
 };
 
 const ProductList: FC<Props> = ({
   products,
   count,
+  offset,
+  limit,
   orderQuery,
-  parentOrder
+  parentOrder,
+  brands
 }) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
@@ -236,6 +289,7 @@ const ProductList: FC<Props> = ({
   const [search, setSearch] = useState(query.get("q"));
   const [page, setPage] = useState(query.get("p") ? Number(query.get("p")) : 1);
   const [openOrder, setOpenOrder] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false)
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState<ProductType | any>({});
 
@@ -251,6 +305,10 @@ const ProductList: FC<Props> = ({
     });
   };
 
+  const [pageHook, setPageHook] = useState(1);
+
+
+
   const move = (fwd: boolean) => {
     if (fwd && page < Math.ceil(count / 9)) return changePage(page + 1);
     else if (!fwd && page > 1) return changePage(page - 1);
@@ -258,12 +316,12 @@ const ProductList: FC<Props> = ({
 
   const changePage = (page: number) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    let search = "?";
-    if (query.get("q")) search += `q=${query.get("q")}&`;
-    search += `p=${page}`;
-    return `${pathname}${search}`
-    // history.push(`${pathname}${search}`);
-    // setPage(page);
+    const params = new URLSearchParams(history.location.search);   
+    
+    params.delete("p")
+    params.append("p", String(page))
+
+    history.push({ search: params.toString() });
   };
 
   const openModal = (product: ProductType) => {
@@ -287,29 +345,25 @@ const ProductList: FC<Props> = ({
   useEffect(() => {
     setOldUrl(getOldUrl());
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
+
+
   }, []);
 
   return (
     <Suspense fallback={<Loader />}>
+         
       <Container>
         <Toolbox>
-          <InputGroup>
-            <Search />
-            <input
-              type="search"
-              value={fromLink(search)}
-              onKeyUp={evt => {
-                if (evt.keyCode === 13) doSearch();
-              }}
-              onChange={evt => setSearch(evt.target.value)}
-              placeholder={t("products.product_list.search_product")}
-            />
-            <Cta
-              filled={true}
-              action={doSearch}
-              text={t("products.product_list.search")}
-            />
-          </InputGroup>
+          <FiltersWrap>
+            <Results>
+            {offset == 0 ? 1 : offset} - {limit+offset > count ? count : limit+offset} de {count} resultados
+            </Results>
+            <Separador />
+            <OrderBy>
+              
+            </OrderBy>
+          </FiltersWrap>
           <SelectBox>
             <Select onClick={() => setOpenOrder(!openOrder)}>
               <span>{t("products.product_list.order_by")}</span>
@@ -328,7 +382,6 @@ const ProductList: FC<Props> = ({
           </SelectBox>
         </Toolbox>
 
-        
         {!!products.length && (
           <Grid>
             {products.map((product: ProductType) => (
@@ -345,26 +398,27 @@ const ProductList: FC<Props> = ({
         {!!products.length && count > 9 && (
           <Pager>
             <PageArrow
-              onClick={() => {}}
+              onClick={() => {move(false)}}
               allowed={page > 1}
-              href={move(false)}
             >
               <PagerArrowLeft />
             </PageArrow>
-            {[...Array(Math.ceil(count / 9))].map((v: any, index: number) => (
+            {[...Array(Math.ceil(count / 9))].map((v: any, index: number) => {
+              return(
               <Page
                 selected={page === index + 1}
                 key={index}
-                onClick={() => {  }}
-                href={changePage(index + 1)}
+                onClick={() => { 
+                  changePage(index + 1)
+                  setPageHook(index + 1)
+                 }}
               >
                 {index + 1}
               </Page>
-            ))}
+            )})}
             <PageArrow
-              onClick={() => {}}
+              onClick={() => {move(true)}}
               allowed={page < Math.ceil(count / 9)}
-              href={move(true)}
             >
               <PagerArrowRight />
             </PageArrow>

@@ -30,31 +30,55 @@ export const cities: Array<KeyValue> = [
   { key: "EA", value: "El Alto" }
 ];
 
-export const capitalizeFirstLetter = (string:string) => {
-  var splitStr = string.toLowerCase().split(' ');
-   for (var i = 0; i < splitStr.length; i++) {
-       // You do not need to check if i is larger than splitStr length, as your for does that for you
-       // Assign it back to the array
-       splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
-   }
-   // Directly return the joined string
-   return splitStr.join(' '); 
+export const titleCase = (str: string): string => {
+  var splitStr = str.toLowerCase().split(' ');
+  for (var i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+  }
+  // Directly return the joined string
+  return splitStr.join(' ');
 }
 
-export const search = (nameKey: string, nameValue: string, myArray: Array<any>) => {
-  for (var i=0; i < myArray.length; i++) {
-      if (myArray[i][nameKey] === nameValue) {
-          return myArray[i];
-      }
+export const capitalizeFirstLetter = (string: string) => {
+  var splitStr = string.toLowerCase().split(" ");
+  for (var i = 0; i < splitStr.length; i++) {
+    // You do not need to check if i is larger than splitStr length, as your for does that for you
+    // Assign it back to the array
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
-}
+  // Directly return the joined string
+  return splitStr.join(" ");
+};
 
-export const searchMultiple = (nameKey: string, nameValue: string, myArray: Array<any>) => {
-  const res = []
-  for (var i=0; i < myArray.length; i++) {
-      if (myArray[i][nameKey] === nameValue) {
-          res.push(myArray[i]);
-      }
+export const search = (
+  nameKey: string,
+  nameValue: string,
+  myArray: Array<any>
+) => {
+  for (var i = 0; i < myArray.length; i++) {
+    if (myArray[i][nameKey] === nameValue) {
+      return myArray[i];
+    }
   }
-  return res
-}
+};
+
+export const searchMultiple = (
+  nameKey: string,
+  nameValue: string,
+  myArray: Array<any>
+) => {
+  const res = [];
+  for (var i = 0; i < myArray.length; i++) {
+    if (myArray[i][nameKey] === nameValue) {
+      res.push(myArray[i]);
+    }
+  }
+  return res;
+};
+
+export const escapeSingleQuote = (text: string): string => {
+  return text ? text.replace(/'/g, "") : "";
+};

@@ -213,6 +213,7 @@ type User = {
   id?: Number;
   isLoggedIn?: Boolean;
   openLoginModal?: Boolean;
+  idPriceList?: Number;
 };
 
 type FormData = {
@@ -295,7 +296,9 @@ const AuthModal: FC<Props> = () => {
       setUser({
         openLoginModal: false,
         isLoggedIn: true,
-        id: response.data.login.id
+        id: response.data.login.id,
+        // TODO Revisar 
+        idPriceList: 0
       });
       StoreToken.set(response.data.login.token);
       if ((window as any).navigateToCheckout) history.push("/checkout");
@@ -362,7 +365,8 @@ const AuthModal: FC<Props> = () => {
       setUser({
         openLoginModal: false,
         isLoggedIn: true,
-        id: response.data.signup.id
+        id: response.data.signup.id,
+        idPriceList: 0
       });
       StoreToken.set(response.data.signup.token);
       showSuccess();

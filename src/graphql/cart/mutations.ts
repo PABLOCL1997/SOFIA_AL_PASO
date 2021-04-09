@@ -50,6 +50,7 @@ export const CREATE_ORDER = gql`
     $facturacion: String!
     $envio: String!
     $payment_method: String!
+    $DIRECCIONID: String
   ) {
     createOrder(
       discount_amount: $discount_amount
@@ -63,6 +64,7 @@ export const CREATE_ORDER = gql`
       facturacion: $facturacion
       envio: $envio
       payment_method: $payment_method
+      DIRECCIONID: $DIRECCIONID
     ) {
       entity_id
       increment_id

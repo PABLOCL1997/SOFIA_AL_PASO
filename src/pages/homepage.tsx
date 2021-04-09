@@ -61,25 +61,22 @@ const Homepage: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <DelayedWrapper>
-
         <SectionWrapper>
           <Hero />
         </SectionWrapper>
         <SectionWrapper>
-          <CategorySlider />
+          <CategorySlider userData={userData} />
         </SectionWrapper>
         <SectionWrapper>
           <Benefits />
         </SectionWrapper>
         <SectionWrapper>
-          <Promotions />
+          <Promotions userData={userData} />
         </SectionWrapper>
         <SectionWrapper>
           <Subscribe />
         </SectionWrapper>
         <Recipes />
-      </DelayedWrapper>
     </Suspense>
   );
 };

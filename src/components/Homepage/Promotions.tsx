@@ -1,11 +1,10 @@
 import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLazyQuery, useQuery } from "@apollo/react-hooks";
-import { useHistory } from "react-router-dom";
-import { GET_PRODUCTS } from "../../graphql/products/queries";
+import { Link, useHistory } from "react-router-dom";
+import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../../graphql/products/queries";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
-import { GET_USER } from "../../graphql/user/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -73,36 +72,60 @@ const CtaWrapper = styled.div`
   }
 `;
 
-type Props = {};
+type Props = {
+  userData: any;
+};
 
-const Promotions: FC<Props> = () => {
+const Promotions: FC<Props> = ({ userData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [products, setProducts] = useState([]);
-  const { data: userData } = useQuery(GET_USER, {});
+  const [idPriceList, setIdPriceList] = useState(0)
+
   const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
-    variables: {
-      category_id: 0,
-      limit: 20,
-      offset: 0,
-      onsale: true,
-      city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
-    },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy:"network-only",
     onCompleted: d => setProducts(d.products.rows)
   });
-
-  const seeAll = () => {
-    history.push(`/productos/promociones`);
-  };
+  const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
+    fetchPolicy:"network-only",
+    onCompleted: d => setProducts(d.productsB2B.rows)
+  }) 
 
   useEffect(() => {
-    loadProducts();
+    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
+      if (userData.userInfo[0].idPriceList !== idPriceList) {
+        setIdPriceList(userData.userInfo[0].idPriceList)
+      }
+    }
+  }, [userData])
+
+  useEffect(() => {
+    if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList > 0) {
+      loadProductsFromListing({
+        variables: {
+          category_id: 0,
+          limit: 9,
+          offset: 0,
+          city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
+          id_price_list: String(userData.userInfo[0].idPriceList),
+          onsale: true,
+        }
+      })
+    } else {
+      loadProducts({
+        variables: {
+          category_id: 0,
+          limit: 20,
+          offset: 0,
+          onsale: true,
+          city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC"
+        }
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [idPriceList]);
 
   return (
-    <Suspense fallback={<Loader />}>
       <Container>
         <div className="main-container">
           <Title>{t("homepage.promotions.title")}</Title>
@@ -110,15 +133,16 @@ const Promotions: FC<Props> = () => {
             <ProductSlider products={products} useArrows={true} />
           </div>
           <CtaWrapper>
-            <Cta
-              action={seeAll}
-              text={t("homepage.promotions.seeall")}
-              filled={true}
-            />
+            <Link to="/productos/promociones">
+              <Cta
+                action={() => {}}
+                text={t("homepage.promotions.seeall")}
+                filled={true}
+              />
+            </Link>
           </CtaWrapper>
         </div>
       </Container>
-    </Suspense>
   );
 };
 

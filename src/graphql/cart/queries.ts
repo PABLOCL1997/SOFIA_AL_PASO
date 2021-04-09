@@ -48,3 +48,9 @@ export const TODOTIX = gql`
     }
   }
 `;
+
+export const COMPARE_PRICES = gql`
+query ComparePrices($prodQty: [ProductQty], $city: String!, $id_price_list:String!){
+  comparePrices(prodQty:$prodQty,city:$city,id_price_list:$id_price_list)
+}
+`

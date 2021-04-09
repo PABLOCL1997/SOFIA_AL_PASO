@@ -49,4 +49,5 @@ export type UserType = {
   password?: string;
   addressId?: number;
   addresses?: Array<AddressType>;
+  employee?: string;
 };

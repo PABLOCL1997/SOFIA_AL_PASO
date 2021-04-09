@@ -16,7 +16,6 @@ const HeaderLogo = React.lazy(() =>
 );
 
 const Container = styled.div`
-  background: #ebebeb url(/images/salad.png) top right no-repeat;
   background-size: 400px;
   width: calc(100% - 120px);
   margin: auto;
@@ -222,16 +221,12 @@ const Subscribe: FC<Props> = () => {
             {/*    <Image className="lazyload"  data-src="/images/salad.png" alt="newsletter" /> */}
             
 
-            <picture>
-              <source srcSet={"/images/salad.webp 2x"} type="image/webp" />
-              <source srcSet={"/images/salad.png 1x"} type="image/jpeg" />
-              <img />
               <Image
+                srcSet={"/images/salad.webp 2x,/images/salad.png 1x"}
                 className="lazyload"
                 data-src="/images/salad.png"
                 alt="newsletter"
               />
-            </picture>
           </MobileContainer>
         </Mobile>
       </>

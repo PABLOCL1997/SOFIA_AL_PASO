@@ -424,7 +424,7 @@ const AuthModal: FC<Props> = () => {
               variables: { user: { showModal: t("cart.change_qty_msg") } }
             });
           } else {
-            showSuccess();
+
           }
         }
       })();
@@ -540,12 +540,7 @@ const AuthModal: FC<Props> = () => {
           ) : (
             <div>
               <LoaderWrapper>
-                <img
-                  src="/images/loader.svg"
-                  width="50px"
-                  height="50px"
-                  alt="loader"
-                />
+                
               </LoaderWrapper>
             </div>
           )}

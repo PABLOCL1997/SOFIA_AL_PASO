@@ -7,6 +7,11 @@ import { CHECK_TOKEN } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { token } from "../utils/store";
 import 'lazysizes'
+import "lazysizes/plugins/unveilhooks/ls.unveilhooks";
+import "lazysizes/plugins/blur-up/ls.blur-up.js";
+import "lazysizes/plugins/object-fit/ls.object-fit.js";
+import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
+
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")

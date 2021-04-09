@@ -74,13 +74,15 @@ const Other = styled.button`
 
 type Props = {
   updateOrder: Function;
+  localUserData: any
 };
 
-const Billing: FC<Props> = ({ updateOrder }) => {
+const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
   const { t } = useTranslation();
   const [other, setOther] = useState(false);
   const [inputs, setInputs] = useState({});
   const { data: userData } = useQuery(DETAILS);
+  const specialAddress =  localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
 
   const onChange = (key: string, value: string) => {
     setInputs({
@@ -125,6 +127,7 @@ const Billing: FC<Props> = ({ updateOrder }) => {
             <InputGroup key={key}>
               <label>{t("checkout.billing." + key)}</label>
               <input
+                readOnly={specialAddress}
                 name={`billing-${key}`}
                 value={(inputs as any)[key] || ""}
                 onChange={(evt) => onChange(key, evt.target.value)}
@@ -135,11 +138,13 @@ const Billing: FC<Props> = ({ updateOrder }) => {
             </InputGroup>
           ))}
         </Form>
+        {!specialAddress && (
         <Other onClick={() => setOther(!other)}>
           {t(
             !other ? "checkout.billing.other_person" : "checkout.billing.to_me"
           )}
         </Other>
+        )}
       </Container>
     </Suspense>
   );

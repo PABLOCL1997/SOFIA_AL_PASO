@@ -1,12 +1,20 @@
 export type SubCategoryLvl4Type = {
     entity_id: number,
-    name: string
+    name: string,
+    quantity: number,
+    category_image?: string, 
+    __typename?: string,
+    
 }
 
 export type SubCategoryLvl3Type = {
     entity_id: number,
     name: string,
-    subcategories?: Array<SubCategoryLvl4Type>
+    quantity: number,
+    category_image?: string,
+    subcategories?: Array<SubCategoryLvl4Type>,
+    __typename?: string,
+ 
 }
 
 export type CategoryType = {
@@ -14,5 +22,9 @@ export type CategoryType = {
     name: string,
     level: number,
     parent_id: number,
-    subcategories?: Array<SubCategoryLvl3Type>
+    quantity: number,
+    category_image?: string,
+    subcategories?: Array<SubCategoryLvl3Type>,
+    __typename?: string,
+    
 }

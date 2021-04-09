@@ -20,10 +20,12 @@ const {
   FAQ_TITLE,
   TERMS_TITLE,
   GET_CATEGORIES,
+  GET_CATEGORY_META,
   fromLink,
   toLink,
   mapCategories,
-  search
+  search,
+  rewriteRequest
 } = require("./src/meta_server");
 
 app.use(compression())
@@ -64,31 +66,51 @@ const loadPage = async (req, res, meta = {}) => {
     }
   }
   if (req.params.category && meta.rel){
+    // determine de last level
+    let lastlevel
+
     const categoryName = toLink(String(req.params.category))
     try {
-      const response = await client.request(GET_CATEGORIES, {})
+      const response = await client.request(GET_CATEGORIES, { city: "SC" })
       if(!response.categories) return res.status(404).redirect("/404")
       const catFound = search('name', categoryName, mapCategories(response.categories))
-      if (!catFound) statusCode = 404
+      if (catFound) lastlevel = catFound
+      if (!catFound) {
+        statusCode = 404
+        req = rewriteRequest(req, '/404')
+      }
   
       if (req.params.subcategory && statusCode != 404) {
         const s3Name = toLink(String(req.params.subcategory))
         const s3Found = search('name', s3Name, mapCategories(catFound.subcategories))
-        if (!s3Found) statusCode = 404
+        if (s3Found) lastlevel = s3Found
+        if (!s3Found) {
+          statusCode = 404
+          req = rewriteRequest(req, '/404')
+
+        }
         
         if (req.params.lastlevel && statusCode != 404){
           const s4Name = toLink(String(req.params.lastlevel))
           const s4Found = search('name', s4Name, mapCategories(s3Found.subcategories))
-          if (!s4Found) statusCode = 404
+          if (s4Found) lastlevel = s4Found
+          if (!s4Found) {
+            statusCode = 404
+            req = rewriteRequest(req, '/404')
+          }
         }
       }
+      if (lastlevel && lastlevel.entity_id) {
+        const { entity_id } = lastlevel
+        const response = await client.request(GET_CATEGORY_META, { entity_id })
 
-      if (statusCode == 404) {
-        return res.status(404).redirect("/404")
+        if (response.categoryMetadata && response.categoryMetadata.meta_title && response.categoryMetadata.meta_description) {
+          const { categoryMetadata: { meta_title, meta_description } } = response
+          metadata = { title: meta_title, meta_description, meta_keywords: "" }
+        }
       }
     }catch (err) {
       console.log('err', err)
-      return res.status(404).redirect("/404")
     }
   }
 
@@ -100,7 +122,8 @@ const loadPage = async (req, res, meta = {}) => {
         name
       })
       if (!response.productMetadata) {
-        return res.status(404).redirect("/404")
+        statusCode = 404
+        req = rewriteRequest(req, '/404')
       }
       if (response.productMetadata && response.productMetadata.meta_title && response.productMetadata.meta_description) {
         const { productMetadata: { meta_title, meta_description } } = response
@@ -139,7 +162,19 @@ const loadPage = async (req, res, meta = {}) => {
 
 app.use(redirectMiddleware)
 app.get("/", (req, res) => loadPage(req, res, { title: HOMEPAGE_TITLE, identifier: "sofia-homepage" }));
-app.use(express.static(__dirname + "/build"));
+app.use(express.static(__dirname + "/build", {
+  setHeaders: (res, path) => {
+    const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
+
+    if (path.endsWith('.html')) {
+      // All of the project's HTML files end in .html
+      res.setHeader('Cache-Control', 'no-cache');
+    } else if (hashRegExp.test(path)) {
+      // If the RegExp matched, then we have a versioned URL.
+      res.setHeader('Cache-Control', 'max-age=31536000');
+    }
+  },
+}));
 app.get("/productos", (req, res) => loadPage(req, res, { title: PRODUCTS_TITLE, identifier: "sofia-products", rel: true }));
 app.get("/preguntas-frecuentes", (req, res) => loadPage(req, res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
 app.get("/terminos-y-condiciones", (req, res) => loadPage(req, res, { title: TERMS_TITLE, identifier: "sofia-tyc" }));

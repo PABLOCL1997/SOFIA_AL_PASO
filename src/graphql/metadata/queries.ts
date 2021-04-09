@@ -11,3 +11,13 @@ query Metadata($identifier: String!) {
     } 
 } 
 `
+
+export const GET_BRANDS = gql`
+query Get_Brands($categoryId: Int!, $city: String!)
+{
+  brands(category_id:$categoryId, city:$city){
+    name,
+    quantity
+  }
+}
+`

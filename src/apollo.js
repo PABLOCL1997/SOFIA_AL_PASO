@@ -41,6 +41,7 @@ export default async () => {
         id: Int!
         defaultAddressId: Int
         defaultAddressLabel: String
+        idPriceList: Int
       }
       type Product {
         entity_id: Int!

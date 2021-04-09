@@ -5,7 +5,12 @@ import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
 import { SET_USER } from "../graphql/user/mutations";
 import { BREAKPOINT } from "../utils/constants";
-import { CREATE_ORDER, EMPTY_CART, PAY, SET_TEMP_CART } from "../graphql/cart/mutations";
+import {
+  CREATE_ORDER,
+  EMPTY_CART,
+  PAY,
+  SET_TEMP_CART
+} from "../graphql/cart/mutations";
 import {
   GET_CART_ITEMS,
   TODOTIX,
@@ -16,6 +21,7 @@ import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { trackOrder, initCheckout } from "../utils/dataLayer";
+import { escapeSingleQuote } from "../utils/string";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -136,6 +142,7 @@ type OrderData = {
   facturacion: string;
   envio: string;
   payment_method: string;
+  DIRECCIONID?: number;
 };
 
 const Checkout: FC<Props> = () => {
@@ -146,6 +153,7 @@ const Checkout: FC<Props> = () => {
   const [userData, setUserData] = useState({});
   const [order, setOrder] = useState<OrderData>();
   const [orderData, setOrderData] = useState<any>({});
+  const [orderIsReady, setOrderIsReady] = useState<boolean>(true);
   const [billingChange, setBillingChange] = useState<any>({});
   const [mapUsed, setMapUsed] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -154,6 +162,7 @@ const Checkout: FC<Props> = () => {
   >([]);
 
   const { data: localUserData } = useQuery(GET_USER, {});
+  const {data: userDetails} = useQuery(DETAILS, {})
   const { data } = useQuery(GET_CART_ITEMS);
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -307,6 +316,8 @@ const Checkout: FC<Props> = () => {
 
   const validateOrder = () => {
     let items: Array<string> = [];
+    const special_address = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+
     data &&
       data.cartItems &&
       data.cartItems.forEach((product: ProductType) => {
@@ -314,7 +325,9 @@ const Checkout: FC<Props> = () => {
           JSON.stringify({
             entity_id: product.entity_id,
             sku: product.sku,
-            category: product.category_name ? product.category_name.toLowerCase().trim() : "",
+            category: product.category_name
+              ? product.category_name.toLowerCase().trim()
+              : "",
             name: product.name,
             price: product.special_price
               ? product.special_price
@@ -364,7 +377,7 @@ const Checkout: FC<Props> = () => {
       }
     });
 
-    if (!mapUsed && !orderData.shipping.id) {
+    if (!mapUsed && !orderData.shipping.id && !special_address) {
       window.scrollTo({
         top:
           (document as any).getElementById("gmap").getBoundingClientRect().top +
@@ -431,10 +444,11 @@ const Checkout: FC<Props> = () => {
   const saveOrder = () => {
     setConfirmModalVisible(false);
     const items: Array<string> = validateOrder();
-
+    const special_address = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
     if (!items.length) return;
 
     setOrder({
+      DIRECCIONID: special_address ? orderData.shipping.street.split("|")[1].replace(/ /g,"") : null,
       discount_amount: parseFloat(
         orderData.coupon ? orderData.coupon.discount : 0
       ),
@@ -443,50 +457,57 @@ const Checkout: FC<Props> = () => {
       items: items,
       delivery_price: 0,
       customer_email: orderData.billing.email,
-      customer_firstname: orderData.billing.firstname,
-      customer_lastname: orderData.billing.lastname,
+      customer_firstname: escapeSingleQuote(orderData.billing.firstname),
+      customer_lastname: escapeSingleQuote(orderData.billing.lastname),
       facturacion: JSON.stringify({
-        addressId:
-          userData && (userData as any).addressId
+        addressId: userData && (userData as any).addressId
             ? (userData as any).addressId
             : 0,
-        firstname: orderData.billing.firstname,
-        lastname: orderData.billing.lastname,
+        firstname: escapeSingleQuote(orderData.billing.firstname),
+        lastname: escapeSingleQuote(orderData.billing.lastname),
         fax: orderData.billing.nit,
         email: orderData.billing.email,
         telephone: orderData.shipping.phone2,
         country_id: "BO",
-        city:
+        city: escapeSingleQuote(
           localUserData &&
             localUserData.userInfo &&
             localUserData.userInfo.length
             ? localUserData.userInfo[0].cityName
-            : "-",
+            : "-"
+        ),
         latitude: String((window as any).latitude),
         longitude: String((window as any).longitude),
-        street: orderData.shipping.id
-          ? orderData.shipping.street
-          : `${orderData.shipping.address || ""}`,
-        reference: orderData.shipping.reference
+        street: escapeSingleQuote(
+          special_address ? orderData.shipping.street.split("|")[0] :
+          orderData.shipping.id
+            ? orderData.shipping.street
+            : `${orderData.shipping.address || ""}`
+        ),
+        reference: escapeSingleQuote(orderData.shipping.reference)
       }),
       envio: JSON.stringify({
         entity_id: orderData.shipping.id,
-        firstname: orderData.shipping.firstname,
-        lastname: orderData.shipping.lastname,
+        firstname: escapeSingleQuote(orderData.shipping.firstname),
+        lastname: escapeSingleQuote(orderData.shipping.lastname),
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
         telephone: orderData.shipping.phone,
-        street: orderData.shipping.id
-          ? orderData.shipping.street
-          : `${orderData.shipping.address || ""}`,
-        city:
+        street: escapeSingleQuote(
+          special_address ? orderData.shipping.street.split("|")[0] :
+          orderData.shipping.id
+            ? orderData.shipping.street
+            : `${orderData.shipping.address || ""}`
+        ),
+        city: escapeSingleQuote(
           orderData.shipping.city ||
-          (localUserData &&
+            (localUserData &&
             localUserData.userInfo &&
             localUserData.userInfo.length
-            ? localUserData.userInfo[0].cityName
-            : "-"),
-        region: orderData.shipping.reference,
+              ? localUserData.userInfo[0].cityName
+              : "-")
+        ),
+        region: escapeSingleQuote(orderData.shipping.reference),
         country_id: "BO",
         latitude: String((window as any).latitude),
         longitude: String((window as any).longitude)
@@ -498,19 +519,19 @@ const Checkout: FC<Props> = () => {
   };
 
   const updateOrderData = (key: string, values: any) => {
-    if (key === 'billing' && values.email) {
+    if (key === "billing" && values.email) {
       setTempCart({
         variables: {
           email: values.email,
           items: JSON.stringify({
-            firstname: values.firstname || '',
+            firstname: values.firstname || "",
             items: data.cartItems.map((product: ProductType) => {
               return {
-                name: product.name || '',
-                image: product.image || '',
-                price: (product.special_price || 0),
+                name: product.name || "",
+                image: product.image || "",
+                price: product.special_price || 0,
                 qty: product.qty || 0
-              }
+              };
             })
           })
         }
@@ -527,7 +548,15 @@ const Checkout: FC<Props> = () => {
 
   const showConfirmAddress = () => {
     const items: Array<string> | boolean = validateOrder();
-    if (items.length) setConfirmModalVisible(true);
+    let b2e = false
+    try {
+      b2e = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+    } catch (e) {
+      b2e = false
+    }
+    console.log('show', b2e, items.length )
+    if (!b2e && items.length) setConfirmModalVisible(true);
+    if (b2e && items.length) saveOrder();
     // setConfirmModalVisible(true);
   };
 
@@ -537,8 +566,8 @@ const Checkout: FC<Props> = () => {
         <ConfirmAddress
           address={
             orderData.shipping &&
-              orderData.shipping.id &&
-              orderData.shipping.street
+            orderData.shipping.id &&
+            orderData.shipping.street
               ? orderData.shipping.street.replace(/\|/g, " ")
               : ""
           }
@@ -558,20 +587,31 @@ const Checkout: FC<Props> = () => {
               <Cols>
                 <Col1>
                   <Steps>
-                    <Billing updateOrder={updateOrderData} />
+                    <Billing updateOrder={updateOrderData} localUserData={localUserData} />
                     <Line />
                     <Shipping
                       updateOrder={updateOrderData}
                       orderData={orderData}
                       billingChange={billingChange}
                       confirmModalVisible={confirmModalVisible}
+                      localUserData={localUserData}
+                      setOrderIsReady={setOrderIsReady}
                     />
                     <Line />
-                    <Payment updateOrder={updateOrderData} />
+                    <Payment
+                      setOrderIsReady={setOrderIsReady}
+                      totalAmount={totalAmount}
+                      updateOrder={updateOrderData}
+                      userData={localUserData}
+                      userDetails={userDetails}
+                    />
                   </Steps>
                 </Col1>
                 <Col2>
                   <Ticket
+                    ready={orderIsReady}
+                    userDetails={userDetails}
+                    userData={localUserData}
                     processing={processing}
                     updateOrder={updateOrderData}
                     order={showConfirmAddress}

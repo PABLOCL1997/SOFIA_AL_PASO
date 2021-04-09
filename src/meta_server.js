@@ -1,4 +1,9 @@
 module.exports = {
+  rewriteRequest: (req, newUrl) => {
+    req.originalUrl = newUrl
+    req.path = newUrl
+    return req
+  },
   toLink: (str) => {
     return str ? str.toLowerCase().replace(/ /g, "-") : "";
   },
@@ -60,8 +65,8 @@ module.exports = {
   }
   `,
   GET_CATEGORIES:`
-  query Categories {
-    categories {
+  query Categories ($city: String!) {
+    categories (city:$city) {
       entity_id
       name
       subcategories {
@@ -74,5 +79,15 @@ module.exports = {
       }
     }
   }
-`
+  `,
+  GET_CATEGORY_META:`
+  query CategoryMetadata ($entity_id: Int!) {
+    categoryMetadata(entity_id:$entity_id){
+      name
+      meta_title
+      meta_description
+      meta_keywords
+    }
+  }
+  `
 };

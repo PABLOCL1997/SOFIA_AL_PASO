@@ -2,15 +2,17 @@ import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { CHECK_COUPON } from "../../graphql/cart/mutations";
-import { GET_CART_ITEMS, GET_TOTAL } from "../../graphql/cart/queries";
-import { useQuery, useMutation } from "react-apollo";
+import { GET_CART_ITEMS, GET_TOTAL, COMPARE_PRICES, GET_MIN_PRICE } from "../../graphql/cart/queries";
+import { useQuery, useMutation, useLazyQuery } from "react-apollo";
 import { ProductType } from "../../graphql/products/type";
 import { SET_USER } from "../../graphql/user/mutations";
+import { GET_USER } from "../../graphql/user/queries";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
+const DiscountCall = React.lazy(() => import(/* webpackChunkName: "DiscountCall" */ "../Discount"));
 
 const Container = styled.div`
   background: white;
@@ -196,19 +198,73 @@ const LoaderWrapper = styled.div`
   }
 `;
 
+const EmployeeMsg = styled.span`
+  display: block;
+  margin-top: -20px;
+  margin-bottom: 30px;
+  text-align: right;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--red);
+`;
+
+const ErrorText = styled.div<{ margin: boolean }>`
+
+  font-family: MullerMedium;
+  font-size: 14px;
+  line-height: 14px;
+  text-decoration-line: none;
+  color: var(--red);
+  border: 0;
+  background: none;
+  margin: 20px 0 ${props => (props.margin ? "40px" : "0")};
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+
 type Props = {
   order: Function;
   updateOrder: Function;
   processing: boolean;
+  userData: any;
+  userDetails: any;
+  ready: boolean;
 };
 
-const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
+const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetails, ready }) => {
   const { t } = useTranslation();
   const [type, setType] = useState("");
   const [discount, setDiscount] = useState("0");
+  const [discountAmount, setDiscountAmount] = useState<any>(0);
   const [showCoupon, setShowCoupon] = useState(false);
+  const [bsDiscount, setBsDiscount] = useState(0)
+  let arr: any[] = [];
   const [coupon, setCoupon] = useState("");
-  const { data } = useQuery(GET_CART_ITEMS);
+  const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
+    fetchPolicy: "network-only",
+    onCompleted: d => {
+      const prodQty = d.cartItems.map(({ name, qty}: ProductType)=> { 
+        return {name, qty}
+      })
+      if(localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0){
+        getDiscounts({
+          variables:{
+            city:localUserData?.userInfo[0]?.cityKey || "SC",
+            id_price_list:String(localUserData?.userInfo[0]?.idPriceList) || "0",
+            prodQty
+          }
+        })
+      }
+    }
+  })
+  const  { data } = useQuery(GET_CART_ITEMS, {});
+  const { data: localUserData } = useQuery(GET_USER, {});
+  const [getDiscounts, { data: dataDiscounts }] = useLazyQuery(COMPARE_PRICES, {
+    fetchPolicy: "network-only",
+    onCompleted: d => console.log('get disc', d)
+  })
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     variables: { name: coupon }
   });
@@ -222,16 +278,11 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
       const response: any = await checkCoupon();
       setType(response.data.coupon.type);
       if (response.data.coupon.type === "%") {
-        setDiscount(
-          parseFloat(
-            String(
-              Number(totalAmount.replace(",", ".")) *
-                (response.data.coupon.discount_amount / 100)
-            )
-          ).toFixed(2)
-        );
+        setDiscount(parseFloat(String(Number(response.data.coupon.discount_amount))).toFixed(2));
+        setDiscountAmount(parseFloat(String(Number(totalAmount.replace(',','.') * response.data.coupon.discount_amount / 100))).toFixed(2))
       } else {
         setDiscount(String(response.data.coupon.discount_amount));
+        setDiscountAmount(String(response.data.coupon.discount_amount))
       }
       setCoupon(response.data.coupon.code);
     } catch (e) {
@@ -243,7 +294,6 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
     setDiscount("0");
     setCoupon("");
   };
-
   useEffect(() => {
     updateOrder("coupon", {
       coupon,
@@ -253,6 +303,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discount]);
 
+  useEffect(()=> {
+    getCartItems()
+  }, [localUserData])
+
   return (
     <Suspense fallback={<Loader />}>
       <Container>
@@ -260,7 +314,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
         <Rows>
           {data &&
             data.cartItems &&
-            data.cartItems.map((product: ProductType) => (
+            data.cartItems.map((product: ProductType, index:number) => (
               <Row key={product.entity_id}>
                 <span>
                   {product.qty} x{" "}
@@ -275,6 +329,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
                   {Number((product?.qty ?? 0) * product.special_price)
                     .toFixed(2)
                     .replace(".", ",")}
+
                 </span>
               </Row>
             ))}
@@ -314,10 +369,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             </InputBox>
           )}
         </Coupon>
-        {Number(discount) > 0 && (
+        {Number(discountAmount) > 0 && (
           <Discount>
             <span>{t("checkout.ticket.discount")}</span>
-            <span>- Bs. {discount.replace(".", ",")}</span>
+            <span>- Bs. {discountAmount.replace(".", ",")}</span>
           </Discount>
         )}
         <Line />
@@ -327,14 +382,19 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
             Bs.{" "}
             {String(
               Number(
-                Number(totalAmount.replace(",", ".")) - parseFloat(discount)
+                Number(totalAmount.replace(",", ".")) - parseFloat(discountAmount)
               ).toFixed(2)
             ).replace(".", ",")}
           </b>
         </Total>
+        {dataDiscounts && !!(localUserData && localUserData?.userInfo[0]?.idPriceList && localUserData?.userInfo[0]?.idPriceList > 0) && userDetails.details.employee && (
+          <EmployeeMsg>¡Te has ahorrado Bs. {Number(dataDiscounts?.comparePrices || 0).toFixed(2).replace('.',',')} por ser empleado!</EmployeeMsg>
+        )}
+
         <CtaWrapper>
           {!processing && (
             <Cta
+              active={ready && Number(totalAmount.replace(",", ".")) >= GET_MIN_PRICE(userData)}
               filled={true}
               text={t("checkout.ticket.send")}
               action={order}
@@ -342,10 +402,18 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing }) => {
           )}
           {processing && (
             <LoaderWrapper>
-              <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+              <img
+                src="/images/loader.svg"
+                width="50px"
+                height="50px"
+                alt="loader"
+              />
             </LoaderWrapper>
           )}
         </CtaWrapper>
+        {Number(totalAmount.replace(",", ".")) < GET_MIN_PRICE(localUserData) && (
+          <ErrorText margin={false}>El valor mínimo para la compra es de Bs. {GET_MIN_PRICE(localUserData)}.</ErrorText>
+        )}
       </Container>
     </Suspense>
   );

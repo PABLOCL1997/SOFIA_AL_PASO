@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";
+import { GET_B2E_PRODUCT } from "../graphql/products/queries";
 import { GET_PRODUCT, GET_PRODUCT_DETAIL } from "../graphql/products/queries";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { PRODUCT_TITLE } from "../meta";
@@ -413,7 +414,25 @@ const Product: FC<Props> = ({
   const [related, setRelated] = useState<Array<ProductType>>([]);
   const [qty, setQty] = useState<number>(1);
   const { data } = useQuery(GET_CART_ITEMS);
-  const { data: userData } = useQuery(GET_USER, {});
+  const { data: userData } = useQuery(GET_USER, {
+    onCompleted: d => {
+      
+    }
+  });
+  const [loadProductFromList] = useLazyQuery(GET_B2E_PRODUCT, {
+    fetchPolicy: "network-only",
+    onCompleted: d => {
+      setProduct(d.productB2B);
+      trackProduct(d.productB2B);
+      if (d.productB2B.categories) setCategories(d.productB2B.categories);
+      if (d.productB2B.related) setRelated(d.productB2B.related);
+      loadProductDetail({
+        variables: {
+          name: prodname
+        }
+      });
+    }
+  })
   const [loadProduct] = useLazyQuery(GET_PRODUCT, {
     variables: {
       name: prodname,
@@ -422,8 +441,8 @@ const Product: FC<Props> = ({
       related: true
     },
     fetchPolicy: "cache-and-network",
-    onError: d => {
-      // history.replace("/404");
+    onError: () => {
+      history.replace("/404");
     },
     onCompleted: d => {
       setProduct(d.product);
@@ -509,10 +528,30 @@ const Product: FC<Props> = ({
       history.push("/productos");
     }
   };
-
+  useEffect(()=> {
+    if (userData) {
+      if (userData.userInfo[0].idPriceList > 0) {
+        loadProductFromList({
+          variables:{
+            name: prodname,
+            id_price_list: String(userData.userInfo[0].idPriceList),
+            city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
+          }
+        })
+      } else {
+        loadProduct({
+          variables: {
+            name: prodname,
+            city: (userData?.userInfo[0]?.cityKey) ? userData?.userInfo[0]?.cityKey : "SC",
+            categories: true,
+            related: true
+          }
+        });
+      }
+    }
+  }, [userData])
   useEffect(() => {
     document.title = `${PRODUCT_TITLE} ${prodname}`;
-    loadProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -581,11 +620,11 @@ const Product: FC<Props> = ({
                         } */}
 
                         <picture>
-                          <source
-                            srcSet={img.slice(0, -4) + "_708px.webp" + " 2x"}
-                            type="image/webp"
-                          />
-                          <source srcSet={img + " 1x"} type="image/jpeg" />
+                          {/* <source
+                            srcSet={img}
+                            type="image"
+                          /> */}
+                          {/* <source srcSet={img + " 1x"} type="image/jpeg" /> */}
                           <img src={img} alt={product.name} />
                         </picture>
                       </div>
