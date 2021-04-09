@@ -128,6 +128,8 @@ const CategorySlider: FC<Props> = ({ userData }) => {
   const [selected, setSelected] = useState<number>(0);
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
+  const [idPriceList, setIdPriceList] = useState(0)
+
   const { loading, data } = useQuery(GET_CATEGORIES, {
     variables: {
       city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
@@ -136,7 +138,7 @@ const CategorySlider: FC<Props> = ({ userData }) => {
   const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
     onCompleted: d => setProducts(d.productsB2B.rows)
   }) 
-  const [loadProducts,{ loading: loadingProducts, data: productsData }] = useLazyQuery(GET_PRODUCTS, {
+  const [loadProducts,{ loading: loadingProducts }] = useLazyQuery(GET_PRODUCTS, {
     onCompleted: d => setProducts(d.products.rows)
   });
 
@@ -179,7 +181,15 @@ const CategorySlider: FC<Props> = ({ userData }) => {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
+  }, [selected, idPriceList]);
+
+  useEffect(() => {
+    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
+      if (userData.userInfo[0].idPriceList !== idPriceList) {
+        setIdPriceList(userData.userInfo[0].idPriceList)
+      }
+    }
+  }, [userData])
 
   const inStockProducts = () => {
     return products.filter((p: { stock: number; }) => p.stock > 0);

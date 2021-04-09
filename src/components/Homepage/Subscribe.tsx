@@ -221,15 +221,12 @@ const Subscribe: FC<Props> = () => {
             {/*    <Image className="lazyload"  data-src="/images/salad.png" alt="newsletter" /> */}
             
 
-            <picture>
-              <source srcSet={"/images/salad.webp 2x"} type="image/webp" />
-              <source srcSet={"/images/salad.png 1x"} type="image/jpeg" />
               <Image
+                srcSet={"/images/salad.webp 2x,/images/salad.png 1x"}
                 className="lazyload"
                 data-src="/images/salad.png"
                 alt="newsletter"
               />
-            </picture>
           </MobileContainer>
         </Mobile>
       </>

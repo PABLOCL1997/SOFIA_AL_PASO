@@ -80,6 +80,8 @@ const Promotions: FC<Props> = ({ userData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [products, setProducts] = useState([]);
+  const [idPriceList, setIdPriceList] = useState(0)
+
   const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
     fetchPolicy:"network-only",
     onCompleted: d => setProducts(d.products.rows)
@@ -88,6 +90,14 @@ const Promotions: FC<Props> = ({ userData }) => {
     fetchPolicy:"network-only",
     onCompleted: d => setProducts(d.productsB2B.rows)
   }) 
+
+  useEffect(() => {
+    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
+      if (userData.userInfo[0].idPriceList !== idPriceList) {
+        setIdPriceList(userData.userInfo[0].idPriceList)
+      }
+    }
+  }, [userData])
 
   useEffect(() => {
     if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList > 0) {
@@ -113,7 +123,7 @@ const Promotions: FC<Props> = ({ userData }) => {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [idPriceList]);
 
   return (
       <Container>

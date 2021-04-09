@@ -105,16 +105,11 @@ const Products: FC<Props> = () => {
     isNaN(pageNumber) || pageNumber == 1 ? 0 : (pageNumber - 1) * limit
   );
   const [search, setSearch] = useState(query.get("q"));
-  const [brand, setBrand] = useState<any>(
-    query
-      .get("marca")
-      ?.split(",")
-      .map((brand: any) => `'${brand}'`)
-      .join(",") || null
-  );
+  const [brand, setBrand] = useState<any>(query.get("marca")?.split(",").map((brand: any) => `'${brand}'`).join(",") || null);
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState(OrderColums[0]);
   const [category_id, setCategoryId] = useState(0);
+  const [idPriceList, setIdPriceList] = useState(0)
   
   const { data: userData } = useQuery(GET_USER, {});
   const { loading, data } = useQuery(GET_CATEGORIES, {
@@ -253,7 +248,16 @@ const Products: FC<Props> = () => {
     }
     setTimeout(() => setLoader(false), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, subcategory, lastlevel, data, order, search, brand, offset]);
+  }, [category, subcategory, lastlevel, data, order, search, brand, offset, idPriceList]);
+
+  useEffect(() => {
+    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
+      if (userData.userInfo[0].idPriceList !== idPriceList) {
+        setIdPriceList(userData.userInfo[0].idPriceList)
+      }
+    }
+  }, [userData])
+
 
   return (
     <Suspense fallback={<Loader />}>
