@@ -1,6 +1,6 @@
 import React, { Suspense, FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { GET_CATEGORIES } from "../graphql/categories/queries";
 import { GET_PRODUCTS } from "../graphql/products/queries";
@@ -12,6 +12,7 @@ import {
 import { OrderColums } from "../graphql/products/type";
 import { trackProductList } from "../utils/dataLayer";
 import { toLink, fromLink } from "../utils/string";
+import * as stringUtils from "../utils/string"
 import { BREAKPOINT } from "../utils/constants";
 import { PRODUCTS_TITLE } from "../meta";
 import { GET_USER } from "../graphql/user/queries";
@@ -73,14 +74,19 @@ const LoaderWrapper = styled.div`
 
 type Props = {};
 const Products: FC<Props> = () => {
+  const history = useHistory()
   const limit = 9;
-  const { category, subcategory, lastlevel } = useParams();
   const query = new URLSearchParams(useLocation().search);
+  const categoryName = useLocation().pathname
+  const [category, setCategory] = useState(categoryName ? categoryName.split('/').length >= 3 ? categoryName.split('/')[2] : "" : "")
+  const [subcategory, setSubCategory] = useState<any>(categoryName ?  categoryName.split('/').length >= 4 ?categoryName.split('/')[3] : "": "")
+  const [lastlevel, setLastLevel] = useState<any>(categoryName ? categoryName.split('/').length >= 5 ?categoryName.split('/')[4] : "" : "")
 
+  const pageNumber = parseInt(String(query.get("p")))
   const [loader, setLoader] = useState(true);
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(isNaN(pageNumber) || pageNumber == 1 ? 0 : (pageNumber-1)* limit);
   const [search, setSearch] = useState(query.get("q"));
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState(OrderColums[0]);
@@ -91,15 +97,6 @@ const Products: FC<Props> = () => {
   });
   const { data: userData } = useQuery(GET_USER, {});
   const [loadProducts, { loading: loadingProds }] = useLazyQuery(GET_PRODUCTS, {
-    variables: {
-      category_id,
-      limit,
-      order,
-      offset: offset,
-      search: search,
-      onsale: category === "promociones",
-      city: userData.userInfo.length ? userData.userInfo[0].cityKey : ""
-    },
     fetchPolicy: "network-only",
     onCompleted: d => {
       trackProductList(d.products.rows);
@@ -107,7 +104,6 @@ const Products: FC<Props> = () => {
       setTotal(d.products.count);
     }
   });
-
   const orderQuery = (column: string) => {
     setOrder(column);
   };
@@ -120,7 +116,6 @@ const Products: FC<Props> = () => {
 
   useEffect(() => {
     setTitle();
-    loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -138,24 +133,24 @@ const Products: FC<Props> = () => {
 
   useEffect(() => {
     setLoader(true);
-
+    
     if (data && data.categories) {
       let entity_id = null;
-
+      
       let __category: any = data.categories.find(
-        (row: CategoryType) => toLink(row.name) === toLink(category || "")
+        (row: CategoryType) => toLink(row.name) === toLink(category) || "" 
       );
       if (__category) {
         if (subcategory) {
           let __subcategory: any = __category.subcategories.find(
             (row: SubCategoryLvl3Type) =>
-              toLink(row.name) === toLink(subcategory || "")
+              toLink(row.name) === toLink(subcategory) || ""
           );
           if (__subcategory) {
             if (lastlevel) {
               let __lastlevel: any = __subcategory.subcategories.find(
                 (row: SubCategoryLvl4Type) =>
-                  toLink(row.name) === toLink(lastlevel || "")
+                  toLink(row.name) === toLink(lastlevel) || ""
               );
               if (__lastlevel) entity_id = __lastlevel.entity_id;
             } else {
@@ -166,20 +161,32 @@ const Products: FC<Props> = () => {
           entity_id = __category.entity_id;
         }
       }
-
+      // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
+      if(!entity_id && !!(category || subcategory || lastlevel)) {
+        // return history.replace('/404')
+      }
       if (entity_id && entity_id !== category_id) {
         setCategoryId(entity_id);
       } else if (!entity_id) {
         setCategoryId(0);
       }
+      loadProducts({
+        variables: {
+          category_id: entity_id || 0,
+          limit,
+          order,
+          offset: offset,
+          search: search,
+          onsale: category === "promociones",
+          city: userData.userInfo.length ? userData?.userInfo[0]?.cityKey || "SC" : "SC"
+        },
+      });
       setTitle();
-      setSearch("");
-      setOffset(0);
       setPage(1);
     }
     setTimeout(() => setLoader(false), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, subcategory, lastlevel, data]);
+  }, [category, subcategory, lastlevel, data, order, search]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -190,6 +197,7 @@ const Products: FC<Props> = () => {
           )}
           <Wrapper>
             <Col1>
+            {data && (
               <FilterSideBar
                 categories={!loading && data ? data.categories : []}
                 category={category}
@@ -197,11 +205,12 @@ const Products: FC<Props> = () => {
                 lastlevel={lastlevel}
                 count={total}
               />
+            )}
             </Col1>
             <Col2>
               {(loader || loadingProds) && (
                 <LoaderWrapper>
-                  <img src="/images/loader.svg" alt="loader" />
+                  <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
                 </LoaderWrapper>
               )}
               {!loader && !loadingProds && (

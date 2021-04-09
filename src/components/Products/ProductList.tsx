@@ -151,14 +151,16 @@ const Pager = styled.div`
   margin: 20px 0;
   flex-wrap: wrap;
 `;
+Pager.displayName = 'Pager'
 
-const PageArrow = styled.div<{ allowed: boolean }>`
+const PageArrow = styled.a<{ allowed: boolean }>`
   opacity: ${props => (props.allowed ? "1" : ".3")};
   margin: 0 10px;
   cursor: ${props => (props.allowed ? "pointer" : "default")};
 `;
+PageArrow.displayName = 'PageArrow'
 
-const Page = styled.div<{ selected: boolean }>`
+const Page = styled.a<{ selected: boolean }>`
   font-family: ${props => (props.selected ? "MullerBold" : "MullerRegular")};
   font-size: 12px;
   line-height: 12px;
@@ -168,6 +170,7 @@ const Page = styled.div<{ selected: boolean }>`
   margin: 5px;
   cursor: ${props => (props.selected ? "default" : "pointer")};
 `;
+Page.displayName = 'Page'
 
 const ProductModal = styled.div`
   position: fixed;
@@ -249,8 +252,8 @@ const ProductList: FC<Props> = ({
   };
 
   const move = (fwd: boolean) => {
-    if (fwd && page < Math.ceil(count / 9)) changePage(page + 1);
-    else if (!fwd && page > 1) changePage(page - 1);
+    if (fwd && page < Math.ceil(count / 9)) return changePage(page + 1);
+    else if (!fwd && page > 1) return changePage(page - 1);
   };
 
   const changePage = (page: number) => {
@@ -258,8 +261,9 @@ const ProductList: FC<Props> = ({
     let search = "?";
     if (query.get("q")) search += `q=${query.get("q")}&`;
     search += `p=${page}`;
-    history.push(`${pathname}${search}`);
-    setPage(page);
+    return `${pathname}${search}`
+    // history.push(`${pathname}${search}`);
+    // setPage(page);
   };
 
   const openModal = (product: ProductType) => {
@@ -323,11 +327,12 @@ const ProductList: FC<Props> = ({
             )}
           </SelectBox>
         </Toolbox>
+
+        
         {!!products.length && (
           <Grid>
             {products.map((product: ProductType) => (
               <ItemBox
-                openModal={openModal}
                 key={product.entity_id}
                 product={product}
               />
@@ -339,21 +344,27 @@ const ProductList: FC<Props> = ({
         )}
         {!!products.length && count > 9 && (
           <Pager>
-            <PageArrow onClick={() => move(false)} allowed={page > 1}>
+            <PageArrow
+              onClick={() => {}}
+              allowed={page > 1}
+              href={move(false)}
+            >
               <PagerArrowLeft />
             </PageArrow>
             {[...Array(Math.ceil(count / 9))].map((v: any, index: number) => (
               <Page
                 selected={page === index + 1}
                 key={index}
-                onClick={() => changePage(index + 1)}
+                onClick={() => {  }}
+                href={changePage(index + 1)}
               >
                 {index + 1}
               </Page>
             ))}
             <PageArrow
-              onClick={() => move(true)}
+              onClick={() => {}}
               allowed={page < Math.ceil(count / 9)}
+              href={move(true)}
             >
               <PagerArrowRight />
             </PageArrow>

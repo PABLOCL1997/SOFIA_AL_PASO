@@ -1,9 +1,9 @@
-import React, { Suspense, FC, useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { Suspense, FC, useState, useEffect } from "react";
+import styled from "styled-components";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";
-import { GET_PRODUCT } from "../graphql/products/queries";
+import { GET_PRODUCT, GET_PRODUCT_DETAIL } from "../graphql/products/queries";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { PRODUCT_TITLE } from "../meta";
 import { trackProduct, trackAddToCart } from "../utils/dataLayer";
@@ -16,41 +16,38 @@ import DelayedWrapper from "../components/DelayedWrapper";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
+const Loader = React.lazy(() =>
+  import(/* webpackChunkName: "Loader" */ "../components/Loader")
 );
-const Slider = React.lazy(
-  () => import(/* webpackChunkName: "Slider" */ "react-slick")
+const Slider = React.lazy(() =>
+  import(/* webpackChunkName: "Slider" */ "react-slick")
 );
-const RelatedProducts = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
-    )
+const RelatedProducts = React.lazy(() =>
+  import(
+    /* webpackChunkName: "RelatedProducts" */ "../components/Product/RelatedProducts"
+  )
 );
-const Chevron = React.lazy(
-  () => import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
+const Chevron = React.lazy(() =>
+  import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
 );
-const Cta = React.lazy(
-  () => import(/* webpackChunkName: "Cta" */ "../components/Cta")
+const Cta = React.lazy(() =>
+  import(/* webpackChunkName: "Cta" */ "../components/Cta")
 );
-const FreeDelivery = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
-    )
+const FreeDelivery = React.lazy(() =>
+  import(
+    /* webpackChunkName: "FreeDelivery" */ "../components/Images/FreeDelivery"
+  )
 );
-const Quality = React.lazy(
-  () => import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
+const Quality = React.lazy(() =>
+  import(/* webpackChunkName: "Quality" */ "../components/Images/Quality")
 );
-const ContinueArrow = React.lazy(
-  () =>
-    import(
-      /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
-    )
+const ContinueArrow = React.lazy(() =>
+  import(
+    /* webpackChunkName: "ContinueArrow" */ "../components/Images/ContinueArrow"
+  )
 );
-const Close = React.lazy(
-  () => import(/* webpackChunkName: "Close" */ "../components/Images/Close")
+const Close = React.lazy(() =>
+  import(/* webpackChunkName: "Close" */ "../components/Images/Close")
 );
 
 const Header = styled.div`
@@ -94,6 +91,19 @@ const Wrapper = styled.div`
     flex-direction: column;
     padding: 20px;
   }
+
+  .slick-slide img {
+    margin: 0 auto;
+    width: 100%;
+    height: 354px;
+    object-fit: contain;
+
+    @media (max-width: ${BREAKPOINT}) {
+      object-fit: contain;
+      width: 100%;
+      height: 250px;
+    }
+  }
 `;
 
 const Col1 = styled.div`
@@ -128,7 +138,7 @@ const Col2 = styled.div`
   flex: 1;
 `;
 
-const Image = styled.div<{ src: string }>`
+const Image = styled.div<{ src: string; srcSet?: string }>`
   height: 354px;
   background: url(${props => props.src}) no-repeat center center / contain;
 
@@ -137,7 +147,7 @@ const Image = styled.div<{ src: string }>`
   }
 `;
 
-const ProductTitle = styled.h1`
+const ProductTitle = styled.h2`
   font-family: MullerBold;
   font-size: 30px;
   line-height: 30px;
@@ -167,6 +177,7 @@ const ProductText = styled.ul`
     }
   }
 `;
+ProductText.displayName = "ProductText";
 
 const Categories = styled.div`
   margin: 25px 0;
@@ -411,13 +422,25 @@ const Product: FC<Props> = ({
       related: true
     },
     fetchPolicy: "cache-and-network",
+    onError: d => {
+      // history.replace("/404");
+    },
     onCompleted: d => {
       setProduct(d.product);
       trackProduct(d.product);
       if (d.product.categories) setCategories(d.product.categories);
       if (d.product.related) setRelated(d.product.related);
+      loadProductDetail({
+        variables: {
+          name: prodname
+        }
+      });
     }
   });
+  const [
+    loadProductDetail,
+    { loading: loadingProdDetail, data: dataProdDetail }
+  ] = useLazyQuery(GET_PRODUCT_DETAIL, {});
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } }
   });
@@ -495,6 +518,22 @@ const Product: FC<Props> = ({
 
   const discount = Math.round(1 - product.special_price / product.price) * 100;
 
+  const toCatLink = (str: string | null, level: number) => {
+    let lvl2Cat: CategoryType | undefined = undefined;
+    let lvl2CatStr = "";
+    let lvl3Cat: CategoryType | undefined = undefined;
+    let lvl3CatStr = "";
+    if (level >= 4) {
+      lvl3Cat = categories.find((c: CategoryType) => c.level === 3);
+      if (lvl3Cat) lvl3CatStr = `${toLink(lvl3Cat.name)}/`;
+    }
+    if (level >= 3) {
+      lvl2Cat = categories.find((c: CategoryType) => c.level === 2);
+      if (lvl2Cat) lvl2CatStr = `${toLink(lvl2Cat.name)}/`;
+    }
+    return lvl2CatStr + lvl3CatStr + toLink(str);
+  };
+
   return (
     <Suspense fallback={<Loader />}>
       <DelayedWrapper noHeader={true}>
@@ -517,8 +556,38 @@ const Product: FC<Props> = ({
                   {product.image
                     .split(",")
                     .map((img: string, index: number) => (
-                      <div key={index + ' Index'}>
-                        <Image src={img}></Image>
+                      <div
+                        key={index + " Index"}
+                        style={{ textAlign: "center" }}
+                      >
+                        {/*          <Image src={img}></Image>  */}
+
+                        {/*       {
+                          <img
+                          width="100px"
+                          height="100px"
+                     
+                            srcSet={
+                              img +
+                              " 1x  ," +
+                              img.slice(0, -4)+"_708px.webp" +
+                              " 2x  ," +
+                              img.slice(0, -4) +
+                              "_708px.webp" +
+                              " 3x"
+                            }
+                            src={img}
+                          />
+                        } */}
+
+                        <picture>
+                          <source
+                            srcSet={img.slice(0, -4) + "_708px.webp" + " 2x"}
+                            type="image/webp"
+                          />
+                          <source srcSet={img + " 1x"} type="image/jpeg" />
+                          <img src={img} alt={product.name} />
+                        </picture>
                       </div>
                     ))}
                 </Slider>
@@ -527,8 +596,8 @@ const Product: FC<Props> = ({
                 <ProductTitle>
                   {product.useKGS
                     ? `${product.name} DE ${Number(product.weight)
-                      .toFixed(2)
-                      .replace(".", ",")} KGS APROX.`
+                        .toFixed(2)
+                        .replace(".", ",")} KGS APROX.`
                     : product.name}
                 </ProductTitle>
                 <EstimatedPrice visible={product.useKGS}>
@@ -552,57 +621,59 @@ const Product: FC<Props> = ({
                   )}
                 </PriceBox>
                 <ProductText>
-                  {product.description
-                    .split("\n")
-                    .filter((line: string) => line.trim())
-                    .map((line: string, index: number) => (
-                      <li
-                        key={index}
-                        dangerouslySetInnerHTML={{ __html: line.trim() }}
-                      />
-                    ))}
+                  {!loadingProdDetail &&
+                    dataProdDetail &&
+                    dataProdDetail.productDetail
+                      .split("\n")
+                      .filter((line: string) => line.trim())
+                      .map((line: string, index: number) => (
+                        <li
+                          key={index}
+                          dangerouslySetInnerHTML={{ __html: line.trim() }}
+                        />
+                      ))}
                 </ProductText>
                 <Categories>
                   <span>{t("product.categories")}: </span>
                   {categories.map((cat: CategoryType, index: number) => (
                     <span key={cat.name}>
-                      <Link key={index} to={`/productos/${toLink(cat.name)}`}>
+                      <Link
+                        key={index}
+                        to={`/productos/${toCatLink(cat.name, cat.level)}`}
+                      >
                         {cat.name}
                       </Link>
                       {index === categories.length - 1 ? "" : ", "}
                     </span>
                   ))}
                 </Categories>
-                {
-                  product.stock > 0 ?
-                    <Toolbox>
-                      <Qty>
-                        <select
-                          onChange={event => setQty(Number(event.target.value))}
-                        >
-                          {[...(Array(21).keys() as any)]
-                            .slice(1)
-                            .map((opt: any, index: number) => (
-                              <option key={index} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
-                        </select>
-                        <Chevron />
-                      </Qty>
-                      <Cta
-                        filled={true}
-                        text={t("product.add")}
-                        action={addAndGo}
-                      />
-                    </Toolbox>
-                    :
-                    <Toolbox>
-                      <OutOfStock>
-                        Temporalmente sin stock
-                      </OutOfStock>
-                    </Toolbox>
-                }
+                {product.stock > 0 ? (
+                  <Toolbox>
+                    <Qty>
+                      <select
+                        onChange={event => setQty(Number(event.target.value))}
+                      >
+                        {[...(Array(21).keys() as any)]
+                          .slice(1)
+                          .map((opt: any, index: number) => (
+                            <option key={index} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                      </select>
+                      <Chevron />
+                    </Qty>
+                    <Cta
+                      filled={true}
+                      text={t("product.add")}
+                      action={addAndGo}
+                    />
+                  </Toolbox>
+                ) : (
+                  <Toolbox>
+                    <OutOfStock>Temporalmente sin stock</OutOfStock>
+                  </Toolbox>
+                )}
                 <DeliveryBox>
                   <FreeDelivery />
                   <Title>

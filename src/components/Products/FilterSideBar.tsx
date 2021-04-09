@@ -97,7 +97,17 @@ const Category = styled.li<{ selected: boolean; key?: number }>`
   span {
     font-family: MullerBold;
   }
+  a {
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+    font-family: MullerBold;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
 `;
+Category.displayName = 'Category'
 
 const CategoryPet = styled.li<{ selected: boolean; key?: number }>`
   display: flex;
@@ -172,6 +182,7 @@ const SubCategory = styled.div<{ selected: boolean; key?: number }>`
     font-family: MullerBold;
   }
 `;
+SubCategory.displayName = 'SubCategory'
 
 type Props = {
   category: string | undefined;
@@ -193,30 +204,29 @@ const FilterSideBar: FC<Props> = ({
   const MascotasId = 354;
   const [open, setOpen] = useState(false);
 
-  const navigate = (
+  const navigateLink = (
     cat: CategoryType,
     s3cat?: SubCategoryLvl3Type,
     s4cat?: SubCategoryLvl4Type
   ) => {
     if (cat.entity_id === 0) {
-      history.push(`/productos/`);
+      return `/productos`;
     } else {
       let link = `/productos/${toLink(cat.name)}`;
       if (s3cat) link = `${link}/${toLink(s3cat.name)}`;
       if (s4cat) link = `${link}/${toLink(s4cat.name)}`;
-      history.push(link);
+      return link
     }
-    setOpen(false);
-  };
+  }
 
   const compare = (
     cat: CategoryType,
     s3cat?: SubCategoryLvl3Type,
     s4cat?: SubCategoryLvl4Type
   ) => {
-    let is = category === toLink(cat.name);
-    if (s3cat) is = is && subcategory === toLink(s3cat.name);
-    if (s4cat) is = is && lastlevel === toLink(s4cat.name);
+    let is = toLink(String(category)) === toLink(cat.name);
+    if (s3cat) is = is && toLink(String(subcategory)) === toLink(s3cat.name);
+    if (s4cat) is = is && toLink(String(lastlevel)) === toLink(s4cat.name);
     return is;
   };
 
@@ -232,19 +242,19 @@ const FilterSideBar: FC<Props> = ({
         />
         <CategoryList open={open}>
           <Category
-            onClick={() =>
-              navigate({ entity_id: 0, name: "", level: 0, parent_id: 0 })
-            }
+            onClick={() => {}}
             selected={!category || category === ""}
           >
-            {t("products.filter_side_bar.all")}
+            <a href={navigateLink({ entity_id: 0, name: "", level: 0, parent_id: 0 })}>
+              {t("products.filter_side_bar.all")}
+            </a>
           </Category>
           {categories.length &&
             categories
               .filter((row: CategoryType) => row.entity_id !== MascotasId)
               .map((row: CategoryType) => (
                 <Category selected={compare(row)} key={row.entity_id}>
-                  <span onClick={() => navigate(row)}>{row.name}</span>
+                  <a href={navigateLink(row)}>{row.name}</a>
                   {compare(row) &&
                     row.subcategories &&
                     !!row.subcategories.length &&
@@ -253,8 +263,10 @@ const FilterSideBar: FC<Props> = ({
                         selected={compare(row, s3row)}
                         key={s3row.entity_id}
                       >
-                        <span onClick={() => navigate(row, s3row)}>
-                          {s3row.name}
+                        <span onClick={() => {}}>
+                          <a href={navigateLink(row, s3row)}>
+                            {s3row.name}
+                          </a>
                         </span>
                         {compare(row, s3row) &&
                           s3row.subcategories &&
@@ -265,11 +277,11 @@ const FilterSideBar: FC<Props> = ({
                                 selected={compare(row, s3row, s4row)}
                                 key={s4row.entity_id}
                               >
-                                <span
-                                  onClick={() => navigate(row, s3row, s4row)}
+                                <a
+                                  href={navigateLink(row, s3row, s4row)}
                                 >
                                   {s4row.name}
-                                </span>
+                                </a>
                               </SubCategory>
                             )
                           )}
@@ -282,12 +294,14 @@ const FilterSideBar: FC<Props> = ({
               .filter((row: CategoryType) => row.entity_id === MascotasId)
               .map((row: CategoryType) => (
                 <CategoryPet
-                  onClick={() => navigate(row)}
+                  onClick={() => {}}
                   selected={category === toLink(row.name)}
                   key={row.entity_id}
                 >
                   <Paw />
-                  <b>{row.name}</b>
+                  <a href={navigateLink(row)}>
+                    <b>{row.name}</b>
+                  </a>
                   <span>- {t("products.filter_side_bar.new")}!</span>
                 </CategoryPet>
               ))}

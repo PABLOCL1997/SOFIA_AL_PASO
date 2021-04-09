@@ -95,3 +95,10 @@ export const GET_PRODUCT = gql`
     }
   }
 `;
+
+
+export const GET_PRODUCT_DETAIL = gql`
+query ProductDetail($name: String!){
+  productDetail(name:$name)
+}
+`

@@ -31,6 +31,7 @@ const Image = styled.img`
   height: 200px;
   margin: 0 auto;
 `;
+Image.displayName = 'RelatedItemImage'
 
 const Title = styled.h2`
   font-family: MullerMedium;
@@ -102,7 +103,7 @@ const RelatedProducts: FC<Props> = ({ product, openModal }) => {
     <Suspense fallback={<Loader />}>
       <Container>
         <Link>
-          <Image src={product.image.split(",")[0]}></Image>
+          <Image className="lazyload"  data-src={product.image.split(",")[0]}></Image>
           <Title>
             {product.useKGS
               ? `${product.name} DE ${Number(product.weight)

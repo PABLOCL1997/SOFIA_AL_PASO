@@ -4,7 +4,7 @@ export const GET_MIN_PRICE = (data: any) => {
   const userInfo =
     data && data.userInfo && data.userInfo.length ? data.userInfo[0] : {};
   return userInfo.cityKey === "CO"
-    ? 100
+    ? 150
     : userInfo.cityKey === "SC"
     ? 200
     : 200;

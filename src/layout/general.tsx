@@ -6,6 +6,7 @@ import { useQuery, useMutation } from "react-apollo";
 import { CHECK_TOKEN } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { token } from "../utils/store";
+import 'lazysizes'
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")

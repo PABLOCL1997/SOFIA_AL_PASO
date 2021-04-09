@@ -1,5 +1,10 @@
 import React, { Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import "./App.css";
 import "./Reset.css";
 import DelayedWrapper from "./components/DelayedWrapper";
@@ -29,12 +34,25 @@ const Terms = React.lazy(() =>
   import(/* webpackChunkName: "Terms" */ "./pages/terms")
 );
 
+const Page404 = React.lazy(() =>
+  import(/* webpackChunkName: "Page404" */ "./components/Page404")
+);
+
 const App = () => {
   return (
     <Suspense fallback={<div />}>
       <DelayedWrapper time={2000}>
         <Router>
           <Switch>
+            <Route
+              exact
+              path="/404"
+              children={
+                <LayoutGeneral>
+                  <Page404 />
+                </LayoutGeneral>
+              }
+            />
             <Route
               exact
               path="/"
@@ -45,7 +63,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/password-reset/:token"
               children={
                 <LayoutGeneral>
@@ -54,7 +72,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/preguntas-frecuentes"
               children={
                 <LayoutGeneral>
@@ -63,7 +81,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/terminos-y-condiciones"
               children={
                 <LayoutGeneral>
@@ -72,7 +90,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/mi-cuenta"
               children={
                 <LayoutGeneral>
@@ -81,7 +99,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/mi-cuenta/ordenes"
               children={
                 <LayoutGeneral>
@@ -90,7 +108,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos"
               children={
                 <LayoutGeneral>
@@ -99,7 +117,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/checkout"
               children={
                 <LayoutGeneral>
@@ -108,7 +126,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos/:category"
               children={
                 <LayoutGeneral>
@@ -117,7 +135,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos/:category/:subcategory"
               children={
                 <LayoutGeneral>
@@ -126,7 +144,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/productos/:category/:subcategory/:lastlevel"
               children={
                 <LayoutGeneral>
@@ -135,7 +153,7 @@ const App = () => {
               }
             />
             <Route
-              exact
+              
               path="/:prodname"
               children={
                 <LayoutGeneral page="productpage">
@@ -143,6 +161,15 @@ const App = () => {
                 </LayoutGeneral>
               }
             />
+            <Route
+              children={
+                <LayoutGeneral>
+                  <Page404 />
+                </LayoutGeneral>
+              }
+            />
+
+         
           </Switch>
         </Router>
       </DelayedWrapper>

@@ -28,7 +28,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: url(/images/Portada_Ecommerce_Navidad_3_2.jpg) no-repeat center center / cover;
+  background: url(/images/b2c-nueva_home.jpg) no-repeat center center / cover;
   margin-top: 15px;
   position: relative;
 
@@ -53,7 +53,7 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-family: MullerBlack;
   font-size: 48px;
   line-height: 48px;

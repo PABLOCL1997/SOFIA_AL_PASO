@@ -146,15 +146,13 @@ const CategorySlider: FC<Props> = () => {
 
   const seeAll = () => {
     if (selected === 0) {
-      history.push(`/productos/`);
+      return `/productos/`;
     } else {
-      history.push(
-        `/productos/${toLink(
+      return `/productos/${toLink(
           data.categories.find(
             (row: CategoryType) => row.entity_id === selected
           ).name
         )}`
-      );
     }
   };
 
@@ -243,11 +241,13 @@ const CategorySlider: FC<Props> = () => {
           <ProductSlider products={inStockProducts()} />
         )}
         <CtaWrapper>
+          <a href={seeAll()}>
           <Cta
-            action={seeAll}
+            action={() => {}}
             text={t("homepage.categoryslider.seeall")}
             filled={true}
           />
+          </a>
         </CtaWrapper>
       </div>
     </Suspense>
