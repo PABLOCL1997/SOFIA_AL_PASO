@@ -264,10 +264,6 @@ const urls = [
         urlTo: "/productos/preparados"
     },
     {
-        urlFrom: "/nuggets-dino-500-grs",
-        urlTo: "/productos?q=nuggets"
-    },
-    {
         urlFrom: "/fiambres",
         urlTo: "/productos/fiambres"
     },

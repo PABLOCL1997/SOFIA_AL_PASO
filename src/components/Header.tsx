@@ -525,14 +525,14 @@ const Header: FC<Props> = ({ checkout, page }) => {
                     !userData.userInfo[0].isLoggedIn) && (
                     /*         <Cta text={t("header.login")} action={myAccount} /> */
                     <IngresarWrap onClick={myAccount}>
-                      <img src={UserIcon} alt="login" />
+                      <img width="25" height="24" src={UserIcon} alt="login" />
                       <span>{t("header.login")}</span>
                     </IngresarWrap>
                   )}
                   {userData.userInfo.length && userData.userInfo[0].isLoggedIn && (
                     /*   <Cta text={t("header.account")} action={myAccount} /> */
                     <IngresarWrap onClick={myAccount}>
-                      <img src={UserIcon} alt="my account" />
+                      <img width="32" height="24" src={UserIcon} alt="my account" />
                       <span>{t("header.account")}</span>
                     </IngresarWrap>
                   )}

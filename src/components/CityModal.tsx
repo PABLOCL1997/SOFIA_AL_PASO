@@ -130,7 +130,7 @@ const CtaWrapper = styled.div`
 `;
 const StarWrap = styled.div`
   position: relative;
-
+  display: inline-block;
   &:hover {
     > div {
       opacity: 1;
@@ -228,26 +228,30 @@ const CityModal: FC<Props> = () => {
     });
   };
 
-  const setDefaultAddress = (address: any) => {
+  const setDefaultAddress = async (address: any) => {
     let c: KeyValue | undefined = cities.find(
       (c: KeyValue) => c.value === address.city
     );
-
     const prev = data?.userInfo[0]?.idPriceList || 0
-    const newVal = parseInt(address?.reference) || 0
+    let newVal = 0
 
-    if (prev > 0 && newVal == 0) {
+    if (parseInt(address?.reference) &&
+    parseInt(address?.phone) &&   
+    address?.phone === address?.reference
+    ) {
+      newVal = parseInt(address?.phone)
+    }
+
+    if (prev > 0 && newVal === 0) {
       showSuccess({
         variables: { user: { showModal: t("cart.change_employee") } }
       });
     } else {
-      if (data?.userInfo[0]?.cityName !== address?.city) {
-        showSuccess({
-          variables: { user: { showModal: t("cart.change_msg") } }
-        });
-      }
+      showSuccess({
+        variables: { user: { showModal: t("cart.change_msg") } }
+      });
     }
-    setUser({
+    await setUser({
       variables: {
         user: {
           defaultAddressId: address.id,
@@ -275,18 +279,6 @@ const CityModal: FC<Props> = () => {
       }
     });
   };
-
-  // const showUserAddresses = () => {
-  //   toggleCityModal({
-  //     variables: {
-  //       user: {
-  //         cityKey: "",
-  //         cityName: "",
-  //         openCityModal: true
-  //       } as User
-  //     }
-  //   });
-  // };
 
   const addAddress = () => {
     toggleCityModal();

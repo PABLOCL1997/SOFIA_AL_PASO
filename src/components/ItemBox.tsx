@@ -260,13 +260,12 @@ const OutOfStock = styled.span`
 type Props = {
   product: ProductType;
   openModal?: Function;
+  dropDownQty?: number;
 };
 
-const ItemBox: FC<Props> = ({ product, openModal }) => {
+const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21 }) => {
   const { t } = useTranslation();
-  const history = useHistory();
   const [qty, setQty] = useState<number>(1);
-  const { data: userData } = useQuery(GET_USER, {});
   const { data } = useQuery(GET_CART_ITEMS);
   const [addItem] = useMutation(ADD_ITEM, {
     variables: { product: { ...product, qty } }
@@ -311,6 +310,18 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
       product.maxPerUser < qty + (p && p.qty ? p.qty : 0)
     );
   };
+
+  const replaceWidthFormatImage = (name: string, width: string, format?: string) => {
+    if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`)
+    if (name.includes(".jpeg")) return name.replace(".jpeg", `_${width}.${format ? format : "jpeg"}`)
+    if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`)
+  }
+ 
+  const getImageType = (name: string) => {
+    if (name.includes(".jpg")) return "image/jpg"
+    if (name.includes(".jpeg")) return "image/jpeg"
+    if (name.includes(".png")) return "image/png"
+  } 
 
   const addAndGo = () => {
     // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
@@ -359,32 +370,18 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
         <Link onClick={goToProduct}>
           <ProductLink href={`/${toLink(product.name)}`}>
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
-
-            <picture className="lazyload">
-              <source
-                srcSet={
-                  product.image.split(",")[0].slice(0, -4) +
-                  "_200px.webp" +
-                  " 2x"
-                }
-                type="image/webp"
-              />
-              <source
-                srcSet={
-                  product.image.split(",")[0].slice(0, -4) +
-                  "_200px.jpg" +
-                  " 1x"
-                }
-                type="image/jpeg"
-              />
               <img
+                className="lazyload"
                 height="200px"
+                srcSet={`
+                ${replaceWidthFormatImage(product.image.split(",")[0], "200px") + " 1x"},
+                ${replaceWidthFormatImage(product.image.split(",")[0], "400px") + " 2x"},
+                `}
                 width="200px"
                 style={{ margin: "0 auto", display: "block" }}
                 src={product.image.split(",")[0]}
                 alt={product.name}
               />
-            </picture>
 
             <Title>
               {product.useKGS
@@ -430,7 +427,7 @@ const ItemBox: FC<Props> = ({ product, openModal }) => {
                 defaultValue={1}
                 onChange={event => setQty(Number(event.target.value))}
               >
-                {[...(Array(21).keys() as any)]
+                {[...(Array(dropDownQty).keys() as any)]
                   .slice(1)
                   .map((opt: any, index: number) => (
                     <option key={index} value={opt}>
