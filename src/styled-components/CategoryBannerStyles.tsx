@@ -54,5 +54,5 @@ export const ImageContainer = styled.div<{ bg?: string }>`
 `;
 
 export const LINK = styled.div`
-  /* cursor: pointer; */
+  cursor: pointer;
 `;
