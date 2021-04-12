@@ -17,6 +17,10 @@ import nuggets from '../../assets/images/banner-1124x100.png'
 import kostlichMob from '../../assets/images/Kostlich-320x80.png'
 import kostlich from '../../assets/images/Kostlich-1124x100.png'
 
+import chiquidaysMob from '../../assets/images/Chiqui-days-320x80.jpg'
+import chiquidays from '../../assets/images/Chiqui-days-1124x100.jpg'
+
+
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -80,8 +84,8 @@ const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Slider {...settings}>
-          <LINK>
-            <ImageContainer bg={isMobile ? nuggetsMob : nuggets }></ImageContainer>
+          <LINK onClick={() => history.push("/productos/chiquidays")}>
+            <ImageContainer bg={isMobile ? chiquidaysMob : chiquidays }></ImageContainer>
           </LINK>
           {category === "mascotas" &&
             <LINK>

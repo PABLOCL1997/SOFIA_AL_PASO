@@ -507,7 +507,9 @@ const FilterSideBar: FC<Props> = ({
                   search(
                     "name",
                     toLink(category),
-                    categories.map((category: CategoryType) => {
+                    categories
+                    .filter((row: CategoryType)=> toLink(row.name) !== 'chiquidays') 
+                    .map((category: CategoryType) => {
                       return { ...category, name: toLink(category.name) };
                     })
                   )?.category_image
@@ -596,7 +598,9 @@ const FilterSideBar: FC<Props> = ({
             </Category>
 
             {categories.length &&
-              categories.map((row: CategoryType) => (
+              categories
+                .filter((row: CategoryType)=> toLink(row.name) !== 'chiquidays') 
+                .map((row: CategoryType) => (
                 <Category lvl={1} selected={compare(row)} key={row.entity_id}>
                   <Link to={navigateLink(row)}>
                     <SmallCatImage src={row.category_image} alt="" />
@@ -718,7 +722,9 @@ const FilterSideBar: FC<Props> = ({
                       )}
                     </Category>
                     {categories.length &&
-                      categories.map((row: CategoryType) => (
+                      categories
+                      .filter((row: CategoryType)=> toLink(row.name) !== 'chiquidays') 
+                      .map((row: CategoryType) => (
                         <Category
                           lvl={1}
                           selected={compare(row)}
