@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { ProductType } from "../../graphql/products/type";
 import { BREAKPOINT } from "../../utils/constants";
+import { LazyLoadTypes } from "react-slick"
 
 
 const Slider = React.lazy(() =>
@@ -71,11 +72,12 @@ const SliderContainer = styled.div`
 `;
 
 const ProductSlider: FC<Props> = ({ products, useArrows }) => {
-
+  const typeLazy: LazyLoadTypes = "ondemand"
   const settings = {
     dots: false,
     infinite: false,
     arrows: true,
+    lazyLoad: typeLazy,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,

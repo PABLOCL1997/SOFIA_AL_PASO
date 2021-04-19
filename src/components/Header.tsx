@@ -25,9 +25,6 @@ const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
-const HeaderLogo = React.lazy(() =>
-  import(/* webpackChunkName: "HeaderLogo" */ "./Images/HeaderLogo")
-);
 const Pin = React.lazy(() =>
   import(/* webpackChunkName: "Pin" */ "./Images/Pin")
 );
@@ -56,7 +53,7 @@ const AuthModal = React.lazy(() =>
   import(/* webpackChunkName: "AuthModal" */ "./AuthModal")
 );
 const CartModal = React.lazy(() =>
-  import(/* webpackChunkName: "CartModal" */ "./CartModal")
+  import(/* webpackChunkName: "CartModal" */ "./Header/CartModal")
 );
 
 const Wrapper = styled.div``;
@@ -485,7 +482,6 @@ const Header: FC<Props> = ({ checkout, page }) => {
   }, []);
 
   return (
-    <Suspense fallback={<Loader />}>
       <Wrapper>
         <Desktop>
           <Fixed shadow={shadow}>
@@ -493,7 +489,12 @@ const Header: FC<Props> = ({ checkout, page }) => {
               {!checkout && (
                 <Container>
                   <Logo onClick={goHome}>
-                    <HeaderLogo />
+                    <img
+                      src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                      width="83px"
+                      height="50px"
+                      alt={"Sofía"}
+                    />
                   </Logo>
                   <AddressHeader>
                     <Address onClick={() => toggleCityModal()}>
@@ -505,14 +506,14 @@ const Header: FC<Props> = ({ checkout, page }) => {
                     <Search />
                     {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
                     <input
-                      type="search"
+                      type="text"
                       onKeyUp={evt => {
                         if (evt.keyCode === 13) handleSearch()
                       }}
                       onChange={({ target: { value }}) => { setNewQuery(value)}}
                       placeholder={t("products.product_list.search_product")}
                       name="product-search"
-                      autoComplete="no-autocomplete"
+                      autoComplete="off"
                     />
                     <Cta
                       filled={true}
@@ -539,7 +540,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
 
                   {/*    <Total>Bs. {GET_TOTAL(data.cartItems)}</Total> */}
                   <CartWrapper big={bigCart} onClick={showCart}>
-                    <img src={CartImg} alt="" />
+                    <img width="32" height="24" src={CartImg} alt="Carrito de compras" />
                     <span>{GET_QTY(data.cartItems)}</span>
                   </CartWrapper>
                   <MenuWrapper onClick={() => setOpen(true)}>
@@ -550,7 +551,12 @@ const Header: FC<Props> = ({ checkout, page }) => {
               {checkout && (
                 <Container>
                   <Logo onClick={goHome}>
-                    <HeaderLogo />
+                    <img
+                      src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                      width="83px"
+                      height="50px"
+                      alt={"Sofía"}
+                    />
                   </Logo>
                   <Separator />
                   <MenuWrapper onClick={() => setOpen(true)}>
@@ -565,20 +571,25 @@ const Header: FC<Props> = ({ checkout, page }) => {
           <MobileMenu page={page}>
             <MobileMenuHeader>
               <Logo onClick={goHome}>
-                <HeaderLogo />
+                <img
+                  src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                  width="60px"
+                  height="36px"
+                  alt={"Sofía"}
+                />
               </Logo>
               <RightMenu>
                 <MenuListTools>
                   {(!userData.userInfo.length ||
                     !userData.userInfo[0].isLoggedIn) && (
-                    <img src={UserIcon} alt="login" onClick={myAccount}/>
+                    <img width="25" height="24" src={UserIcon} alt="login" onClick={myAccount}/>
                   )}
                   {userData.userInfo.length && userData.userInfo[0].isLoggedIn && (
-                    <img src={UserIcon} alt="my account" onClick={myAccount}/>
+                    <img width="32" height="24" src={UserIcon} alt="my account" onClick={myAccount}/>
                   )}
                 </MenuListTools>
                 <CartWrapper onClick={showCart}>
-                  <img src={CartImg} alt="" />
+                  <img width="32" height="24" src={CartImg} alt="Carrito de compras" />
                   <span>{GET_QTY(data.cartItems)}</span>
                 </CartWrapper>
                 <MenuWrapper onClick={() => setOpen(true)}>
@@ -655,7 +666,12 @@ const Header: FC<Props> = ({ checkout, page }) => {
             </MenuItem>
           </MenuList>
           <MenuBottom>
-            <HeaderLogo />
+              <img
+                src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                width="60px"
+                height="36px"
+                alt={"Sofía"}
+              />
             <span>{t("header.slogan")}</span>
           </MenuBottom>
         </SideMenu>
@@ -663,7 +679,6 @@ const Header: FC<Props> = ({ checkout, page }) => {
         <AuthModal />
         <CartModal />
       </Wrapper>
-    </Suspense>
   );
 };
 

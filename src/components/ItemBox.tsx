@@ -261,9 +261,10 @@ type Props = {
   product: ProductType;
   openModal?: Function;
   dropDownQty?: number;
+  webp?: Boolean;
 };
 
-const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21 }) => {
+const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false }) => {
   const { t } = useTranslation();
   const [qty, setQty] = useState<number>(1);
   const { data } = useQuery(GET_CART_ITEMS);
@@ -278,19 +279,6 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21 }) => {
       user: { showModal: t("cart.add_msg", { product: product.name }) }
     }
   });
-
-  const goToProduct = () => {
-    if (
-      !openModal ||
-      window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
-    ) {
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-      }, 500);
-    } else {
-      openModal(product);
-    }
-  };
 
   const hasStock = () => {
     let p = data.cartItems.find(
@@ -317,12 +305,6 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21 }) => {
     if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`)
   }
  
-  const getImageType = (name: string) => {
-    if (name.includes(".jpg")) return "image/jpg"
-    if (name.includes(".jpeg")) return "image/jpeg"
-    if (name.includes(".png")) return "image/png"
-  } 
-
   const addAndGo = () => {
     // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
     if (isOverLimit()) {
@@ -363,23 +345,27 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21 }) => {
             </div>
           </Discount> */
           <NewDiscount>
-            <img src={DiscountIcon} alt="%" />
+            <img width="32" height="48" src={DiscountIcon} alt="%" />
           </NewDiscount>
         )}
 
-        <Link onClick={goToProduct}>
+        <Link onClick={() => {}}>
           <ProductLink href={`/${toLink(product.name)}`}>
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
               <img
                 className="lazyload"
                 height="200px"
-                srcSet={`
-                ${replaceWidthFormatImage(product.image.split(",")[0], "200px") + " 1x"},
-                ${replaceWidthFormatImage(product.image.split(",")[0], "400px") + " 2x"},
-                `}
+                srcSet={
+                  window.innerWidth < parseInt(BREAKPOINT.replace("px", "")) ?
+                  webp ?
+                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px", "webp")}` :
+                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},` :
+                  webp ?
+                  ` ${replaceWidthFormatImage(product.image.split(",")[0], "400px", "webp")}` :
+                  ` ${replaceWidthFormatImage(product.image.split(",")[0], "400px")}`
+                }
                 width="200px"
                 style={{ margin: "0 auto", display: "block" }}
-                src={product.image.split(",")[0]}
                 alt={product.name}
               />
 

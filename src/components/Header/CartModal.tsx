@@ -1,38 +1,38 @@
 import React, { FC, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { BREAKPOINT } from "../utils/constants";
 import { useMutation, useQuery } from "react-apollo";
-import { SET_USER } from "../graphql/user/mutations";
-import { GET_USER } from "../graphql/user/queries";
-import { trackAddToCart, trackRemoveFromCart } from "../utils/dataLayer";
+import { SET_USER } from "../../graphql/user/mutations";
+import { GET_USER } from "../../graphql/user/queries";
+import { trackAddToCart, trackRemoveFromCart } from "../../utils/dataLayer";
 import {
   GET_CART_ITEMS,
   GET_TOTAL,
   GET_QTY,
   CHECK_CART,
   GET_MIN_PRICE
-} from "../graphql/cart/queries";
+} from "../../graphql/cart/queries";
 import { useHistory } from "react-router-dom";
-import { ProductType } from "../graphql/products/type";
-import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
+import { ProductType } from "../../graphql/products/type";
+import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../../graphql/cart/mutations";
+import { BREAKPOINT } from "../../utils/constants";
 
 const ProductCart = React.lazy(() =>
-  import(/* webpackChunkName: "ProductCart" */ "./ProductCart")
+  import(/* webpackChunkName: "ProductCart" */ "../ProductCart")
 );
 
 const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+  import(/* webpackChunkName: "Loader" */ "../Loader")
 );
-const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
+const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "./Images/Close")
+  import(/* webpackChunkName: "Close" */ "../Images/Close")
 );
 const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
+  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
 );
 const Delete = React.lazy(() =>
-  import(/* webpackChunkName: "Delete" */ "./Images/Delete")
+  import(/* webpackChunkName: "Delete" */ "../Images/Delete")
 );
 
 const ModalCourtain = styled.div`
@@ -254,6 +254,9 @@ const AuthModal: FC<Props> = () => {
   const [shouldExecute, executeNewCartQuery] = useState(false);
   const [newCartEmpty, setNewCartEmpty] = useState(true);
   const [reloadModal, setReloadModal] = useState(false);
+  const [city, setCity] = useState("SC");
+  const [idPriceList, setIdPriceList] = useState(0);
+
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } }
   });
@@ -265,7 +268,8 @@ const AuthModal: FC<Props> = () => {
           qty: p.qty
         }))
       ),
-      city: userData && userData.userInfo.length && userData.userInfo[0].cityKey
+      city,
+      id_price_list: idPriceList
     },
     fetchPolicy: "network-only",
     skip: !shouldExecute
@@ -456,11 +460,21 @@ const AuthModal: FC<Props> = () => {
   useEffect(() => {
     const _w: any = window;
     if (userData && userData.userInfo.length) {
-      if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
+      // if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
         // if (userData.userInfo[0].cityKey !== "SC") showCityWarning();
+      // }
+      // _w.currentCity = userData.userInfo[0].cityName;
+      if(userData.userInfo[0].cityKey !== city) {
+        setCity(userData.userInfo[0].cityKey)
         if (newCartEmpty) setNewCartEmpty(false);
+
       }
-      _w.currentCity = userData.userInfo[0].cityName;
+
+      if(userData.userInfo[0].idPriceList !== idPriceList) {
+        setIdPriceList(userData.userInfo[0].idPriceList)
+        if (newCartEmpty) setNewCartEmpty(false);
+
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);

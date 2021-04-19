@@ -7,15 +7,9 @@ import { SUBSCRIBE, SET_USER } from "../../graphql/user/mutations";
 import { useMutation } from "react-apollo";
 import { isValidEmail } from "../../utils/string";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
-const HeaderLogo = React.lazy(() =>
-  import(/* webpackChunkName: "HeaderLogo" */ "../Images/HeaderLogo")
-);
 
-const Container = styled.div`
+const Container = styled.section`
   background-size: 400px;
   width: calc(100% - 120px);
   margin: auto;
@@ -23,7 +17,7 @@ const Container = styled.div`
   border-radius: 15px;
   box-shadow: 25px 19px 0px #fecd00;
   @media screen and (min-width: ${BREAKPOINT}) and (max-width: 1300px) {
-    background: none;
+    // background: none;
   }
 `;
 
@@ -168,12 +162,16 @@ const Subscribe: FC<Props> = () => {
   };
 
   return (
-    <Suspense fallback={<Loader />}>
       <>
         <Desktop>
           <Container>
             <LogoContainer>
-              <HeaderLogo />
+              <img
+                src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                width="83px"
+                height="50px"
+                alt={"Sofía"}
+              />
               <span>{t("homepage.subscribe.store")}</span>
             </LogoContainer>
             <Notifications>
@@ -201,7 +199,12 @@ const Subscribe: FC<Props> = () => {
         <Mobile>
           <MobileContainer>
             <LogoContainer>
-              <HeaderLogo />
+            <img
+              src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+              width="60px"
+              height="36px"
+              alt={"Sofía"}
+            />
             </LogoContainer>
             <Notifications>
               {t("homepage.subscribe.notifications")}
@@ -218,19 +221,9 @@ const Subscribe: FC<Props> = () => {
               </CtaWrapper>
             </InputGroup>
             <Text>{t("homepage.subscribe.text")}</Text>
-            {/*    <Image className="lazyload"  data-src="/images/salad.png" alt="newsletter" /> */}
-            
-
-              <Image
-                srcSet={"/images/salad.webp 2x,/images/salad.png 1x"}
-                className="lazyload"
-                data-src="/images/salad.png"
-                alt="newsletter"
-              />
           </MobileContainer>
         </Mobile>
       </>
-    </Suspense>
   );
 };
 

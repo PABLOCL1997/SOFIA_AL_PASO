@@ -84,9 +84,6 @@ const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Slider {...settings}>
-          <LINK onClick={() => history.push("/productos/chiquidays")}>
-            <ImageContainer bg={isMobile ? chiquidaysMob : chiquidays }></ImageContainer>
-          </LINK>
           {category === "mascotas" &&
             <LINK>
               <ImageContainer bg={isMobile ? podiumMob : podium }></ImageContainer>

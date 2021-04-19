@@ -1,18 +1,18 @@
 import React, { FC, Suspense } from "react";
 import styled from "styled-components";
-import { BREAKPOINT } from "../utils/constants";
+import { BREAKPOINT } from "../../utils/constants";
 
 const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+  import(/* webpackChunkName: "Loader" */ "../Loader")
 );
 const Chart = React.lazy(() =>
-  import(/* webpackChunkName: "Chart" */ "./Images/Chart")
+  import(/* webpackChunkName: "Chart" */ "../Images/Chart")
 );
 const Clock = React.lazy(() =>
-  import(/* webpackChunkName: "Clock" */ "./Images/Clock")
+  import(/* webpackChunkName: "Clock" */ "../Images/Clock")
 );
 const User = React.lazy(() =>
-  import(/* webpackChunkName: "User" */ "./Images/User")
+  import(/* webpackChunkName: "User" */ "../Images/User")
 );
 
 const Container = styled.a`
@@ -113,24 +113,14 @@ type Props = {
 
 const RecipeItem: FC<Props> = ({ item, index }) => {
   return (
-    <Suspense fallback={<Loader />}>
       <Container href={item.link} target="_blank">
-        <picture>
-          <source
-            srcSet={`/images/recipes/recipe_${index}.webp 2x`}
-            type="image/webp"
-          />
-          <source
-            srcSet={`/images/recipes/recipe_${index}.jpg 1x`}
-            type="image/jpeg"
-          />
-        
           <Image
             className="lazyload"
-            data-src={`/images/recipes/recipe_${index}.jpg`}
+            width="230"
+            height="150"
+            src={`/images/recipes/recipe_${index}.webp`}
             alt={item.title}
           />
-        </picture>
         <IconBox>
           <Icon>
             <Chart />
@@ -147,7 +137,6 @@ const RecipeItem: FC<Props> = ({ item, index }) => {
         </IconBox>
         <Title>{item.title}</Title>
       </Container>
-    </Suspense>
   );
 };
 
