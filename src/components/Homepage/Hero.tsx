@@ -8,12 +8,6 @@ import { SET_USER } from "../../graphql/user/mutations";
 import { useMutation, useQuery } from "react-apollo";
 import { GET_USER } from "../../graphql/user/queries";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const HeaderLogoWhite = React.lazy(() =>
-  import(/* webpackChunkName: "HeaderLogoWhite" */ "../Images/HeaderLogoWhite")
-);
 const Pin = React.lazy(() =>
   import(/* webpackChunkName: "Pin" */ "../Images/Pin")
 );
@@ -37,13 +31,10 @@ const Container = styled.div`
     width: 140px;
   }
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin-top:15px;
+    margin-top:0px;
     padding: 40px 20px;
     min-height: auto;
-    background-position: 28% center;
-    > div > img {
-      width: 90px;
-    }
+
   }
 
   > div {
@@ -170,6 +161,16 @@ const Image = styled.img`
 
 `
 
+const Loader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  img {
+    max-width: 100%;
+  }
+`
+
 type Props = {};
 
 const Hero: FC<Props> = () => {
@@ -188,7 +189,7 @@ const Hero: FC<Props> = () => {
   };
 
   const addressLabel = () => {
-    if (userData.userInfo.length && userData.userInfo.length) {
+    if (userData.userInfo.length) {
       if (userData.userInfo[0].defaultAddressLabel)
         return `${userData.userInfo[0].defaultAddressLabel.replace(
           / \| /g,
@@ -201,8 +202,9 @@ const Hero: FC<Props> = () => {
   };
 
   return (
-    <Suspense fallback={<Loader />}>
-      <div>
+    <Suspense fallback={<Loader>
+      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+    </Loader>}>   
         <Container>
           <Image
             data-sizes="auto"
@@ -216,9 +218,16 @@ const Hero: FC<Props> = () => {
             /images/e-commerce_1_1_1400.jpg 1400w,
             "
             className="lazyload blur-up"
+            alt="hero"
           />
           <div>
-            <HeaderLogoWhite withSlogan={false} />
+            <img
+              src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+              className="lazyload"
+              width="119px"
+              height="83px"
+              alt="Sofía Logo"
+            />
             <Title>{t("homepage.hero.text")}</Title>
             <SearchBox>
               <CitySelect onClick={() => toggleCityModal()}>
@@ -244,7 +253,6 @@ const Hero: FC<Props> = () => {
             </CtaWrapper>
           </div>
         </Container>
-      </div>
     </Suspense>
   );
 };

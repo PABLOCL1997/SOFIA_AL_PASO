@@ -7,9 +7,6 @@ import { Link } from "react-router-dom";
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
 );
-const HeaderLogoWhite = React.lazy(() =>
-  import(/* webpackChunkName: "HeaderLogoWhite" */ "./Images/HeaderLogoWhite")
-);
 const Phone = React.lazy(() =>
   import(/* webpackChunkName: "Phone" */ "./Images/Phone")
 );
@@ -124,12 +121,17 @@ const Footer: FC<Props> = ({ page }) => {
   const { t } = useTranslation();
 
   return (
-    <Suspense fallback={<Loader />}>
       <Container page={page}>
         <div className="main-container">
           <Col1>
             <Text>{t("footer.text")}</Text>
-            <HeaderLogoWhite />
+            <img
+              src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+              className="lazyload"
+              width="119px"
+              height="80px"
+              alt="Sofía Logo"
+            />
             <Copy className="copy">
               {t("footer.copy", { year: new Date().getFullYear() })}
             </Copy>
@@ -160,7 +162,6 @@ const Footer: FC<Props> = ({ page }) => {
           </Col2>
         </div>
       </Container>
-    </Suspense>
   );
 };
 

@@ -21,11 +21,13 @@ const {
   TERMS_TITLE,
   GET_CATEGORIES,
   GET_CATEGORY_META,
+  GET_PRODUCT_SCHEMA,
   fromLink,
   toLink,
   mapCategories,
   search,
-  rewriteRequest
+  rewriteRequest,
+  returnSchema
 } = require("./src/meta_server");
 
 app.use(compression())
@@ -38,6 +40,8 @@ const loadPage = async (req, res, meta = {}) => {
     meta_description: meta.title || "Tienda Sofia",
     meta_keywords: ""
   }
+
+  let productSchema;
   // add link cano/prev/next if products
   const fullUrl = 'https://' + req.get('host') + req.originalUrl.split("?").shift();
   let relCanon = `<link rel="canonical" href="${fullUrl}" />`
@@ -129,6 +133,16 @@ const loadPage = async (req, res, meta = {}) => {
         const { productMetadata: { meta_title, meta_description } } = response
         metadata = { title: meta_title, meta_description, meta_keywords: "" }
       }
+
+      const p = await client.request(GET_PRODUCT_SCHEMA, {
+        name,
+        city: "SC",
+        related: false,
+        categories: false
+      })
+      if (p.product) {
+        productSchema = p.product
+      }
     } catch (error) {
       console.log(error)
       statusCode = 404
@@ -156,6 +170,7 @@ const loadPage = async (req, res, meta = {}) => {
         .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
         .replace(/__OG_H1__/g, meta && !!meta.prodName ? String(meta.prodName).split(/-/g).join(" ").toUpperCase() : metadata.title)
         .replace(`<link rel="replace">`, meta.rel ? relCanon.concat(relPrev).concat(relNext) : relCanon)
+        .replace(`<script id="replace-schema"></script>`, productSchema && meta.identifier && meta.identifier === PRODUCT ? returnSchema(productSchema, metadata.meta_description) : "" )
     )
   });
 };

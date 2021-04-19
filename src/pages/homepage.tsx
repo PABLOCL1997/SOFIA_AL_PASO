@@ -1,16 +1,11 @@
 import React, { Suspense, FC, useEffect } from "react";
 import styled from "styled-components";
-import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
-import { HOMEPAGE_TITLE } from "../meta";
-import DelayedWrapper from "../components/DelayedWrapper";
-import { useQuery, useMutation } from "react-apollo";
-import { GET_USER } from "../graphql/user/queries";
-import { SET_USER } from "../graphql/user/mutations";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
+const Header = React.lazy(() =>
+  import(/* webpackChunkName: "Header" */ "../components/Header")
 );
+
 const Hero = React.lazy(() =>
   import(/* webpackChunkName: "Hero" */ "../components/Homepage/Hero")
 );
@@ -34,6 +29,21 @@ const Subscribe = React.lazy(() =>
   import(/* webpackChunkName: "Subscribe" */ "../components/Homepage/Subscribe")
 );
 
+const Error = React.lazy(() =>
+  import(/* webpackChunkName: "Error" */ "../components/Error")
+);
+const Success = React.lazy(() =>
+  import(/* webpackChunkName: "Success" */ "../components/Success")
+);
+const Modal = React.lazy(() =>
+  import(/* webpackChunkName: "ModalMessage" */ "../components/ModalMessage")
+);
+
+
+const Footer = React.lazy(() =>
+  import(/* webpackChunkName: "Footer" */ "../components/Footer")
+);
+
 const SectionWrapper = styled.div`
   margin-bottom: 88px;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -41,42 +51,67 @@ const SectionWrapper = styled.div`
   }
 `;
 
+const Loader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  img {
+    max-width: 100%;
+  }
+`
+
 type Props = {};
 const Homepage: FC<Props> = () => {
-  const { t } = useTranslation();
-  const { data: userData } = useQuery(GET_USER, {});
-  const [showSuccess] = useMutation(SET_USER, {
-    variables: { user: { showModal: t("cart.city_warning") } }
-  });
-
-  useEffect(() => {
-    // if (
-    //   userData &&
-    //   userData.userInfo[0] &&
-    //   userData.userInfo[0].cityKey !== "SC"
-    // )
-    //   setTimeout(() => showSuccess(), 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Loader>
+      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+    </Loader>}>
+      <Header checkout={false} page={undefined} />
+
+      {window.innerWidth < parseInt(BREAKPOINT.replace("px", "")) ?
+      ( // mobile
+        <>
         <SectionWrapper>
           <Hero />
         </SectionWrapper>
         <SectionWrapper>
-          <CategorySlider userData={userData} />
+          <CategorySlider />
         </SectionWrapper>
         <SectionWrapper>
           <Benefits />
         </SectionWrapper>
+          <Promotions />
         <SectionWrapper>
-          <Promotions userData={userData} />
+          <Subscribe />
         </SectionWrapper>
+        </>
+      )
+      : 
+      ( // desktop
+        <>
+        <SectionWrapper>
+          <Hero />
+        </SectionWrapper>
+        <SectionWrapper>
+          <CategorySlider />
+        </SectionWrapper>
+        <SectionWrapper>
+          <Benefits />
+        </SectionWrapper>
+          <Promotions />
         <SectionWrapper>
           <Subscribe />
         </SectionWrapper>
         <Recipes />
+        </>
+      )
+
+      }
+      <Error />
+      <Success />
+      <Modal />
+      <Footer page={"footer"} />
     </Suspense>
   );
 };

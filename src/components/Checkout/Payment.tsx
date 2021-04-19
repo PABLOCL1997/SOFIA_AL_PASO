@@ -71,11 +71,11 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
     {
       title: t("checkout.payment.checkmo"),
       value: "checkmo"
-    } /*,
-        {
-            title: t('checkout.payment.todotix'),
-            value: 'todotix'
-        }*/
+    },
+    // {
+    //   title: t('checkout.payment.todotix'),
+    //   value: 'todotix'
+    // }
   ]
 
   const [option, setOption] = useState('cashondelivery');

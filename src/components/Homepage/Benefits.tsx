@@ -1,22 +1,14 @@
-import React, { FC, Suspense } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const DeliveryBag = React.lazy(() =>
-  import(/* webpackChunkName: "DeliveryBag" */ "../Images/DeliveryBag")
-);
-const FreeShipping = React.lazy(() =>
-  import(/* webpackChunkName: "FreeShipping" */ "../Images/FreeShipping")
-);
-const Wallet = React.lazy(() =>
-  import(/* webpackChunkName: "Wallet" */ "../Images/Wallet")
-);
-
-const Container = styled.div``;
+const Container = styled.section`
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 20px;
+`;
 
 const Title = styled.div`
   font-family: MullerMedium;
@@ -110,35 +102,63 @@ const Benefits: FC<Props> = () => {
   const { t } = useTranslation();
 
   return (
-      <div className="main-container">
-        <Container>
-          <Title>{t("homepage.benefits.title")}</Title>
-          <Text>{t("homepage.benefits.text")}</Text>
-          <Grid>
-            <Box>
-              <DeliveryBag />
-              <div>
-                <GridTitle>{t("homepage.benefits.delivery.title")}</GridTitle>
-                <GridText>{t("homepage.benefits.delivery.text")}</GridText>
-              </div>
-            </Box>
-            <Box>
-              <Wallet />
-              <div>
-                <GridTitle>{t("homepage.benefits.payment.title")}</GridTitle>
-                <GridText>{t("homepage.benefits.payment.text")}</GridText>
-              </div>
-            </Box>
-            <Box>
-              <FreeShipping  />
-              <div>
-                <GridTitle>{t("homepage.benefits.order.title")}</GridTitle>
-                <GridText>{t("homepage.benefits.order.text")}</GridText>
-              </div>
-            </Box>
-          </Grid>
-        </Container>
-      </div>
+    <Container>
+      <Title>{t("homepage.benefits.title")}</Title>
+      <Text>{t("homepage.benefits.text")}</Text>
+      <Grid>
+        <Box>
+          <picture>
+            <source srcSet={"/images/delivery.webp 2x"} type="image/webp" />
+            <source srcSet={"/images/delivery.png 1x"} type="image/jpeg" />
+            <img
+              width="40px"
+              height="40px"
+              className="lazyload benefit-icon"
+              data-src="/images/delivery.png"
+              alt="benefit"
+            />
+          </picture>
+          <div>
+            <GridTitle>{t("homepage.benefits.delivery.title")}</GridTitle>
+            <GridText>{t("homepage.benefits.delivery.text")}</GridText>
+          </div>
+        </Box>
+        <Box>
+          <picture>
+            <source srcSet={"/images/wallet.webp 2x"} type="image/webp" />
+            <source srcSet={"/images/wallet.png 1x"} type="image/jpeg" />
+            <img
+              width="40px"
+              height="40px"
+              className="lazyload benefit-icon"
+              data-src="/images/wallet.png"
+              alt="wallet"
+            />
+          </picture>
+          <div>
+            <GridTitle>{t("homepage.benefits.payment.title")}</GridTitle>
+            <GridText>{t("homepage.benefits.payment.text")}</GridText>
+          </div>
+        </Box>
+        <Box>
+          <picture>
+            <source srcSet={"/images/bag.webp 2x"} type="image/webp" />
+            <source srcSet={"/images/bag.png 1x"} type="image/jpeg" />
+            <img
+              width="40px"
+              height="40px"
+              className="lazyload benefit-icon"
+              data-src="/images/bag.png"
+              alt="benefit"
+            />
+          </picture>
+          <div>
+            <GridTitle>{t("homepage.benefits.order.title")}</GridTitle>
+            <GridText>{t("homepage.benefits.order.text")}</GridText>
+          </div>
+        </Box>
+      </Grid>
+    </Container>
   );
 };
 

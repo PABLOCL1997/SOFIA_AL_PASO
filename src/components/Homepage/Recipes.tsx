@@ -1,7 +1,7 @@
 import React, { FC, Suspense } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { RecipeType } from "../RecipeItem";
+import { RecipeType } from "./RecipeItem";
 import { Desktop, Mobile } from "../ResponsiveContainers";
 import { BREAKPOINT } from "../../utils/constants";
 
@@ -10,7 +10,7 @@ const Loader = React.lazy(() =>
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 const RecipeItem = React.lazy(() =>
-  import(/* webpackChunkName: "RecipeItem" */ "../RecipeItem")
+  import(/* webpackChunkName: "RecipeItem" */ "./RecipeItem")
 );
 const Slider = React.lazy(() =>
   import(/* webpackChunkName: "Slider" */ "react-slick")

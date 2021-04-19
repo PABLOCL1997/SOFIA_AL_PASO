@@ -1,4 +1,31 @@
 module.exports = {
+  returnSchema: (product, description) => {
+    const { name, sku, image, price, special_price} = product
+    
+    return `
+      <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "brand": {
+          "@type": "Thing",
+          "name": "Tienda Sofia"
+        },
+        "name": "${name}",
+        "image": "${image.split(",")[0]}",
+        "description": "${description}",
+        "productId": "SKU:${sku}",
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency" : "BOB",
+          "lowPrice": "${special_price}",
+          "highPrice": "${special_price < price ? price : ""}",    
+          "itemCondition": "New"
+        }
+      }
+      </script>    
+    `
+  },
   rewriteRequest: (req, newUrl) => {
     req.originalUrl = newUrl
     req.path = newUrl
@@ -63,6 +90,29 @@ module.exports = {
       meta_description
     }
   }
+  `,
+  GET_PRODUCT_SCHEMA: `
+  query Product(
+    $name: String!
+    $city: String!
+    $categories: Boolean
+    $related: Boolean
+  ) {
+    product(
+      name: $name
+      city: $city
+      categories: $categories
+      related: $related
+    ) {
+      entity_id
+      name
+      sku
+      image
+      price
+      fullprice
+      special_price
+    }
+  }  
   `,
   GET_CATEGORIES:`
   query Categories ($city: String!) {

@@ -1,16 +1,19 @@
 import React, { Suspense } from "react";
+import styled from "styled-components";
+
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Redirect
+  Route
 } from "react-router-dom";
-import "./App.css";
-import "./Reset.css";
-import DelayedWrapper from "./components/DelayedWrapper";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const LayoutGeneral = React.lazy(() =>
   import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general")
+);
+const LayoutHomepage = React.lazy(() =>
+  import(/* webpackChunkName: "LayoutHomepage" */ "./layout/homepage")
 );
 const Homepage = React.lazy(() =>
   import(/* webpackChunkName: "Homepage" */ "./pages/homepage")
@@ -38,142 +41,151 @@ const Page404 = React.lazy(() =>
   import(/* webpackChunkName: "Page404" */ "./components/Page404")
 );
 
+const Loader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  img {
+    max-width: 100%;
+  }
+`;
+
+
 const App = () => {
   return (
-    <Suspense fallback={<div />}>
-      <DelayedWrapper time={2000}>
-        <Router>
-          <Switch>
-            <Route
-              exact
-              path="/404"
-              children={
-                <LayoutGeneral>
-                  <Page404 />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              exact
-              path="/"
-              children={
-                <LayoutGeneral>
-                  <Homepage />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/password-reset/:token"
-              children={
-                <LayoutGeneral>
-                  <Homepage />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/preguntas-frecuentes"
-              children={
-                <LayoutGeneral>
-                  <Faq />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/terminos-y-condiciones"
-              children={
-                <LayoutGeneral>
-                  <Terms />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/mi-cuenta"
-              children={
-                <LayoutGeneral>
-                  <MyAccount />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/mi-cuenta/ordenes"
-              children={
-                <LayoutGeneral>
-                  <MyAccount />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              exact
-              path="/productos"
-              children={
-                <LayoutGeneral>
-                  <Products />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/checkout"
-              children={
-                <LayoutGeneral>
-                  <Checkout />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              exact
-              path="/productos/:category"
-              children={
-                <LayoutGeneral>
-                  <Products />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              exact
-              path="/productos/:category/:subcategory"
-              children={
-                <LayoutGeneral>
-                  <Products />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              exact
-              path="/productos/:category/:subcategory/:lastlevel"
-              children={
-                <LayoutGeneral>
-                  <Products />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              
-              path="/:prodname"
-              children={
-                <LayoutGeneral page="productpage">
-                  <Product />
-                </LayoutGeneral>
-              }
-            />
-            <Route
-              children={
-                <LayoutGeneral>
-                  <Page404 />
-                </LayoutGeneral>
-              }
-            />
-
-         
-          </Switch>
-        </Router>
-      </DelayedWrapper>
-    </Suspense>
+  <Suspense fallback={<Loader>
+    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+ </Loader>}>
+    <Router>
+      <Switch>
+        <Route
+          exact
+          path="/404"
+          children={
+            <LayoutGeneral>
+              <Page404 />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          exact
+          path="/"
+          children={
+            <LayoutHomepage>
+              <Homepage />
+            </LayoutHomepage>
+          }
+        />
+        <Route
+          
+          path="/password-reset/:token"
+          children={
+            <LayoutGeneral>
+              <Homepage />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          
+          path="/preguntas-frecuentes"
+          children={
+            <LayoutGeneral>
+              <Faq />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          
+          path="/terminos-y-condiciones"
+          children={
+            <LayoutGeneral>
+              <Terms />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          
+          path="/mi-cuenta"
+          children={
+            <LayoutGeneral>
+              <MyAccount />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          
+          path="/mi-cuenta/ordenes"
+          children={
+            <LayoutGeneral>
+              <MyAccount />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          exact
+          path="/productos"
+          children={
+            <LayoutGeneral>
+              <Products />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          
+          path="/checkout"
+          children={
+            <LayoutGeneral>
+              <Checkout />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          exact
+          path="/productos/:category"
+          children={
+            <LayoutGeneral>
+              <Products />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          exact
+          path="/productos/:category/:subcategory"
+          children={
+            <LayoutGeneral>
+              <Products />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          exact
+          path="/productos/:category/:subcategory/:lastlevel"
+          children={
+            <LayoutGeneral>
+              <Products />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          
+          path="/:prodname"
+          children={
+            <LayoutGeneral page="productpage">
+              <Product />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          children={
+            <LayoutGeneral>
+              <Page404 />
+            </LayoutGeneral>
+          }
+        />        
+      </Switch>
+    </Router>
+  </Suspense>
   );
 };
 
