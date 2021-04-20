@@ -1,26 +1,29 @@
 module.exports = {
   returnSchema: (product, description) => {
-    const { name, sku, image, price, special_price} = product
-    
+    const { name, sku, image, price, stock} = product
+    const availability = stock > 0 ? "InStock" : "OutOfStock"
+    const [firstImage, secondaryImage] = image.split(',')
     return `
       <script type="application/ld+json">
       {
         "@context": "http://schema.org/",
         "@type": "Product",
+        "name": "${name}",
+        "image": ["${firstImage}", "${secondaryImage ? secondaryImage : firstImage}"],
+        "description": "${description}",
+        "sku": "${sku}",
+        "mpn": false,
         "brand": {
-          "@type": "Thing",
+          "@type": "Brand",
           "name": "Tienda Sofia"
         },
-        "name": "${name}",
-        "image": "${image.split(",")[0]}",
-        "description": "${description}",
-        "productId": "SKU:${sku}",
         "offers": {
-          "@type": "AggregateOffer",
+          "@type": "Offer",
+          "url": "https://tienda.sofia.com.bo/${name.toLowerCase().replace(/ /g, "-")}",
           "priceCurrency" : "BOB",
-          "lowPrice": "${special_price}",
-          "highPrice": "${special_price < price ? price : ""}",    
-          "itemCondition": "New"
+          "price": "${price}",
+          "itemCondition": "New",
+          "availability": "${availability}"
         }
       }
       </script>    
@@ -111,6 +114,7 @@ module.exports = {
       price
       fullprice
       special_price
+      stock
     }
   }  
   `,
