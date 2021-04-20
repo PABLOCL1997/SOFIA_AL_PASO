@@ -206,20 +206,19 @@ const Hero: FC<Props> = () => {
       <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
     </Loader>}>   
         <Container>
+      {window.innerWidth < parseInt(BREAKPOINT.replace("px", "")) ?
+      (//mobile
+        <Image
+        src="/images/375x500-ecommerce.webp"
+        alt="hero"
+      />
+      ): (//desktop
           <Image
-            data-sizes="auto"
-            src="/images/e-commerce_1_1_lq.jpg"
-            data-srcset="
-            /images/e-commerce_1_1_lq.jpg 220w,
-            /images/e-commerce_1_1_500.jpg 500w,
-            /images/e-commerce_1_1_700.jpg 700w,
-            /images/e-commerce_1_1_900.jpg 900w,
-            /images/e-commerce_1_1_1200.jpg 1200w,
-            /images/e-commerce_1_1_1400.jpg 1400w,
-            "
+            src="/images/portada-e-commerce-final.webp"
             className="lazyload blur-up"
             alt="hero"
           />
+      )}
           <div>
             <img
               src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
