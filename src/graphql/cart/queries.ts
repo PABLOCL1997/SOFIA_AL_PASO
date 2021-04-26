@@ -54,3 +54,9 @@ query ComparePrices($prodQty: [ProductQty], $city: String!, $id_price_list:Strin
   comparePrices(prodQty:$prodQty,city:$city,id_price_list:$id_price_list)
 }
 `
+
+export const ORDER_MINIMUM_PRICE = gql`
+query minimumPrice($city: String!, $store: String){
+  minimum_price(city:$city, store: $store)
+}
+`

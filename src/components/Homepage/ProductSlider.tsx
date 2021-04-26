@@ -119,7 +119,7 @@ const ProductSlider: FC<Props> = ({ products, useArrows }) => {
         <SliderContainer>
           <Slider {...settings}>
             {products.map((product: ProductType) => 
-              <ItemBox key={product.entity_id} openModal={() => {}} dropDownQty={6} product={product} />
+              <ItemBox key={product.entity_id} openModal={() => {}} dropDownQty={6} product={product} webp={true} />
             )}
           </Slider>
         </SliderContainer>

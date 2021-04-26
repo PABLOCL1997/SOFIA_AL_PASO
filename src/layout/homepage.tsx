@@ -10,11 +10,8 @@ import "lazysizes/plugins/object-fit/ls.object-fit.js";
 import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
 
 
-
-
-
-
 const Wrapper = styled.div`
+  min-height: 100vh;
   margin: 0;
   padding: 74px 0 0;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -23,10 +20,6 @@ const Wrapper = styled.div`
       padding-top: 72px !important;
     }
   }
-`;
-
-const Content = styled.div`
-  min-height: 100vh;
 `;
 
 const Loader = styled.div`
@@ -48,9 +41,7 @@ const LayoutHomepage: FC<Props> = ({ children, page }) => {
   <Suspense fallback={<Loader>
     <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
   </Loader>}>
-    <Wrapper className={page ? page : ""}>
-    <Content>{children}</Content>
-    </Wrapper>
+    <Wrapper className={page ? page : ""}>{children}</Wrapper>
   </Suspense>
 
   )

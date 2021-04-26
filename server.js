@@ -114,7 +114,7 @@ const loadPage = async (req, res, meta = {}) => {
         }
       }
     }catch (err) {
-      console.log('err', err)
+      // console.log('err', err)
     }
   }
 
@@ -144,7 +144,7 @@ const loadPage = async (req, res, meta = {}) => {
         productSchema = p.product
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       statusCode = 404
     }
   }
@@ -159,7 +159,7 @@ const loadPage = async (req, res, meta = {}) => {
         metadata = {title: res.metadata.title, meta_description: res.metadata.meta_description, meta_keywords: ""}
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   }
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
@@ -180,7 +180,7 @@ app.get("/", (req, res) => loadPage(req, res, { title: HOMEPAGE_TITLE, identifie
 app.use(express.static(__dirname + "/build", {
   setHeaders: (res, path) => {
     const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
-
+    
     if (path.endsWith('.html')) {
       // All of the project's HTML files end in .html
       res.setHeader('Cache-Control', 'no-cache');

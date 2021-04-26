@@ -16,6 +16,10 @@ const Container = styled.section`
   padding: 45px 95px;
   border-radius: 15px;
   box-shadow: 25px 19px 0px #fecd00;
+  margin-bottom: 88px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-bottom: 30px;
+  }
   @media screen and (min-width: ${BREAKPOINT}) and (max-width: 1300px) {
     // background: none;
   }
@@ -162,7 +166,7 @@ const Subscribe: FC<Props> = () => {
   };
 
   return (
-      <>
+      <Suspense fallback={<span></span>}>
         <Desktop>
           <Container>
             <LogoContainer>
@@ -223,7 +227,7 @@ const Subscribe: FC<Props> = () => {
             <Text>{t("homepage.subscribe.text")}</Text>
           </MobileContainer>
         </Mobile>
-      </>
+      </Suspense>
   );
 };
 

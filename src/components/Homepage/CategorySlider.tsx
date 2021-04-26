@@ -21,6 +21,12 @@ const Chevron = React.lazy(() =>
   import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
 );
 
+const SectionWrapper = styled.div`
+  margin-bottom: 88px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-bottom: 30px;
+  }
+`; 
 const CategoryList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -215,7 +221,7 @@ const CategorySlider: FC<Props> = () => {
   }
 
   return (
-      <div className="main-container">
+    <SectionWrapper>
         <CategoryList>
           <Category onClick={() => setSelected(0)} selected={selected === 0}>
             {t("homepage.categoryslider.all")}
@@ -235,7 +241,10 @@ const CategorySlider: FC<Props> = () => {
         <CategoryMobile>
           <Category onClick={() => setOpen(true)} selected={true}>
             <span>{categoryName}</span>
-            <Chevron />
+            {/* chevron */}
+            <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Category>
           {open && (
             <CategoryMobileList>
@@ -276,7 +285,7 @@ const CategorySlider: FC<Props> = () => {
           />
           </Link>
         </CtaWrapper>
-      </div>
+    </SectionWrapper>
   );
 };
 

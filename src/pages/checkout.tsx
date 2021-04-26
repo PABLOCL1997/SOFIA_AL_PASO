@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
+import useMinimumPrice from "../hooks/useMinimumPrice";
+
 import { SET_USER } from "../graphql/user/mutations";
 import { BREAKPOINT } from "../utils/constants";
 import {
@@ -15,7 +17,6 @@ import {
   GET_CART_ITEMS,
   TODOTIX,
   GET_TOTAL,
-  GET_MIN_PRICE
 } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
@@ -149,6 +150,8 @@ const Checkout: FC<Props> = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
+  const minimumPrice = useMinimumPrice()
+
   const [processing, setProcessing] = useState(false);
   const [userData, setUserData] = useState({});
   const [order, setOrder] = useState<OrderData>();
@@ -235,7 +238,7 @@ const Checkout: FC<Props> = () => {
     } else {
       if (data && !data.cartItems.length) history.push("/");
       else if (
-        parseFloat(totalAmount.replace(",", ".")) < GET_MIN_PRICE(localUserData)
+        parseFloat(totalAmount.replace(",", ".")) < minimumPrice
       )
         history.push("/");
       else {
