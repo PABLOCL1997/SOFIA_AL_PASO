@@ -2,13 +2,11 @@ import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { ProductType } from "../graphql/products/type";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { toLink } from "../utils/string";
 import { ADD_ITEM } from "../graphql/cart/mutations";
 import { trackAddToCart } from "../utils/dataLayer";
 import { BREAKPOINT, customStyles } from "../utils/constants";
-import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_CART_ITEMS } from "../graphql/cart/queries";
 
@@ -21,9 +19,6 @@ import {
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "./Loader")
-);
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "./Images/Chevron")
 );
 
 const Container = styled.div`
@@ -421,7 +416,10 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
                     </option>
                   ))}
               </select>
-              <Chevron />
+              {/* Chevron */}
+              <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Qty>
             <Add onClick={addAndGo}>{t("itembox.add")}</Add>
           </Pill>

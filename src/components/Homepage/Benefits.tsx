@@ -8,6 +8,10 @@ const Container = styled.section`
   max-width: 1440px;
   margin: 0 auto;
   padding: 0 20px;
+  margin-bottom: 88px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-bottom: 30px;
+  }
 `;
 
 const Title = styled.div`
@@ -107,51 +111,39 @@ const Benefits: FC<Props> = () => {
       <Text>{t("homepage.benefits.text")}</Text>
       <Grid>
         <Box>
-          <picture>
-            <source srcSet={"/images/delivery.webp 2x"} type="image/webp" />
-            <source srcSet={"/images/delivery.png 1x"} type="image/jpeg" />
             <img
               width="40px"
               height="40px"
               className="lazyload benefit-icon"
-              data-src="/images/delivery.png"
+              data-src="/images/delivery.webp"
               alt="benefit"
             />
-          </picture>
           <div>
             <GridTitle>{t("homepage.benefits.delivery.title")}</GridTitle>
             <GridText>{t("homepage.benefits.delivery.text")}</GridText>
           </div>
         </Box>
         <Box>
-          <picture>
-            <source srcSet={"/images/wallet.webp 2x"} type="image/webp" />
-            <source srcSet={"/images/wallet.png 1x"} type="image/jpeg" />
             <img
               width="40px"
               height="40px"
               className="lazyload benefit-icon"
-              data-src="/images/wallet.png"
+              data-src="/images/wallet.webp"
               alt="wallet"
             />
-          </picture>
           <div>
             <GridTitle>{t("homepage.benefits.payment.title")}</GridTitle>
             <GridText>{t("homepage.benefits.payment.text")}</GridText>
           </div>
         </Box>
         <Box>
-          <picture>
-            <source srcSet={"/images/bag.webp 2x"} type="image/webp" />
-            <source srcSet={"/images/bag.png 1x"} type="image/jpeg" />
             <img
               width="40px"
               height="40px"
               className="lazyload benefit-icon"
-              data-src="/images/bag.png"
+              data-src="/images/bag.webp"
               alt="benefit"
             />
-          </picture>
           <div>
             <GridTitle>{t("homepage.benefits.order.title")}</GridTitle>
             <GridText>{t("homepage.benefits.order.text")}</GridText>

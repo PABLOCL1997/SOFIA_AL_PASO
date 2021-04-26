@@ -2,7 +2,7 @@ import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { BREAKPOINT, XL } from "../../utils/constants";
 import Slider from "react-slick";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   Wrapper,
   ImageContainer,
@@ -11,14 +11,11 @@ import {
 import podiumMob from '../../assets/images/2-POST-BANNER-II-320X80_MARZO_PODIUM.png'
 import podium from '../../assets/images/2-POST-BANNER-II-1124X100_MARZO_PODIUM.png'
 
-import nuggetsMob from '../../assets/images/banner-320x80.png'
-import nuggets from '../../assets/images/banner-1124x100.png'
-
 import kostlichMob from '../../assets/images/Kostlich-320x80.png'
 import kostlich from '../../assets/images/Kostlich-1124x100.png'
 
-import chiquidaysMob from '../../assets/images/Chiqui-days-320x80.jpg'
-import chiquidays from '../../assets/images/Chiqui-days-1124x100.jpg'
+import workWeekMob from '../../assets/images/work-week-380x80.jpg'
+import workWeek from '../../assets/images/work-week-1124x100.jpg'
 
 
 
@@ -84,6 +81,11 @@ const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Slider {...settings}>
+          <LINK>
+          <Link to="/productos/work-week">
+            <ImageContainer bg={isMobile ? workWeekMob : workWeek } />
+          </Link>
+          </LINK>
           {category === "mascotas" &&
             <LINK>
               <ImageContainer bg={isMobile ? podiumMob : podium }></ImageContainer>

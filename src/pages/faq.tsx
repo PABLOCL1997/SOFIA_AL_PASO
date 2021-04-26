@@ -4,9 +4,7 @@ import { BREAKPOINT } from "../utils/constants";
 import { FAQ_TITLE } from "../meta";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "react-apollo";
-import { GET_USER } from "../graphql/user/queries";
-import { GET_MIN_PRICE } from "../graphql/cart/queries";
+import useMinimumPrice from "../hooks/useMinimumPrice";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -114,16 +112,14 @@ type Question = {
 type Props = {};
 const Faq: FC<Props> = () => {
   const { t } = useTranslation();
+  const minimumPrice = useMinimumPrice()
 
   const [question, setQuestion] = useState(0);
-  const { data: userData } = useQuery(GET_USER, {});
 
   const questions: Array<Question> = [
     {
       title: `¿Hay un costo mínimo para realizar una compra online?`,
-      text: `Existe hasta el momento un monto mínimo de Bs ${GET_MIN_PRICE(
-        userData
-      )}.-`
+      text: `Existe hasta el momento un monto mínimo de Bs ${minimumPrice}.-`
     },
     {
       title: `¿Cuánto demora la entrega de los pedidos?`,

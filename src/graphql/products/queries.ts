@@ -109,8 +109,9 @@ query productsB2B(
   $search: String
   $order: String
   $onsale: Boolean
+  $brand: String
   ) {
-    productsB2B(skus: $skus, limit:$limit, offset:$offset, id_price_list:$id_price_list, city:$city, category_id: $category_id, search: $search, order: $order, onsale:$onsale) {
+    productsB2B(skus: $skus, limit:$limit, offset:$offset, id_price_list:$id_price_list, city:$city, category_id: $category_id, search: $search, order: $order, onsale:$onsale, brand: $brand) {
       rows {
         entity_id
         name

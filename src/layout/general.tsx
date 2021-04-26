@@ -11,6 +11,7 @@ import "lazysizes/plugins/unveilhooks/ls.unveilhooks";
 import "lazysizes/plugins/blur-up/ls.blur-up.js";
 import "lazysizes/plugins/object-fit/ls.object-fit.js";
 import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
+import GTM from "../components/Shared/GTM";
 
 
 const Loader = React.lazy(() =>
@@ -26,7 +27,7 @@ const Modal = React.lazy(() =>
   import(/* webpackChunkName: "ModalMessage" */ "../components/ModalMessage")
 );
 const Header = React.lazy(() =>
-  import(/* webpackChunkName: "Header" */ "../components/Header")
+  import(/* webpackChunkName: "Header" */ "../components/Header/Header")
 );
 const Footer = React.lazy(() =>
   import(/* webpackChunkName: "Footer" */ "../components/Footer")
@@ -104,6 +105,7 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
 
   return (
     <Suspense fallback={<Loader />}>
+      <GTM />
       <Wrapper className={page ? page : ""}>
         <Header checkout={checkout} page={page} />
         <Content>{children}</Content>

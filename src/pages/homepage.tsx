@@ -1,9 +1,9 @@
-import React, { Suspense, FC, useEffect } from "react";
+import React, { Suspense } from "react";
 import styled from "styled-components";
-import { BREAKPOINT } from "../utils/constants";
+import GTM from "../components/Shared/GTM";
 
 const Header = React.lazy(() =>
-  import(/* webpackChunkName: "Header" */ "../components/Header")
+  import(/* webpackChunkName: "Header" */ "../components/Header/Header")
 );
 
 const Hero = React.lazy(() =>
@@ -22,9 +22,7 @@ const Promotions = React.lazy(() =>
     /* webpackChunkName: "Promotions" */ "../components/Homepage/Promotions"
   )
 );
-const Recipes = React.lazy(() =>
-  import(/* webpackChunkName: "Recipes" */ "../components/Homepage/Recipes")
-);
+
 const Subscribe = React.lazy(() =>
   import(/* webpackChunkName: "Subscribe" */ "../components/Homepage/Subscribe")
 );
@@ -44,13 +42,6 @@ const Footer = React.lazy(() =>
   import(/* webpackChunkName: "Footer" */ "../components/Footer")
 );
 
-const SectionWrapper = styled.div`
-  margin-bottom: 88px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-bottom: 30px;
-  }
-`;
-
 const Loader = styled.div`
   display: flex;
   align-items: center;
@@ -61,58 +52,24 @@ const Loader = styled.div`
   }
 `
 
-type Props = {};
-const Homepage: FC<Props> = () => {
+const Homepage = () => {
   return (
-    <Suspense fallback={<Loader>
+  <>
+    {/* <Suspense fallback={<Loader>
       <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-    </Loader>}>
+    </Loader>}> */}
       <Header checkout={false} page={undefined} />
-
-      {window.innerWidth < parseInt(BREAKPOINT.replace("px", "")) ?
-      ( // mobile
-        <>
-        <SectionWrapper>
-          <Hero />
-        </SectionWrapper>
-        <SectionWrapper>
-          <CategorySlider />
-        </SectionWrapper>
-        <SectionWrapper>
-          <Benefits />
-        </SectionWrapper>
-          <Promotions />
-        <SectionWrapper>
-          <Subscribe />
-        </SectionWrapper>
-        </>
-      )
-      : 
-      ( // desktop
-        <>
-        <SectionWrapper>
-          <Hero />
-        </SectionWrapper>
-        <SectionWrapper>
-          <CategorySlider />
-        </SectionWrapper>
-        <SectionWrapper>
-          <Benefits />
-        </SectionWrapper>
-          <Promotions />
-        <SectionWrapper>
-          <Subscribe />
-        </SectionWrapper>
-        <Recipes />
-        </>
-      )
-
-      }
+      <Hero />
+      <GTM />
+      <CategorySlider />
+      <Benefits />
+      <Promotions />
+      <Subscribe />
       <Error />
       <Success />
       <Modal />
       <Footer page={"footer"} />
-    </Suspense>
+    </>
   );
 };
 

@@ -32,7 +32,6 @@ import {
 import Cta from "../Cta";
 import { useTranslation } from "react-i18next";
 import axios from "axios"
-import Close from "../Images/Close";
 import QuestionIcon from "../../assets/images/question.svg";
 import SucessImage from "../../assets/images/sucess-icon.svg";
 import CatalogIcon from "../../assets/images/Catalogue.svg";
@@ -256,7 +255,11 @@ const LoginModal: FC<Props> = ({ loginB2bOpen, setLoginB2bOpen, inputs }) => {
                 setKnowCode(true);
               }}
             >
-              <Close />
+              {/* close */}
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+              </svg>
             </CloseWrapper>
 
             {steps === 1 && knowCode && (

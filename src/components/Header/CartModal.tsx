@@ -2,6 +2,8 @@ import React, { FC, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery } from "react-apollo";
+import useMinimumPrice from "../../hooks/useMinimumPrice";
+
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import { trackAddToCart, trackRemoveFromCart } from "../../utils/dataLayer";
@@ -10,7 +12,6 @@ import {
   GET_TOTAL,
   GET_QTY,
   CHECK_CART,
-  GET_MIN_PRICE
 } from "../../graphql/cart/queries";
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../../graphql/products/type";
@@ -25,15 +26,7 @@ const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "../Images/Close")
-);
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
-);
-const Delete = React.lazy(() =>
-  import(/* webpackChunkName: "Delete" */ "../Images/Delete")
-);
+
 
 const ModalCourtain = styled.div`
   position: fixed;
@@ -237,6 +230,8 @@ const AuthModal: FC<Props> = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const { data } = useQuery(GET_CART_ITEMS);
+  const minimumPrice = useMinimumPrice()
+
   const [action, setAction] = useState<Action>({});
   const { data: userData } = useQuery(GET_USER, {});
   const [closeCartModal] = useMutation(SET_USER, {
@@ -522,13 +517,17 @@ const AuthModal: FC<Props> = () => {
               <span>{t("cart.items")}</span>
             </Count>
             <CloseWrapper onClick={() => closeCartModal()}>
-              <Close />
+              {/* close */}
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+              </svg>
             </CloseWrapper>
           </Header>
           {parseFloat(totalAmount.replace(",", ".")) <
-            GET_MIN_PRICE(userData) && (
+            minimumPrice && (
             <UnderBudget>
-              {t("cart.under_budget", { min_price: GET_MIN_PRICE(userData) })}
+              {t("cart.under_budget", { min_price: minimumPrice })}
             </UnderBudget>
           )}
 
@@ -567,7 +566,7 @@ const AuthModal: FC<Props> = () => {
             <Toolbox>
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
               {parseFloat(totalAmount.replace(",", ".")) >=
-                GET_MIN_PRICE(userData) && (
+                minimumPrice && (
                 <CtaWrapper>
                   <Cta filled={true} text={t("cart.pay")} action={checkout} />
                 </CtaWrapper>
