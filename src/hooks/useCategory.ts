@@ -20,7 +20,7 @@ const useCategory = () => {
     const _lastlevel = categoryName ? categoryName.split('/').length >= 5 ?categoryName.split('/')[4] : "" : ""
 
     const { data: userData } = useQuery(GET_USER, {});
-    const { data } = useQuery(GET_CATEGORIES, {
+    const { data, loading } = useQuery(GET_CATEGORIES, {
         variables: {
           city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
         },
@@ -28,7 +28,7 @@ const useCategory = () => {
             setCategories(d.categories)
         }
     });
-    const [categories, setCategories] = useState([])
+    const [categories, setCategories] = useState<CategoryType[]>([])
     const [category_id, setCategoryId] = useState(0);
 
     useEffect(() => {
@@ -73,7 +73,7 @@ const useCategory = () => {
         }
     }, [categories, category, _category, subcategory, _subcategory, lastlevel, _lastlevel, data])
 
-    return { categories, category_id, category, subcategory, lastlevel }
+    return { categories, category_id, category, subcategory, lastlevel, loading, setCategoryId }
 
 }
 

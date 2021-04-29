@@ -43,10 +43,10 @@ const Footer = React.lazy(() =>
 );
 
 const Loader = styled.div`
+  margin-top: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   img {
     max-width: 100%;
   }
@@ -55,20 +55,21 @@ const Loader = styled.div`
 const Homepage = () => {
   return (
   <>
-    {/* <Suspense fallback={<Loader>
-      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-    </Loader>}> */}
       <Header checkout={false} page={undefined} />
       <Hero />
-      <GTM />
+    <Suspense fallback={<Loader>
+      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+    </Loader>}>
       <CategorySlider />
       <Benefits />
       <Promotions />
       <Subscribe />
+      <GTM />
       <Error />
       <Success />
       <Modal />
       <Footer page={"footer"} />
+    </Suspense>
     </>
   );
 };

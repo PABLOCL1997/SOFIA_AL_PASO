@@ -14,7 +14,7 @@ const Slider = React.lazy(() =>
 //   import(/* webpackChunkName: "RelatedItem" */ "../RelatedItem")
 // );
 const ItemBox = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBox" */ "../ItemBox")
+  import(/* webpackChunkName: "ItemBox" */ "./ItemBox")
 );
 
 const Container = styled.div`
@@ -117,7 +117,6 @@ const RelatedProducts: FC<Props> = ({ products, openModal }) => {
             {products.map((product: ProductType) => (
               <div key={product.entity_id}>
                 <ItemBox openModal={openModal} product={product} />
-                {/* <RelatedItem openModal={openModal} product={product} /> */}
               </div>
             ))}
           </Slider>

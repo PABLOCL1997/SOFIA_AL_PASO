@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useQuery, useMutation, useLazyQuery } from "react-apollo"
+import { useLazyQuery } from "react-apollo"
 import { ORDER_MINIMUM_PRICE } from '../graphql/cart/queries'
-import { GET_USER } from '../graphql/user/queries'
+import useCityPriceList from './useCityPriceList'
 
 const useMinimumPrice = () => {
-  const { data: userData } = useQuery(GET_USER, {})
+  const { city, idPriceList } = useCityPriceList()
   const [getMinimumPrice] = useLazyQuery(ORDER_MINIMUM_PRICE, {
     fetchPolicy: 'network-only',
     onCompleted: d => {
@@ -13,9 +13,7 @@ const useMinimumPrice = () => {
       }
     }
   })
-  const [city, setCity] = useState<string>("SC")
   const [store, setStore] = useState<string>("b2c")
-  const [idPriceList, setIdPriceList] = useState<number>(0)
   const [minimumPrice, setMinimumPrice] = useState(200)
 
   useEffect(() => {
@@ -25,29 +23,15 @@ const useMinimumPrice = () => {
         store
       }
     })
-
   }, [city, store])
 
   useEffect(() => {
-    // update price list
-    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
-      if (userData.userInfo[0].idPriceList !== idPriceList) {
-        setIdPriceList(userData.userInfo[0].idPriceList)
-        // if it changes, if new value is b2e or not
-        if(userData.userInfo[0].idPriceList > 0) {
-          setStore("b2e")
-        } else {
-          setStore("b2c")
-        }
-      }
+    if(idPriceList > 0) {
+      setStore("b2e")
+    } else {
+      setStore("b2c")
     }
-    // update city
-    if(userData.userInfo.length && userData.userInfo[0].cityKey) {
-      if (userData.userInfo[0].cityKey !== city) {
-        setCity(userData.userInfo[0].cityKey)
-      }
-    }
-  }, [userData])
+  }, [city, idPriceList])
 
   return minimumPrice
 }

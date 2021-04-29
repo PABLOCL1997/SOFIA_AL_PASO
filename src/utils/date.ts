@@ -13,5 +13,5 @@ export const toDate = (unix_timestamp: string, addHours: boolean = false) => {
 }
 
 export const toLocalDate = (timestamp: string, addHours: boolean = false) => {
-    return format(new Date(timestamp), addHours);
+    return format(new Date(Number(timestamp)), addHours);
 }

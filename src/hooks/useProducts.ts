@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
-import { useLazyQuery, useQuery } from "@apollo/react-hooks"
-import { GET_USER } from "../graphql/user/queries"
+import { useLazyQuery } from "@apollo/react-hooks"
 import { trackProductList } from "../utils/dataLayer";
 import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../graphql/products/queries";
 import { GET_BRANDS } from "../graphql/metadata/queries";
 import { useLocation } from "react-router-dom";
 import useCategory from "./useCategory";
 import { OrderColums } from "../graphql/products/type";
+import useCityPriceList from "./useCityPriceList";
 
 
 type Products = {
@@ -22,19 +22,18 @@ type Products = {
     brands: any,
     setLoading: Function,
     setOrder: Function,
-    setBrand: Function
-
+    setBrand: Function,
+    setCategoryId: Function
 }
 
-const useProducts = (): Products => {
+const useProducts = (onsale: boolean = false ): Products => {
     const limit = 9
     const query = new URLSearchParams(useLocation().search)
     const pageNumber = parseInt(String(query.get("p")))
 
-    const { data: userData } = useQuery(GET_USER, {})
-    const { category_id, category, subcategory, lastlevel } = useCategory()
+    const { city, idPriceList } = useCityPriceList()
+    const { category_id, category, subcategory, lastlevel, setCategoryId } = useCategory()
     const [loading, setLoading] = useState(true)
-    const [idPriceList, setIdPriceList] = useState(0)
     const [products, setProducts] = useState([])
     const [total, setTotal] = useState(0)
     const [brand, setBrand] = useState<any>(query.get("marca")?.split(",").map((brand: any) => `'${brand}'`).join(",") || null);
@@ -45,7 +44,7 @@ const useProducts = (): Products => {
     const [page, setPage] = useState(1);
     const [order, setOrder] = useState<string>(OrderColums[0]);      
 
-    const [getBrands, { data: brands, loading: loadingBrands }] = useLazyQuery(GET_BRANDS,    {
+    const [getBrands, { data: brands }] = useLazyQuery(GET_BRANDS,    {
         fetchPolicy: "network-only",
     })
 
@@ -58,7 +57,7 @@ const useProducts = (): Products => {
             setLoading(false)
         }
     })
-    const [loadProducts, { loading: loadingProds }] = useLazyQuery(GET_PRODUCTS, {
+    const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
         fetchPolicy: "network-only",
         onCompleted: d => {
             trackProductList(d.products.rows)
@@ -80,16 +79,6 @@ const useProducts = (): Products => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [query]);
-
-
-    useEffect(() => {
-        if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
-          if (userData.userInfo[0].idPriceList !== idPriceList) {
-            setIdPriceList(userData.userInfo[0].idPriceList)
-          }
-        }
-      }, [userData])
-
     
     useEffect(() => {
         setLoading(true);
@@ -97,11 +86,11 @@ const useProducts = (): Products => {
         getBrands({
             variables: {
             categoryId: category_id || 0,
-            city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",      
+            city,      
             }
         });
 
-        if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList > 0) {
+        if (idPriceList > 0) {
             loadProductsFromListing({
             variables: {
                 category_id: search && search.length > 0 ? 0 : category_id || 0,
@@ -109,9 +98,9 @@ const useProducts = (): Products => {
                 order,
                 offset,
                 search,
-                city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
-                id_price_list: String(userData.userInfo[0].idPriceList),
-                onsale: category === "promociones",
+                city,
+                id_price_list: String(idPriceList),
+                onsale: category === "promociones" || onsale,
                 brand: brand
             }
             })
@@ -121,21 +110,19 @@ const useProducts = (): Products => {
                 category_id: category_id || 0,
                 limit,
                 order,
+                city,
                 offset: offset,
                 search: search,
-                onsale: category === "promociones",
-                city: userData.userInfo.length
-                ? userData?.userInfo[0]?.cityKey || "SC"
-                : "SC",
+                onsale: category === "promociones" || onsale,
                 brand: brand
             }
             });
         }
         setPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category_id, category, subcategory, lastlevel, order, search, brand, offset, idPriceList]);
+    }, [category_id, category, subcategory, lastlevel, order, search, brand, offset, idPriceList, city]);
 
-    return { loading, products, total, limit, query, offset, order, search, brand, brands, setLoading, setOrder, setBrand }
+    return { loading, products, total, limit, query, offset, order, search, brand, brands, setLoading, setOrder, setBrand, setCategoryId }
 
 }
 

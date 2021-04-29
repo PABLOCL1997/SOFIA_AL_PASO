@@ -1,24 +1,19 @@
 import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
-import { ProductType } from "../graphql/products/type";
+import { ProductType } from "../../graphql/products/type";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import { toLink } from "../utils/string";
-import { ADD_ITEM } from "../graphql/cart/mutations";
-import { trackAddToCart } from "../utils/dataLayer";
-import { BREAKPOINT, customStyles } from "../utils/constants";
-import { SET_USER } from "../graphql/user/mutations";
-import { GET_CART_ITEMS } from "../graphql/cart/queries";
-
-import DiscountIcon from "../assets/images/descuento.svg";
+import { toLink } from "../../utils/string";
+import { BREAKPOINT, customStyles } from "../../utils/constants";
+import DiscountIcon from "../../assets/images/descuento.svg";
 import {
   NewDiscount,
   ProductLink,
   BottomCard
-} from "../styled-components/ItemBoxStyles";
+} from "../../styled-components/ItemBoxStyles";
+import useCart from "../../hooks/useCart";
 
 const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "./Loader")
+  import(/* webpackChunkName: "Loader" */ "../Loader")
 );
 
 const Container = styled.div`
@@ -262,37 +257,7 @@ type Props = {
 const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false }) => {
   const { t } = useTranslation();
   const [qty, setQty] = useState<number>(1);
-  const { data } = useQuery(GET_CART_ITEMS);
-  const [addItem] = useMutation(ADD_ITEM, {
-    variables: { product: { ...product, qty } }
-  });
-  const [toggleLoginModal] = useMutation(SET_USER, {
-    variables: { user: { openLoginModal: true } }
-  });
-  const [showSuccess] = useMutation(SET_USER, {
-    variables: {
-      user: { showModal: t("cart.add_msg", { product: product.name }) }
-    }
-  });
-
-  const hasStock = () => {
-    let p = data.cartItems.find(
-      (p: ProductType) => p.entity_id === product.entity_id
-    );
-
-    return product.stock >= qty + (p && p.qty ? p.qty : 0);
-  };
-
-  const isOverLimit = () => {
-    let p = data.cartItems.find(
-      (p: ProductType) => p.entity_id === product.entity_id
-    );
-
-    return (
-      product.maxPerUser > 0 &&
-      product.maxPerUser < qty + (p && p.qty ? p.qty : 0)
-    );
-  };
+  const { addAndGo } = useCart()
 
   const replaceWidthFormatImage = (name: string, width: string, format?: string) => {
     if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`)
@@ -300,31 +265,6 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
     if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`)
   }
  
-  const addAndGo = () => {
-    // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-    if (isOverLimit()) {
-      showSuccess({
-        variables: {
-          user: {
-            showModal: t("cart.over_limit", { units: product.maxPerUser })
-          }
-        }
-      });
-    } else if (!hasStock()) {
-      showSuccess({
-        variables: {
-          user: { showModal: t("cart.no_stock", { qty: product.stock }) }
-        }
-      });
-    } else {
-      trackAddToCart({ ...product, qty });
-      addItem();
-      showSuccess();
-    }
-    // } else {
-    //   toggleLoginModal();
-    // }
-  };
 
   const discount = (1 - product.special_price / product.price) * 100;
 
@@ -332,13 +272,6 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
     <Suspense fallback={<Loader />}>
       <Container>
         {discount > 0 && (
-          /*  <Discount>
-            <div>{Number(discount).toFixed(0)}</div>
-            <div>
-              <span>%</span>
-              <span>DSCTO</span>
-            </div>
-          </Discount> */
           <NewDiscount>
             <img width="32" height="48" src={DiscountIcon} alt="%" />
           </NewDiscount>
@@ -349,17 +282,13 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
               <img
                 className="lazyload"
+                width="200px"
                 height="200px"
                 srcSet={
-                  window.innerWidth < parseInt(BREAKPOINT.replace("px", "")) ?
                   webp ?
                   `${replaceWidthFormatImage(product.image.split(",")[0], "200px", "webp")}` :
-                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},` :
-                  webp ?
-                  ` ${replaceWidthFormatImage(product.image.split(",")[0], "400px", "webp")}` :
-                  ` ${replaceWidthFormatImage(product.image.split(",")[0], "400px")}`
+                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},`
                 }
-                width="200px"
                 style={{ margin: "0 auto", display: "block" }}
                 alt={product.name}
               />
@@ -378,11 +307,11 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
                 / KGS)
               </EstimatedPrice>
             </Title>
-            {/*  {product.maxPerUser > 0 && (
+             {product.maxPerUser > 0 && (
               <MaxUnits>
                 {t("itembox.max_per_user", { units: product.maxPerUser })}
               </MaxUnits>
-            )} */}
+            )}
 
             <BottomCard>
               <PriceBox>
@@ -421,7 +350,7 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
                   <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Qty>
-            <Add onClick={addAndGo}>{t("itembox.add")}</Add>
+            <Add onClick={() => addAndGo(product, qty)}>{t("itembox.add")}</Add>
           </Pill>
         ) : (
           <Pill>
