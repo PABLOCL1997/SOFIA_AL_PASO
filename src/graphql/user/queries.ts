@@ -73,9 +73,12 @@ export const ORDER = gql`
       shippingReference
       items {
         itemId
+        sku
+        entity_id
         name
         price
         qty
+        image
       }
       subtotal
       shippingPrice

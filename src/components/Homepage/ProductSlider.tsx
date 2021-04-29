@@ -9,7 +9,7 @@ const Slider = React.lazy(() =>
   import(/* webpackChunkName: "Slider" */ "react-slick")
 );
 const ItemBox = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBox" */ "../ItemBox")
+  import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox")
 );
 const ArrowLeft = React.lazy(() =>
   import(/* webpackChunkName: "ArrowLeft" */ "../Images/ArrowLeft.js")

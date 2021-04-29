@@ -6,6 +6,7 @@ import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../../graphql/products/queries";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
 import { GET_USER } from "../../graphql/user/queries";
+import useProducts from "../../hooks/useProducts";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -88,59 +89,7 @@ type Props = {
 
 const Promotions: FC<Props> = () => {
   const { t } = useTranslation();
-  const [products, setProducts] = useState([]);
-  const [idPriceList, setIdPriceList] = useState(0)
-  const [city, setCity] = useState("SC")
-  
-  const { data: userData } = useQuery(GET_USER, {});
-  const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
-    fetchPolicy:"network-only",
-    onCompleted: d => setProducts(d.products.rows)
-  });
-  const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
-    fetchPolicy:"network-only",
-    onCompleted: d => setProducts(d.productsB2B.rows)
-  }) 
-
-  useEffect(() => {
-    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
-      if (userData.userInfo[0].idPriceList !== idPriceList) {
-        setIdPriceList(userData.userInfo[0].idPriceList)
-      }
-    }
-
-    if(userData.userInfo.length && userData.userInfo[0].cityKey) {
-      if (userData.userInfo[0].cityKey !== city) {
-        setCity(userData.userInfo[0].cityKey)
-      }
-    }
-  }, [userData])
-
-  useEffect(() => {
-    if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList > 0) {
-      loadProductsFromListing({
-        variables: {
-          category_id: 0,
-          limit: 9,
-          offset: 0,
-          city,
-          id_price_list: String(userData.userInfo[0].idPriceList),
-          onsale: true,
-        }
-      })
-    } else {
-      loadProducts({
-        variables: {
-          category_id: 0,
-          limit: 20,
-          offset: 0,
-          onsale: true,
-          city
-        }
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idPriceList, city]);
+  const { products } = useProducts(true)
 
   return (
       <Container>

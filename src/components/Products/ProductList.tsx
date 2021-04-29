@@ -12,7 +12,7 @@ const Loader = React.lazy(() =>
 );
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 const ItemBox = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBox" */ "../ItemBox")
+  import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox")
 );
 const Search = React.lazy(() =>
   import(/* webpackChunkName: "Search" */ "../Images/Search")

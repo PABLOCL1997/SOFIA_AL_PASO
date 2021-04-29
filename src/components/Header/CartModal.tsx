@@ -17,6 +17,7 @@ import { useHistory } from "react-router-dom";
 import { ProductType } from "../../graphql/products/type";
 import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../../graphql/cart/mutations";
 import { BREAKPOINT } from "../../utils/constants";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 const ProductCart = React.lazy(() =>
   import(/* webpackChunkName: "ProductCart" */ "../ProductCart")
@@ -230,6 +231,7 @@ const AuthModal: FC<Props> = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const { data } = useQuery(GET_CART_ITEMS);
+  const { city, idPriceList } = useCityPriceList()
   const minimumPrice = useMinimumPrice()
 
   const [action, setAction] = useState<Action>({});
@@ -249,8 +251,6 @@ const AuthModal: FC<Props> = () => {
   const [shouldExecute, executeNewCartQuery] = useState(false);
   const [newCartEmpty, setNewCartEmpty] = useState(true);
   const [reloadModal, setReloadModal] = useState(false);
-  const [city, setCity] = useState("SC");
-  const [idPriceList, setIdPriceList] = useState(0);
 
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } }
@@ -453,26 +453,9 @@ const AuthModal: FC<Props> = () => {
   }, [newCartEmpty]);
 
   useEffect(() => {
-    const _w: any = window;
-    if (userData && userData.userInfo.length) {
-      // if (_w.currentCity && _w.currentCity !== userData.userInfo[0].cityName) {
-        // if (userData.userInfo[0].cityKey !== "SC") showCityWarning();
-      // }
-      // _w.currentCity = userData.userInfo[0].cityName;
-      if(userData.userInfo[0].cityKey !== city) {
-        setCity(userData.userInfo[0].cityKey)
-        if (newCartEmpty) setNewCartEmpty(false);
-
-      }
-
-      if(userData.userInfo[0].idPriceList !== idPriceList) {
-        setIdPriceList(userData.userInfo[0].idPriceList)
-        if (newCartEmpty) setNewCartEmpty(false);
-
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData]);
+    // when city or idPriceList changes, updateCart
+    if (newCartEmpty) setNewCartEmpty(false);
+  }, [city, idPriceList]);
 
   const isStockAvaible = (
     flag: number,

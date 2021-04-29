@@ -1,21 +1,14 @@
 import React, { Suspense, FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useHistory, Link, useParams } from "react-router-dom";
-import { useMutation, useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { useTranslation } from "react-i18next";
-import { GET_B2E_PRODUCT } from "../graphql/products/queries";
-import { GET_PRODUCT, GET_PRODUCT_DETAIL } from "../graphql/products/queries";
-import { ADD_ITEM } from "../graphql/cart/mutations";
 import { PRODUCT_TITLE } from "../meta";
-import { trackProduct, trackAddToCart } from "../utils/dataLayer";
 import { fromLink, toLink } from "../utils/string";
-import { ProductType } from "../graphql/products/type";
 import { CategoryType } from "../graphql/categories/type";
 import { BREAKPOINT } from "../utils/constants";
-import { GET_USER } from "../graphql/user/queries";
 import DelayedWrapper from "../components/DelayedWrapper";
-import { SET_USER } from "../graphql/user/mutations";
-import { GET_CART_ITEMS } from "../graphql/cart/queries";
+import useProduct from "../hooks/useProduct";
+import useCart from "../hooks/useCart";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -409,116 +402,9 @@ const Product: FC<Props> = ({
   };
   const { t } = useTranslation();
   const history = useHistory();
-  const [product, setProduct] = useState<ProductType | any>({});
-  const [categories, setCategories] = useState<Array<CategoryType>>([]);
-  const [related, setRelated] = useState<Array<ProductType>>([]);
+  const { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, toCatLink } = useProduct()
+  const { addAndGo } = useCart()
   const [qty, setQty] = useState<number>(1);
-  const { data } = useQuery(GET_CART_ITEMS);
-  const { data: userData } = useQuery(GET_USER, {
-    onCompleted: d => {
-      
-    }
-  });
-  const [loadProductFromList] = useLazyQuery(GET_B2E_PRODUCT, {
-    fetchPolicy: "network-only",
-    onCompleted: d => {
-      setProduct(d.productB2B);
-      trackProduct(d.productB2B);
-      if (d.productB2B.categories) setCategories(d.productB2B.categories);
-      if (d.productB2B.related) setRelated(d.productB2B.related);
-      loadProductDetail({
-        variables: {
-          name: prodname
-        }
-      });
-    }
-  })
-  const [loadProduct] = useLazyQuery(GET_PRODUCT, {
-    variables: {
-      name: prodname,
-      city: userData.userInfo.length ? userData.userInfo[0].cityKey : "",
-      categories: true,
-      related: true
-    },
-    fetchPolicy: "cache-and-network",
-    onError: () => {
-      history.replace("/404");
-    },
-    onCompleted: d => {
-      setProduct(d.product);
-      trackProduct(d.product);
-      if (d.product.categories) setCategories(d.product.categories);
-      if (d.product.related) setRelated(d.product.related);
-      loadProductDetail({
-        variables: {
-          name: prodname
-        }
-      });
-    }
-  });
-  const [
-    loadProductDetail,
-    { loading: loadingProdDetail, data: dataProdDetail }
-  ] = useLazyQuery(GET_PRODUCT_DETAIL, {});
-  const [toggleLoginModal] = useMutation(SET_USER, {
-    variables: { user: { openLoginModal: true } }
-  });
-  const [addItem] = useMutation(ADD_ITEM, {
-    variables: {
-      product: { ...product, categories: [], description: false, qty }
-    }
-  });
-  const [showSuccess] = useMutation(SET_USER, {
-    variables: {
-      user: { showModal: t("cart.add_msg", { product: product.name }) }
-    }
-  });
-
-  const hasStock = () => {
-    let p = data.cartItems.find(
-      (p: ProductType) => p.entity_id === product.entity_id
-    );
-
-    return product.stock >= qty + (p && p.qty ? p.qty : 0);
-  };
-
-  const isOverLimit = () => {
-    let p = data.cartItems.find(
-      (p: ProductType) => p.entity_id === product.entity_id
-    );
-
-    return (
-      product.maxPerUser > 0 &&
-      product.maxPerUser < qty + (p && p.qty ? p.qty : 0)
-    );
-  };
-
-  const addAndGo = () => {
-    // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-    if (isOverLimit()) {
-      showSuccess({
-        variables: {
-          user: {
-            showModal: t("cart.over_limit", { units: product.maxPerUser })
-          }
-        }
-      });
-    } else if (!hasStock()) {
-      showSuccess({
-        variables: {
-          user: { showModal: t("cart.no_stock", { qty: product.stock }) }
-        }
-      });
-    } else {
-      trackAddToCart({ ...product, categories: [], description: false, qty });
-      addItem();
-      showSuccess();
-    }
-    // } else {
-    //   if (closeModal) closeModal();
-    //   toggleLoginModal();
-    // }
-  };
 
   const proceed = () => {
     if (oldUrl) {
@@ -528,50 +414,11 @@ const Product: FC<Props> = ({
       history.push("/productos");
     }
   };
-  useEffect(()=> {
-    if (userData) {
-      if (userData.userInfo[0].idPriceList > 0) {
-        loadProductFromList({
-          variables:{
-            name: prodname,
-            id_price_list: String(userData.userInfo[0].idPriceList),
-            city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
-          }
-        })
-      } else {
-        loadProduct({
-          variables: {
-            name: prodname,
-            city: (userData?.userInfo[0]?.cityKey) ? userData?.userInfo[0]?.cityKey : "SC",
-            categories: true,
-            related: true
-          }
-        });
-      }
-    }
-  }, [userData])
+
   useEffect(() => {
     document.title = `${PRODUCT_TITLE} ${prodname}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const discount = Math.round(1 - product.special_price / product.price) * 100;
-
-  const toCatLink = (str: string | null, level: number) => {
-    let lvl2Cat: CategoryType | undefined = undefined;
-    let lvl2CatStr = "";
-    let lvl3Cat: CategoryType | undefined = undefined;
-    let lvl3CatStr = "";
-    if (level >= 4) {
-      lvl3Cat = categories.find((c: CategoryType) => c.level === 3);
-      if (lvl3Cat) lvl3CatStr = `${toLink(lvl3Cat.name)}/`;
-    }
-    if (level >= 3) {
-      lvl2Cat = categories.find((c: CategoryType) => c.level === 2);
-      if (lvl2Cat) lvl2CatStr = `${toLink(lvl2Cat.name)}/`;
-    }
-    return lvl2CatStr + lvl3CatStr + toLink(str);
-  };
 
   return (
     <Suspense fallback={<Loader />}>
@@ -705,7 +552,7 @@ const Product: FC<Props> = ({
                     <Cta
                       filled={true}
                       text={t("product.add")}
-                      action={addAndGo}
+                      action={() => addAndGo(product, qty)}
                     />
                   </Toolbox>
                 ) : (

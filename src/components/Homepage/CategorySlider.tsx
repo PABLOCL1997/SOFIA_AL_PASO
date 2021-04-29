@@ -1,25 +1,15 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import styled from "styled-components";
-import { useQuery, useLazyQuery } from "@apollo/react-hooks";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CategoryType } from "../../graphql/categories/type";
-import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../../graphql/products/queries";
-import { GET_CATEGORIES } from "../../graphql/categories/queries";
 import { useTranslation } from "react-i18next";
 import { toLink } from "../../utils/string";
 import { BREAKPOINT } from "../../utils/constants";
-import { GET_USER } from "../../graphql/user/queries";
+import useCategory from "../../hooks/useCategory";
+import useProducts from "../../hooks/useProducts";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const ProductSlider = React.lazy(() =>
-  import(/* webpackChunkName: "ProductSlider" */ "./ProductSlider")
-);
-const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
-);
+const ProductSlider = React.lazy(() => import(/* webpackChunkName: "ProductSlider" */ "./ProductSlider"))
+const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"))
 
 const SectionWrapper = styled.div`
   margin-bottom: 88px;
@@ -131,106 +121,36 @@ type Props = {
 
 const CategorySlider: FC<Props> = () => {
   const { t } = useTranslation();
-  const [selected, setSelected] = useState<number>(0);
-  const [products, setProducts] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [idPriceList, setIdPriceList] = useState(0)
-  const [city, setCity] = useState("SC")
-  const { data: userData } = useQuery(GET_USER, {});
+  const { categories, loading: loadingCat } = useCategory()
+  const { products, loading: loadingProds, setCategoryId } = useProducts()
+  const [selected, setSelected] = useState<CategoryType | number>(0);
+  const [open, setOpen] = useState<boolean>(false);
+  const [categoryName, setCategoryName] = useState<string>(t("homepage.categoryslider.all"))
+  const [link, setLink] = useState<string>('/productos')
 
 
-  const { loading, data } = useQuery(GET_CATEGORIES, {
-    variables: {
-      city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
-    }
-  });
-  const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
-    fetchPolicy:"network-only",
-    onCompleted: d => setProducts(d.productsB2B.rows)
-  }) 
-  const [loadProducts,{ loading: loadingProducts }] = useLazyQuery(GET_PRODUCTS, {
-    fetchPolicy:"network-only",
-    onCompleted: d => setProducts(d.products.rows)
-  });
-
-  const seeAll = () => {
-    if (selected === 0) {
-      return `/productos`;
-    } else {
-      return `/productos/${toLink(
-          data.categories.find(
-            (row: CategoryType) => row.entity_id === selected
-          ).name
-        )}`
-    }
-  };
-
-  const selectCategory = (index: number) => {
+  const selectCategory = (index: number, cat?: CategoryType) => {
     setSelected(index);
+    setCategoryId(index)
     setOpen(false);
-  };
-
-  useEffect(() => {
-    if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList > 0) {
-      loadProductsFromListing({
-        variables: {
-          category_id: selected,
-          limit: 9,
-          offset: 0,
-          city,
-          id_price_list: String(userData.userInfo[0].idPriceList),
-        }
-      })
+    if (!cat) {
+      setCategoryName(t("homepage.categoryslider.all"))
+      setLink('/productos')
     } else {
-      loadProducts({
-        variables: {
-          category_id: selected,
-          limit: 9,
-          offset: 0,
-          city
-        }
-      })
+      setLink(`/productos/${toLink(cat.name)}`)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, idPriceList, city]);
-
-  useEffect(() => {
-    if(userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
-      if (userData.userInfo[0].idPriceList !== idPriceList) {
-        setIdPriceList(userData.userInfo[0].idPriceList)
-      }
-    }
-
-    if(userData.userInfo.length && userData.userInfo[0].cityKey) {
-      if (userData.userInfo[0].cityKey !== city) {
-        setCity(userData.userInfo[0].cityKey)
-      }
-    }
-
-  }, [userData])
-
-  const inStockProducts = () => {
-    return products.filter((p: { stock: number; }) => p.stock > 0);
   };
-
-  let categoryName = t("homepage.categoryslider.all");
-  if (selected > 0) {
-    categoryName = data.categories.find(
-      (row: CategoryType) => row.entity_id === selected
-    ).name;
-  }
 
   return (
     <SectionWrapper>
         <CategoryList>
-          <Category onClick={() => setSelected(0)} selected={selected === 0}>
+          <Category onClick={() => selectCategory(0)} selected={selected === 0}>
             {t("homepage.categoryslider.all")}
           </Category>
-          {!loading &&
-            data &&
-            data.categories.map((row: CategoryType) => (
+          {!loadingCat &&
+            categories.map((row: CategoryType) => (
               <Category
-                onClick={() => setSelected(row.entity_id)}
+                onClick={() => selectCategory(row.entity_id, row)}
                 selected={selected === row.entity_id}
                 key={row.entity_id}
               >
@@ -254,11 +174,10 @@ const CategorySlider: FC<Props> = () => {
               >
                 {t("homepage.categoryslider.all")}
               </CategoryItemMobile>
-              {!loading &&
-                data &&
-                data.categories.map((row: CategoryType) => (
+              {!loadingCat &&
+                categories.map((row: CategoryType) => (
                   <CategoryItemMobile
-                    onClick={() => selectCategory(row.entity_id)}
+                    onClick={() => selectCategory(row.entity_id, row)}
                     selected={selected === row.entity_id}
                     key={row.entity_id}
                   >
@@ -268,16 +187,16 @@ const CategorySlider: FC<Props> = () => {
             </CategoryMobileList>
           )}
         </CategoryMobile>
-        {(loadingProducts || !products.length) && (
+        {loadingProds && (
           <LoaderWrapper>
             <img src="/images/loader.svg" alt="loader" />
           </LoaderWrapper>
         )}
-        {!loadingProducts && !!products.length && (
-          <ProductSlider products={inStockProducts()} />
+        {!loadingProds && !!products.length && (
+          <ProductSlider products={products} />
         )}
         <CtaWrapper>
-          <Link to={seeAll()}>
+          <Link to={link}>
           <Cta
             action={() => {}}
             text={t("homepage.categoryslider.seeall")}
