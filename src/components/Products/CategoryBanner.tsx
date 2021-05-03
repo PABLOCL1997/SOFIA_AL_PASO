@@ -14,11 +14,6 @@ import podium from '../../assets/images/2-POST-BANNER-II-1124X100_MARZO_PODIUM.p
 import kostlichMob from '../../assets/images/Kostlich-320x80.png'
 import kostlich from '../../assets/images/Kostlich-1124x100.png'
 
-import workWeekMob from '../../assets/images/work-week-380x80.jpg'
-import workWeek from '../../assets/images/work-week-1124x100.jpg'
-
-
-
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
@@ -81,12 +76,7 @@ const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Slider {...settings}>
-          <LINK>
-          <Link to="/productos/work-week">
-            <ImageContainer bg={isMobile ? workWeekMob : workWeek } />
-          </Link>
-          </LINK>
-          {category === "mascotas" &&
+          {category === "alimento-para-mascotas" &&
             <LINK>
               <ImageContainer bg={isMobile ? podiumMob : podium }></ImageContainer>
             </LINK>
