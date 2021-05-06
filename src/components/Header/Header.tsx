@@ -466,22 +466,26 @@ const Header: FC<Props> = ({ checkout, page }) => {
   }, []);
 
   return (
-      <Wrapper>
-        <CityModal />
-        <AuthModal />
-        <CartModal />
+    <Wrapper>
+        <Suspense fallback={<div></div>}>
+          <AuthModal />
+          <CityModal />
+          <CartModal />
+        </Suspense>
         <Desktop>
           <Fixed shadow={shadow}>
             <div className="main-container">
               {!checkout && (
                 <Container>
-                  <Logo onClick={goHome}>
-                    <img
-                      src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
-                      width="83px"
-                      height="50px"
-                      alt={"Sofía"}
-                    />
+                  <Logo>
+                    <Link to="/">
+                      <img
+                        src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                        width="83px"
+                        height="50px"
+                        alt={"Sofía"}
+                      />
+                    </Link>
                   </Logo>
                   <AddressHeader>
                     <Address onClick={() => toggleCityModal()}>
@@ -546,13 +550,15 @@ const Header: FC<Props> = ({ checkout, page }) => {
               )}
               {checkout && (
                 <Container>
-                  <Logo onClick={goHome}>
-                    <img
-                      src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
-                      width="83px"
-                      height="50px"
-                      alt={"Sofía"}
-                    />
+                  <Logo>
+                    <Link to="/">
+                      <img
+                        src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                        width="83px"
+                        height="50px"
+                        alt={"Sofía"}
+                      />
+                    </Link>
                   </Logo>
                   <Separator />
                   <MenuWrapper onClick={() => setOpen(true)}>
@@ -571,13 +577,15 @@ const Header: FC<Props> = ({ checkout, page }) => {
         <Mobile>
           <MobileMenu page={page}>
             <MobileMenuHeader>
-              <Logo onClick={goHome}>
-                <img
-                  src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
-                  width="60px"
-                  height="36px"
-                  alt={"Sofía"}
-                />
+              <Logo>
+                <Link to="/">
+                  <img
+                    src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
+                    width="60px"
+                    height="36px"
+                    alt={"Sofía"}
+                  />
+                </Link>
               </Logo>
               <RightMenu>
                 <MenuListTools>
