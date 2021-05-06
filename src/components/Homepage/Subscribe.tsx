@@ -10,6 +10,7 @@ import { isValidEmail } from "../../utils/string";
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
 const Container = styled.section`
+  background-color: #ebebeb;
   background-size: 400px;
   width: calc(100% - 120px);
   margin: auto;

@@ -1,9 +1,12 @@
 import React, { Suspense } from "react";
 import styled from "styled-components";
-import GTM from "../components/Shared/GTM";
 
 const Header = React.lazy(() =>
   import(/* webpackChunkName: "Header" */ "../components/Header/Header")
+);
+
+const GTM = React.lazy(() =>
+  import(/* webpackChunkName: "GTM" */ "../components/Shared/GTM")
 );
 
 const Hero = React.lazy(() =>
@@ -55,21 +58,29 @@ const Loader = styled.div`
 const Homepage = () => {
   return (
   <>
+
       <Header checkout={false} page={undefined} />
-      <Hero />
+      <Hero /> 
+    
     <Suspense fallback={<Loader>
       <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
     </Loader>}>
-      <CategorySlider />
       <Benefits />
-      <Promotions />
+      <CategorySlider />
+       {/* <Promotions />  */}
+    </Suspense>
+    
+    
+    <Suspense fallback={<Loader>
+      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+    </Loader>}>
       <Subscribe />
       <GTM />
       <Error />
       <Success />
       <Modal />
       <Footer page={"footer"} />
-    </Suspense>
+    </Suspense> 
     </>
   );
 };

@@ -23,6 +23,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { trackOrder, initCheckout } from "../utils/dataLayer";
 import { escapeSingleQuote } from "../utils/string";
+import useCityPriceList from "../hooks/useCityPriceList";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -144,6 +145,7 @@ type OrderData = {
   envio: string;
   payment_method: string;
   DIRECCIONID?: number;
+  agencia?:string
 };
 
 const Checkout: FC<Props> = () => {
@@ -151,6 +153,7 @@ const Checkout: FC<Props> = () => {
   const history = useHistory();
   const location = useLocation();
   const minimumPrice = useMinimumPrice()
+  const { idPriceList } = useCityPriceList()
 
   const [processing, setProcessing] = useState(false);
   const [userData, setUserData] = useState({});
@@ -319,7 +322,7 @@ const Checkout: FC<Props> = () => {
 
   const validateOrder = () => {
     let items: Array<string> = [];
-    const special_address = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+    const special_address = idPriceList > 0
 
     data &&
       data.cartItems &&
@@ -447,11 +450,12 @@ const Checkout: FC<Props> = () => {
   const saveOrder = () => {
     setConfirmModalVisible(false);
     const items: Array<string> = validateOrder();
-    const special_address = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+    const special_address = idPriceList > 0
     if (!items.length) return;
 
     setOrder({
       DIRECCIONID: special_address ? orderData.shipping.street.split("|")[1].replace(/ /g,"") : null,
+      agencia: undefined,
       discount_amount: parseFloat(
         orderData.coupon ? orderData.coupon.discount : 0
       ),
@@ -553,7 +557,7 @@ const Checkout: FC<Props> = () => {
     const items: Array<string> | boolean = validateOrder();
     let b2e = false
     try {
-      b2e = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+      b2e = idPriceList > 0
     } catch (e) {
       b2e = false
     }

@@ -52,7 +52,7 @@ const Col2 = styled.div`
 const Text = styled.p`
   font-family: MullerBold;
   font-weight: bold;
-  padding: 40px 0 10px;
+  padding: 0 0 10px;
   font-size: 24px;
   line-height: 31px;
   letter-spacing: 0.015em;
