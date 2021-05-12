@@ -112,13 +112,14 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
   }
 
   useEffect(() => {
-    console.log('effect', option, options)
     if(userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
       changeOption(CREDIT)
       setOptions(valuesB2E)
+      updateOrder('payment', { method: CREDIT });
     }else {
       setOptions(values)
       setOption(values[0].value)
+      updateOrder('payment', { method: values[0].value });
     }
 
   }, [userData])

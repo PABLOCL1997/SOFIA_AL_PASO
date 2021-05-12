@@ -219,7 +219,8 @@ const Toolbox = styled.div`
     button {
       font-size: 14px;
       text-transform: uppercase;
-      padding: 15px 80px;
+      padding: 15px 70px;
+      margin: 0 15px;
       span {
         font-family: MullerExtraBold;
       }
@@ -307,6 +308,7 @@ const Price = styled.div`
   color: var(--red);
   margin-bottom: 58px;
   font-family: MullerBold;
+  margin: 0px 0px 15px;
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-bottom: 30px;
     font-size: 20px;
@@ -506,33 +508,6 @@ const Product: FC<Props> = ({
                     </DiscountPrice>
                   )}
                 </PriceBox>
-                <ProductText>
-                  {!loadingProdDetail &&
-                    dataProdDetail &&
-                    dataProdDetail.productDetail
-                      .split("\n")
-                      .filter((line: string) => line.trim())
-                      .map((line: string, index: number) => (
-                        <li
-                          key={index}
-                          dangerouslySetInnerHTML={{ __html: line.trim() }}
-                        />
-                      ))}
-                </ProductText>
-                <Categories>
-                  <span>{t("product.categories")}: </span>
-                  {categories.map((cat: CategoryType, index: number) => (
-                    <span key={cat.name}>
-                      <Link
-                        key={index}
-                        to={`/productos/${toCatLink(cat.name, cat.level)}`}
-                      >
-                        {cat.name}
-                      </Link>
-                      {index === categories.length - 1 ? "" : ", "}
-                    </span>
-                  ))}
-                </Categories>
                 {product.stock > 0 ? (
                   <Toolbox>
                     <Qty>
@@ -560,6 +535,33 @@ const Product: FC<Props> = ({
                     <OutOfStock>Temporalmente sin stock</OutOfStock>
                   </Toolbox>
                 )}
+                <ProductText>
+                  {!loadingProdDetail &&
+                    dataProdDetail &&
+                    dataProdDetail.productDetail
+                      .split("\n")
+                      .filter((line: string) => line.trim())
+                      .map((line: string, index: number) => (
+                        <li
+                          key={index}
+                          dangerouslySetInnerHTML={{ __html: line.trim() }}
+                        />
+                      ))}
+                </ProductText>
+                <Categories>
+                  <span>{t("product.categories")}: </span>
+                  {categories.map((cat: CategoryType, index: number) => (
+                    <span key={cat.name}>
+                      <Link
+                        key={index}
+                        to={`/productos/${toCatLink(cat.name, cat.level)}`}
+                      >
+                        {cat.name}
+                      </Link>
+                      {index === categories.length - 1 ? "" : ", "}
+                    </span>
+                  ))}
+                </Categories>
                 <DeliveryBox>
                   <FreeDelivery />
                   <Title>
