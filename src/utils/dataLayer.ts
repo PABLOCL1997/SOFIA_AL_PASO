@@ -14,7 +14,7 @@ export const trackProductList = (products: Array<ProductType>) => {
       currencyCode: "BOB",
       impressions: products.map((p: ProductType, index: number) => ({
         name: p.name,
-        id: p.entity_id,
+        id: p.sku,
         price: (p.special_price || 0).toFixed(2),
         brand: "Sofía",
         category: p.category_name,
@@ -32,7 +32,7 @@ export const trackProduct = (p: ProductType) => {
         products: [
           {
             name: p.name,
-            id: p.entity_id,
+            id: p.sku,
             price: (p.special_price || 0).toFixed(2),
             brand: "Sofía",
             category: p.category_name
@@ -52,7 +52,7 @@ export const trackAddToCart = (p: ProductType) => {
         products: [
           {
             name: p.name,
-            id: p.entity_id,
+            id: p.sku,
             price: (p.special_price || 0).toFixed(2),
             brand: "Sofía",
             category: p.category_name,
@@ -73,7 +73,7 @@ export const trackRemoveFromCart = (p: ProductType) => {
         products: [
           {
             name: p.name,
-            id: p.entity_id,
+            id: p.sku,
             price: (p.special_price || 0).toFixed(2),
             brand: "Sofía",
             category: p.category_name,
@@ -103,7 +103,7 @@ export const initCheckout = (
         },
         products: products.map((p: ProductType, index: number) => ({
           name: p.name,
-          id: p.entity_id,
+          id: p.sku,
           price: (p.special_price || 0).toFixed(2),
           brand: "Sofía",
           category: p.category_name,
@@ -130,7 +130,7 @@ export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
         },
         products: products.map((p: ProductType, index: number) => ({
           name: p.name,
-          id: p.entity_id,
+          id: p.sku,
           price: (p.special_price || 0).toFixed(2),
           brand: "Sofía",
           category: p.category_name,
