@@ -21,8 +21,9 @@ const useCategory = () => {
 
     const { data: userData } = useQuery(GET_USER, {});
     const { data, loading } = useQuery(GET_CATEGORIES, {
+        fetchPolicy: "network-only",
         variables: {
-          city: userData.userInfo.length ? userData.userInfo[0].cityKey : "SC",
+          city: userData.userInfo.length && userData.userInfo[0].cityKey ? userData.userInfo[0].cityKey : "SC",
         },
         onCompleted: d => {
             setCategories(d.categories)
@@ -61,7 +62,7 @@ const useCategory = () => {
             }
             // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
             if (!entity_id && !!(category || subcategory || lastlevel)) {
-                if((category !== "promociones" || _category !== "promociones") && (category !== "work-week" || _category !== "work-week") )  {
+                if((category !== "promociones" || _category !== "promociones") && (category !== "ofertas-del-dia" || _category !== "ofertas-del-dia") )  {
                     return history.replace("/404");
                 }
             }
