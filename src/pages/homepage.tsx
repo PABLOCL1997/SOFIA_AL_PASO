@@ -66,6 +66,11 @@ const Homepage = () => {
       <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
     </Loader>}>
       <Benefits />
+    </Suspense>
+
+    <Suspense fallback={<Loader>
+      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+    </Loader>}>
       <CategorySlider />
        {/* <Promotions />  */}
     </Suspense>

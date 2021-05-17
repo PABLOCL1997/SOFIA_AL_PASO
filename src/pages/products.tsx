@@ -6,7 +6,7 @@ import { BREAKPOINT } from "../utils/constants";
 import { PRODUCTS_TITLE } from "../meta";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { BreadWrap } from "../styled-components/ProductsStyles";
-import BreadCrums from "../components/Breadcrums/Breadcrums";
+import BreadCrumbs from "../components/Breadcrumbs/Breadcrumbs";
 import useCategory from "../hooks/useCategory";
 import useProducts from "../hooks/useProducts";
 
@@ -96,7 +96,7 @@ const Products: FC<Props> = () => {
           } category={category} />
 
           <BreadWrap>
-            <BreadCrums
+            <BreadCrumbs
               isMobile={
                 window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
               }
