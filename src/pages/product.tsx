@@ -4,8 +4,10 @@ import { useHistory, Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PRODUCT_TITLE } from "../meta";
 import { fromLink, toLink } from "../utils/string";
+import BreadCrumbs from "../components/Breadcrumbs/Breadcrumbs";
+
 import { CategoryType } from "../graphql/categories/type";
-import { BREAKPOINT } from "../utils/constants";
+import { BREAKPOINT, customStyles } from "../utils/constants";
 import DelayedWrapper from "../components/DelayedWrapper";
 import useProduct from "../hooks/useProduct";
 import useCart from "../hooks/useCart";
@@ -47,11 +49,11 @@ const Close = React.lazy(() =>
 const Header = styled.div`
   padding: var(--padding);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin-top: 30px;
+    margin-top: 80px;
     padding: 20px;
-    justify-content: flex-start;
+    justify-content:  space-between;
   }
 `;
 
@@ -379,6 +381,24 @@ const OutOfStock = styled.span`
   line-height: 16px;
 `;
 
+const BreadWrap = styled.div`
+  margin: 15px 0;  
+  padding: 0;
+  ul {
+    li {
+      a {
+        color: ${customStyles.darkGrey};
+        font-size: 12px;
+        line-height: 16px;
+      }
+    }
+  }
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin: 0;
+  }
+`;
+
 type Props = {
   inlineProdname?: String;
   oldUrl?: String;
@@ -432,6 +452,19 @@ const Product: FC<Props> = ({
                 <Close />
               </CloseWrapper>
             )}
+            <BreadWrap>
+              <BreadCrumbs
+                isMobile={
+                  window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
+                }
+                alias={[
+                  {
+                    oldName: "productos",
+                    newName: "Tienda"
+                  }
+                ]}
+              />
+            </BreadWrap>
             <HeaderLink onClick={proceed}>
               <span>{t("product.continue_shopping")}</span>
               <ContinueArrow />
