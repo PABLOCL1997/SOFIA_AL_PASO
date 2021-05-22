@@ -14,8 +14,8 @@ import podium from '../../assets/images/2-POST-BANNER-II-1124X100_MARZO_PODIUM.p
 import kostlichMob from '../../assets/images/Kostlich-320x80.png'
 import kostlich from '../../assets/images/Kostlich-1124x100.png'
 
-import semanaAtunMob from '../../assets/images/semana-atun-380x80.jpg'
-import semanaAtun from '../../assets/images/semana-atun-1124x100.jpg'
+import semanaMamaMob from '../../assets/images/semana-mama-320x80.jpg'
+import semanaMama from '../../assets/images/semana-mama-1124x100.jpg'
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -89,8 +89,8 @@ const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
               <ImageContainer bg={isMobile ? kostlichMob : kostlich }></ImageContainer>
             </LINK>
           }
-          <Link to="/productos/semana-del-atun-">
-            <ImageContainer bg={isMobile ? semanaAtunMob : semanaAtun}></ImageContainer>
+          <Link to="/productos/semana-de-mam%C3%A1-">
+            <ImageContainer bg={isMobile ? semanaMamaMob : semanaMama}></ImageContainer>
           </Link>
         </Slider>
       </Wrapper>

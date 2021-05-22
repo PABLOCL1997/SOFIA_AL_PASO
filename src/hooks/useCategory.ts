@@ -62,7 +62,7 @@ const useCategory = () => {
             }
             // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
             if (!entity_id && !!(category || subcategory || lastlevel)) {
-                if((category !== "promociones" || _category !== "promociones") && (category !== "semana-del-atun-" || _category !== "semana-del-atun-") )  {
+                if((category !== "promociones" || _category !== "promociones") && (category !== "semana-de-mam%C3%A1-" || _category !== "semana-de-mam%C3%A1-") )  {
                     return history.replace("/404");
                 }
             }
