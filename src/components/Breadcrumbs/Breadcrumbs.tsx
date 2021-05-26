@@ -6,7 +6,7 @@ import { ListItem, ListItemTitle } from './styled'
 
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"))
 
-const BreadCrumbs: FC<Props> = ({ alias, isMobile = true }) => {
+const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => {
   const { pathname } = useLocation()
   const Home = "Home"
   const routes = pathname.split('/')
@@ -30,11 +30,15 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true }) => {
       const newLink: BreadCrum = links[0]
       finalLinks = [newLink] 
     } else {
-      const newLink: BreadCrum = links[length -2]
+      const newLink: BreadCrum = links[length - 2]
       finalLinks = [newLink]
     }
   } else {
-    finalLinks = links
+    if (additionalLinks) {
+      finalLinks = additionalLinks
+    } else {
+      finalLinks = links
+    }
   }
 
   return <nav>

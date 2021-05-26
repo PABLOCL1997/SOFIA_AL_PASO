@@ -457,10 +457,26 @@ const Product: FC<Props> = ({
                 isMobile={
                   window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
                 }
-                alias={[
+                additionalLinks={[
                   {
-                    oldName: "productos",
-                    newName: "Tienda"
+                    routeLink: "/",
+                    routeName: "Home "
+                  },
+                  {
+                    routeLink: "/productos",
+                    routeName: "/ Tienda"
+                  },
+                  ...categories
+                  .sort((a:CategoryType, b:CategoryType) => a.level - b.level)
+                  .map(cat => {
+                    return {
+                      routeLink: `/productos/${toCatLink(cat.name, cat.level)}`,
+                      routeName: ` / ${cat.name}`
+                    }
+                  }),
+                  {
+                    routeLink: `/${toLink(prodname)}`,
+                    routeName: ` / ${prodname}`
                   }
                 ]}
               />
