@@ -11,5 +11,6 @@ length: number
 
 export type Props = {
 isMobile?: boolean,
-alias?: Alias[]
+alias?: Alias[],
+additionalLinks?: any[]
 };

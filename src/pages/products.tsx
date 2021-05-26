@@ -93,7 +93,7 @@ const Products: FC<Props> = () => {
 
           <CategoryBanner isMobile={
                 window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
-          } category={category} />
+          } />
 
           <BreadWrap>
             <BreadCrumbs

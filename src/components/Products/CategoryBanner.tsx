@@ -16,6 +16,8 @@ import kostlich from '../../assets/images/Kostlich-1124x100.png'
 
 import semanaMamaMob from '../../assets/images/semana-mama-320x80.jpg'
 import semanaMama from '../../assets/images/semana-mama-1124x100.jpg'
+import useProduct from "../../hooks/useProduct";
+import useCategory from "../../hooks/useCategory";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -42,11 +44,13 @@ const Root = styled.div`
 `;
 
 type Props = {
-  category: string | undefined;
   isMobile: Boolean | undefined;
 };
 
-const CategoryBanner: FC<Props> = ({ category, isMobile = true }) => {
+const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
+  const { categories, category_id, category, subcategory, lastlevel } = useCategory()
+  const { toCatLink } = useProduct()
+
   const settings = {
     dots: true,
     infinite: false,
