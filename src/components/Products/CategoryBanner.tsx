@@ -6,13 +6,11 @@ import { Link, useHistory } from "react-router-dom";
 import {
   Wrapper,
   ImageContainer,
-  LINK
 } from "../../styled-components/CategoryBannerStyles";
 
 
 import useCategory from "../../hooks/useCategory";
-import useProduct from "../../hooks/useProduct";
-import { CategoryType } from "../../graphql/categories/type";
+import { toCatLink } from "../../utils/string";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -43,8 +41,7 @@ type Props = {
 };
 
 const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
-  const { categories, category_id, category, subcategory, lastlevel, tCategory } = useCategory()
-  const { toCatLink } = useProduct()
+  const { categories, tCategory } = useCategory()
 
   const settings = {
     dots: true,
@@ -91,16 +88,16 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
           {/* <Link to="/productos/semana-del-atun-">
             <ImageContainer bg={isMobile ? semanaAtunMob : semanaAtun}></ImageContainer>
           </Link> */}
-          {tCategory && !tCategory.is_campaign && tCategory.banner_mobile && tCategory.banner_desktop &&
-            <Link to={`/productos/${toCatLink(tCategory?.name, tCategory?.level)}`}>
+          {tCategory && tCategory.banner_mobile && tCategory.banner_desktop &&
+            <Link to={`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`}>
               <ImageContainer bg={isMobile ? tCategory.banner_mobile : tCategory.banner_desktop} />
             </Link>
           }
-
-          {categories.map((category: CategoryType) => 
+          {/* below code: mostrar campaign en todas la categorias */}
+          {/* {categories.map((category: CategoryType) => 
             category.is_campaign && 
             <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
-          )}
+          )} */}
         </Slider>
       </Wrapper>
     </Suspense>
