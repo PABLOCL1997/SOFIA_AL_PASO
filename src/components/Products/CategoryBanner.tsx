@@ -8,16 +8,11 @@ import {
   ImageContainer,
   LINK
 } from "../../styled-components/CategoryBannerStyles";
-import podiumMob from '../../assets/images/2-POST-BANNER-II-320X80_MARZO_PODIUM.png'
-import podium from '../../assets/images/2-POST-BANNER-II-1124X100_MARZO_PODIUM.png'
 
-import kostlichMob from '../../assets/images/Kostlich-320x80.png'
-import kostlich from '../../assets/images/Kostlich-1124x100.png'
 
-import semanaMamaMob from '../../assets/images/semana-mama-320x80.jpg'
-import semanaMama from '../../assets/images/semana-mama-1124x100.jpg'
-import useProduct from "../../hooks/useProduct";
 import useCategory from "../../hooks/useCategory";
+import useProduct from "../../hooks/useProduct";
+import { CategoryType } from "../../graphql/categories/type";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -48,7 +43,7 @@ type Props = {
 };
 
 const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
-  const { categories, category_id, category, subcategory, lastlevel } = useCategory()
+  const { categories, category_id, category, subcategory, lastlevel, tCategory } = useCategory()
   const { toCatLink } = useProduct()
 
   const settings = {
@@ -83,7 +78,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Slider {...settings}>
-          {category === "alimento-para-mascotas" &&
+          {/* {category === "alimento-para-mascotas" &&
             <LINK>
               <ImageContainer bg={isMobile ? podiumMob : podium }></ImageContainer>
             </LINK>
@@ -92,10 +87,20 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
             <LINK>
               <ImageContainer bg={isMobile ? kostlichMob : kostlich }></ImageContainer>
             </LINK>
+          } */}
+          {/* <Link to="/productos/semana-del-atun-">
+            <ImageContainer bg={isMobile ? semanaAtunMob : semanaAtun}></ImageContainer>
+          </Link> */}
+          {tCategory && !tCategory.is_campaign && tCategory.banner_mobile && tCategory.banner_desktop &&
+            <Link to={`/productos/${toCatLink(tCategory?.name, tCategory?.level)}`}>
+              <ImageContainer bg={isMobile ? tCategory.banner_mobile : tCategory.banner_desktop} />
+            </Link>
           }
-          <Link to="/productos/semana-de-mam%C3%A1-">
-            <ImageContainer bg={isMobile ? semanaMamaMob : semanaMama}></ImageContainer>
-          </Link>
+
+          {categories.map((category: CategoryType) => 
+            category.is_campaign && 
+            <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
+          )}
         </Slider>
       </Wrapper>
     </Suspense>
