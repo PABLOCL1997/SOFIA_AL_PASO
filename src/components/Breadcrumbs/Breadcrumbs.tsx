@@ -24,7 +24,7 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
 
   let finalLinks: BreadCrum[];
   
-  if (isMobile){
+  if (isMobile) {
     const { length } = links
     if (length < 2){
       const newLink: BreadCrum = links[0]

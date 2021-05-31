@@ -30,6 +30,7 @@ const useCategory = () => {
         }
     });
     const [categories, setCategories] = useState<CategoryType[]>([])
+    const [tCategory, setTCategory] = useState<CategoryType | null>() 
     const [category_id, setCategoryId] = useState(0);
 
     useEffect(() => {
@@ -40,6 +41,7 @@ const useCategory = () => {
             (row: CategoryType) => toLink(row.name) === toLink(category || _category) || ""
             );
             if (__category) {
+                setTCategory(__category)
                 if (subcategory || _subcategory) {
                     let __subcategory: any = __category.subcategories.find(
                     (row: SubCategoryLvl3Type) =>
@@ -70,11 +72,12 @@ const useCategory = () => {
                 setCategoryId(entity_id);
             } else if (!entity_id) {
                 setCategoryId(0);
+                setTCategory(null)
             }
         }
     }, [categories, category, _category, subcategory, _subcategory, lastlevel, _lastlevel, data])
 
-    return { categories, category_id, category, subcategory, lastlevel, loading, setCategoryId }
+    return { categories, category_id, category, subcategory, lastlevel, loading, setCategoryId, tCategory }
 
 }
 
