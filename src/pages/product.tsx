@@ -51,7 +51,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin-top: 80px;
+    margin-top: 110px;
     padding: 20px;
     justify-content:  space-between;
   }
@@ -382,7 +382,7 @@ const OutOfStock = styled.span`
 `;
 
 const BreadWrap = styled.div`
-  margin: 15px 0;  
+  margin: 35px 0;  
   padding: 0;
   ul {
     li {
@@ -398,6 +398,19 @@ const BreadWrap = styled.div`
     margin: 0;
   }
 `;
+
+const MainContainer = styled.div`
+  width: 100%;
+  max-width: 1440px;
+  margin: 10px auto;
+  padding: 0 20px;
+
+  @media screen and (max-width: 768px) {
+    .main-container {
+        padding: 0;
+    }
+  }
+`
 
 type Props = {
   inlineProdname?: String;
@@ -445,7 +458,7 @@ const Product: FC<Props> = ({
   return (
     <Suspense fallback={<Loader />}>
       <DelayedWrapper noHeader={true}>
-        <div className="main-container">
+        <MainContainer>
           <Header>
             {oldUrl && (
               <CloseWrapper onClick={proceed}>
@@ -632,7 +645,7 @@ const Product: FC<Props> = ({
           {!!related.length && (
             <RelatedProducts openModal={openModal} products={related} />
           )}
-        </div>
+        </MainContainer>
       </DelayedWrapper>
     </Suspense>
   );
