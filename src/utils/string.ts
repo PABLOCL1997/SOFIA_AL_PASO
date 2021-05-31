@@ -1,3 +1,5 @@
+import { CategoryType } from "../graphql/categories/type";
+
 export const toLink = (str: string | null) => {
   return str ? str.toLowerCase().replace(/ /g, "-") : "";
 };
@@ -82,3 +84,20 @@ export const searchMultiple = (
 export const escapeSingleQuote = (text: string): string => {
   return text ? text.replace(/'/g, "") : "";
 };
+
+export const toCatLink = (categories: CategoryType[], str: string | null, level: number) => {
+  let lvl2Cat: CategoryType | undefined = undefined;
+  let lvl2CatStr = "";
+  let lvl3Cat: CategoryType | undefined = undefined;
+  let lvl3CatStr = "";
+  if (level >= 4) {
+    lvl3Cat = categories.find((c: CategoryType) => c.level === 3);
+    if (lvl3Cat) lvl3CatStr = `${toLink(lvl3Cat.name)}/`;
+  }
+  if (level >= 3) {
+    lvl2Cat = categories.find((c: CategoryType) => c.level === 2);
+    if (lvl2Cat) lvl2CatStr = `${toLink(lvl2Cat.name)}/`;
+  }
+  return lvl2CatStr + lvl3CatStr + toLink(str);
+};
+
