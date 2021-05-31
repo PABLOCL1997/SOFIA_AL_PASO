@@ -22,24 +22,23 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
     return { routeName, routeLink, length }
   })
 
-  let finalLinks: BreadCrum[];
+  let finalLinks: BreadCrum[] = links;
   
   if (isMobile) {
-    const { length } = links
-    if (length < 2){
-      const newLink: BreadCrum = links[0]
+    if (additionalLinks) {
+      finalLinks = additionalLinks.map((bc:BreadCrum) => {
+        return {...bc, routeName: String(bc.routeName).replaceAll("/", "").replaceAll(" ","")}
+      });
+    }
+    const { length } = finalLinks
+    if (length < 1){
+      const newLink: BreadCrum = finalLinks[0]
       finalLinks = [newLink] 
     } else {
-      const newLink: BreadCrum = links[length - 2]
+      const newLink: BreadCrum = finalLinks[length - 2]
       finalLinks = [newLink]
     }
-  } else {
-    if (additionalLinks) {
-      finalLinks = additionalLinks
-    } else {
-      finalLinks = links
-    }
-  }
+  } 
 
   return <nav>
       {finalLinks.map(({ routeLink, routeName, length }, index) => 

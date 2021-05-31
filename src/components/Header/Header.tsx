@@ -222,7 +222,7 @@ const MobileMenu = styled.div<{ page?: string }>`
   left: 0;
   width: 100%;
   background: ${customStyles.yellow};
-  z-index: 99;
+  z-index: 3;
 `;
 
 const MobileMenuHeader = styled.div`
