@@ -72,16 +72,12 @@ export const CREATE_ORDER = gql`
   }
 `;
 
-export const PAY = gql`
+export const TODOTIX_ORDER_INFO = gql`
   mutation AddPayment(
     $parent_ids: String!
-    $authorizationcs_id: String!
-    $last_trans_id: String!
   ) {
-    addPayment(
+    todotixPayment(
       parent_ids: $parent_ids
-      authorizationcs_id: $authorizationcs_id
-      last_trans_id: $last_trans_id
     ) {
       entity_id
       increment_id

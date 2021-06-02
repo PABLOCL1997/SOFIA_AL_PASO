@@ -23,6 +23,9 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
   })
 
   let finalLinks: BreadCrum[] = links;
+  if (additionalLinks) {
+    finalLinks = additionalLinks;
+  }
   
   if (isMobile) {
     if (additionalLinks) {
@@ -38,7 +41,7 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
       const newLink: BreadCrum = finalLinks[length - 2]
       finalLinks = [newLink]
     }
-  } 
+  }  
 
   return <nav>
       {finalLinks.map(({ routeLink, routeName, length }, index) => 

@@ -10,7 +10,7 @@ import { BREAKPOINT } from "../utils/constants";
 import {
   CREATE_ORDER,
   EMPTY_CART,
-  PAY,
+  TODOTIX_ORDER_INFO,
   SET_TEMP_CART
 } from "../graphql/cart/mutations";
 import {
@@ -186,7 +186,7 @@ const Checkout: FC<Props> = () => {
       ...order
     }
   });
-  const [pay] = useMutation(PAY);
+  const [pay] = useMutation(TODOTIX_ORDER_INFO);
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [showError] = useMutation(SET_USER, {
     variables: { user: { showError: t("checkout.error") } }
@@ -210,21 +210,17 @@ const Checkout: FC<Props> = () => {
     (window as any).orderData = {};
     let params = new URLSearchParams(location.search);
     if (
-      params.get("orderIds") &&
-      params.get("authorizationcs_id") &&
-      params.get("transaction_id")
+      params.get("id")
     ) {
       (async () => {
         try {
           const response = await pay({
             variables: {
-              parent_ids: params.get("orderIds"),
-              authorizationcs_id: params.get("authorizationcs_id"),
-              last_trans_id: params.get("transaction_id")
+              parent_ids: params.get("id")
             }
           });
           setResult(
-            response.data.addPayment.map((co: any) => ({
+            response.data.todotixPayment.map((co: any) => ({
               entity_id: co.entity_id,
               increment_id: co.increment_id
             }))
