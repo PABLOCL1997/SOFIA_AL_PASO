@@ -13,11 +13,20 @@ const Details = React.lazy(() => import(/* webpackChunkName: "Details" */'../com
 const Orders = React.lazy(() => import(/* webpackChunkName: "Orders" */'../components/MyAccount/Orders'));
 
 const Wrapper = styled.div`
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    @media screen and (max-width: 768px) {
+        padding: 0;
+    }
+
     margin: 40px 0;
     padding: var(--padding);
     display:flex;
     flex-direction: row;
     align-items: flex-start;
+    justify-content: center;
     @media screen and (max-width: ${BREAKPOINT}) {
         flex-direction: column;
         padding: 20px;
@@ -30,7 +39,7 @@ const SidebarContainer = styled.div`
     box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.06);
     border-radius: 20px;
     position: relative;
-    left: 100px;
+    // left: 100px;
     z-index: 0;
     width: 350px;
     @media screen and (max-width: ${BREAKPOINT}) {
@@ -44,13 +53,14 @@ const Container = styled.div`
     box-shadow: 7px 15px 84px rgba(0, 0, 0, 0.07);
     border-radius: 20px;
     padding: 30px 40px;
-    width: calc(100% - 500px);
+    min-width: 600px;
     margin-left: 50px;
     position: relative;
-    z-index: 1;
+    z-index: -1;
 
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;
+        min-width: 200px;
         margin-left: 0;
         margin-top: 20px;
     }
@@ -75,8 +85,6 @@ const MyAccount: FC<Props> = () => {
 
     return (
         <Suspense fallback={<Loader />}>
-            <DelayedWrapper>
-                <div className="main-container">
                     <Wrapper>
                         <SidebarContainer>
                             <Sidebar />
@@ -86,8 +94,6 @@ const MyAccount: FC<Props> = () => {
                             {!showDetails && <Orders />}
                         </Container>
                     </Wrapper>
-                </div>
-            </DelayedWrapper>
         </Suspense>
     );
 }

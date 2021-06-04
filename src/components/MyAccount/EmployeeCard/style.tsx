@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   align-items: center;
   padding: 22px 20px;
 
-  margin-top: 40px;
+  // margin-top: 40px;
 
   img {
     margin-left: 5px;

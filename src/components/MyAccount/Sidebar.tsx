@@ -1,9 +1,11 @@
-import React, { FC, Suspense } from 'react';
+import React, { FC, Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from "@apollo/react-hooks";
-import { DETAILS } from '../../graphql/user/queries';
+import { DETAILS, GET_USER } from '../../graphql/user/queries';
 import { Link, useLocation } from "react-router-dom";
+import EmployeeModal from '../EmployeeModal';
+import EmployeeCard from './EmployeeCard/EmployeeCard';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
 const ProfileIcon = React.lazy(() => import(/* webpackChunkName: "ProfileIcon" */'../Images/ProfileIcon'));
@@ -52,6 +54,11 @@ const Sidebar: FC<Props> = () => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
     const { data } = useQuery(DETAILS, {});
+    const { data: userData } = useQuery(GET_USER, {
+        onCompleted: d => console.log('data', d)
+    });
+    const [show, setShowOpen] = useState(false);
+
 
     return <Suspense fallback={<Loader />}>
         <>
@@ -64,6 +71,21 @@ const Sidebar: FC<Props> = () => {
                 <Item active={pathname.indexOf('ordenes') >= 0}>
                     <History />
                     <Link to="/mi-cuenta/ordenes">{t('account.sidebar.history')}</Link>
+                </Item>
+                <Item active={false}>
+                    {data && (
+                    <>
+                        <EmployeeCard setShowOpen={setShowOpen} cuentaActiva={data.details.employee} />
+
+                        <EmployeeModal
+                            show={show}
+                            setShowOpen={setShowOpen}
+                            setCuentaActiva={data.details.employee}
+                            userDetails={data}
+                            userData={userData}
+                        />
+                    </>
+                    )}
                 </Item>
             </Menu>
         </>
