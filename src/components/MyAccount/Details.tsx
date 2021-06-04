@@ -928,19 +928,7 @@ const Details: FC<Props> = () => {
         </>
         )}
 
-        {userDetails && (
-          <>
-            <EmployeeCard setShowOpen={setShowOpen} cuentaActiva={userDetails.details.employee} />
 
-            <EmployeeModal
-              show={show}
-              setShowOpen={setShowOpen}
-              setCuentaActiva={userDetails.details.employee}
-              userDetails={userDetails}
-              userData={userData}
-            />
-          </>
-        )}
 
         <ModalCourtain
           className={
