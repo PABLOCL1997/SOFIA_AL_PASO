@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import ArrowPrev from "../assets/images/arrow-prev.svg";
 import ArrowNext from "../assets/images/arrow-next.svg";
-import { customStyles } from "../utils/constants";
+import { BREAKPOINT, customStyles } from "../utils/constants";
 
 export const Wrapper = styled.div`
   .slick-dots {
@@ -51,6 +51,11 @@ export const ImageContainer = styled.div<{ bg?: string }>`
 
   background: url('${props => props.bg}') no-repeat
     center center / cover;
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    background: url('${props => props.bg}') no-repeat
+    center center / 100%;
+  }
 `;
 
 export const LINK = styled.div`
