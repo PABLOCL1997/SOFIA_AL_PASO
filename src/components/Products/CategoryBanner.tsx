@@ -11,6 +11,7 @@ import {
 
 import useCategory from "../../hooks/useCategory";
 import { toCatLink } from "../../utils/string";
+import { CategoryType } from "../../graphql/categories/type";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -75,29 +76,18 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
     <Suspense fallback={<Loader />}>
       <Wrapper>
         <Slider {...settings}>
-          {/* {category === "alimento-para-mascotas" &&
-            <LINK>
-              <ImageContainer bg={isMobile ? podiumMob : podium }></ImageContainer>
-            </LINK>
-          }
-          {category === "embutidos-premium" && 
-            <LINK>
-              <ImageContainer bg={isMobile ? kostlichMob : kostlich }></ImageContainer>
-            </LINK>
-          } */}
-          {/* <Link to="/productos/semana-del-atun-">
-            <ImageContainer bg={isMobile ? semanaAtunMob : semanaAtun}></ImageContainer>
-          </Link> */}
-          {tCategory && tCategory.banner_mobile && tCategory.banner_desktop &&
+          {tCategory && !tCategory.is_campaign &&  tCategory.banner_mobile && tCategory.banner_desktop &&
             <Link to={`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`}>
               <ImageContainer bg={isMobile ? tCategory.banner_mobile : tCategory.banner_desktop} />
             </Link>
           }
           {/* below code: mostrar campaign en todas la categorias */}
-          {/* {categories.map((category: CategoryType) => 
+          {categories.map((category: CategoryType) => 
             category.is_campaign && 
-            <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
-          )} */}
+            <Link to={`/productos/${toCatLink(categories, category.name, category.level)}`}>
+              <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
+            </Link>
+          )}
         </Slider>
       </Wrapper>
     </Suspense>
