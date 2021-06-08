@@ -284,42 +284,6 @@ const urls = [
         urlTo: "/productos/cerdo/bandejas"
     },
     {
-        urlFrom: "/pack-grande-san-juan",
-        urlTo: "/"
-    },
-    {
-        urlFrom: "/pack-res-san-juan-con-salsa",
-        urlTo: "/"
-    },
-    {
-        urlFrom: "/pack-xl-de-res-san-juan",
-        urlTo: "/"
-    },
-    {
-        urlFrom: "/pack-res-xl-san-juan-con-salsa",
-        urlTo: "/"
-    },
-    {
-        urlFrom: "/pack-frankfurt-san-juan-con-salsa",
-        urlTo: "/productos/embutidos/salchichas"
-    },
-    {
-        urlFrom: "/pack-frankfurt-xl-san-juan-con-salsa",
-        urlTo: "/productos/embutidos/salchichas"
-    },
-    {
-        urlFrom: "/pack-clasico-de-res-san-juan",
-        urlTo: "/"
-    },
-    {
-        urlFrom: "/pack-peque-o-san-juan",
-        urlTo: "/"
-    },
-    {
-        urlFrom: "/pack-chorizo-de-res-con-salsa",
-        urlTo: "/"
-    },
-    {
         urlFrom: "/carne-de-cerdo/bife-de-cerdo-congelado-en-bandeja",
         urlTo: "/productos/cerdo"
     },
