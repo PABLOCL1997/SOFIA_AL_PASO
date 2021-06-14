@@ -56,7 +56,7 @@ const Container = styled.div`
     min-width: 600px;
     margin-left: 50px;
     position: relative;
-    z-index: -1;
+    z-index: 0;
 
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;
