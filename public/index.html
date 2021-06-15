@@ -25,7 +25,87 @@
     <link rel="preload" href="https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp" as="image">
     <link rel="preload" href="/images/375x500-ecommerce.webp" as="image">  
     <link rel="replace">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            /** init gtm after 3500 seconds - this could be adjusted */
+            setTimeout(initGTM, 7500);
+            setTimeout(initSocialLogin, 1500);
+        });
 
+        function initSocialLogin () {
+            (function() {
+                var s = document.createElement('script');
+                s.type = 'application/javascript';
+                s.src = 'https://connect.facebook.net/en_US/sdk.js';
+                (document.getElementsByTagName('body')[0] || document.documentElement).appendChild(s);
+            })();
+
+            window.fbAsyncInit = function () {
+                FB.init({
+                appId: "614067362874540",
+                cookie: true,
+                xfbml: true,
+                version: "v7.0"
+                });
+                FB.AppEvents.logPageView();
+            };
+        }
+
+        function initGTM () {
+            if (window.gtmDidInit) {
+                return false;
+            }
+            window.gtmDidInit = true; // flag to ensure script does not get added to DOM more than once.
+            // GTM code
+            (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+            var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+            j.async = true;
+            j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+            f.parentNode.insertBefore(j, f);
+            })(window, document, "script", "dataLayer", "GTM-WTF75HG");
+
+            // inspectlet
+            (function() {
+                window.__insp = window.__insp || [];
+                __insp.push(['wid', 145310927]);
+                var ldinsp = function(){
+                if(typeof window.__inspld != "undefined") return; window.__inspld = 1; var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js?wid=145310927&r=' + Math.floor(new Date().getTime()/3600000); var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); };
+                setTimeout(ldinsp, 0);
+            })();
+
+            // hotjar
+            (function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:2020275,hjsv:6};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+
+            // omapapi
+            (function() {
+                var s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = 'https://a.omappapi.com/app/js/api.min.js';
+                s.setAttribute('data-user', "85930");
+                s.setAttribute('data-account', "96460");
+                (document.getElementsByTagName('body')[0] || document.documentElement).appendChild(s);
+            })();
+
+        }
+    </script>
+    <script type="application/javascript" async defer src=""></script>
+    <meta
+        name="google-signin-client_id"
+        content="477197213348-fjk4p43702gn9t61jja26iqsj6j7j2of.apps.googleusercontent.com"
+    />
+
+    
     <style>
 :root {
     --bkg: #FAFAFA;

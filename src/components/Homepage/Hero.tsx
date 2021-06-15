@@ -30,10 +30,7 @@ const Container = styled.div`
 
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin-bottom: 30px;
-    margin-top:0px;
     padding: 40px 20px;
-    min-height: auto;
 
   }
 

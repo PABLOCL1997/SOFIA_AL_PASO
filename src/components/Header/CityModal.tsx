@@ -26,7 +26,7 @@ const Courtain = styled.div<any>`
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.2);
-  z-index: 4;
+  z-index: 400;
   &.visible {
     display: flex;
   }

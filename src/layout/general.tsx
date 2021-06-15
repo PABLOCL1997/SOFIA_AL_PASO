@@ -34,7 +34,6 @@ const Footer = React.lazy(() =>
 );
 
 const Wrapper = styled.div`
-  margin: 0;
   padding: 113px 0 0;
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0;
@@ -105,7 +104,6 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <GTM />
       <Wrapper className={page ? page : ""}>
         <Header checkout={checkout} page={page} />
         <Content>{children}</Content>
