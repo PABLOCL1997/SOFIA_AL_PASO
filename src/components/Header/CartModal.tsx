@@ -19,13 +19,18 @@ import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../../graphql/cart/mutations"
 import { BREAKPOINT } from "../../utils/constants";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
-const ProductCart = React.lazy(() =>
-  import(/* webpackChunkName: "ProductCart" */ "../ProductCart")
-);
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
+
+const Delete = React.lazy(
+  () => import(/* webpackChunkName: "Delete" */ "../Images/Delete")
+);
+const Chevron = React.lazy(
+  () => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
+);
+
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
 
@@ -218,6 +223,96 @@ const CtaWrapper = styled.div`
     }
   }
 `;
+
+const Row = styled.div`
+  display: grid;
+  grid-template-columns: 115px 1fr 95px 95px 100px 24px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    grid-template-columns: 115px 1fr 70px;
+  }
+`;
+const Image = styled.img`
+  width: 100px;
+  margin-right: 20px;
+`;
+Image.displayName = 'ProductCartImage'
+const NameBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  flex: 1;
+`;
+
+const Name = styled.h3`
+  font-family: MullerMedium;
+  font-size: 14px;
+  line-height: 14px;
+  color: var(--black);
+  margin-bottom: 5px;
+`;
+const Units = styled.span`
+  font-family: MullerMedium;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--font);
+  margin-right: 20px;
+`;
+const Qty = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--yellow);
+  padding: 10px 0;
+  border-radius: 30px;
+  margin-right: 20px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-right: 0;
+  }
+  select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    width: 65px;
+    padding-left: 25px;
+    font-size: 12px;
+    line-height: 12px;
+  }
+  svg {
+    pointer-events: none;
+    position: absolute;
+    right: 10px;
+  }
+`;
+const UnitPrice = styled.span`
+  font-family: MullerMedium;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--font);
+  margin-right: 5px;
+`;
+
+const Price = styled.span`
+  margin-right: 20px;
+  font-family: MullerMedium;
+  font-size: 16px;
+  line-height: 16px;
+`;
+
+const DeleteWrapper = styled.div`
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+  @media screen and (max-width: ${BREAKPOINT}) {
+    text-align: center;
+  }
+`;
+
 
 type Action = {
   qty?: number;
@@ -524,13 +619,50 @@ const AuthModal: FC<Props> = () => {
                       a.entity_id - b.entity_id
                   )
                   .map((product: ProductType, i: number) => (
-                    <ProductCart
-                      key={i}
-                      product={product}
-                      // updateItem={updateItem}
-                      isStockAvaible={isStockAvaible}
-                      removeRow={removeRow}
-                    />
+                    <Row key={product.entity_id}>
+                    <Image src={product.image.split(",")[0]}></Image>
+                    <NameBox>
+                      <Name>
+                        {product.useKGS
+                          ? `${product.name} DE ${Number(product.weight)
+                              .toFixed(2)
+                              .replace(".", ",")} KGS APROX.`
+                          : product.name}
+                      </Name>
+                      <Units>&nbsp;</Units>
+                    </NameBox>
+                    <Qty>
+                      <select
+                        defaultValue={product.qty}
+                        onChange={event =>
+                          updateItem(Number(event.target.value), product)
+                        }
+                      >
+                        {[...(Array(21).keys() as any)]
+                          .slice(1)
+                          .map((opt: any, index: number) => (
+                            <option key={index} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                      </select>
+                      <Chevron />
+                    </Qty>
+                    <UnitPrice>
+                      Bs. {product.special_price.toFixed(2).replace(".", ",")}{" "}
+                      c/u -
+                    </UnitPrice>
+                    <Price>
+                      Bs.{" "}
+                      {(product.special_price * (product.qty ? product.qty : 0))
+                        .toFixed(2)
+                        .replace(".", ",")}
+                    </Price>
+                    <DeleteWrapper onClick={() => removeRow(product)}>
+                      <Delete />
+                    </DeleteWrapper>
+                  </Row>
+
                   ))}
             </Items>
           ) : (
