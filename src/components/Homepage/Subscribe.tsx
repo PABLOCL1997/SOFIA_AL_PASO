@@ -1,13 +1,21 @@
 import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Desktop, Mobile } from "../ResponsiveContainers";
+
 import { BREAKPOINT } from "../../utils/constants";
 import { SUBSCRIBE, SET_USER } from "../../graphql/user/mutations";
 import { useMutation } from "react-apollo";
 import { isValidEmail } from "../../utils/string";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
+
+
+export const MobileDesktopContainer = styled.div`
+    display: flex;
+    @media screen and (max-width: ${BREAKPOINT}) {
+        width: 100%;
+    }
+`
 
 const Container = styled.section`
   background-color: #ebebeb;
@@ -19,12 +27,21 @@ const Container = styled.section`
   box-shadow: 25px 19px 0px #fecd00;
   margin-bottom: 88px;
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-radius: 19px;
+    background: #ffffff;
+    margin: 80px 30px 30px 30px;
+    box-shadow: 0px 8px 80px rgba(0, 0, 0, 0.12);
+    padding: 30px;
   }
   @media screen and (min-width: ${BREAKPOINT}) and (max-width: 1300px) {
-    // background: none;
+    background: none;
   }
 `;
+
 
 const LogoContainer = styled.div`
   display: flex;
@@ -37,6 +54,12 @@ const LogoContainer = styled.div`
     text-transform: uppercase;
     color: var(--red);
     margin-left: 15px;
+  }
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    span {
+      display: none
+    }
   }
 `;
 
@@ -117,17 +140,7 @@ const Text = styled.div`
   max-width: 412px;
 `;
 
-const MobileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border-radius: 19px;
-  margin: 20px;
-  align-items: center;
-  box-shadow: 0px 8px 80px rgba(0, 0, 0, 0.12);
-  padding: 30px;
-  margin-top: 80px;
-`;
+
 
 const Image = styled.img`
   transform: rotate(90deg);
@@ -168,7 +181,7 @@ const Subscribe: FC<Props> = () => {
 
   return (
       <Suspense fallback={<span></span>}>
-        <Desktop>
+        <MobileDesktopContainer>
           <Container>
             <LogoContainer>
               <img
@@ -200,34 +213,7 @@ const Subscribe: FC<Props> = () => {
             </InputGroup>
             <Text>{t("homepage.subscribe.text")}</Text>
           </Container>
-        </Desktop>
-        <Mobile>
-          <MobileContainer>
-            <LogoContainer>
-            <img
-              src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
-              width="60px"
-              height="36px"
-              alt={"Sofía"}
-            />
-            </LogoContainer>
-            <Notifications>
-              {t("homepage.subscribe.notifications")}
-            </Notifications>
-            <Title>{t("homepage.subscribe.title")}</Title>
-            <InputGroup>
-              <input placeholder={t("homepage.subscribe.mail")} type="email" />
-              <CtaWrapper>
-                <Cta
-                  filled={true}
-                  text={t("homepage.subscribe.button")}
-                  action={doSubscribe}
-                />
-              </CtaWrapper>
-            </InputGroup>
-            <Text>{t("homepage.subscribe.text")}</Text>
-          </MobileContainer>
-        </Mobile>
+        </MobileDesktopContainer>
       </Suspense>
   );
 };

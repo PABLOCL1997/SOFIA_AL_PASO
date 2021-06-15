@@ -5,9 +5,6 @@ const Header = React.lazy(() =>
   import(/* webpackChunkName: "Header" */ "../components/Header/Header")
 );
 
-const GTM = React.lazy(() =>
-  import(/* webpackChunkName: "GTM" */ "../components/Shared/GTM")
-);
 
 const Hero = React.lazy(() =>
   import(/* webpackChunkName: "Hero" */ "../components/Homepage/Hero")
@@ -20,11 +17,7 @@ const CategorySlider = React.lazy(() =>
 const Benefits = React.lazy(() =>
   import(/* webpackChunkName: "Benefits" */ "../components/Homepage/Benefits")
 );
-const Promotions = React.lazy(() =>
-  import(
-    /* webpackChunkName: "Promotions" */ "../components/Homepage/Promotions"
-  )
-);
+
 
 const Subscribe = React.lazy(() =>
   import(/* webpackChunkName: "Subscribe" */ "../components/Homepage/Subscribe")
@@ -58,29 +51,20 @@ const Loader = styled.div`
 const Homepage = () => {
   return (
   <>
-
-      <Header checkout={false} page={undefined} />
-      <Hero /> 
+    <Header checkout={false} page={undefined} />
+    <Hero /> 
     
-    <Suspense fallback={<Loader>
-      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-    </Loader>}>
+    <Suspense fallback={<></>}>
       <Benefits />
     </Suspense>
 
-    <Suspense fallback={<Loader>
-      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-    </Loader>}>
+    <Suspense fallback={<></>}>
       <CategorySlider />
        {/* <Promotions />  */}
     </Suspense>
-    
-    
-    <Suspense fallback={<Loader>
-      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-    </Loader>}>
+        
+    <Suspense fallback={<></>}>
       <Subscribe />
-      <GTM />
       <Error />
       <Success />
       <Modal />

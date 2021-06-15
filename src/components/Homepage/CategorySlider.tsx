@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { CategoryType } from "../../graphql/categories/type";
@@ -106,15 +106,15 @@ const CtaWrapper = styled.div`
   }
 `;
 
-const LoaderWrapper = styled.div`
+const Loader = styled.div`
+  margin-top: 45px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 470px;
+  justify-content: center;
   img {
-    width: 40px;
+    max-width: 100%;
   }
-`;
+`
 
 type Props = {
 };
@@ -142,6 +142,9 @@ const CategorySlider: FC<Props> = () => {
   };
 
   return (
+    <Suspense fallback={<Loader>
+      <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+    </Loader>}>
     <SectionWrapper>
         <CategoryList>
           <Category onClick={() => selectCategory(0)} selected={selected === 0}>
@@ -187,11 +190,6 @@ const CategorySlider: FC<Props> = () => {
             </CategoryMobileList>
           )}
         </CategoryMobile>
-        {loadingProds && (
-          <LoaderWrapper>
-            <img src="/images/loader.svg" alt="loader" />
-          </LoaderWrapper>
-        )}
         {!loadingProds && !!products.length && (
           <ProductSlider products={products} />
         )}
@@ -205,6 +203,7 @@ const CategorySlider: FC<Props> = () => {
           </Link>
         </CtaWrapper>
     </SectionWrapper>
+    </Suspense>
   );
 };
 

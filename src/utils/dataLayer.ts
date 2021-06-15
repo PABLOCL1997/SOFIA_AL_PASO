@@ -8,24 +8,27 @@ type TrackOrder = {
 };
 
 export const trackProductList = (products: Array<ProductType>) => {
-  (window as any).dataLayer.push({
-    event: "productList",
-    ecommerce: {
-      currencyCode: "BOB",
-      impressions: products.map((p: ProductType, index: number) => ({
-        name: p.name,
-        id: p.sku,
-        price: (p.special_price || 0).toFixed(2),
-        brand: "Sofía",
-        category: p.category_name,
-        position: index + 1
-      }))
-    }
-  });
+  try {
+    (window as any).dataLayer.push({
+      event: "productList",
+      ecommerce: {
+        currencyCode: "BOB",
+        impressions: products.map((p: ProductType, index: number) => ({
+          name: p.name,
+          id: p.sku,
+          price: (p.special_price || 0).toFixed(2),
+          brand: "Sofía",
+          category: p.category_name,
+          position: index + 1
+        }))
+      }
+    });
+  } catch (e) { }
 };
 
 export const trackProduct = (p: ProductType) => {
-  (window as any).dataLayer.push({
+  try {
+    (window as any).dataLayer.push({
     event: "productDetail",
     ecommerce: {
       detail: {
@@ -41,10 +44,12 @@ export const trackProduct = (p: ProductType) => {
       }
     }
   });
+  } catch (e) { }
 };
 
 export const trackAddToCart = (p: ProductType) => {
-  (window as any).dataLayer.push({
+  try {
+    (window as any).dataLayer.push({
     event: "addToCart",
     ecommerce: {
       currencyCode: "BOB",
@@ -62,9 +67,11 @@ export const trackAddToCart = (p: ProductType) => {
       }
     }
   });
+  } catch (e) { }
 };
 
 export const trackRemoveFromCart = (p: ProductType) => {
+  try {
   (window as any).dataLayer.push({
     event: "removeFromCart",
     ecommerce: {
@@ -83,6 +90,7 @@ export const trackRemoveFromCart = (p: ProductType) => {
       }
     }
   });
+  } catch (e) { }
 };
 
 export const initCheckout = (
@@ -90,7 +98,8 @@ export const initCheckout = (
   email: string,
   products: Array<ProductType>
 ) => {
-  (window as any).dataLayer.push({
+  try {
+    (window as any).dataLayer.push({
     event: "initiateCheckout ",
     ecommerce: {
       purchase: {
@@ -112,10 +121,12 @@ export const initCheckout = (
       }
     }
   });
+} catch (e) { }
 };
 
 export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
-  (window as any).dataLayer.push({
+  try {
+    (window as any).dataLayer.push({
     event: "purchase",
     ecommerce: {
       purchase: {
@@ -139,4 +150,5 @@ export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
       }
     }
   });
+} catch (e) { }
 };
