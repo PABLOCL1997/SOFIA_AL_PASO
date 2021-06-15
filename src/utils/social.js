@@ -24,6 +24,7 @@ export const facebookLogin = callback => {
 };
 
 export const googleLogin = callback => {
+  try {
   window.gapi.load("auth2", () => {
     let auth2 = window.gapi.auth2.init({
       client_id:
@@ -44,4 +45,5 @@ export const googleLogin = callback => {
       () => callback({})
     );
   });
+  } catch (e) {}
 };
