@@ -392,7 +392,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           </b>
         </Total>
         {dataDiscounts && !!(localUserData && localUserData?.userInfo[0]?.idPriceList && localUserData?.userInfo[0]?.idPriceList > 0) && userDetails.details.employee && (
-          <EmployeeMsg>¡Te has ahorrado Bs. {Number(dataDiscounts?.comparePrices || 0).toFixed(2).replace('.',',')} por ser empleado!</EmployeeMsg>
+          <EmployeeMsg>¡Te has ahorrado Bs. {Number(dataDiscounts?.comparePrices || 0).toFixed(2).replace('.',',')} por ser colaborador!</EmployeeMsg>
         )}
 
         <CtaWrapper>

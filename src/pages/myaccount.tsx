@@ -40,7 +40,7 @@ const SidebarContainer = styled.div`
     border-radius: 20px;
     position: relative;
     // left: 100px;
-    z-index: 0;
+    z-index: 1;
     width: 350px;
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;

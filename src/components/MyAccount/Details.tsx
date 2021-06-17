@@ -14,10 +14,7 @@ import {
 } from "../../graphql/user/mutations";
 import { UserType, AddressType } from "../../graphql/user/type";
 import { setLatLng } from "../../utils/googlemaps";
-import EmployeeCard from "./EmployeeCard/EmployeeCard";
-import EmployeeModal from "../EmployeeModal";
 import StarIcon from "../../assets/images/star.svg";
-import LoginModal from "../LoginModal";
 import { GET_USER2E_DETAILS } from "../../graphql/b2e/queries";
 
 const Loader = React.lazy(() =>
@@ -799,10 +796,6 @@ const Details: FC<Props> = () => {
       value: t("checkout.delivery.avenue")
     }
   ];
-
-  //MODAL CUENTA
-
-  const [show, setShowOpen] = useState(false);
 
   return (
     <Suspense fallback={<Loader />}>
