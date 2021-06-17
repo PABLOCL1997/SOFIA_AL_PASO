@@ -1,8 +1,6 @@
 import React, {
   Suspense,
   FC,
-  useEffect,
-  useState,
   SetStateAction
 } from "react";
 import { Wrapper, TextWrap, ActivaTitle } from "./style";
@@ -21,12 +19,12 @@ const EmployeeCard: FC<Props> = ({ setShowOpen, cuentaActiva }) => {
         <TextWrap onClick={() => setShowOpen && setShowOpen(true)}>
           {cuentaActiva ? (
             <ActivaTitle>
-              <h4>Cuenta de empleado activada</h4>
+              <h4>Cuenta de colaborador activada</h4>
               <img src={Checked} alt="Listo"/>
             </ActivaTitle>
           ) : (
             <p>
-              ¿Trabajas en Sofía?
+              ¿Eres colaborador interno?
               <br /> <span>Activa tu cuenta</span> para obtener más beneficios.
             </p>
           )}
