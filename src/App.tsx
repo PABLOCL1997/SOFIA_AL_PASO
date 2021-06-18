@@ -41,6 +41,11 @@ const Page404 = React.lazy(() =>
   import(/* webpackChunkName: "Page404" */ "./components/Page404")
 );
 
+const Incentivos = React.lazy(() => 
+  import(/* webpackChunkName: "Incentivos" */ "./pages/incentivos")
+);
+
+
 const Loader = styled.div`
   display: flex;
   align-items: center;
@@ -78,7 +83,14 @@ const App = () => {
           }
         />
         <Route
-          
+          path="/habilitacion-incentivos"
+          children={
+            <LayoutGeneral>
+              <Incentivos />
+            </LayoutGeneral>
+          }
+        />
+        <Route
           path="/password-reset/:token"
           children={
             <LayoutGeneral>
