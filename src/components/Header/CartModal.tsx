@@ -549,35 +549,12 @@ const AuthModal: FC<Props> = () => {
 
   useEffect(() => {
     // when city or idPriceList changes, updateCart
-    if (newCartEmpty) setNewCartEmpty(false);
+    if (city && idPriceList ) {
+      if (newCartEmpty) setNewCartEmpty(false);
+    }
   }, [city, idPriceList]);
 
-  const isStockAvaible = (
-    flag: number,
-    stockAvaible: Number,
-    updateItem: any
-  ) => {
-    console.log("show modal not stock", flag);
-    if (!flag) {
-      return showSuccess({
-        variables: {
-          user: {
-            showModal: t("cart.no_stock", {
-              qty: stockAvaible
-            })
-          }
-        }
-      });
-    } else {
-      data.cartItems.map((item: any, index: any) => {
-        if (item.name === updateItem.nameItem) {
-          data.cartItems[index].qty = updateItem.qtyItem;
-        }
-      });
-      totalAmount = GET_TOTAL(data.cartItems);
-      setReloadModal(!reloadModal);
-    }
-  };
+
 
   return (
     <Suspense fallback={<Loader />}>
