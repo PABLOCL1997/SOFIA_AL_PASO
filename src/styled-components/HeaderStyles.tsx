@@ -35,7 +35,7 @@ export const AddressHeader = styled.div`
   span {
     line-height: 15px;
     max-height: 45px;
-    // overflow: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
