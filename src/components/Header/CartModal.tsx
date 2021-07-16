@@ -6,7 +6,7 @@ import useMinimumPrice from "../../hooks/useMinimumPrice";
 
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
-import { trackAddToCart, trackRemoveFromCart } from "../../utils/dataLayer";
+import { trackAddToCart, trackRemoveFromCart, trackRemoverCarrito, trackIrCheckout } from "../../utils/dataLayer";
 import {
   GET_CART_ITEMS,
   GET_TOTAL,
@@ -29,6 +29,10 @@ const Delete = React.lazy(
 );
 const Chevron = React.lazy(
   () => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
+);
+
+const RecommendedProducts = React.lazy(
+  () => import(/* webpackChunkName: "RecommendedProducts" */ "../Checkout/RecommendedProducts")
 );
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
@@ -330,6 +334,7 @@ const AuthModal: FC<Props> = () => {
   const minimumPrice = useMinimumPrice()
 
   const [action, setAction] = useState<Action>({});
+  const [relatedProducts, setRelatedProducts] = useState<any>([]);
   const { data: userData } = useQuery(GET_USER, {});
   const [closeCartModal] = useMutation(SET_USER, {
     variables: { user: { openCartModal: false } }
@@ -437,6 +442,7 @@ const AuthModal: FC<Props> = () => {
         });
       }
       if ((action.product?.qty ?? 0) < (action.qty || 0)) {
+        trackRemoverCarrito();
         trackRemoveFromCart({
           ...action.product,
           qty: action.qty
@@ -447,6 +453,7 @@ const AuthModal: FC<Props> = () => {
       await addItem();
       setAction({});
     } else if (action.action === "delete") {
+      trackRemoverCarrito();
       trackRemoveFromCart({
         ...action.product,
         qty: 0
@@ -462,6 +469,7 @@ const AuthModal: FC<Props> = () => {
   };
 
   const checkout = () => {
+    trackIrCheckout();
     closeCartModal();
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
       history.push("/checkout");
@@ -470,6 +478,22 @@ const AuthModal: FC<Props> = () => {
       toggleLoginModal();
     }
   };
+
+  const getRelatedProducts = () => {
+    let relProducts: any = [];
+    let checkoutItems: any = [];
+    data.cartItems.forEach((el: any) => {
+      checkoutItems.push(el.entity_id);
+      if(el.related){
+        relProducts = [...relProducts, ...el.related];
+      }
+    })
+    relProducts = relProducts.filter((v:any,i:any,a:any)=>a.findIndex((t:any)=>(t.entity_id === v.entity_id))===i)
+    relProducts = relProducts.filter((i:any) => !checkoutItems.includes(i.entity_id))
+    relProducts = relProducts.sort((a:any, b:any) => (a.entity_id > b.entity_id) ? 1 : -1);
+    setRelatedProducts(relProducts);
+    return relProducts
+  }
 
   useEffect(() => {
     if (newCart && newCart.checkCart && !newCartEmpty) {
@@ -660,13 +684,28 @@ const AuthModal: FC<Props> = () => {
               {parseFloat(totalAmount.replace(",", ".")) >=
                 minimumPrice && (
                 <CtaWrapper>
-                  <Cta filled={true} text={t("cart.pay")} action={checkout} />
+                  <Cta filled={true} text={t("cart.pay")} action={() => {
+                    const relProducts = getRelatedProducts();
+                    if(relProducts.length == 0){
+                      checkout();
+                    } else {
+                      closeCartModal();
+                    }
+                  }} />
                 </CtaWrapper>
               )}
             </Toolbox>
           </Footer>
         </Modal>
       </ModalCourtain>
+      <RecommendedProducts
+        visible={relatedProducts.length > 0}
+        items={relatedProducts}
+        close={() => {
+          setRelatedProducts([]);
+          checkout();
+        }}
+      />
     </Suspense>
   );
 };

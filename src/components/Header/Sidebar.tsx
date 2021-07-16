@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_TOTAL, GET_QTY, GET_CART_ITEMS } from "../../graphql/cart/queries";
 
@@ -14,16 +14,46 @@ import {
     MenuBottom,
     MenuListTools,
     CartWrapper,
+    Category,
+    Subcategory,
 
 } from "../../styled-components/HeaderStyles";
 import { Link, useHistory } from "react-router-dom";
 import Cta from "../Cta";
 import { GET_USER } from "../../graphql/user/queries";
 import { useTranslation } from "react-i18next";
+import useCategory from "../../hooks/useCategory";
+import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
+import styled from "styled-components";
+import { toLink } from "../../utils/string";
 
 const Cart = React.lazy(() =>
   import(/* webpackChunkName: "Cart" */ "../Images/Cart")
 );
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"))
+
+const ChevronWrapper = styled.div<{ active: boolean; }>`
+  margin: 0 10px 0 0;
+  display: inline;
+
+  ${({ active }) => active ? `
+    svg {
+      transform: rotate(180deg);
+    }
+  ` : ``}
+`
+
+const Wrapper = styled.aside`
+    display:flex;
+    flex-direction: column;
+    
+    height: 100%;
+
+    svg {
+      cursor: pointer;
+    }
+
+`
 
 type Props = {
     setOpen: Function;
@@ -31,9 +61,11 @@ type Props = {
 const Sidebar: FC<Props> = ({ setOpen }) => {
     const history = useHistory();
     const { t } = useTranslation();
-
+    const { categories } = useCategory()
     const { data: userData } = useQuery(GET_USER, {});
     const { data } = useQuery(GET_CART_ITEMS);
+    const [showCategories, setShowCategories] = useState<boolean>(true);
+    const [categoryOpen, setCategoryOpen] = useState<number>(0)
 
     const [logout] = useMutation(SET_USER, {
         variables: {
@@ -78,7 +110,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
         history.push("/");
       };
     return (
-        <>
+        <Wrapper>
         <CloseRow>
         <CartWrapper onClick={showCart}>
           <Cart />
@@ -116,17 +148,6 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           </Link>
         </MenuItem>
         <MenuItem>
-        {/* steak */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 8V13C1 16.1 4.1 21 12 21C20.2 21 23 20.4 23 17V12" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" />
-            <path d="M6 3C3.1 3 1 5.2 1 8C1 11.1 4.1 16 12 16C20.2 16 23 15.4 23 12C23 9.7 20 8 17 8C12.1 8 12.7 3 6 3Z" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
-            <path d="M10 9C10 9.8 8.1 10.6 6.9 10.4C5.8 10.1 5 9.1 5 8.2C5 7.3 5.5 6.5 6.6 6.5C7.7 6.5 10 7.9 10 9Z" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
-          </svg>
-          <Link onClick={() => setOpen(false)} to="/productos">
-            {t("header.products")}
-          </Link>
-        </MenuItem>
-        <MenuItem>
         {/* faq */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9 5H1V21H21V13" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
@@ -138,6 +159,51 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
             {t("header.faq")}
           </Link>
         </MenuItem>
+        <MenuItem>
+        {/* steak */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 8V13C1 16.1 4.1 21 12 21C20.2 21 23 20.4 23 17V12" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" />
+            <path d="M6 3C3.1 3 1 5.2 1 8C1 11.1 4.1 16 12 16C20.2 16 23 15.4 23 12C23 9.7 20 8 17 8C12.1 8 12.7 3 6 3Z" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+            <path d="M10 9C10 9.8 8.1 10.6 6.9 10.4C5.8 10.1 5 9.1 5 8.2C5 7.3 5.5 6.5 6.6 6.5C7.7 6.5 10 7.9 10 9Z" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+          </svg>
+          {/* <Link onClick={() => setOpen(false)} to="/productos"> */}
+          <span onClick={() => setShowCategories(!showCategories)}>
+            {t("header.products")}{" "}
+            <ChevronWrapper active={showCategories}>
+              <Chevron />
+            </ChevronWrapper>
+          </span>
+          {/* </Link> */}
+        </MenuItem>
+
+          {categories && React.Children.toArray(categories.filter((category: CategoryType) => !category.is_campaign).map((category: CategoryType) => 
+          <>
+            <Category isVisible={showCategories} showSubCategories={category.entity_id === categoryOpen}>
+              <span onClick={() => {
+                category.entity_id === categoryOpen ? 
+                setCategoryOpen(0)
+                :
+                setCategoryOpen(category.entity_id)
+              }}>
+                <Link to={`/productos/${toLink(category.name)}`}>
+                  {category.name}
+                </Link>
+                {" "}
+                <ChevronWrapper active={category.entity_id === categoryOpen}>
+                  <Chevron />
+                </ChevronWrapper>
+              </span>
+
+              {category.subcategories && React.Children.toArray(category.subcategories.map((subcategory: SubCategoryLvl3Type) =>
+                <Subcategory>
+                  <Link to={`/productos/${toLink(category.name)}/${toLink(subcategory.name)}`}>
+                    {subcategory.name}
+                  </Link>
+                </Subcategory>
+              ))}
+            </Category>
+          </>
+          ))} 
       </MenuList>
       <MenuBottom>
           <img
@@ -148,7 +214,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           />
         <span>{t("header.slogan")}</span>
       </MenuBottom>
-      </>)
+      </Wrapper>)
 }
 
 export default Sidebar

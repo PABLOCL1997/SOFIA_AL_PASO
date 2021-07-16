@@ -152,3 +152,29 @@ export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
   });
 } catch (e) { }
 };
+
+export const trackIrCarrito = () => {
+  try {
+  (window as any).dataLayer.push({
+    event: "irCarrito",
+  });
+  } catch(e) {}
+};
+
+export const trackRemoverCarrito = () => {
+  try {
+    (window as any).dataLayer.push({
+    event: "removerCarrito",
+  });
+} catch(e) {}
+
+};
+
+export const trackIrCheckout = () => {
+  try {
+    (window as any).dataLayer.push({
+    event: "irCheckout",
+  });
+} catch(e) {}
+
+};

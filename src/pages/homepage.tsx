@@ -1,28 +1,29 @@
 import React, { Suspense } from "react";
-import styled from "styled-components";
 
 const Header = React.lazy(() =>
   import(/* webpackChunkName: "Header" */ "../components/Header/Header")
 );
-
-
+const Categories = React.lazy(() =>
+  import(/* webpackChunkName: "Categories" */ "../components/Homepage/Categories")
+);
 const Hero = React.lazy(() =>
   import(/* webpackChunkName: "Hero" */ "../components/Homepage/Hero")
 );
-const CategorySlider = React.lazy(() =>
-  import(
-    /* webpackChunkName: "CategorySlider" */ "../components/Homepage/CategorySlider"
-  )
+const Promotions = React.lazy(() =>
+  import(/* webpackChunkName: "Promotions" */ "../components/Homepage/Promotions")
 );
 const Benefits = React.lazy(() =>
   import(/* webpackChunkName: "Benefits" */ "../components/Homepage/Benefits")
 );
-
-
+const ProductSlider = React.lazy(() =>
+  import(/* webpackChunkName: "CategorySlider" */ "../components/Homepage/CategorySlider")
+);
+const GoTop = React.lazy(() =>
+  import(/* webpackChunkName: "GoTop" */ "../components/Homepage/GoTop")
+);
 const Subscribe = React.lazy(() =>
   import(/* webpackChunkName: "Subscribe" */ "../components/Homepage/Subscribe")
 );
-
 const Error = React.lazy(() =>
   import(/* webpackChunkName: "Error" */ "../components/Error")
 );
@@ -32,35 +33,29 @@ const Success = React.lazy(() =>
 const Modal = React.lazy(() =>
   import(/* webpackChunkName: "ModalMessage" */ "../components/ModalMessage")
 );
-
-
 const Footer = React.lazy(() =>
   import(/* webpackChunkName: "Footer" */ "../components/Footer")
 );
 
-const Loader = styled.div`
-  margin-top: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  img {
-    max-width: 100%;
-  }
-`
 
 const Homepage = () => {
   return (
   <>
     <Header checkout={false} page={undefined} />
-    <Hero /> 
+    <Categories isMobile={window.innerWidth <= 768} />
+    <Hero />
     
+
+    <Suspense fallback={<></>}>
+       <Promotions /> 
+    </Suspense>
+
     <Suspense fallback={<></>}>
       <Benefits />
     </Suspense>
 
     <Suspense fallback={<></>}>
-      <CategorySlider />
-       {/* <Promotions />  */}
+      <ProductSlider />
     </Suspense>
         
     <Suspense fallback={<></>}>
@@ -68,8 +63,10 @@ const Homepage = () => {
       <Error />
       <Success />
       <Modal />
+      <GoTop/>
       <Footer page={"footer"} />
     </Suspense> 
+
     </>
   );
 };

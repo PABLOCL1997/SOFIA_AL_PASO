@@ -26,8 +26,7 @@ type Products = {
     setCategoryId: Function
 }
 
-const useProducts = (onsale: boolean = false ): Products => {
-    const limit = 9
+const useProducts = (limit: number = 9,onsale: boolean = false ): Products => {
     const query = new URLSearchParams(useLocation().search)
     const pageNumber = parseInt(String(query.get("p")))
 

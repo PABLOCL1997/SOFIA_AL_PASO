@@ -2,73 +2,96 @@ import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { ProductType } from "../../graphql/products/type";
 import { useTranslation } from "react-i18next";
-import { toLink } from "../../utils/string";
+import { capitalizeFirstLetter, toLink } from "../../utils/string";
 import { BREAKPOINT, customStyles } from "../../utils/constants";
 import DiscountIcon from "../../assets/images/descuento.svg";
 import {
   NewDiscount,
-  ProductLink,
-  BottomCard
+
+  BottomCardHome
 } from "../../styled-components/ItemBoxStyles";
 import useCart from "../../hooks/useCart";
+import { Link } from "react-router-dom";
 import useProduct from "../../hooks/useProduct";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
 
-const Container = styled.div`
+const Container = styled.div<{ featured?: boolean, homeCategories?: boolean}>`
   position: relative;
   background: #ffffff;
-  /*   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.06); */
+
   box-shadow: 0px 2px 9px rgb(0 0 0 / 9%);
   border-radius: 16px;
+
   margin: 20px 10px 15px;
   padding: 14px 10px 22px;
-`;
 
-const Discount = styled.div`
-  position: absolute;
-  top: -20px;
-  right: 8px;
-  background: var(--red);
-  box-shadow: 0px 8px 29px rgba(254, 205, 0, 0.4);
-  border-radius: 3px;
-  font-family: MullerBold;
-  font-size: 14px;
-  line-height: 14px;
-  display: flex;
-  align-items: flex-end;
-  text-align: left;
-  color: var(--black);
-  padding: 3px 4px 1px;
-  div {
-    display: flex;
-    flex-direction: column;
-    color: white;
-    &:first-child {
-      font-size: 28px;
-      font-weight: bold;
-      margin-right: 2px;
-      padding-bottom: 5px;
+  ${({ featured, homeCategories }) => featured ?
+    `
+    margin: 0 16px 0 0; 
+    padding: 1px 0 0;
+    height: 303px;
+    width: 269px;
+
+    img {
+      max-width: 187px;
+      max-height: 130px;
+      width: auto;
+      height: auto;
     }
-    &:last-child {
-      padding-top: 5px;
-    }
-    span {
-      font-size: 8px;
-      font-weight: bold;
-      &:first-child {
-        line-height: 5px;
-        font-size: 12px;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+
+      width: 190px;
+      height: 290px;
+
+      img {
+        max-width: 175px;
+        max-height: 123px;
+        width: auto;
+        height: auto;
       }
     }
-  }
-`;
+    `
+  : homeCategories ? 
+    `
+    margin: 0 16px 0 0;
+    padding: 1px 0 0;
+    height: 358px;
+    width: 269px;
 
-const Link = styled.div`
-  cursor: pointer;
-  position: relative;
+    img {
+      max-width: 242px;
+      max-height: 170px;
+      width: auto;
+      height: auto;
+    }
+
+    @media screen and (max-width: 1024px) {
+      &:first-child {
+        margin: 0 16px;
+      }
+    }
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+
+      width: 190px;
+      height: 290px;
+
+      img {
+        max-width: 175px;
+        max-height: 123px;
+        width: auto;
+        height: auto;
+      }
+
+      &:first-child {
+        margin: 0 16px;
+      }
+    ` 
+  : ``}
 `;
 
 const NewLabel = styled.span`
@@ -96,15 +119,6 @@ const NewLabel = styled.span`
   padding: 7px 0 5px;
 `;
 
-const Category = styled.h3`
-  font-size: 14px;
-  line-height: 14px;
-  text-align: center;
-  letter-spacing: 0.05em;
-  color: var(--red);
-  text-transform: uppercase;
-`;
-
 const Image = styled.img`
   max-width: 100%;
   height: 200px;
@@ -117,10 +131,8 @@ const Title = styled.h2`
   font-family: MullerMedium;
   font-size: 16px;
   line-height: 20px;
-  text-align: left;
+  text-align: center;
   color: var(--black);
-  min-height: 90px;
-  padding: 0 10px;
 
   margin-bottom: 15px;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -131,7 +143,7 @@ const Title = styled.h2`
 const PriceBox = styled.div`
   text-align: center;
   margin: 0;
-  padding: 0 10px 3px;
+  padding: 0;
 
   span {
     display: block;
@@ -142,10 +154,14 @@ const PriceBox = styled.div`
 
 const Price = styled.span`
   font-family: MullerBold;
-  font-size: 16px;
-  line-height: 16px;
+  font-size: 14px;
   color: var(--red);
 `;
+
+const Weight = styled.span`
+font-family: MullerBold;
+color: var(--black);
+`
 
 const DiscountPrice = styled.span`
   color: ${customStyles.darkGrey};
@@ -156,12 +172,26 @@ const DiscountPrice = styled.span`
   line-height: 16px;
 `;
 
-const Pill = styled.div`
+const Pill = styled.div<{ featured: boolean, homeCategories: boolean }>`
   border: 1px solid var(--yellow);
   border-radius: 30px;
   display: flex;
   width: fit-content;
   margin: 0 auto;
+  position: absolute; 
+  bottom: 32px;
+  left: 64px;
+
+  ${({ featured, homeCategories }) =>
+   featured || homeCategories ? 
+   `   
+   @media screen and (max-width: ${BREAKPOINT}) {
+     left: 12px;
+     bottom: 24px;
+    }
+   `
+   :
+  ``}
 `;
 
 const Qty = styled.div`
@@ -205,23 +235,12 @@ const Add = styled.button`
   }
 `;
 
-const EstimatedPrice = styled.div<{ visible?: boolean }>`
-  font-family: MullerMedium;
-  font-size: 12px;
+const Label = styled.div<{ visible?: boolean }>`
+  
   line-height: 12px;
   text-align: left;
-  color: ${customStyles.black};
-  padding: 5px 0;
-  opacity: ${props => (props.visible ? 1 : 0)};
-`;
-
-const Label = styled.div<{ visible?: boolean }>`
-  font-family: MullerRegular;
-  font-size: 12px;
-  line-height: 12px;
-  text-align: center;
   color: #808080;
-  padding: 5px 10px;
+
   opacity: ${props => (props.visible ? 1 : 0)};
 `;
 
@@ -252,13 +271,15 @@ type Props = {
   product: ProductType;
   openModal?: Function;
   dropDownQty?: number;
-  webp?: Boolean;
+  webp?: boolean;
+  featured?: boolean;
+  homeCategories?: boolean; 
 };
 
-const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false }) => {
+const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false, featured = false, homeCategories = false }) => {
   const { t } = useTranslation();
   const [qty, setQty] = useState<number>(1);
-  const { addAndGo } = useCart();
+  const { addAndGo } = useCart()
   const { related } = useProduct(product.name);
 
   const replaceWidthFormatImage = (name: string, width: string, format?: string) => {
@@ -272,15 +293,14 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
 
   return (
     <Suspense fallback={<Loader />}>
-      <Container>
+      <Container featured={featured} homeCategories={homeCategories}>
         {discount > 0 && (
           <NewDiscount>
             <img width="32" height="48" src={DiscountIcon} alt="%" />
           </NewDiscount>
         )}
 
-        <Link onClick={() => {}}>
-          <ProductLink href={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
+          <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
               <img
                 className="lazyload"
@@ -296,44 +316,38 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
               />
 
             <Title>
-              {product.useKGS
-                ? `${product.name} DE ${Number(product.weight)
-                    .toFixed(2)
-                    .replace(".", ",")} KGS APROX.`
-                : product.name}
-              <EstimatedPrice visible={product.useKGS}>
-                (Bs.{" "}
-                {(product.special_price / product.weight)
-                  .toFixed(2)
-                  .replace(".", ",")}
-                / KGS)
-              </EstimatedPrice>
+              {capitalizeFirstLetter(product.name)}
             </Title>
              {product.maxPerUser > 0 && (
               <MaxUnits>
                 {t("itembox.max_per_user", { units: product.maxPerUser })}
               </MaxUnits>
             )}
-
-            <BottomCard>
+            {product.useKGS ?
+            <BottomCardHome>
+                <Label visible={product.useKGS}>Peso promedio -&nbsp;</Label>
+                <Weight>{product.weight * 1000}g</Weight>
+            </BottomCardHome>
+            : null}
+            <BottomCardHome>
+              <Label visible={true}>Estimado:&nbsp;</Label>
               <PriceBox>
                 {discount > 0 && (
                   <DiscountPrice>
                     Bs. {product.price.toFixed(2).replace(".", ",")}
                   </DiscountPrice>
-                )}
+                )} 
 
                 <Price>
-                  Bs.{" "}
-                  {(product.special_price || 0).toFixed(2).replace(".", ",")}
+                  Bs.{" "}{(product.special_price || 0).toFixed(2).replace(".", ",")}
+                  {" "}{product.useKGS ? 'Kg' : ''}
                 </Price>
-              </PriceBox>
-              <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
-            </BottomCard>
-          </ProductLink>
+              </PriceBox> 
+            </BottomCardHome>
+          
         </Link>
         {product.stock > 0 ? (
-          <Pill>
+          <Pill featured={featured} homeCategories={homeCategories}>
             <Qty>
               <select
                 defaultValue={1}
@@ -355,7 +369,7 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
             <Add onClick={() => addAndGo(product, qty, related)}>{t("itembox.add")}</Add>
           </Pill>
         ) : (
-          <Pill>
+          <Pill featured={featured} homeCategories={homeCategories}>
             <OutOfStock>TEMPORALMENTE SIN STOCK</OutOfStock>
           </Pill>
         )}
@@ -364,4 +378,4 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
   );
 };
 
-export default ItemBox;
+export default ItemBoxHome;

@@ -78,7 +78,8 @@
     "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:",
     "title_alt": "¿A qué dirección enviamos tu pedido?",
     "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:",
-    "add_address": "Agregar una nueva dirección"
+    "add_address": "Agregar una nueva dirección",
+    "take_away": "Cambiaste de ciudad a sucursal|Recorda que tenes que pasar a buscar tu pedido"
   },
   "products": {
     "filter_side_bar": {
@@ -246,7 +247,7 @@
     "empty": "Vaciar carrito",
     "pay": "Ir a pagar",
     "under_budget": "El valor  mínimo para la compra es de Bs. {{min_price}}. Por favor agrega mas productos",
-    "change_qty_msg": "Cambiaste la ciudad|Los productos que agregaste al carrito, para la ciudad seleccionada, no alcanzan el monto mínimo de Bs. 100",
+    "change_qty_msg": "Cambiaste la ciudad|Los productos que agregaste al carrito, para la ciudad seleccionada, no alcanzan el monto mínimo de Bs. {{minimumPrice}}",
     "change_msg": "Cambiaste la ciudad|Como cambiaste la ciudad de entrega, el precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido",
     "change_employee": "Cambiaste de dirección|Como cambiaste la dirección de entrega ya no tenes el beneficio de empleado. El precio y la disponibilidad de los productos de tu carrito puede haber cambiado, por favor verifica tu pedido.",
     "add_msg": "Producto agregado|El producto {{product}} ha sido agregado al carrito",
@@ -306,8 +307,8 @@
     },
     "payment": {
       "title": "3. Método de pago",
-      "cashondelivery": "Efectivo en domicilio",
-      "checkmo": "Con tarjeta en domicilio",
+      "cashondelivery": "EFECTIVO CONTRA ENTREGA",
+      "checkmo": "CON TARJETA CONTRA ENTREGA",
       "todotix": "Pago Online",
       "bs_only": "*Sólo en Bolivianos",
       "home": "Pago en mi domicilio",
@@ -323,6 +324,10 @@
         "cvv": "Código CVV",
         "add": "Agregar"
       }
+    },
+    "recommendedproducts": {
+      "title" : "Productos recomendados",
+      "close" : "Continuar"
     },
     "ticket": {
       "title": "Mi pedido",

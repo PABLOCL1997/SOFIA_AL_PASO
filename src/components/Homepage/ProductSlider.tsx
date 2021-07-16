@@ -11,6 +11,9 @@ const Slider = React.lazy(() =>
 const ItemBox = React.lazy(() =>
   import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox")
 );
+const ItemBoxHome = React.lazy(() =>
+  import(/* webpackChunkName: "ItemBoxHome" */ "../Product/ItemBoxHome")
+);
 const ArrowLeft = React.lazy(() =>
   import(/* webpackChunkName: "ArrowLeft" */ "../Images/ArrowLeft.js")
 );
@@ -18,18 +21,35 @@ const ArrowRight = React.lazy(() =>
   import(/* webpackChunkName: "ArrowRight" */ "../Images/ArrowRight.js")
 );
 
+const PromotionsCard = React.lazy(() =>
+  import(/* webpackChunkName: "PromotionsCard" */ "./PromotionsCard")
+);
+
 type Props = {
   products: Array<ProductType>;
   useArrows?: boolean;
+  isPromotions?: boolean;
+  isCategories?: boolean;
 };
 
-const SliderContainer = styled.div`
-  padding: 0 70px;
+const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
+  .slick-list {
+    display: inline-block;
+    padding: 10px 120px 60px;
+    width: 100%;
+    @media screen and (max-width: 1024px) {
+      padding: 10px 0 60px 0;
+      max-height: 360px;
+    }
+  }
   .slick-arrow > svg {
     position: absolute;
     top: -75px;
   }
   .slick-arrow.slick-prev {
+    z-index: 3;
+  }
+  .slick-arrow.slick-next {
     z-index: 3;
   }
   .slick-arrow.slick-prev > svg {
@@ -50,6 +70,9 @@ const SliderContainer = styled.div`
   }
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0 20px;
+    ${({ onlyPaddingLeft }) =>  onlyPaddingLeft ? `
+      padding: 0;
+    ` : ``}
     .slick-dots {
       bottom: -5px;
       li {
@@ -69,14 +92,40 @@ const SliderContainer = styled.div`
       }
     }
   }
+
+  .slick-dots {
+    bottom: -25px;
+    li {
+      background: var(--btn-background);
+      box-shadow: 0 0 0 1px var(--black);
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 0.35;
+      border: none;
+
+      * {
+        opacity: 0;
+        border: none;
+
+      }
+    }
+    .slick-active {
+      opacity: 1;
+      border: none;
+
+    }
+  }
 `;
 
-const ProductSlider: FC<Props> = ({ products, useArrows }) => {
+
+const ProductSlider: FC<Props> = ({ products, useArrows, isPromotions, isCategories }) => {
   const typeLazy: LazyLoadTypes = "ondemand"
   const settings = {
     dots: false,
     infinite: false,
     arrows: true,
+    variableWidth: true,
     lazyLoad: typeLazy,
     speed: 500,
     slidesToShow: 4,
@@ -85,7 +134,7 @@ const ProductSlider: FC<Props> = ({ products, useArrows }) => {
     prevArrow: <ArrowLeft />,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1025,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
@@ -94,36 +143,42 @@ const ProductSlider: FC<Props> = ({ products, useArrows }) => {
         }
       },
       {
-        breakpoint: 600,
+        breakpoint: 768,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          arrows: useArrows,
-          dots: !useArrows
+          slidesToShow: 4,
+          slidesToScroll: 4          
         }
       },
       {
-        breakpoint: 480,
+        breakpoint: 600,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
           slidesToScroll: 1,
           arrows: useArrows,
-          dots: !useArrows
+          dots: !useArrows && !isPromotions
         }
-      }
+      },
     ]
   };
 
   return (
-      <div className="main-container">
-        <SliderContainer>
+
+        <SliderContainer onlyPaddingLeft={(isPromotions || isCategories) && window.innerWidth < 600}>
           <Slider {...settings}>
-            {products.map((product: ProductType) => 
-              <ItemBox key={product.entity_id} openModal={() => {}} dropDownQty={6} product={product} webp={true} />
-            )}
+            {isPromotions ? 
+            <PromotionsCard />
+            : null}
+            {React.Children.toArray(products.map((product: ProductType) => 
+            <>
+            {isPromotions || isCategories  ? 
+              <ItemBoxHome openModal={() => {}} dropDownQty={6} product={product} webp={true} featured={isPromotions} homeCategories={isCategories} />
+              :
+              <ItemBox openModal={() => {}} dropDownQty={6} product={product} webp={true} />
+            }
+            </>
+            ))}
           </Slider>
         </SliderContainer>
-      </div>
   );
 };
 

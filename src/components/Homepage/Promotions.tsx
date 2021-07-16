@@ -1,11 +1,8 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
-import { useLazyQuery, useQuery } from "@apollo/react-hooks";
-import { Link, useHistory } from "react-router-dom";
-import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../../graphql/products/queries";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
-import { GET_USER } from "../../graphql/user/queries";
 import useProducts from "../../hooks/useProducts";
 
 const Loader = React.lazy(() =>
@@ -19,11 +16,12 @@ const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 const Container = styled.section`
   width: 100%;
   max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 20px;
+  margin: 0 auto 0;
+  padding: 0;
 
-  margin-bottom: 88px;
+  margin-bottom: 40px;
   @media screen and (max-width: ${BREAKPOINT}) {
+    // padding: 0 0 0 15px;
     margin-bottom: 30px;
   }
 
@@ -63,21 +61,10 @@ const Container = styled.section`
   }
 `;
 
-const Title = styled.h2`
-  font-family: MullerMedium;
-  font-size: 40px;
-  line-height: 40px;
-  color: var(--black);
-  text-align: center;
-  margin-bottom: 75px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-bottom: 30px;
-  }
-`;
 
 const CtaWrapper = styled.div`
   text-align: center;
-  margin-top: 30px;
+
   button {
     padding: 13px 80px;
     text-transform: uppercase;
@@ -89,14 +76,11 @@ type Props = {
 
 const Promotions: FC<Props> = () => {
   const { t } = useTranslation();
-  const { products } = useProducts(true)
+  const { products } = useProducts(9, true)
 
   return (
       <Container>
-          <Title>{t("homepage.promotions.title")}</Title>
-          <div className="productslider-wrapper">
-            <ProductSlider products={products} useArrows={true} />
-          </div>
+          <ProductSlider products={products} useArrows={window.innerHeight < 600} isPromotions={true} />
           <CtaWrapper>
             <Link to="/productos/promociones">
               <Cta

@@ -21,3 +21,17 @@ query Get_Brands($categoryId: Int!, $city: String!)
   }
 }
 `
+
+export const GET_BANNERS = gql`
+query Banners($mobile: Boolean!){
+  banners(mobile: $mobile){
+    banner7_id
+    title
+    link
+    image
+    order
+    description
+    status
+  }
+}
+`

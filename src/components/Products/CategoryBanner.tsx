@@ -82,12 +82,12 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
             </Link>
           }
           {/* below code: mostrar campaign en todas la categorias */}
-          {categories.map((category: CategoryType) => 
+          {React.Children.toArray(categories.map((category: CategoryType) => 
             category.is_campaign && 
             <Link to={`/productos/${toCatLink(categories, category.name, category.level)}`}>
               <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
             </Link>
-          )}
+          ))}
         </Slider>
       </Wrapper>
     </Suspense>

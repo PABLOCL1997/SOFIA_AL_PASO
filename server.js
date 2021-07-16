@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const compression = require('compression')
 const fs = require("fs");
@@ -5,8 +6,11 @@ const app = express();
 const GraphQLClient = require("graphql-request").GraphQLClient
 const redirectMiddleware = require('./src/redirect')
 const client = new GraphQLClient("http://localhost:4000/graphql")
+const cron = require("node-cron");
+const { SitemapStream } = require('sitemap');
+const axios = require("axios")
 const port = process.env.PORT || 26235;
-
+const base_url = process.env.BASE_URL;
 
 const {
   GET_METADATA,
@@ -176,11 +180,17 @@ const loadPage = async (req, res, meta = {}) => {
 };
 
 app.use(redirectMiddleware)
+
+app.get("/sitemap.xml", (req, res) => {
+  var os = require("os");
+  console.log(os.hostname());
+  res.sendFile(`${__dirname}/public/media/sitemap.xml`);
+});
+
 app.get("/", (req, res) => loadPage(req, res, { title: HOMEPAGE_TITLE, identifier: "sofia-homepage" }));
 app.use(express.static(__dirname + "/build", {
   setHeaders: (res, path) => {
     const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
-    
     if (path.endsWith('.html')) {
       // All of the project's HTML files end in .html
       res.setHeader('Cache-Control', 'no-cache');
@@ -227,6 +237,127 @@ app.get("/:product", (req, res) =>
 
 app.get("*", (req, res) => loadPage(req, res, { title: "" }));
 
+const generateSitemap = async () => {
+  let graphqlUrl = base_url+':4000';
+  try{
+    let products = await axios({
+      url: `${graphqlUrl}/graphql`,
+      method: 'post',
+      data: {
+        query: `
+          query productsB2CSitemap {
+              productsB2CSitemap {
+                name
+              }
+            }
+          `,
+      }
+    });
 
+    let categories_data = await axios({
+      url: `${graphqlUrl}/graphql`,
+      method: 'post',
+      data: {
+        query: `
+          query CategoriesSitemap {
+              categoriesSitemap {
+                name
+                entity_id
+                parent_id
+                level
+              }
+            }
+          `,
+      }
+    });
+
+    categories_data = categories_data.data.data.categoriesSitemap;
+    let categories = categories_data
+      .filter(({ level }) => level === 2)
+      .map(({ name, entity_id }) => ({
+          name,
+          entity_id,
+          subcategories: []
+      }));
+    categories_data
+      .filter(({ level }) => level === 3)
+      .forEach(({ entity_id, parent_id, name }) => {
+        let index = categories.findIndex(r => r.entity_id === parent_id);
+        if(categories[index]) {
+          categories[index].subcategories.push({
+            parent_id,
+            entity_id,
+            name,
+            subcategories: []
+          });
+        }
+      });
+
+    categories_data
+      .filter(({ level }) => level === 4)
+      .forEach(({ entity_id, parent_id, name }) => {
+        let index = categories.findIndex(r =>
+          r.subcategories.some(rr => rr.entity_id === parent_id)
+        );
+        let index2 = categories[index].subcategories.findIndex(
+          r => r.entity_id === parent_id
+        );
+        categories[index].subcategories[index2].subcategories.push({
+          parent_id,
+          entity_id,
+          name,
+        });
+      });
+
+    let categories_urls = [];
+    categories.forEach(cat => {
+      let name = cat.name.replace(/\s+/g, '-').toLowerCase();
+      categories_urls.push({url: `/productos/${name}`, changefreq: "monthly", priority: 0.9});
+      cat.subcategories.forEach(subcat => {
+        let subname = subcat.name.replace(/\s+/g, '-').toLowerCase();
+        categories_urls.push({url: `/productos/${name}/${subname}`, changefreq: "monthly", priority: 0.9});
+
+        subcat.subcategories.forEach(subsubcat => {
+          let subsubname = subsubcat.name.replace(/\s+/g, '-').toLowerCase();
+          categories_urls.push({url: `/productos/${name}/${subname}/${subsubname}`, changefreq: "monthly", priority: 0.9});
+        })
+      })
+    })
+
+    let products_urls = products.data.data.productsB2CSitemap.map(el => {
+      let name = el.name.replace(/\s+/g, '-').toLowerCase();
+      return {url: `/${name}`, changefreq: "daily", priority: 1.0};
+    });
+
+    const urls = [{
+      url: base_url+'/',
+      changefreq: "daily",
+      priority: 1.0
+    },{
+      url: `${base_url}/locales/es-ES/translation.json`,
+      changefreq: "daily",
+      priority: 0.9
+    },
+    ...categories_urls,
+    ...products_urls];
+
+    const sitemap = new SitemapStream({ hostname: base_url });
+    const writeStream = fs.createWriteStream(`${__dirname}/public/media/sitemap.xml`);
+    sitemap.pipe(writeStream);
+    urls.forEach(item => sitemap.write(item))
+    sitemap.end();
+
+  }catch(e){
+    if(e.response && e.response.data){
+      console.log(e.response.data);
+    } else {
+      console.log(e);
+    }
+  }
+}
+
+cron.schedule("0 0 * * *", async () => {
+  await generateSitemap();
+});
 
 app.listen(port, () => console.log(`Webapp on ::${port}`));
