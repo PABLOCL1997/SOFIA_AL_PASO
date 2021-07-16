@@ -11,10 +11,15 @@ import { toLink } from "../utils/string";
 
 
 
-const useProduct = () => {
+const useProduct = (inlineProdname = "") => {
     const history = useHistory();
     let { prodname } = useParams();
-    prodname = fromLink(prodname);
+    prodname = String(prodname || inlineProdname);
+    prodname = prodname.replaceAll("--", "~")
+    .split(/-/g)
+    .map((word:any) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+    .join(" ")
+    .replaceAll("~", "-");
     const { city, idPriceList } = useCityPriceList()
 
     const [product, setProduct] = useState<ProductType | any>({});

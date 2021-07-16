@@ -35,7 +35,7 @@ const useCart = (): CartReturn => {
     )
   }
 
-  const addAndGo = (product: ProductType, qty: number) => {
+  const addAndGo = (product: ProductType, qty: number, related: null|ProductType) => {
     if (isOverLimit(product, qty)) {
       showSuccess({
         variables: {
@@ -51,6 +51,15 @@ const useCart = (): CartReturn => {
         }
       });
     } else {
+      if(related){
+        let localProd: any = {...product};
+        localProd.related = related;
+        localProd.related = localProd.related.filter((el: any) => el.infinite_stock || el.stock > 0 || el.maxPerUser > 0)
+        localProd.related.forEach((el: any) => {
+          el.qty = el.multiplier ? Number(el.multiplier) : 1
+        });
+        product = localProd;
+      }
       trackAddToCart({ ...product, categories: [], description: "", qty });
       addItem({
         variables: {
@@ -65,6 +74,7 @@ const useCart = (): CartReturn => {
     }
 
   };
+
 
   return { cart, hasStock, isOverLimit, addAndGo }
 }

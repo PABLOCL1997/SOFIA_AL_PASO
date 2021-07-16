@@ -21,6 +21,8 @@ import {
 
 import UserIcon from "../../assets/images/profile-ingresar.svg";
 import CartImg from "../../assets/images/Carrito.svg";
+import { trackIrCarrito } from "../../utils/dataLayer";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
@@ -54,6 +56,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("")
   const { data } = useQuery(GET_CART_ITEMS);
+  const { idPriceList } = useCityPriceList()
   const { data: userData } = useQuery(GET_USER, {});
   const [toggleCityModal] = useMutation(SET_USER, {
     variables: { user: { openCityModal: true } }
@@ -66,6 +69,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   });
 
   const showCart = () => {
+    trackIrCarrito();
     setOpen(false);
     // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
     toggleCartModal();
@@ -84,18 +88,17 @@ const Header: FC<Props> = ({ checkout, page }) => {
   };
 
   const addressLabel = () => {
-    if (userData.userInfo.length && userData.userInfo.length) {
-      if (userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
-        return `${userData.userInfo[0].defaultAddressLabel.split("|")[0]}, Bolivia`
-      }
-      if (userData.userInfo[0].defaultAddressLabel)
-        return `${userData.userInfo[0].defaultAddressLabel.replace(
-          / \| /g,
-          " "
-        )}, Bolivia`;
-      if (userData.userInfo[0].cityName)
-        return `${userData.userInfo[0].cityName}, Bolivia`;
-    }
+    if (idPriceList > 0)
+      return `${userData.userInfo[0].defaultAddressLabel.split("|")[0]}`
+    
+    if (userData.userInfo[0].defaultAddressLabel)
+      return `${userData.userInfo[0].defaultAddressLabel.replace(
+        / \| /g,
+        " "
+      )}`;
+    if (userData.userInfo[0].cityName)
+      return `${userData.userInfo[0].cityName}, Bolivia`;
+    
     return "";
   };
 

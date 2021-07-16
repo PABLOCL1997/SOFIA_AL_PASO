@@ -11,8 +11,6 @@ import "lazysizes/plugins/unveilhooks/ls.unveilhooks";
 import "lazysizes/plugins/blur-up/ls.blur-up.js";
 import "lazysizes/plugins/object-fit/ls.object-fit.js";
 import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
-import GTM from "../components/Shared/GTM";
-
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -38,7 +36,7 @@ const Wrapper = styled.div`
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0;
     &.productpage {
-      padding-top: 72px !important;
+      // padding-top: 72px !important;
     }
   }
 `;

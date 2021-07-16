@@ -6,112 +6,65 @@ import { BREAKPOINT } from "../../utils/constants";
 import { SUBSCRIBE, SET_USER } from "../../graphql/user/mutations";
 import { useMutation } from "react-apollo";
 import { isValidEmail } from "../../utils/string";
+import hongosDesktop from "../../assets/images/hongos-desktop.png";
+import morronDesktop from "../../assets/images/morron-desktop.png";
+import tomateDesktop from "../../assets/images/tomate-desktop.png";
+import trigoDesktop from "../../assets/images/trigo-desktop.png";
+import zanahoriasDesktop from "../../assets/images/zanahorias-desktop.png";
+
+import tomateMobile from "../../assets/images/tomate-mobile.png";
+import trigoMobile from "../../assets/images/trigo-mobile.png";
+import zanahoriaMobile from "../../assets/images/zanahoria-mobile.png";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
-
-export const MobileDesktopContainer = styled.div`
-    display: flex;
-    @media screen and (max-width: ${BREAKPOINT}) {
-        width: 100%;
-    }
-`
-
-const Container = styled.section`
-  background-color: #ebebeb;
-  background-size: 400px;
-  width: calc(100% - 120px);
-  margin: auto;
-  padding: 45px 95px;
-  border-radius: 15px;
-  box-shadow: 25px 19px 0px #fecd00;
-  margin-bottom: 88px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    border-radius: 19px;
-    background: #ffffff;
-    margin: 80px 30px 30px 30px;
-    box-shadow: 0px 8px 80px rgba(0, 0, 0, 0.12);
-    padding: 30px;
-  }
-  @media screen and (min-width: ${BREAKPOINT}) and (max-width: 1300px) {
-    background: none;
-  }
-`;
-
-
-const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-  span {
-    font-family: MullerMedium;
-    font-size: 14px;
-    line-height: 14px;
-    letter-spacing: 0.105em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-left: 15px;
-  }
-
-  @media screen and (max-width: ${BREAKPOINT}) {
-    span {
-      display: none
-    }
-  }
-`;
-
-const Notifications = styled.h3`
-  margin: 60px 0 16px;
-  font-size: 14px;
-  line-height: 14px;
-  letter-spacing: 0.24em;
-  color: var(--red);
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin: 30px 0;
-    text-align: center;
-    font-size: 12px;
-  }
-`;
-
 const Title = styled.h2`
-  font-family: MullerBold;
-  font-size: 40px;
-  line-height: 47px;
+  font-family: MullerMedium;
+  font-size: 32px;
+  text-align: center;
   letter-spacing: 0.015em;
   color: var(--dark);
-  max-width: 660px;
+
+  margin-top: 24px;
+  
+  width: 489px;
+  
   @media screen and (max-width: ${BREAKPOINT}) {
-    text-align: center;
-    font-size: 24px;
-    line-height: 117.5%;
+    font-size: 22px;
+
+    width: 288px;
+
+
+    margin-top: 16px;
   }
 `;
 
 const InputGroup = styled.div`
-  margin: 40px 0;
+  margin: 49px 0;
   display: flex;
-  max-width: 600px;
-  background: var(--f-gray);
+  width: 610px;
+  background: #FFFFFF;
   border-radius: 30px;
   input {
     font-family: MullerMedium;
     font-size: 14px;
     line-height: 14px;
+
     background: none;
     border: 0;
     padding: 15px 30px;
     flex: 1;
+    z-index: 1;
   }
   @media screen and (max-width: ${BREAKPOINT}) {
-    flex-direction: column;
+    margin: 32px 0;
+    width: 256px;
     background: none;
-    width: 100%;
+
+    flex-direction: column;
     input {
+      background: #FFFFFF;
       text-align: center;
-      background: var(--f-gray);
       border-radius: 30px;
     }
   }
@@ -127,20 +80,10 @@ const CtaWrapper = styled.div`
     }
     @media screen and (max-width: ${BREAKPOINT}) {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 16px;
     }
   }
 `;
-
-const Text = styled.div`
-  font-size: 16px;
-  line-height: 152.5%;
-  letter-spacing: 0.01em;
-  color: var(--font);
-  max-width: 412px;
-`;
-
-
 
 const Image = styled.img`
   transform: rotate(90deg);
@@ -153,6 +96,108 @@ const Image = styled.img`
   }
 `;
 Image.displayName = "ImageSuscribe";
+
+const Wrapper = styled.section`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  
+  width: 100%;
+  height: 409px;
+  border-radius: 24px;
+  
+  margin-bottom: 80px;
+  
+  background-color: RGBA(254,205,0,0.4);
+
+`
+
+const IconWrapper = styled.div`
+  display: block;
+  margin-top: 80px;
+  
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-top: 72px;
+  }
+`
+
+const ImageTomato = styled.div`
+  position: absolute;
+  bottom: -37%;
+  left:0;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`
+
+const ImageCarrot = styled.div`
+  position: absolute;
+  top: 54px;
+  left: 107px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`
+
+const ImageWeath = styled.div`
+  position: absolute;
+  right: 91px;
+  top: -12%;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`
+
+const ImagePepper = styled.div`
+  position: absolute;
+  top:67px;
+  right: 0;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`
+
+const ImageMushrooms = styled.div`
+  position: absolute;
+  top: 122px;
+  right: 0px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
+`
+
+const ImageTomatoMobile = styled.div`
+  display: none;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: block;
+    position: absolute;
+    bottom: -28%;
+    left: 0;
+  }
+
+`
+const ImageWeathMobile = styled.div`
+  display: none;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+`
+const ImageCarrotsMobile = styled.div`
+  display: none;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: block;
+    position: absolute;
+    top: -8%;
+    left: 0;
+  }
+
+`
 
 type Props = {};
 
@@ -181,39 +226,61 @@ const Subscribe: FC<Props> = () => {
 
   return (
       <Suspense fallback={<span></span>}>
-        <MobileDesktopContainer>
-          <Container>
-            <LogoContainer>
-              <img
-                src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
-                width="83px"
-                height="50px"
-                alt={"Sofía"}
+        <Wrapper>
+          <ImageTomato>
+            <img src={tomateDesktop} alt="Tomate" />
+          </ImageTomato>
+          <ImageCarrot>
+            <img src={zanahoriasDesktop} alt="Zanahoria" />
+          </ImageCarrot>
+          <ImageWeath>
+            <img src={trigoDesktop} alt="Trigo" />
+          </ImageWeath>
+          <ImagePepper>
+            <img src={morronDesktop} alt="Pimiento" />
+          </ImagePepper>
+          <ImageMushrooms>
+            <img src={hongosDesktop} alt="Hongos" />
+          </ImageMushrooms>
+
+          <ImageCarrotsMobile>
+            <img src={zanahoriaMobile} alt="Zanahoria" />
+          </ImageCarrotsMobile>
+
+          <ImageWeathMobile>
+            <img src={trigoMobile} alt="Trigo" />
+          </ImageWeathMobile>
+
+          <ImageTomatoMobile>
+            <img src={tomateMobile} alt="Tomate" />
+          </ImageTomatoMobile>
+          
+          <IconWrapper>
+
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 2H8L10 20H28L32 8H14" stroke="#E30613" strokeWidth="3" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M11 32C12.6569 32 14 30.6569 14 29C14 27.3431 12.6569 26 11 26C9.34315 26 8 27.3431 8 29C8 30.6569 9.34315 32 11 32Z" stroke="#E30613" strokeWidth="3" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M27 32C28.6569 32 30 30.6569 30 29C30 27.3431 28.6569 26 27 26C25.3431 26 24 27.3431 24 29C24 30.6569 25.3431 32 27 32Z" stroke="#E30613" strokeWidth="3" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </IconWrapper>
+
+          <Title>{t("homepage.subscribe.title")}</Title>
+          <InputGroup>
+            <input
+              value={email}
+              onChange={$evt => setEmail($evt.target.value)}
+              placeholder={t("homepage.subscribe.mail")}
+              type="email"
+            />
+            <CtaWrapper>
+              <Cta
+                filled={true}
+                text={t("homepage.subscribe.button")}
+                action={doSubscribe}
               />
-              <span>{t("homepage.subscribe.store")}</span>
-            </LogoContainer>
-            <Notifications>
-              {t("homepage.subscribe.notifications")}
-            </Notifications>
-            <Title>{t("homepage.subscribe.title")}</Title>
-            <InputGroup>
-              <input
-                value={email}
-                onChange={$evt => setEmail($evt.target.value)}
-                placeholder={t("homepage.subscribe.mail")}
-                type="email"
-              />
-              <CtaWrapper>
-                <Cta
-                  filled={true}
-                  text={t("homepage.subscribe.button")}
-                  action={doSubscribe}
-                />
-              </CtaWrapper>
-            </InputGroup>
-            <Text>{t("homepage.subscribe.text")}</Text>
-          </Container>
-        </MobileDesktopContainer>
+            </CtaWrapper>
+          </InputGroup>
+        </Wrapper>
       </Suspense>
   );
 };

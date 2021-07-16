@@ -87,7 +87,6 @@ export const Fixed = styled.div<{ shadow: boolean }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
   }
 `;
 
@@ -196,12 +195,13 @@ export const MenuWrapper = styled.div<any>`
 
 export const SideMenu = styled.div<any>`
   position: fixed;
+  overflow: auto;
   top: 0;
   z-index: 400;
   right: 0;
-  height: 100vh;
+  bottom: 0;
   background: white;
-  padding: 40px;
+  padding: 32px;
   transform: translateX(100%);
   transition: transform 0.2s linear;
   &.open {
@@ -237,10 +237,9 @@ export const CloseWrapper = styled.div`
 `;
 
 export const MenuList = styled.div`
-  margin-top: 100px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  padding-right: 80px;
 `;
 
 export const MenuItem = styled.div`
@@ -251,7 +250,7 @@ export const MenuItem = styled.div`
     width: 20px;
     height: 20px;
   }
-  a {
+  a, span {
     text-decoration: none;
     font-family: MullerMedium;
     font-size: 16px;
@@ -262,10 +261,14 @@ export const MenuItem = styled.div`
 `;
 
 export const MenuBottom = styled.div`
-  position: absolute;
-  bottom: 50px;
+  // position: absolute;
+  // bottom: 50px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  flex-grow: 1;
+  img {
+    margin-bottom: -10px;
+  }
   span {
     margin-left: 20px;
     font-family: MullerBold;
@@ -373,3 +376,26 @@ export const InputGroup = styled.div`
     }
   }
 `;
+
+export const Category = styled.div<{ showSubCategories: boolean, isVisible: boolean }>`
+  align-items: center;
+  margin-bottom: 30px;
+  > svg {
+    width: 20px;
+    height: 20px;
+  }
+  span {
+    text-decoration: none;
+    font-family: MullerMedium;
+    font-size: 16px;
+    line-height: 16px;
+    color: var(--black);
+    margin-left: 30px;
+  }
+  ${({ isVisible }) => isVisible ? 'display: block;' : ' display:none; ' }
+  ${({ showSubCategories }) => showSubCategories ? ' li { display: block; }' : ' li { display:none; } '}
+`;
+
+export const Subcategory = styled.li`
+  margin: 14px 0px 14px 50px;  
+`

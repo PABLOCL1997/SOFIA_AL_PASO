@@ -8,13 +8,11 @@ import Loader from "./Loader";
 const Container = styled.div<{ page?: string }>`
   background: var(--black);
   padding: 40px;
-  .main-container {
-    display: flex;
-    flex-direction: row;
-    @media screen and (max-width: ${BREAKPOINT}) {
-      flex-direction: column;
-      display: ${props => (props.page === "productpage" ? "none" : "")};
-    }
+  display: flex;
+  flex-direction: row;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    flex-direction: column;
+    display: ${props => (props.page === "productpage" ? "none" : "")};
   }
   @media screen and (max-width: ${BREAKPOINT}) {
     background: ${props =>
@@ -75,7 +73,11 @@ const Slogan = styled.h2`
   line-height: 20px;
   letter-spacing: 0.015em;
   color: white;
-  margin-top: 40px;
+  margin-top: 5px;
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-top: 30px;
+  }
 `;
 
 const Contact = styled.p`
@@ -104,6 +106,15 @@ const Line1 = styled.p`
   color: white;
 `;
 
+const Anchor = styled.a`
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.015em;
+  color: var(--red);
+
+  text-decoration: underline;
+`;
+
 type Props = {
   page?: string;
 };
@@ -114,7 +125,7 @@ const Footer: FC<Props> = ({ page }) => {
   return (
     <Suspense fallback={<Loader />}>
       <Container page={page}>
-        <div className="main-container">
+
           <Col1>
             <Text>{t("footer.text")}</Text>
             <img
@@ -151,7 +162,7 @@ const Footer: FC<Props> = ({ page }) => {
               </svg>
               <IconText>
                 <Line1>{t("footer.phone")}</Line1>
-                <Line1>800124141</Line1>
+                <Anchor href="tel:800124141">800124141</Anchor>
               </IconText>
             </IconBox>
             <IconBox>
@@ -166,14 +177,13 @@ const Footer: FC<Props> = ({ page }) => {
               </svg>
               <IconText>
                 <Line1>{t("footer.mail")}</Line1>
-                <Line1>info@sofia.com.bo</Line1>
+                <Anchor href="mailto:info@sofia.com.bo">info@sofia.com.bo</Anchor>
               </IconText>
             </IconBox>
             <Copy className="copy">
               {t("footer.copy", { year: new Date().getFullYear() })}
             </Copy>
           </Col2>
-        </div>
       </Container>
     </Suspense>
   );
