@@ -2,11 +2,11 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components"
 import { BREAKPOINT } from "../../utils/constants";
-import carrito from "../../assets/images/carrito.png"
+import carrito from "../../assets/images/carrito.webp"
 
-import choriDesktop from "../../assets/images/chori-desktop-promotions.png";
-import choriMobile from "../../assets/images/chori-mobile-promotions.png";
-import trigoMobile from "../../assets/images/trigo-mobile-promotions.png";
+import choriDesktop from "../../assets/images/chori-desktop-promotions.webp";
+import choriMobile from "../../assets/images/chori-mobile-promotions.webp";
+import trigoMobile from "../../assets/images/trigo-mobile-promotions.webp";
 
 const Card = styled.article`
     width: 269px;
@@ -122,16 +122,16 @@ const PromotionsCard = () => {
                 <Chorizo>
                     {window.innerWidth <= 768 ? 
                     <>
-                        <img src={choriMobile} alt="Chorizo" />
-                        <img src={trigoMobile} alt="Trigo" />
+                        <img src={choriMobile} alt="Chorizo" width="190px" height="286px" className="lazyload" />
+                        <img src={trigoMobile} alt="Trigo" width="107px" height="112px" className="lazyload" />
                     </>
                     :
-                    <img src={choriDesktop} alt="Chorizo" />
+                    <img src={choriDesktop} alt="Chorizo" width="249px" height="254px" className="lazyload" />
                     }
                 </Chorizo>
                 <Clip />
                 <Cart>
-                    <img src={carrito} alt="carrito" />
+                    <img src={carrito} alt="carrito" width="31px" height="28px" className="lazyload" />
                 </Cart>
                 <ProductosText>Productos</ProductosText>
                 <DestacadosText>Destacados</DestacadosText>
