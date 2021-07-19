@@ -88,17 +88,21 @@ const Header: FC<Props> = ({ checkout, page }) => {
   };
 
   const addressLabel = () => {
-    if (idPriceList > 0)
-      return `${userData.userInfo[0].defaultAddressLabel.split("|")[0]}`
-    
-    if (userData.userInfo[0].defaultAddressLabel)
-      return `${userData.userInfo[0].defaultAddressLabel.replace(
-        / \| /g,
-        " "
-      )}`;
-    if (userData.userInfo[0].cityName)
-      return `${userData.userInfo[0].cityName}, Bolivia`;
-    
+    if (userData.userInfo.length && userData.userInfo[0].defaultAddressLabel) {
+      if (idPriceList > 0)
+        return `${userData.userInfo[0].defaultAddressLabel.split("|")[0]}`
+      
+      if (userData.userInfo[0].defaultAddressLabel)
+        return `${userData.userInfo[0].defaultAddressLabel.replace(
+          / \| /g,
+          " "
+        )}`;
+    }
+    if (userData.userInfo.length && userData.userInfo[0].cityName) {
+      if (userData.userInfo[0].cityName)
+        return `${userData.userInfo[0].cityName}, Bolivia`;
+      
+    }
     return "";
   };
 
