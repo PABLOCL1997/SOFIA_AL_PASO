@@ -18,9 +18,11 @@ const Container = styled.section`
   max-width: 1440px;
   margin: 0 auto 0;
   padding: 0;
-
+  min-height: 421px;
+  
   margin-bottom: 40px;
   @media screen and (max-width: ${BREAKPOINT}) {
+    min-height: 408px;
     // padding: 0 0 0 15px;
     margin-bottom: 30px;
   }

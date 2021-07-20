@@ -12,8 +12,9 @@ const Slider = React.lazy(() =>
 );
 
 const Container = styled.div`
-
+  min-height: 359px;
   @media screen and (max-width: ${BREAKPOINT}) {
+    min-height: 169px;
     margin-top:-3px;
     padding: 40px 20px;
   }  
