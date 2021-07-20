@@ -10,10 +10,12 @@ const Container = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 357px;
 
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-top: 64px;
     margin-bottom: 30px;
+    min-height: 566px;
   }
 `;
 
