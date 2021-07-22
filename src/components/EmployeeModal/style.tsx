@@ -217,6 +217,20 @@ export const SmallTextBtn = styled.button<{ margin?: string }>`
   margin: ${props => (props.margin ? props.margin : "auto")};
 `;
 
+export const Anchor = styled.a`
+  color: var(--red);
+  outline: 0 !important;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  background: transparent;
+  border: 0;
+  font-family: MullerMedium;
+  text-decoration-line: underline;
+
+`
+
 export const SmallText = styled.p<{ marginBottom?: string }>`
   font-style: normal;
   font-weight: normal;
@@ -227,6 +241,11 @@ export const SmallText = styled.p<{ marginBottom?: string }>`
   max-width: 300px;
 
   margin-bottom: ${props => (props.marginBottom ? props.marginBottom : "20px")};
+
+  &:a {
+    text-decoration: underline; 
+    text-transform: none;
+  }
 `;
 
 export const QuestionIconWrap = styled.div`

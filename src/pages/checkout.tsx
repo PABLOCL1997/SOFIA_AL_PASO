@@ -144,7 +144,7 @@ type OrderData = {
   facturacion: string;
   envio: string;
   payment_method: string;
-  DIRECCIONID?: number;
+  DIRECCIONID?: string | null;
   agencia?:string
 };
 
@@ -450,7 +450,7 @@ const Checkout: FC<Props> = () => {
     if (!items.length) return;
 
     setOrder({
-      DIRECCIONID: special_address ? orderData.shipping.street.split("|")[1].replace(/ /g,"") : null,
+      DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
       agencia: undefined,
       discount_amount: parseFloat(
         orderData.coupon ? orderData.coupon.discount : 0

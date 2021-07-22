@@ -79,7 +79,9 @@ mutation AddAddress(
     $city: String,
     $latitude: String,
     $longitude: String,
-    $billing: Int!
+    $billing: Int!,
+    $id_address_ebs: Int,
+    $id_price_list: Int
     ) {
     addAddress(
         addressId: $addressId, 
@@ -94,7 +96,9 @@ mutation AddAddress(
         city: $city,
         latitude: $latitude,
         longitude: $longitude,
-        billing: $billing
+        billing: $billing,
+        id_address_ebs: $id_address_ebs,
+        id_price_list: $id_price_list
     ) {
         id
         firstname
@@ -110,6 +114,8 @@ mutation AddAddress(
             reference
             latitude
             longitude
+            id_address_ebs
+            id_price_list
         }
     }
   }
@@ -141,4 +147,26 @@ export const SET_EMPLOYEE = gql`
   mutation setEmployee($customer_id: Int!, $value: Int) {
     setEmployee(customer_id:$customer_id, value:$value)
   }
+`
+
+export const UPDATE_B2E_ADDRESS = gql`
+    mutation UpdateB2EAddress (
+        $Id_Cliente: Int!
+        $Id_Direccion: Int!
+        $Direccion: String
+        $Ciudad: String
+        $Telefono: String
+        $Latitud: String
+        $Longitud: String
+    ) {
+        updateB2EAddress(
+            Id_Cliente: $Id_Cliente
+            Id_Direccion: $Id_Direccion
+            Direccion: $Direccion
+            Ciudad: $Ciudad
+            Telefono: $Telefono
+            Latitud: $Latitud
+            Longitud: $Longitud
+        )
+    }
 `
