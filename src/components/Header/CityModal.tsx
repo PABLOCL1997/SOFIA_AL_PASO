@@ -229,11 +229,8 @@ const CityModal: FC<Props> = () => {
     const prev = data?.userInfo[0]?.idPriceList || 0
     let newVal = 0
 
-    if (parseInt(address?.reference) &&
-    parseInt(address?.phone) &&   
-    address?.phone === address?.reference
-    ) {
-      newVal = parseInt(address?.phone)
+    if (address?.id_price_list) {
+      newVal = address?.id_price_list
     }
 
     if (prev > 0 && newVal === 0) {
@@ -253,7 +250,7 @@ const CityModal: FC<Props> = () => {
           openCityModal: false,
           cityKey: c?.key,
           cityName: c?.value,
-          idPriceList: address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? parseInt(address?.reference) : 0 
+          idPriceList: address?.id_price_list || 0 
         }
       }
     });
@@ -488,7 +485,7 @@ const CityModal: FC<Props> = () => {
                     />
 
 
-                    {address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? (
+                    {address?.id_price_list ? (
                       <><label>{address?.street?.split("|")[0]}</label>
 
                       <StarWrap>

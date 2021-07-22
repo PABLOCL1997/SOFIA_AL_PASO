@@ -38,6 +38,8 @@ export type AddressType = {
   reference?: string;
   latitude?: string;
   longitude?: string;
+  id_price_list?: number;
+  id_address_ebs?: number;
 };
 
 export type UserType = {
@@ -49,5 +51,6 @@ export type UserType = {
   password?: string;
   addressId?: number;
   addresses?: Array<AddressType>;
+  employee_old?: string;
   employee?: string;
 };
