@@ -13,4 +13,9 @@ Disallow: /about-magento-demo-store
 Disallow: /catalogsearch/term/popular/
 Disallow: /catalog/seo_sitemap/category/
 
+
+User-agent: AhrefsBot
+
+Disallow:/
+
 Sitemap: https://tienda.sofia.com.bo/media/sitemap.xml
