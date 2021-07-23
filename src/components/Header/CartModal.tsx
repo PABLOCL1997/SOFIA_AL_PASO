@@ -6,7 +6,7 @@ import useMinimumPrice from "../../hooks/useMinimumPrice";
 
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
-import { trackAddToCart, trackRemoveFromCart, trackRemoverCarrito, trackIrCheckout } from "../../utils/dataLayer";
+import { trackAddToCart, trackRemoveFromCart, trackRemoveCartEvent, trackGoToCheckoutEvent } from "../../utils/dataLayer";
 import {
   GET_CART_ITEMS,
   GET_TOTAL,
@@ -442,7 +442,7 @@ const AuthModal: FC<Props> = () => {
         });
       }
       if ((action.product?.qty ?? 0) < (action.qty || 0)) {
-        trackRemoverCarrito();
+        trackRemoveCartEvent();
         trackRemoveFromCart({
           ...action.product,
           qty: action.qty
@@ -453,7 +453,7 @@ const AuthModal: FC<Props> = () => {
       await addItem();
       setAction({});
     } else if (action.action === "delete") {
-      trackRemoverCarrito();
+      trackRemoveCartEvent();
       trackRemoveFromCart({
         ...action.product,
         qty: 0
@@ -469,7 +469,7 @@ const AuthModal: FC<Props> = () => {
   };
 
   const checkout = () => {
-    trackIrCheckout();
+    trackGoToCheckoutEvent();
     closeCartModal();
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
       history.push("/checkout");
