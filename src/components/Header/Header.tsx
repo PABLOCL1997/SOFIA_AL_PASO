@@ -21,7 +21,7 @@ import {
 
 import UserIcon from "../../assets/images/profile-ingresar.svg";
 import CartImg from "../../assets/images/Carrito.svg";
-import { trackIrCarrito } from "../../utils/dataLayer";
+import { trackGoToCartEvent } from "../../utils/dataLayer";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
 
@@ -69,7 +69,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   });
 
   const showCart = () => {
-    trackIrCarrito();
+    trackGoToCartEvent();
     setOpen(false);
     // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
     toggleCartModal();
