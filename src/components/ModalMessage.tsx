@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "react-apollo";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
-import { trackIrCarrito } from "../utils/dataLayer";
+import { trackGoToCartEvent } from "../utils/dataLayer";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "./Loader")
@@ -110,7 +110,7 @@ const ModalMessage: FC<Props> = () => {
                   filled={false}
                   text={t("modal.cart")}
                   action={() => {
-                    trackIrCarrito();
+                    trackGoToCartEvent();
                     hideModal();
                     toggleCartModal();
                   }}
