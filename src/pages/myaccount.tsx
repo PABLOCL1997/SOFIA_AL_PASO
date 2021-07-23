@@ -1,7 +1,9 @@
 import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useHistory } from "react-router-dom";
+import { useQuery } from '@apollo/react-hooks'
 import { MY_ACCOUNT_TITLE } from '../meta';
+import DelayedWrapper from '../components/DelayedWrapper';
 import { BREAKPOINT } from '../utils/constants';
 import { token } from '../utils/store';
 
@@ -54,6 +56,7 @@ const Container = styled.div`
     min-width: 600px;
     margin-left: 50px;
     position: relative;
+    z-index: 0;
 
     @media screen and (max-width: ${BREAKPOINT}) {
         width: 100%;
@@ -82,15 +85,15 @@ const MyAccount: FC<Props> = () => {
 
     return (
         <Suspense fallback={<Loader />}>
-            <Wrapper>
-                <SidebarContainer>
-                    <Sidebar />
-                </SidebarContainer>
-                <Container>
-                    {showDetails && <Details />}
-                    {!showDetails && <Orders />}
-                </Container>
-            </Wrapper>
+                    <Wrapper>
+                        <SidebarContainer>
+                            <Sidebar />
+                        </SidebarContainer>
+                        <Container>
+                            {showDetails && <Details />}
+                            {!showDetails && <Orders />}
+                        </Container>
+                    </Wrapper>
         </Suspense>
     );
 }
