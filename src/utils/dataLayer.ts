@@ -153,7 +153,7 @@ export const trackOrder = (order: TrackOrder, products: Array<ProductType>) => {
 } catch (e) { }
 };
 
-export const trackIrCarrito = () => {
+export const trackGoToCartEvent = () => {
   try {
   (window as any).dataLayer.push({
     event: "irCarrito",
@@ -161,7 +161,7 @@ export const trackIrCarrito = () => {
   } catch(e) {}
 };
 
-export const trackRemoverCarrito = () => {
+export const trackRemoveCartEvent = () => {
   try {
     (window as any).dataLayer.push({
     event: "removerCarrito",
@@ -170,7 +170,7 @@ export const trackRemoverCarrito = () => {
 
 };
 
-export const trackIrCheckout = () => {
+export const trackGoToCheckoutEvent = () => {
   try {
     (window as any).dataLayer.push({
     event: "irCheckout",
