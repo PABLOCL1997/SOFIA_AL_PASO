@@ -150,9 +150,7 @@ type OrderData = {
 
 const Checkout: FC<Props> = () => {
   const { t } = useTranslation();
-  const history = useHistory();
   const location = useLocation();
-  const minimumPrice = useMinimumPrice()
   const { idPriceList } = useCityPriceList()
 
   const [processing, setProcessing] = useState(false);
@@ -235,14 +233,8 @@ const Checkout: FC<Props> = () => {
         }
       })();
     } else {
-      if (data && !data.cartItems.length) history.push("/");
-      else if (
-        parseFloat(totalAmount.replace(",", ".")) < minimumPrice
-      )
-        history.push("/");
-      else {
-        getDetails();
-      }
+      // if this is not a todotix redirect then get user details
+      getDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

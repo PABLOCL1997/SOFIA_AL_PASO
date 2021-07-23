@@ -537,7 +537,7 @@ const AuthModal: FC<Props> = () => {
             history.location.pathname.indexOf("checkout") >= 0 &&
             new_total < 100
           ) {
-            history.push("/");
+            // history.push("/");
             showSuccess({
               variables: { user: { showModal: t("cart.change_qty_msg") } }
             });
