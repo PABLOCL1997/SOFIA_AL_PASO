@@ -306,7 +306,7 @@ const Shipping: FC<Props> = ({
         (window as any).latitude = address.latitude;
         (window as any).longitude = address.longitude;
         const prev = localData?.userInfo[0]?.idPriceList || 0
-        const newVal = address?.id_price_list || 0
+        const newVal = parseInt(address?.reference || "") || 0
     
         if (prev > 0 && newVal == 0) {
           showSuccess({
@@ -329,7 +329,7 @@ const Shipping: FC<Props> = ({
               openCityModal: false,
               defaultAddressId: address.id,
               defaultAddressLabel: address.street,
-              idPriceList: address?.id_price_list || 0
+              idPriceList: address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? parseInt(address?.reference)  : 0
             }
           }
         });
@@ -423,7 +423,7 @@ const Shipping: FC<Props> = ({
                 value={address.id}
                 onChange={() => selectAddress(address)}
               />
-              {address?.id_price_list ? (
+              {address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? (
                 <>
                   <label onClick={() => selectAddress(address)}>
                     {address.street?.split("|")[0]}

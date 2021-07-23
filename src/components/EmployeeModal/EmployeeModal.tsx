@@ -27,8 +27,7 @@ import {
   SuccessIcon,
   ListaItems,
   ErrorInputMsg,
-  QuestionIconWrapCentered,
-  Anchor
+  QuestionIconWrapCentered
 } from "./style";
 import Cta from "../Cta";
 import axios from "axios";
@@ -46,19 +45,12 @@ import { titleCase } from "../../utils/string";
 type Props = {
 
   show: boolean;
-  setShowOpen: Function;
-  setCuentaActiva: Function;
+  setShowOpen: React.Dispatch<SetStateAction<boolean>>;
+  setCuentaActiva?: React.Dispatch<SetStateAction<boolean>>;
 
   userData: any;
   userDetails: any;
 };
-
-enum Steps {
-  AskNit,
-  AskPin,
-  InvalidAccount,
-  AccountActivated,
-}
 
 const EmployeeModal: FC<Props> = ({
   show,
@@ -70,11 +62,9 @@ const EmployeeModal: FC<Props> = ({
   const authyUrl = "https://tienda.sofia.com.bo/api/v1/authy"
 
   const { t } = useTranslation();
-  const [loader, setLoader] = useState<Boolean>(false);
-  const [steps, setSteps] = useState<Steps>(Steps.AskNit);
-  const [unknownNit, setUnknownNit] = useState<Boolean>(false);
-  const [knowCode, setKnowCode] = useState<Boolean>(true);
-  const [clientPhone, setClientPhone] = useState<String>("");
+  const [loader, setLoader] = useState(false);
+  const [steps, setSteps] = useState(1);
+  const [knowCode, setKnowCode] = useState(true);
   const [clientCode, setClientCode] = useState("");
   const [passSteps, setPassSteps] = useState(0);
   const [updateEmployee] = useMutation(SET_EMPLOYEE, {})
@@ -82,7 +72,7 @@ const EmployeeModal: FC<Props> = ({
   const [getB2EUser, {data: userB2E}] = useLazyQuery(GET_USER2E_DETAILS, {
     fetchPolicy: "network-only",
     onError: d => {
-      setSteps(Steps.AskNit);
+      setSteps(1);
       setKnowCode(true);
       setClientCode("");
       setPin1("");
@@ -93,19 +83,9 @@ const EmployeeModal: FC<Props> = ({
       setPin6("");
       setLoader(false)
     },
-    onCompleted: d => {  
-      if (!userB2E.getB2EUserDetails.nombre || !userB2E.getB2EUserDetails.nit) {
-        setUnknownNit(true)
-      }
-      if (!userB2E.getB2EUserDetails.celular || !userB2E.getB2EUserDetails.direcciones){
-        setSteps(Steps.InvalidAccount)
-      } else {
-        setClientPhone(userB2E.getB2EUserDetails.celular)
-        setEmpresa({ empresa: userB2E.getB2EUserDetails.nombre, numero: userB2E.getB2EUserDetails.celular })
-        start(userB2E.getB2EUserDetails.celular)
-        setSteps(Steps.AskPin)
-        setUnknownNit(false)
-      }
+    onCompleted: d => {    
+      setEmpresa({ empresa: userB2E.getB2EUserDetails.nombre, numero: userB2E.getB2EUserDetails.celular })
+      start(userB2E.getB2EUserDetails.celular)
       setLoader(false)
     }
   })
@@ -225,7 +205,7 @@ const EmployeeModal: FC<Props> = ({
     }
   }
   useEffect(() => {
-    if (show && steps === Steps.AskPin) {
+    if (show && steps === 3) {
       if (counter > 0) {
         setTimeout(() => {
           setCounter(--counter);
@@ -252,7 +232,7 @@ const EmployeeModal: FC<Props> = ({
 
   useEffect(() => {
     if(empresa && empresa.authyId) {
-      setSteps(Steps.AskPin);
+      setSteps(3);
     }
 
   },[empresa])
@@ -260,6 +240,7 @@ const EmployeeModal: FC<Props> = ({
   return (
     <Wrapper>
       <ModalCourtain className={show ? "visible" : ""}>
+        {steps !== 0 && (
           <Modal padding={"36px 42px 20px"}>
             {loader && (
               <LoaderWrapper>
@@ -269,7 +250,7 @@ const EmployeeModal: FC<Props> = ({
             <CloseWrapper
               onClick={() => {
                 setShowOpen(false);
-                setSteps(Steps.AskNit);
+                setSteps(1);
                 setKnowCode(true);
                 setClientCode("");
                 setPin1("");
@@ -283,7 +264,7 @@ const EmployeeModal: FC<Props> = ({
               <Close />
             </CloseWrapper>
 
-            {steps === Steps.AskNit && knowCode ? (
+            {steps === 1 && knowCode && (
               <Fragment>
                 <Title marginBottom={"30px"}>
                   {t("employeeModal.activar_cuenta")}
@@ -306,7 +287,7 @@ const EmployeeModal: FC<Props> = ({
                   }
                 />
 
-                {clientCode !== "" ? (
+                {clientCode !== "" && (
                   <>
                     {clientCode.length > 3 ? (
                       <></>
@@ -317,22 +298,14 @@ const EmployeeModal: FC<Props> = ({
                       </ErrorInputMsg>
                     )}
                   </>
-                ): null}
-
-                {unknownNit ? 
-                  <ErrorInputMsg margin={"15px 0 0 0"}>
-                    <img src={WarningIcon} alt="(!)" />
-                    <span>Este Carnet de Identidad no se encuentra registrado como colaborador.</span>
-                  </ErrorInputMsg>
-                : null}
-
+                )}
 
                 <CtaWrapper>
                   <Cta
                     filled={true}
                     action={() => {
                       if (clientCode === "" || clientCode.length <= 3) {
-                        setSteps(Steps.AskNit)
+                        setSteps(1)
                       } else {
                         setLoader(true)
                         getB2EUser({
@@ -346,9 +319,9 @@ const EmployeeModal: FC<Props> = ({
                   />
                 </CtaWrapper>
               </Fragment>
-            ): null}
+            )}
 
-            {steps === Steps.AskNit && !knowCode ? (
+            {steps === 1 && !knowCode && (
               <Fragment>
                 <Title marginBottom={"30px"}>
                   {t("auth_modal.activate_account.title")}
@@ -371,9 +344,9 @@ const EmployeeModal: FC<Props> = ({
                   />
                 </CtaWrapper>
               </Fragment>
-            ): null}
+            )}
 
-            {steps === Steps.AskPin ? (
+            {steps === 3 && (
               <Fragment>
                 <Title marginBottom={"30px"}>
                   {t("employeeModal.activar_cuenta")}
@@ -381,7 +354,6 @@ const EmployeeModal: FC<Props> = ({
 
                 <SmallText>
                   Por favor, ingrese el código que enviamos al teléfono
-                  {clientPhone ? <> {clientPhone.split('').map((c: String, index: number, arr: any[]) => arr.length > 5 && index >=3 && index <= 5 ? '*' : c ).join('')}</>: null }
                 </SmallText>
 
                 <Counter>
@@ -570,31 +542,28 @@ const EmployeeModal: FC<Props> = ({
                                 userB2E.getB2EUserDetails.direcciones.map(async (address:any)=> {
                                   await addAddress({
                                     variables: {
-                                      addressId: 0, 
+                                      addressId: address.id_direccion, 
                                       firstname: String(userB2E.getB2EUserDetails.nombre), 
                                       lastname: " ", 
                                       email: userDetails.details.email,
                                       nit: userB2E.getB2EUserDetails.nit,
-                                      telephone: address.celular,
-                                      street: address.direccion,
-                                      reference: address.televendedor,
+                                      telephone: String(address.id_listaPrecio),
+                                      street: address.direccion + " | " + address.id_direccion,
+                                      reference: String(address.id_listaPrecio),
                                       city: titleCase(address.ciudad),
                                       latitude: address.latitud,
                                       longitude: address.longitud,
-                                      billing: 0,
-                                      id_price_list: address.id_listaPrecio,
-                                      id_address_ebs: address.id_direccion
-
+                                      billing: 0
                                     }
                                   })
                                 })
                               )
                           }
                           setLoader(false)
-                          setSteps(Steps.AccountActivated)
+                          setSteps(4)
                         }
                       } else {
-                        setSteps(Steps.AskPin)
+                        setSteps(3)
                       }
                       setKnowCode(true);
                     }}
@@ -608,23 +577,16 @@ const EmployeeModal: FC<Props> = ({
                     margin={"0 0 0 auto"}
                     onClick={() => {
                       setKnowCode(true);
-                      setSteps(Steps.AskNit)
+                      setSteps(3)
                     }}
                   >
                     {t("employeeModal.reenviar")}
                   </SmallTextBtn>
                 </Disclaimer>
-
-                <Disclaimer>
-                  <span>¿El teléfono es incorrecto?</span>
-                  <Anchor href="mailto:etoledo@avicolasofia.com">
-                    Ayuda
-                  </Anchor>
-                </Disclaimer>
               </Fragment>
-            ): null}
+            )}
 
-            {steps === Steps.AccountActivated ? (
+            {steps === 4 && (
               <Fragment>
                 <SuccessIcon src={SucessImage} alt="" />
 
@@ -640,42 +602,21 @@ const EmployeeModal: FC<Props> = ({
                   <Cta
                     filled={true}
                     action={() => {
-                      setSteps(Steps.AskNit);
+                      setSteps(1);
                       setKnowCode(true);
-                      setShowOpen(false); 
+                      setShowOpen(false);
+                      setCuentaActiva && setCuentaActiva(true)
                       setTimeout(() => (window as any).location.reload(), 0);
                     }}
                     text={t("employeeModal.siguiente")}
                   />
                 </CtaWrapper>
               </Fragment>
-            ): null}
-
-            {steps === Steps.InvalidAccount ? (
-              <Fragment>
-                <Title marginBottom={"30px"}>
-                  {t("auth_modal.activate_account.title")}
-                </Title>
-
-                <SmallText marginBottom={"30px"}>
-                Estimado colaborador, debes contactar a <Anchor href="mailto:etoledo@avicolasofia.com">Servicios Comerciales</Anchor> para revisar la información de tu cuenta.
-                </SmallText>
-
-                <CtaWrapper>
-                  <Cta
-                    filled={true}
-                    action={() => {
-                      setKnowCode(true);
-                      setSteps(Steps.AskNit)
-                    }}
-                    text={t("auth_modal.activate_account.back")}
-                  />
-                </CtaWrapper>
-              </Fragment>
-            ): null}
+            )}
 
       
           </Modal>
+        )}
       </ModalCourtain>
     </Wrapper>
   );
