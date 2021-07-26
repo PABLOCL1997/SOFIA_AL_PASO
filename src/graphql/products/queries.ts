@@ -99,7 +99,7 @@ export const GET_PRODUCT = gql`
 `;
 
 export const GET_B2E_PRODUCTS = gql`
-query productsB2B(
+query productsB2E(
   $category_id: Int!
   $skus: [Int]
   $limit: Int!
@@ -111,7 +111,7 @@ query productsB2B(
   $onsale: Boolean
   $brand: String
   ) {
-    productsB2B(skus: $skus, limit:$limit, offset:$offset, id_price_list:$id_price_list, city:$city, category_id: $category_id, search: $search, order: $order, onsale:$onsale, brand: $brand) {
+    productsB2E(skus: $skus, limit:$limit, offset:$offset, id_price_list:$id_price_list, city:$city, category_id: $category_id, search: $search, order: $order, onsale:$onsale, brand: $brand) {
       rows {
         entity_id
         name
@@ -135,12 +135,12 @@ query productsB2B(
 `
 
 export const GET_B2E_PRODUCT = gql`
-query productB2B (
+query productB2E (
   $name: String
   $id_price_list: String!
   $city: String!
 ) {
-  productB2B(name:$name, id_price_list:$id_price_list, city:$city){
+  productB2E(name:$name, id_price_list:$id_price_list, city:$city){
     entity_id
       name
       sku

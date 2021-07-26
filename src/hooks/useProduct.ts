@@ -33,10 +33,10 @@ const useProduct = (inlineProdname = "") => {
             history.replace("/404");
         },
         onCompleted: d => {
-            setProduct(d.productB2B);
-            trackProduct(d.productB2B);
-            if (d.productB2B.categories) setCategories(d.productB2B.categories);
-            if (d.productB2B.related) setRelated(d.productB2B.related);
+            setProduct(d.productB2E);
+            trackProduct(d.productB2E);
+            if (d.productB2E.categories) setCategories(d.productB2E.categories);
+            if (d.productB2E.related) setRelated(d.productB2E.related);
             loadProductDetail({
                 variables: {
                     name: prodname
