@@ -50,9 +50,9 @@ const useProducts = (limit: number = 9,onsale: boolean = false ): Products => {
     const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
         fetchPolicy: "network-only",
         onCompleted: d => {
-            trackProductList(d.productsB2B.rows)
-            setProducts(d.productsB2B.rows)
-            setTotal(d.productsB2B.count)
+            trackProductList(d.productsB2E.rows)
+            setProducts(d.productsB2E.rows)
+            setTotal(d.productsB2E.count)
             setLoading(false)
         }
     })
