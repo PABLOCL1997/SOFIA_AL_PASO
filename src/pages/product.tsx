@@ -437,7 +437,7 @@ const Product: FC<Props> = ({
   };
   const { t } = useTranslation();
   const history = useHistory();
-  const { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, toCatLink } = useProduct()
+  const { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, toCatLink, error } = useProduct()
   const { addAndGo } = useCart()
   const [qty, setQty] = useState<number>(1);
 
@@ -449,6 +449,11 @@ const Product: FC<Props> = ({
       history.push("/productos");
     }
   };
+
+  if(error){
+    history.replace("/404");
+  }
+
 
   useEffect(() => {
     document.title = `${PRODUCT_TITLE} ${prodname}`;

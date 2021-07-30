@@ -25,12 +25,13 @@ const useProduct = (inlineProdname = "") => {
     const [product, setProduct] = useState<ProductType | any>({});
     const [categories, setCategories] = useState<Array<CategoryType>>([]);
     const [related, setRelated] = useState<Array<ProductType>>([]);
+    const [error, setError] = useState<any>(null);
 
     const [ loadProductDetail, { loading: loadingProdDetail, data: dataProdDetail }] = useLazyQuery(GET_PRODUCT_DETAIL, {});
     const [loadProductFromList] = useLazyQuery(GET_B2E_PRODUCT, {
         fetchPolicy: "network-only",
-        onError: () => {
-            history.replace("/404");
+        onError: (e) => {
+            setError(e);
         },
         onCompleted: d => {
             setProduct(d.productB2E);
@@ -53,8 +54,8 @@ const useProduct = (inlineProdname = "") => {
           categories: true,
           related: true
         },
-        onError: () => {
-          history.replace("/404");
+        onError: (e) => {
+          setError(e);
         },
         onCompleted: d => {
           setProduct(d.product);
@@ -108,7 +109,7 @@ const useProduct = (inlineProdname = "") => {
     }, [city, idPriceList])
 
 
-    return { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, toCatLink }
+    return { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, toCatLink, error }
 }
 
 export default useProduct
