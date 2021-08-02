@@ -160,6 +160,18 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           </Link>
         </MenuItem>
         <MenuItem>
+        <MenuItem>
+        {/* contact */}
+          <svg width="32" height="32" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 4.375L10 11.25L2.5 4.375" stroke="#E30613" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2.5 4.375H17.5V15C17.5 15.1658 17.4342 15.3247 17.3169 15.4419C17.1997 15.5592 17.0408 15.625 16.875 15.625H3.125C2.95924 15.625 2.80027 15.5592 2.68306 15.4419C2.56585 15.3247 2.5 15.1658 2.5 15V4.375Z" stroke="#E30613" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.63651 10L2.69287 15.4484" stroke="#E30613" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17.307 15.4484L11.3633 10" stroke="#E30613" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <Link onClick={() => setOpen(false)} to="/contacto">
+            {t("header.contact")}
+          </Link>
+        </MenuItem>
         {/* steak */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 8V13C1 16.1 4.1 21 12 21C20.2 21 23 20.4 23 17V12" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" />
