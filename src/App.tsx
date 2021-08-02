@@ -33,6 +33,9 @@ const Checkout = React.lazy(() =>
 const Faq = React.lazy(() =>
   import(/* webpackChunkName: "Faq" */ "./pages/faq")
 );
+const Contact = React.lazy(() =>
+  import(/* webpackChunkName: "Faq" */ "./pages/contact")
+);
 const Terms = React.lazy(() =>
   import(/* webpackChunkName: "Terms" */ "./pages/terms")
 );
@@ -41,10 +44,9 @@ const Page404 = React.lazy(() =>
   import(/* webpackChunkName: "Page404" */ "./components/Page404")
 );
 
-const Incentivos = React.lazy(() => 
+const Incentivos = React.lazy(() =>
   import(/* webpackChunkName: "Incentivos" */ "./pages/incentivos")
 );
-
 
 const Loader = styled.div`
   display: flex;
@@ -99,7 +101,6 @@ const App = () => {
           }
         />
         <Route
-          
           path="/preguntas-frecuentes"
           children={
             <LayoutGeneral>
@@ -108,7 +109,14 @@ const App = () => {
           }
         />
         <Route
-          
+          path="/contacto"
+          children={
+            <LayoutGeneral>
+              <Contact />
+            </LayoutGeneral>
+          }
+        />
+        <Route
           path="/terminos-y-condiciones"
           children={
             <LayoutGeneral>
@@ -117,7 +125,6 @@ const App = () => {
           }
         />
         <Route
-          
           path="/mi-cuenta"
           children={
             <LayoutGeneral>
@@ -126,7 +133,6 @@ const App = () => {
           }
         />
         <Route
-          
           path="/mi-cuenta/ordenes"
           children={
             <LayoutGeneral>
@@ -144,7 +150,6 @@ const App = () => {
           }
         />
         <Route
-          
           path="/checkout"
           children={
             <LayoutGeneral>
@@ -180,7 +185,6 @@ const App = () => {
           }
         />
         <Route
-          
           path="/:prodname"
           children={
             <LayoutGeneral page="productpage">
@@ -194,7 +198,7 @@ const App = () => {
               <Page404 />
             </LayoutGeneral>
           }
-        />        
+        />
       </Switch>
     </Router>
   </Suspense>
