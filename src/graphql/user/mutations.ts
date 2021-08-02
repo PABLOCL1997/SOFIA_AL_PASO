@@ -142,3 +142,19 @@ export const SET_EMPLOYEE = gql`
     setEmployee(customer_id:$customer_id, value:$value)
   }
 `
+
+export const SEND_CONTACT_FORM = gql`
+mutation sendContactForm($name: String!, $email: String!, $question: String!, $phone: String!, $city: String!, $country: String!, $message: String!) {
+    sendcontactform (
+        name: $name,
+        email: $email,
+        question: $question,
+        phone: $phone,
+        city: $city,
+        country: $country,
+        message: $message
+    ) {
+        status
+    }
+}
+`;
