@@ -441,5 +441,18 @@
       "title": "¿No encontraste lo que buscabas?",
       "contact": "Envianos un mail a <a href='mailto:info@sofia.com.bo'>info@sofia.com.bo</a>"
     }
+  },
+  "contact": {
+    "title": "Contacto",
+    "form": {
+      "name": "Nombre",
+      "email": "Email",
+      "question": "Pregunta",
+      "phone": "Telefono",
+      "city": "Ciudad",
+      "country": "País",
+      "message": "Mensaje"
+    },
+    "send": "Enviar"
   }
 }
