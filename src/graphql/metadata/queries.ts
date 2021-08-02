@@ -35,3 +35,16 @@ query Banners($mobile: Boolean!){
   }
 }
 `
+
+export const GET_PAGES = gql`
+query GetPages($identifier: String!) {
+  pages(identifier: $identifier){
+    page_id,
+    title,
+    meta_keywords,
+    content,
+    meta_description,
+    identifier
+  }
+}
+`

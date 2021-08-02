@@ -1,9 +1,13 @@
-import React, { FC, Suspense } from "react";
+import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
-import { Link } from "react-router-dom";
 import Loader from "./Loader";
+import PhoneImg from "../assets/images/footer-phone.svg";
+import EmailImg from "../assets/images/footer-email.svg";
+
+import { useQuery } from "react-apollo";
+import { GET_PAGES } from "../graphql/metadata/queries";
 
 const Container = styled.div<{ page?: string }>`
   background: var(--black);
@@ -21,52 +25,30 @@ const Container = styled.div<{ page?: string }>`
   }
 `;
 
-const Col1 = styled.div`
-  width: 50%;
-  margin-right: 110px;
-  > img {
- /*    width: 80px; */
-  }
-  @media screen and (max-width: ${BREAKPOINT}) {
-    width: 100%;
-    margin-right: 0;
-    .copy {
-      display: none;
-    }
-  }
-`;
-
-const Col2 = styled.div`
-  .copy {
-    display: none;
-  }
-  @media screen and (max-width: ${BREAKPOINT}) {
-    .copy {
-      display: block;
-    }
-  }
-`;
-
 const Text = styled.p`
   font-family: MullerBold;
   font-weight: bold;
-  padding: 0 0 10px;
-  font-size: 24px;
+  font-size: 19px;
+  padding: 0 20% 10px 0px;
   line-height: 31px;
   letter-spacing: 0.015em;
   color: white;
-`;
 
-const Copy = styled.p`
-  font-size: 12px;
-  line-height: 12px;
-  letter-spacing: 0.015em;
-  color: var(--red);
-  margin-top: 10px;
-  a {
-    color: var(--red);
+  @media screen and (max-width: ${BREAKPOINT}) {
+    padding: 0;
   }
 `;
+
+const Disclaimer = styled.p`
+  font-size: 12px;
+  color: white;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-top: 40px;
+  }
+`;
+
 const Slogan = styled.h2`
   font-family: MullerBold;
   font-size: 20px;
@@ -76,7 +58,7 @@ const Slogan = styled.h2`
   margin-top: 5px;
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    margin-top: 30px;
+    margin-top: 40px;
   }
 `;
 
@@ -86,17 +68,9 @@ const Contact = styled.p`
   letter-spacing: 0.015em;
   color: white;
   margin: 10px 0 20px;
-`;
-
-const IconBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const IconText = styled.div`
-  margin-left: 10px;
-  flex: 1;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin: 10px 0 20px;
+  }
 `;
 
 const Line1 = styled.p`
@@ -108,11 +82,174 @@ const Line1 = styled.p`
 
 const Anchor = styled.a`
   font-size: 12px;
-  line-height: 18px;
-  letter-spacing: 0.015em;
-  color: var(--red);
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+`;
 
-  text-decoration: underline;
+const FooterWrapper = styled.div`
+  display: grid;
+  padding: 30px;
+  grid-template-columns: 60% 40%;
+  grid-column-gap: 20px;
+  > ul {
+    display: none;
+  }
+  @media screen and (max-width: ${BREAKPOINT}) {
+    grid-template-columns: 100%;
+    > ul {
+      display: block;
+      color: white;
+      margin: 35px 0 0 0;
+
+      > li{
+        margin-bottom: 20px;
+
+        div{
+          width: 160px;
+          font-weight: 800;
+
+          &:after {
+            content: "+";
+            float: left;
+            position: relative;
+            left: 140px;
+            width: 0;
+          }
+
+          &.open{
+            &:after {
+              content: "x";
+              float: left;
+              position: relative;
+              left: 140px;
+              width: 0;
+            }
+          }
+        }
+
+        > ul {
+          display: none;
+
+          &.open{
+            display: block;
+          }
+
+          margin: 20px 0;
+          font-weight: 200;
+
+          > li {
+            margin-bottom: 20px
+          }
+        }
+      }
+    }
+  }
+`;
+
+const FooterHeaderImg = styled.div`
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin-bottom: 20px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    grid-column: unset;
+  }
+`;
+
+const TablaMagento = styled.div`
+  overflow: auto;
+  > table {
+    margin: 20px 0 0 0;
+    padding: 0;
+    color: white;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: none;
+    }
+
+    tr{
+      th {
+        width: 120px;
+        font-weight: 600;
+        padding: 0 20px 20px 0;
+
+        @media screen and (max-width: ${BREAKPOINT}) {
+          &:first-child{
+            display: none;
+          }
+          &:nth-child(3){
+            display: none;
+          }
+          &:nth-child(5){
+            display: none;
+          }
+        }
+      }
+
+      td {
+        padding-bottom: 15px;
+        padding-right: 40px;
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+    tr:first-child{
+      height: 30px;
+    }
+  }
+`;
+
+const ContactWrapper = styled.div`
+  display: grid;
+  margin-top: 30px;
+
+  @media screen and (min-width: ${BREAKPOINT}) {
+    > div:first-child{
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-top: 0;
+    > div:first-child{
+      margin-top: 10px;
+    }
+    > div:nth-child(2){
+      margin-bottom: 20px;
+    }
+  }
+`;
+
+const ContactDiv = styled.div`
+  @media screen and (max-width: ${BREAKPOINT}) {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+  > div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+  }
+  > img {
+    margin-right: 15px;
+  }
+`;
+
+const DisclaimerDivider = styled.div`
+  width: 32px;
+  height: 4px;
+  border-bottom: 4px solid red;
+  margin-top: 20px;
+`;
+
+const SloganDiv = styled.div`
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: none;
+  }
 `;
 
 type Props = {
@@ -121,69 +258,112 @@ type Props = {
 
 const Footer: FC<Props> = ({ page }) => {
   const { t } = useTranslation();
+  const [ table, setTable ] = useState("");
+  const [ footerList, setFooterList ] = useState<any>([]);
+  const { data: dynamicFooter } = useQuery(GET_PAGES, {
+    fetchPolicy: "network-only",
+    variables: { identifier: "footer-dinamico" },
+    onCompleted: d => {
+      if(d.pages && d.pages.length > 0){
+        let categories = d.pages[0].content.split('<th>');
+        categories.shift();
+        categories.forEach((cat: any, i: number) => {
+          categories[i] = cat.slice(0, cat.indexOf('</th>'));
+        })
+        let items = d.pages[0].content.split('<td>');
+        items.shift();
+        items.forEach((item: any, i: number) => {
+          items[i] = item.slice(0, item.indexOf('</td>'));
+        })
+        let list = [...categories.map((cat: any, i: number) => {
+          return {id: i+1, name: cat, items: [], active: false};
+        })];
+        for(let i=0; i<categories.length; i++){
+          let item_index = 1;
+          for(let j=0; j<items.length; j += categories.length){
+            if(items[j+i] !== '&nbsp;'){
+              list[i].items.push({id: item_index, name: items[j+i]})
+              item_index++;
+            }
+          }
+        }
+        setFooterList(list);
+        setTable(d.pages[0].content);
+      }
+    }
+  });
+
+  const openFooterItem = (e: any) => {
+    let list = [...footerList]
+    list = list.map((item:any) => {
+      if(item.id == e){
+        item.active = !item.active;
+      }
+      return item;
+    })
+    setFooterList(list);
+  }
 
   return (
     <Suspense fallback={<Loader />}>
       <Container page={page}>
-
-          <Col1>
-            <Text>{t("footer.text")}</Text>
+        <FooterWrapper>
+          <FooterHeaderImg>
             <img
               src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
               className="lazyload"
-              width="119px"
-              height="80px"
+              width="80px"
               alt="Sofía Logo"
             />
-            <Copy className="copy">
-              {t("footer.copy", { year: new Date().getFullYear() })}
-            </Copy>
-            <Copy>
-              <Link to="/terminos-y-condiciones">{t("footer.terms")}</Link>
-            </Copy>
-          </Col1>
-          <Col2>
+          </FooterHeaderImg>
+          <Text>{t("footer.text")}</Text>
+          <SloganDiv>
             <Slogan>{t("footer.slogan")}</Slogan>
             <Contact>{t("footer.contact")}</Contact>
-            <IconBox>
-              {/* phone */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" x="0px" y="0px" viewBox="0 0 30.4 31.3" >
-                <g id="_x39_">
-                  <path fill="#E11E26" d="M21.9,12.2c0.5,1.1,0.8,2.3,0.8,3.5c0,0.7,0.5,1.2,1.2,1.2h0c0.7,0,1.2-0.5,1.2-1.2c0-1.6-0.3-3.1-1-4.5
-              c-0.9-1.8-2.2-3.3-3.9-4.3c-1.6-1-3.5-1.6-5.4-1.6c-0.7,0-1.2,0.5-1.2,1.2c0,0.7,0.5,1.2,1.2,1.2C17.8,7.7,20.5,9.5,21.9,12.2z"/>
-                  <path fill="#E11E26" d="M28.8,8.9c-1.3-2.7-3.3-4.9-5.9-6.5C20.5,0.8,17.7,0,14.8,0c0,0,0,0,0,0c-0.7,0-1.2,0.5-1.2,1.2
-              c0,0.7,0.5,1.2,1.2,1.2c5.1,0,9.7,2.9,11.9,7.5c0.9,1.8,1.3,3.8,1.3,5.8c0,0.7,0.5,1.2,1.2,1.2c0,0,0,0,0,0c0.7,0,1.2-0.5,1.2-1.2
-              C30.4,13.4,29.9,11,28.8,8.9z"/>
-                  <path fill="#E11E26" d="M24.8,21.3c-0.4-0.5-1-0.7-1.6-0.7c-0.5,0-0.9,0.1-1.3,0.4l-2.5,1.6c-0.5-0.2-2.2-1.2-6.1-5.3
-              c-3.9-4.2-4.7-5.9-4.9-6.4l1.8-2.4c0.7-0.9,0.6-2.1-0.1-2.9l-4-4.2C5.6,0.8,5,0.5,4.4,0.5C3.7,0.5,3,0.8,2.6,1.4L1.5,2.7
-              C0.5,3.9,0,5.3,0,7c0,1.5,0.4,3.2,1.2,5c1.3,3.1,3.8,6.6,7,10c1.7,1.8,4.3,4.3,7.3,6.3c2.9,1.9,5.5,2.9,7.7,2.9
-              c1.4,0,2.7-0.4,3.8-1.2l1.4-1c0.6-0.4,0.9-1,1-1.7c0.1-0.7-0.2-1.3-0.6-1.8L24.8,21.3z"/>
-                </g>
-              </svg>
-              <IconText>
+          </SloganDiv>
+          {footerList &&
+            <ul>
+              {footerList.map((item: any) => {
+                return (
+                  <li key={`${item.id}-0`}>
+                    <div onClick={() => openFooterItem(item.id)} className={item.active ? "open" : ""}>{item.name}</div>
+                    <ul className={item.active ? "open" : ""}>
+                    {item.items.map((item2: any) => {
+                      return (<li key={`${item.id}-${item2.id}`} dangerouslySetInnerHTML={{ __html: item2.name }}></li>)
+                    })}
+                    </ul>
+                  </li>)
+              })}
+            </ul>
+          }
+          <TablaMagento dangerouslySetInnerHTML={{ __html: table }}>
+          </TablaMagento>
+          <ContactWrapper>
+            <div>
+              <Slogan>{t("footer.slogan")}</Slogan>
+              <Contact>{t("footer.contact")}</Contact>
+            </div>
+            <ContactDiv>
+              <img src={PhoneImg} alt="Telefono" />
+              <div>
                 <Line1>{t("footer.phone")}</Line1>
                 <Anchor href="tel:800124141">800124141</Anchor>
-              </IconText>
-            </IconBox>
-            <IconBox>
-              {/* mail */}
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="26" x="0px" y="0px">
-                <g id="_x36_">
-                  <path fill="#E11E26" d="M14.7,12.7c-0.2,0.1-0.3,0.1-0.5,0.1c-0.2,0-0.4,0-0.5-0.1L0.4,4.9C0.2,4.8,0,4.9,0,5.1V17
-              c0,1.2,1,2.2,2.2,2.2h23.9c1.2,0,2.2-1,2.2-2.2V5.1c0-0.2-0.2-0.4-0.4-0.3L14.7,12.7z"/>
-                  <path fill="#E11E26" d="M14.8,10.2l13.4-7.9c0.1-0.1,0.2-0.2,0.1-0.3c-0.1-1.1-1.1-2-2.2-2H2.2C1.1,0,0.1,0.9,0,2c0,0.1,0,0.2,0.1,0.3
-              l13.4,7.9C13.9,10.5,14.4,10.5,14.8,10.2z"/>
-                </g>
-              </svg>
-              <IconText>
+              </div>
+            </ContactDiv>
+            <ContactDiv>
+              <img src={EmailImg} alt="Email" />
+              <div>
                 <Line1>{t("footer.mail")}</Line1>
                 <Anchor href="mailto:info@sofia.com.bo">info@sofia.com.bo</Anchor>
-              </IconText>
-            </IconBox>
-            <Copy className="copy">
+              </div>
+            </ContactDiv>
+            <Disclaimer>
               {t("footer.copy", { year: new Date().getFullYear() })}
-            </Copy>
-          </Col2>
+              <DisclaimerDivider>
+              </DisclaimerDivider>
+            </Disclaimer>
+          </ContactWrapper>
+        </FooterWrapper>
       </Container>
     </Suspense>
   );
