@@ -48,11 +48,6 @@ const Incentivos = React.lazy(() =>
   import(/* webpackChunkName: "Incentivos" */ "./pages/incentivos")
 );
 
-const Thanks = React.lazy(
-  () => import(/* webpackChunkName: "Thanks" */ "./pages/thanks")
-);
-
-
 const Loader = styled.div`
   display: flex;
   align-items: center;
@@ -159,14 +154,6 @@ const App = () => {
           children={
             <LayoutGeneral>
               <Checkout />
-            </LayoutGeneral>
-          }
-        />
-        <Route
-          path="/gracias"
-          children={
-            <LayoutGeneral>
-              <Thanks />
             </LayoutGeneral>
           }
         />
