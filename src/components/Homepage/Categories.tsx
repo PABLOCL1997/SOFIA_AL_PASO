@@ -47,7 +47,7 @@ const List = styled.ul`
     span {
       font-family: MullerBold;
       padding-bottom: 2px;
-      // border-bottom: 1px solid #FFFFFF;
+      border-bottom: 1px solid #FFFFFF;
     }
 
     a, div {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useLazyQuery } from "@apollo/react-hooks"
 import { trackProductList } from "../utils/dataLayer";
-import { GET_B2E_PRODUCTS, GET_PRODUCTS } from "../graphql/products/queries";
+import { GET_B2E_PRODUCTS, GET_PRODUCTS, GET_SAP_PRODUCTS } from "../graphql/products/queries";
 import { GET_BRANDS } from "../graphql/metadata/queries";
 import { useLocation } from "react-router-dom";
 import useCategory from "./useCategory";
@@ -26,11 +26,11 @@ type Products = {
     setCategoryId: Function
 }
 
-const useProducts = (limit: number = 9,onsale: boolean = false ): Products => {
+const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
     const query = new URLSearchParams(useLocation().search)
     const pageNumber = parseInt(String(query.get("p")))
 
-    const { city, idPriceList } = useCityPriceList()
+    const { city, idPriceList, agency } = useCityPriceList()
     const { category_id, category, subcategory, lastlevel, setCategoryId } = useCategory()
     const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState([])
@@ -59,9 +59,22 @@ const useProducts = (limit: number = 9,onsale: boolean = false ): Products => {
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
         fetchPolicy: "network-only",
         onCompleted: d => {
-            trackProductList(d.products.rows)
+            try {
+                trackProductList(d.products.rows)
+            } catch (e) {}
             setProducts(d.products.rows)
             setTotal(d.products.count)
+            setLoading(false)
+        }
+    })
+
+    const [loadSapProducts] = useLazyQuery(GET_SAP_PRODUCTS, {
+        fetchPolicy: "network-only",
+        onCompleted: d => {
+            try {
+                setProducts(d.productsSap.rows)
+            } catch (e) {}
+            setTotal(d.productsSap.count)
             setLoading(false)
         }
     })
@@ -89,37 +102,57 @@ const useProducts = (limit: number = 9,onsale: boolean = false ): Products => {
             }
         });
 
+        if (agency) {
+            loadSapProducts({
+                variables: {
+                    agency,
+                    city,
+                    category_id: search && search.length > 0 ? 0 : category_id || 0,
+                    limit,
+                    order,
+                    offset,
+                    search,
+                    onsale: category === "promociones" || onsale,
+                    brand: brand
+                }
+            })
+
+        } 
+        
         if (idPriceList > 0) {
             loadProductsFromListing({
-            variables: {
-                category_id: search && search.length > 0 ? 0 : category_id || 0,
-                limit,
-                order,
-                offset,
-                search,
-                city,
-                id_price_list: String(idPriceList),
-                onsale: category === "promociones" || onsale,
-                brand: brand
-            }
+                variables: {
+                    category_id: search && search.length > 0 ? 0 : category_id || 0,
+                    limit,
+                    order,
+                    offset,
+                    search,
+                    city,
+                    id_price_list: String(idPriceList),
+                    onsale: category === "promociones" || onsale,
+                    brand: brand
+                }
             })
-        } else {
+        }
+
+
+        if (!agency && idPriceList === 0) {
             loadProducts({
-            variables: {
-                category_id: category_id || 0,
-                limit,
-                order,
-                city,
-                offset: offset,
-                search: search,
-                onsale: category === "promociones" || onsale,
-                brand: brand
-            }
+                variables: {
+                    category_id: category_id || 0,
+                    limit,
+                    order,
+                    city,
+                    offset: offset,
+                    search: search,
+                    onsale: category === "promociones" || onsale,
+                    brand: brand
+                }
             });
         }
         setPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category_id, category, subcategory, lastlevel, order, search, brand, offset, idPriceList, city]);
+    }, [category_id, category, subcategory, lastlevel, order, search, brand, offset, idPriceList, city, agency]);
 
     return { loading, products, total, limit, query, offset, order, search, brand, brands, setLoading, setOrder, setBrand, setCategoryId }
 

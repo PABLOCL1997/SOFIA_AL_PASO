@@ -214,7 +214,9 @@ const Header: FC<Props> = ({ checkout, page }) => {
             </IngresarWrap>
             <CartWrapper big={bigCart} onClick={showCart}>
               <img width="32" height="24" src={CartImg} alt="Carrito de compras" />
+              {data && data.cartItems && data.cartItems.length ?
               <span>{GET_QTY(data.cartItems)}</span>
+              : <span>0</span>}
             </CartWrapper>
             <MenuWrapper onClick={() => setOpen(true)}>
               {/* menu */}

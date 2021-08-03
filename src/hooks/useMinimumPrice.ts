@@ -4,9 +4,9 @@ import { ORDER_MINIMUM_PRICE } from '../graphql/cart/queries'
 import useCityPriceList from './useCityPriceList'
 
 const useMinimumPrice = () => {
-  const { city, idPriceList } = useCityPriceList()
+  const { city, idPriceList, agency } = useCityPriceList()
   const [getMinimumPrice] = useLazyQuery(ORDER_MINIMUM_PRICE, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-first',
     onCompleted: d => {
       if(d && d.minimum_price){
         setMinimumPrice(d.minimum_price)
@@ -19,11 +19,11 @@ const useMinimumPrice = () => {
   useEffect(() => {
     getMinimumPrice({
       variables: {
-        city,
+        city: agency ? agency : city,
         store
       }
     })
-  }, [city, store])
+  }, [city, store, agency])
 
   useEffect(() => {
     if(idPriceList > 0) {

@@ -9,7 +9,9 @@ import { DETAILS, GET_USER } from "../../graphql/user/queries";
 import { AddressType } from "../../graphql/user/type";
 import { SET_USER } from "../../graphql/user/mutations";
 import StarIcon from "../../assets/images/star.svg";
-
+import { GET_SAP_AGENCIES } from "../../graphql/products/queries";
+import useCityPriceList from "../../hooks/useCityPriceList";
+import Agency from "../../types/Agency";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -97,6 +99,11 @@ const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
   }
 `;
 
+const OtherAddressWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const Other = styled.button<{ margin: boolean }>`
   font-family: MullerMedium;
   font-size: 14px;
@@ -112,7 +119,9 @@ const Other = styled.button<{ margin: boolean }>`
 `;
 
 const CheckboxGroup = styled.div<{ red: boolean }>`
-  display: flex;
+  display: grid;
+  grid-template-columns: 20px 1fr 13px;
+
   align-items: center;
   margin-bottom: 20px;
   input {
@@ -251,15 +260,23 @@ const Shipping: FC<Props> = ({
   const [inputs, setInputs] = useState<any>({
     addressType: t("checkout.delivery.street")
   });
+  const [agencies, setAgencies] = useState<any>([])
   const { data: localData } = useQuery(GET_USER, {});
   const [showSuccess] = useMutation(SET_USER, {})
+
+  const {} = useQuery(GET_SAP_AGENCIES, {
+    fetchPolicy: "network-only",
+    onCompleted: d => {
+      setAgencies(d.agencies)
+    }
+  })
 
   const [other, setOther] = useState(false);
   const { data: userData } = useQuery(DETAILS, {
     fetchPolicy: "network-only"
   });
   const [setUser] = useMutation(SET_USER);
-
+  const { agency, setAgency } = useCityPriceList()
 
   const onChange = (
     key: string,
@@ -293,21 +310,58 @@ const Shipping: FC<Props> = ({
     }
   };
 
-  const selectAddress = (address: AddressType) => {
-    if (address) {
+  const selectAddress = (address: AddressType | any) => {
+    if (address && address.id) {
       onChange("addressId", Number(address.id));
       updateOrder("shipping", address);
       setOther(false);
-      let c: KeyValue | undefined = cities.find(
-        (c: KeyValue) => c.value === address.city
-      );
+      let c: KeyValue | undefined = cities.find(({ value }: KeyValue) => value === address.city);
+
+      if (!c) {
+        let city: KeyValue | undefined = cities.find(({ key }:KeyValue) => key === address.city) 
+        if (city) {
+          setUser({
+            variables: {
+              user: {
+                cityKey: city.key,
+                cityName: city.value
+              }
+            }
+          })
+        }
+      }
 
       if (c) {
-        (window as any).latitude = address.latitude;
-        (window as any).longitude = address.longitude;
-        const prev = localData?.userInfo[0]?.idPriceList || 0
-        const newVal = parseInt(address?.reference || "") || 0
-    
+        setUser({
+          variables: {
+            user: {
+              cityKey: c.key,
+              cityName: c.value
+            }
+          }
+        })
+      }
+
+      (window as any).latitude = address.latitude;
+      (window as any).longitude = address.longitude;
+      const prev = localData?.userInfo[0]?.idPriceList || 0
+      const newVal = address?.id_price_list || 0
+  
+      // check if pick-up address
+      if (address && address.isAgency) {
+        showSuccess({
+          variables: { user: { showModal: "Cambiaste de dirección|Recuerda que al elegir esta dirección debes pasar a retirar a la agencia Sofía al Paso seleccionada." } }
+        });
+        setUser({
+          variables: {
+            user:{
+              agency: address.key
+            }
+          }
+        })
+      } else {
+        setAgency(null)
+
         if (prev > 0 && newVal == 0) {
           showSuccess({
             variables: { user: { showModal: t("cart.change_employee") } }
@@ -320,19 +374,18 @@ const Shipping: FC<Props> = ({
             });
           }
         }
-
+        
         setUser({
           variables: {
             user: {
-              cityKey: c.key,
-              cityName: c.value,
               openCityModal: false,
               defaultAddressId: address.id,
               defaultAddressLabel: address.street,
-              idPriceList: address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? parseInt(address?.reference)  : 0
+              idPriceList: address?.id_price_list || 0,
+              agency: null
             }
           }
-        });
+        })
       }
     }
   };
@@ -382,18 +435,24 @@ const Shipping: FC<Props> = ({
       localData &&
       localData.userInfo.length &&
       localData.userInfo[0].defaultAddressId &&
-      userData &&
-      userData.details.addresses
+      userData && userData.details.addresses
     ) {
-      let _a = userData.details.addresses.findIndex(
-        (a: AddressType) =>
-          Number(a.id) === Number(localData.userInfo[0].defaultAddressId)
-      );
-      if (_a) selectAddress(userData.details.addresses[_a]);
-      else selectAddress(userData.details.addresses[0]);
-    } else setOther(true);
+      if (!agency) {
+        let _a = userData.details.addresses.findIndex(
+          (a: AddressType) =>
+            Number(a.id) === Number(localData.userInfo[0].defaultAddressId)
+        );
+        if (_a) selectAddress(userData.details.addresses[_a]);
+        else selectAddress(userData.details.addresses[0]);
+      }
+      setOther(false)
+    } else {
+      if(!agency) {
+        setOther(true);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData]);
+  }, [userData, agency]);
 
   useEffect(() => {
     if (!inputs.addressId)
@@ -411,6 +470,18 @@ const Shipping: FC<Props> = ({
         <Title>
           <h2>{t("checkout.delivery.title")}</h2>
         </Title>
+        {agencies.map((_agency: Agency, index: number) =>        
+          <CheckboxGroup red={!other} key={index}>
+            <input
+              type="radio"
+              name="agencies"
+              id=""
+              onChange={() => selectAddress({ ..._agency, isAgency: true })}
+              checked={agency === _agency.key}
+            />
+            <label>Retirar en: {_agency.name} - {_agency.street}</label>
+          </CheckboxGroup>
+        )}
         {userData &&
           userData.details.addresses &&
           userData.details.addresses.map((address: AddressType) => (
@@ -423,7 +494,7 @@ const Shipping: FC<Props> = ({
                 value={address.id}
                 onChange={() => selectAddress(address)}
               />
-              {address?.phone && address?.reference && address?.phone === address?.reference  && !isNaN(parseInt(address?.reference)) ? (
+              {address?.id_price_list ? (
                 <>
                   <label onClick={() => selectAddress(address)}>
                     {address.street?.split("|")[0]}
@@ -443,9 +514,15 @@ const Shipping: FC<Props> = ({
             </CheckboxGroup>
           ))}
 
-          <Other margin={!!other} onClick={showOther}>
-            {t("checkout.delivery.other_address")}
-          </Other>
+          <OtherAddressWrapper>
+            <Other margin={!!other} onClick={showOther}>
+              Ver mapa
+            </Other>
+
+            <Other margin={!!other} onClick={showOther}>
+              {t("checkout.delivery.other_address")}
+            </Other>
+          </OtherAddressWrapper>
 
         <Form hidden={!other}>
           {[

@@ -117,7 +117,7 @@ const CtaWrapper = styled.div`
 `;
 
 type Props = {
-  orders: Array<{ entity_id: string; increment_id: string }>;
+  orders: Array<{ increment_id: string }>;
 };
 
 const Thanks: FC<Props> = ({ orders }) => {

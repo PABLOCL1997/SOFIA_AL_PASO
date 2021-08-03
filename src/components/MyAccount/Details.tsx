@@ -10,7 +10,8 @@ import { useMutation } from "react-apollo";
 import {
   SET_USER,
   ADD_ADDRESS,
-  REMOVE_ADDRESS
+  REMOVE_ADDRESS,
+  UPDATE_B2E_ADDRESS
 } from "../../graphql/user/mutations";
 import { UserType, AddressType } from "../../graphql/user/type";
 import { setLatLng } from "../../utils/googlemaps";
@@ -447,6 +448,8 @@ type AddressArgs = {
   latitude?: string;
   longitude?: string;
   billing?: Number;
+  id_price_list?: string;
+  id_address_ebs?: string;
   on: boolean;
 };
 
@@ -492,6 +495,7 @@ const Details: FC<Props> = () => {
   const [deleteAddress] = useMutation(REMOVE_ADDRESS, {
     variables: { addressId }
   });
+  const [updateB2EAddress] = useMutation(UPDATE_B2E_ADDRESS)
   const [handleAddress] = useMutation(ADD_ADDRESS, { variables: addressArgs });
   const [toggleAddressModal] = useMutation(SET_USER, {
     variables: { user: { openAddressModal: true } }
@@ -561,8 +565,6 @@ const Details: FC<Props> = () => {
   };
 
   const openEditModal = (address: AddressType) => {
-    console.log(address);
-
     let street: Array<string> = [];
     let phone: Array<string> = [];
     if (address.street) street = address.street.split(" | ");
@@ -612,11 +614,18 @@ const Details: FC<Props> = () => {
       return false;
     }
 
-    let fields = [
+    let fields = 
+    addressInputs?.id_address_ebs ? 
+    [
+      "phone",
+      "city",
+      "address",
+    ]
+    :
+    [
       "firstname",
       "lastname",
       "phone",
-      "phone2",
       "city",
       "address",
       "reference"
@@ -653,9 +662,9 @@ const Details: FC<Props> = () => {
     return !missingField;
   };
 
-  const editAddress = () => {
+  const editAddress = async () => {
+    setLoading(true);
     if (!validate()) return;
-
     if (
       userData.userInfo.length &&
       userData.userInfo[0] &&
@@ -681,8 +690,24 @@ const Details: FC<Props> = () => {
       latitude: String((window as any).latitude),
       longitude: String((window as any).longitude),
       billing: 0,
+      id_price_list: addressInputs.id_price_list,
+      id_address_ebs: addressInputs.id_address_ebs,
       on: true
     });
+    if (addressInputs?.id_address_ebs) {
+      await updateB2EAddress({
+        variables: {
+          Id_Cliente: userDetails?.details.employee,
+          Id_Direccion: addressInputs?.id_address_ebs,
+          Direccion: addressInputs.address,
+          Ciudad: addressInputs.city,
+          Telefono: addressInputs.phone,
+          Latitud: String((window as any).latitude),
+          Longitud: String((window as any).longitude),
+        }
+      })
+    }
+    setLoading(false);
   };
 
   const addAddress = () => {
@@ -735,7 +760,7 @@ const Details: FC<Props> = () => {
       closeAddressModal();
       getDetails();
       // showSuccess();
-      setTimeout(() => (window as any).location.reload(), 0);
+      // setTimeout(() => (window as any).location.reload(), 0);
     } catch (e) {
       showError();
     }
@@ -748,7 +773,7 @@ const Details: FC<Props> = () => {
       setAddressId(0);
       getDetails();
       // showSuccess();
-      setTimeout(() => (window as any).location.reload(), 0);
+      // setTimeout(() => (window as any).location.reload(), 0);
     } catch (e) {
       showError();
     }
@@ -873,36 +898,26 @@ const Details: FC<Props> = () => {
             {inputs.addresses &&
               inputs.addresses.map((address: AddressType) => (
                 <AddressRow key={address.id}>
-                  <Street onClick={() => {
-                    if (address?.phone && address?.reference && address?.phone === address?.reference) return 0
-                    openEditModal(address)
-                  }}>
+                  <Street onClick={() => openEditModal(address)}>
                     <StreetSpan>
 
-                      {address?.phone && address?.reference && address?.phone === address?.reference && !isNaN(parseInt(address?.reference)) ? (
-                      <>
-                        <span title={address.street?.split("|")[0]} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS }>
-                          {" "}
-                          {address.street?.split("|")[0]}
-                        </span>
-                        <StarWrap>
-                          <img src={StarIcon} alt="" />
-                          <TooltipStar>
-                            {t("account.tooltip_star_msg")}
-                          </TooltipStar>
-                        </StarWrap>
-                      </>
-                      ): (
                         <span title={address.street?.replace(/ \| /g, " ")} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS }>
                         {" "}
                         {address.street?.replace(/ \| /g, " ")}
                       </span>
-                      )}
+                        {address?.id_price_list ? (
+                          <StarWrap>
+                            <img src={StarIcon} alt="" />
+                            <TooltipStar>
+                              {t("account.tooltip_star_msg")}
+                            </TooltipStar>
+                          </StarWrap>
+                        ): ''}
 
                     </StreetSpan>
 
                   </Street>
-                  {address?.phone && address?.reference && address?.phone === address?.reference && !isNaN(parseInt(address?.reference)) ? '' :
+                  {address?.id_price_list ? '' :
                   <DeleteWrapper onClick={() => removeAddress(address)}>
                     <Delete />
                   </DeleteWrapper>
@@ -943,7 +958,17 @@ const Details: FC<Props> = () => {
             </Header>
             <ModalContainer id="new-address-modal">
               <Form>
-                {[
+                {/* here */}
+
+                {(addressInputs
+                 && addressInputs?.id_address_ebs ?
+                [
+                  "phone",
+                  "city",
+                  "address"
+                ]
+                :
+                [
                   "firstname",
                   "lastname",
                   "phone",
@@ -951,7 +976,7 @@ const Details: FC<Props> = () => {
                   "city",
                   "address",
                   "reference"
-                ].map((key: string) => {
+                ]).map((key: string) => {
                   return (
                     <InputGroup
                       withLabel={key !== "street"}
@@ -1028,13 +1053,20 @@ const Details: FC<Props> = () => {
               {userData.userInfo.length &&
                 userData.userInfo[0].openAddressModal && <Map />}
               <CtaWrapper>
-                {!loading &&(
+              {!loading && addressInputs.id ? 
+                  <Cta
+                  filled={true}
+                  text={t("account.modal.edit_title")}
+                  action={editAddress}
+                  />
+                  : 
                   <Cta
                     filled={true}
                     text={t("account.modal.add")}
                     action={addAddress}
                   />
-                )}
+              }
+
                 {loading && (
                   <LoaderWrapper>
                     <img

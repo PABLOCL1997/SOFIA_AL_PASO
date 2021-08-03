@@ -6,15 +6,6 @@ import { BREAKPOINT } from "../../utils/constants";
 import { SUBSCRIBE, SET_USER } from "../../graphql/user/mutations";
 import { useMutation } from "react-apollo";
 import { isValidEmail } from "../../utils/string";
-import hongosDesktop from "../../assets/images/hongos-desktop.webp";
-import morronDesktop from "../../assets/images/morron-desktop.webp";
-import tomateDesktop from "../../assets/images/tomate-desktop.webp";
-import trigoDesktop from "../../assets/images/trigo-desktop.webp";
-import zanahoriasDesktop from "../../assets/images/zanahorias-desktop.webp";
-
-import tomateMobile from "../../assets/images/tomate-mobile.webp";
-import trigoMobile from "../../assets/images/trigo-mobile.webp";
-import zanahoriaMobile from "../../assets/images/zanahoria-mobile.webp";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
@@ -111,7 +102,6 @@ const Wrapper = styled.section`
 const IconWrapper = styled.div`
   display: block;
   margin-top: 80px;
-  
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-top: 72px;
   }
@@ -222,31 +212,31 @@ const Subscribe: FC<Props> = () => {
       <Suspense fallback={<span></span>}>
         <Wrapper>
           <ImageTomato>
-            <img src={tomateDesktop} alt="Tomate" width="261px" height="306px" className="lazyload" />
+            <img src="/images/tomate-desktop.webp" alt="Tomate" width="261px" height="306px" className="lazyload" />
           </ImageTomato>
           <ImageCarrot>
-            <img src={zanahoriasDesktop} alt="Zanahoria" width="184px" height="332px" className="lazyload" />
+            <img src="/images/zanahorias-desktop.web" alt="Zanahoria" width="184px" height="332px" className="lazyload" />
           </ImageCarrot>
           <ImageWeath>
-            <img src={trigoDesktop} alt="Trigo" width="252px" height="285px" className="lazyload" />
+            <img src="/images/trigo-desktop.webp" alt="Trigo" width="252px" height="285px" className="lazyload" />
           </ImageWeath>
           <ImagePepper>
-            <img src={morronDesktop} alt="Pimiento" width="131px" height="164px" className="lazyload" />
+            <img src="/images/morron-desktop.webp" alt="Pimiento" width="131px" height="164px" className="lazyload" />
           </ImagePepper>
           <ImageMushrooms>
-            <img src={hongosDesktop} alt="Hongos" width="239px" height="360px" className="lazyload" />
+            <img src="/images/hongos-desktop.webp" alt="Hongos" width="239px" height="360px" className="lazyload" />
           </ImageMushrooms>
 
           <ImageCarrotsMobile>
-            <img src={zanahoriaMobile} alt="Zanahoria" width="146px" height="215px" className="lazyload" />
+            <img src="/images/zanahoria-mobile.webp" alt="Zanahoria" width="146px" height="215px" className="lazyload" />
           </ImageCarrotsMobile>
 
           <ImageWeathMobile>
-            <img src={trigoMobile} alt="Trigo" width="148px" height="291px" className="lazyload" />
+            <img src="/images/trigo-mobile.webp" alt="Trigo" width="148px" height="291px" className="lazyload" />
           </ImageWeathMobile>
 
           <ImageTomatoMobile>
-            <img src={tomateMobile} alt="Tomate" width="159px" height="216px" className="lazyload" />
+            <img src="/images/tomate-mobile.webp" alt="Tomate" width="159px" height="216px" className="lazyload" />
           </ImageTomatoMobile>
           
           <IconWrapper>

@@ -35,7 +35,6 @@ import {
   TabClick,
   RadioWrap,
   RadioLi,
-  LevelSub3,
   SmallCatImage,
   TitleCatImage
 } from "../../styled-components/FilterSideBarStyles";
@@ -47,21 +46,16 @@ import CrossIcon from "../../assets/images/close-modal.svg";
 import RadioIcon from "../../assets/images/radio-btn.svg";
 import RadioIconChecked from "../../assets/images/radio-btn-checked.svg";
 import { fromLink } from "../../utils/string";
-import IconPrueba from "../../assets/images/embutidos-2x.png";
+
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
 );
-const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
-const Paw = React.lazy(() =>
-  import(/* webpackChunkName: "Paw" */ "../Images/Paw")
-);
+
 const FreeDelivery = React.lazy(() =>
   import(/* webpackChunkName: "FreeDelivery" */ "../Images/FreeDelivery")
 );
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
-);
+
 
 const Container = styled.div`
   position: relative;
@@ -265,33 +259,6 @@ const SubCategory4 = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   }
 `;
 
-const CategoryPet = styled.li<{ selected: boolean; key?: number }>`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  border: 1px solid var(--yellow);
-  border-radius: 20px;
-  position: relative;
-  top: 25px;
-  padding: 25px 30px;
-  b {
-    font-family: MullerBold;
-    font-size: 12px;
-    line-height: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin: 0 5px 0 10px;
-  }
-  span {
-    font-size: 10px;
-    line-height: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--red);
-  }
-`;
-
 const DeliveryBox = styled.div`
   margin-top: 50px;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -320,17 +287,6 @@ const Text = styled.div`
   margin: 20px 0;
 `;
 
-const ProductsFound = styled.div`
-  font-family: MullerBold;
-  font-size: 14px;
-  line-height: 14px;
-  letter-spacing: 0.01em;
-  color: var(--m-gray);
-  @media screen and (max-width: ${BREAKPOINT}) {
-    display: none;
-  }
-`;
-
 type Props = {
   count: number;
   offset: number;
@@ -355,7 +311,6 @@ const FilterSideBar: FC<Props> = ({
   const { t } = useTranslation();
 
   const history = useHistory();
-  const params = useParams();
   const query = new URLSearchParams(useLocation().search);
   const { category, subcategory, lastlevel } = useParams();
 
@@ -508,7 +463,6 @@ const FilterSideBar: FC<Props> = ({
                     "name",
                     toLink(category),
                     categories
-                    .filter((row: CategoryType)=> toLink(row.name) !== 'chiquidays') 
                     .map((category: CategoryType) => {
                       return { ...category, name: toLink(category.name) };
                     })
@@ -599,7 +553,6 @@ const FilterSideBar: FC<Props> = ({
 
             {categories.length &&
               categories
-                .filter((row: CategoryType)=> toLink(row.name) !== 'chiquidays') 
                 .map((row: CategoryType) => (
                 <Category lvl={1} selected={compare(row)} key={row.entity_id}>
                   <Link to={navigateLink(row)}>
@@ -723,7 +676,6 @@ const FilterSideBar: FC<Props> = ({
                     </Category>
                     {categories.length &&
                       categories
-                      .filter((row: CategoryType)=> toLink(row.name) !== 'chiquidays') 
                       .map((row: CategoryType) => (
                         <Category
                           lvl={1}

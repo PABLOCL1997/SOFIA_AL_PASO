@@ -101,3 +101,4 @@ export const toCatLink = (categories: CategoryType[], str: string | null, level:
   return lvl2CatStr + lvl3CatStr + toLink(str);
 };
 
+export const findCity = (key: string): string => cities.find(({ key: _key })=> _key === key) ? cities.find(({ key: _key })=> _key === key)?.value || "Santa Cruz" : "Santa Cruz" 

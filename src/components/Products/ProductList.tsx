@@ -132,7 +132,7 @@ const List = styled.ul`
   padding: 25px 0 0;
 `;
 
-const Item = styled.li<{ key: number }>`
+const Item = styled.li<{ key: any }>`
   padding: 15px 30px;
   cursor: pointer;
   font-family: MullerBold;
@@ -373,7 +373,7 @@ const ProductList: FC<Props> = ({
             {openOrder && (
               <List>
                 {OrderColums.map((item: string, index: number) => (
-                  <Item key={index} onClick={() => selectItem(item)}>
+                  <Item key={`OrderColums${index}`} onClick={() => selectItem(item)}>
                     {t("products.product_list." + item)}
                   </Item>
                 ))}
@@ -386,7 +386,7 @@ const ProductList: FC<Props> = ({
           <Grid>
             {products.map((product: ProductType) => (
               <ItemBox
-                key={product.entity_id}
+                key={`ProductEntity#${product.entity_id}`}
                 product={product}
               />
             ))}
@@ -407,7 +407,7 @@ const ProductList: FC<Props> = ({
               return(
               <Page
                 selected={page === index + 1}
-                key={index}
+                key={`Page#${index}`}
                 onClick={() => { 
                   changePage(index + 1)
                   setPageHook(index + 1)

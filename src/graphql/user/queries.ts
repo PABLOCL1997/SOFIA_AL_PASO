@@ -24,6 +24,7 @@ export const DETAILS = gql`
       nit
       phone
       addressId
+      employee_old
       employee
       addresses {
         id
@@ -36,6 +37,8 @@ export const DETAILS = gql`
         reference
         latitude
         longitude
+        id_price_list
+        id_address_ebs
       }
     }
   }
