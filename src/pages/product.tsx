@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PRODUCT_TITLE } from "../meta";
-import { fromLink, toLink } from "../utils/string";
+import { fromLink, toCatLink, toLink } from "../utils/string";
 import BreadCrumbs from "../components/Breadcrumbs/Breadcrumbs";
 
 import { CategoryType } from "../graphql/categories/type";
@@ -437,7 +437,7 @@ const Product: FC<Props> = ({
   };
   const { t } = useTranslation();
   const history = useHistory();
-  const { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, toCatLink, error } = useProduct()
+  const { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, error } = useProduct("", true)
   const { addAndGo } = useCart()
   const [qty, setQty] = useState<number>(1);
 
@@ -488,7 +488,7 @@ const Product: FC<Props> = ({
                   .sort((a:CategoryType, b:CategoryType) => a.level - b.level)
                   .map(cat => {
                     return {
-                      routeLink: `/productos/${toCatLink(cat.name, cat.level)}`,
+                      routeLink: `/productos/${toCatLink(categories, cat.name, cat.level)}`,
                       routeName: ` / ${cat.name}`
                     }
                   }),
@@ -621,7 +621,7 @@ const Product: FC<Props> = ({
                     <span key={cat.name}>
                       <Link
                         key={index}
-                        to={`/productos/${toCatLink(cat.name, cat.level)}`}
+                        to={`/productos/${toCatLink(categories, cat.name, cat.level)}`}
                       >
                         {cat.name}
                       </Link>

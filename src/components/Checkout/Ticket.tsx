@@ -391,7 +391,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
             ).replace(".", ",")}
           </b>
         </Total>
-        {dataDiscounts && !!(localUserData && localUserData?.userInfo[0]?.idPriceList && localUserData?.userInfo[0]?.idPriceList > 0) && userDetails.details.employee && (
+        {dataDiscounts && !localUserData?.userInfo[0]?.agency && !!(localUserData && localUserData?.userInfo[0]?.idPriceList && localUserData?.userInfo[0]?.idPriceList > 0) && userDetails.details.employee && (
           <EmployeeMsg>¡Te has ahorrado Bs. {Number(dataDiscounts?.comparePrices || 0).toFixed(2).replace('.',',')} por ser colaborador!</EmployeeMsg>
         )}
 

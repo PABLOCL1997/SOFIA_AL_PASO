@@ -21,6 +21,9 @@ const Error = React.lazy(() =>
 const Success = React.lazy(() =>
   import(/* webpackChunkName: "Success" */ "../components/Success")
 );
+const MinimumPrice = React.lazy(() =>
+  import(/* webpackChunkName: "MinimumPrice" */ "../components/MinimumPrice")
+);
 const Modal = React.lazy(() =>
   import(/* webpackChunkName: "ModalMessage" */ "../components/ModalMessage")
 );
@@ -108,6 +111,7 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
         <Footer page={page} />
         <Error />
         <Success />
+        <MinimumPrice />
         <Modal />
       </Wrapper>
     </Suspense>

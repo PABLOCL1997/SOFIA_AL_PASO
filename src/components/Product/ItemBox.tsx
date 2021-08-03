@@ -12,6 +12,7 @@ import {
 } from "../../styled-components/ItemBoxStyles";
 import useCart from "../../hooks/useCart";
 import useProduct from "../../hooks/useProduct";
+import { Link } from "react-router-dom";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -66,10 +67,7 @@ const Discount = styled.div`
   }
 `;
 
-const Link = styled.div`
-  cursor: pointer;
-  position: relative;
-`;
+
 
 const NewLabel = styled.span`
   position: absolute;
@@ -279,8 +277,7 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
           </NewDiscount>
         )}
 
-        <Link onClick={() => {}}>
-          <ProductLink href={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
+        <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
             {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
               <img
                 className="lazyload"
@@ -330,7 +327,6 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
               </PriceBox>
               <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
             </BottomCard>
-          </ProductLink>
         </Link>
         {product.stock > 0 ? (
           <Pill>

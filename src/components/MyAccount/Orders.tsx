@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { ORDERS, ORDER } from "../../graphql/user/queries";
@@ -8,9 +8,6 @@ import { UserOrder, UserOrderItem } from "../../graphql/user/type";
 import { toLocalDate } from "../../utils/date";
 import { ADD_ITEM } from "../../graphql/cart/mutations";
 import { SET_USER } from "../../graphql/user/mutations";
-import { GET_PRODUCT } from "../../graphql/products/queries";
-import { GET_USER } from "../../graphql/user/queries";
-import { ProductType } from "../../graphql/products/type";
 import Status from "./Status";
 
 const Loader = React.lazy(

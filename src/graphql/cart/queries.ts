@@ -32,8 +32,8 @@ export const GET_CART_ITEMS = gql`
 `;
 
 export const CHECK_CART = gql`
-  query CheckCart($cart: String!, $city: String!, $id_price_list: Int) {
-    checkCart(cart: $cart, city: $city, id_price_list: $id_price_list) {
+  query CheckCart($cart: String!, $city: String!, $id_price_list: Int, $agency: String) {
+    checkCart(cart: $cart, city: $city, id_price_list: $id_price_list, agency: $agency) {
       cart
     }
   }

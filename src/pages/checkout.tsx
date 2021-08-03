@@ -22,8 +22,10 @@ import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { trackOrder, initCheckout } from "../utils/dataLayer";
-import { escapeSingleQuote } from "../utils/string";
+import { escapeSingleQuote, search } from "../utils/string";
 import useCityPriceList from "../hooks/useCityPriceList";
+import { GET_SAP_AGENCIES } from "../graphql/products/queries";
+import { ShippingMethod } from "../components/CityModal/types";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -130,6 +132,26 @@ const Line = styled.div`
   margin: 48px 0;
 `;
 
+const ShippingMethodWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 14px;
+  margin-bottom: 40px; 
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+
+  svg {
+    margin-right: 16px;
+  }
+  h4 {
+    margin: 0;
+    padding: 0;
+    
+    font-size: 20px;
+    font-family: MullerMedium;
+  }
+`
+
 type Props = {};
 
 type OrderData = {
@@ -144,14 +166,15 @@ type OrderData = {
   facturacion: string;
   envio: string;
   payment_method: string;
-  DIRECCIONID?: number;
-  agencia?:string
+  DIRECCIONID?: string | null;
+  agencia?:string | null
 };
 
 const Checkout: FC<Props> = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { idPriceList } = useCityPriceList()
+  const history = useHistory();
+  const { idPriceList, agency } = useCityPriceList()
 
   const [processing, setProcessing] = useState(false);
   const [userData, setUserData] = useState({});
@@ -161,13 +184,14 @@ const Checkout: FC<Props> = () => {
   const [billingChange, setBillingChange] = useState<any>({});
   const [mapUsed, setMapUsed] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
-  const [result, setResult] = useState<
-    Array<{ entity_id: string; increment_id: string }>
-  >([]);
+  const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
+  const [agencies, setAgencies] = useState<any>([])
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(ShippingMethod.Delivery); 
 
   const { data: localUserData } = useQuery(GET_USER, {});
   const {data: userDetails} = useQuery(DETAILS, {})
   const { data } = useQuery(GET_CART_ITEMS);
+
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: d => {
@@ -189,18 +213,15 @@ const Checkout: FC<Props> = () => {
   const [showError] = useMutation(SET_USER, {
     variables: { user: { showError: t("checkout.error") } }
   });
+  const {} = useQuery(GET_SAP_AGENCIES, {
+    fetchPolicy: "network-only",
+    onCompleted: d => {
+      setAgencies(d.agencies)
+    }
+  })
 
   const totalAmount = GET_TOTAL(data.cartItems);
 
-  useEffect(() => {
-    if (
-      localUserData &&
-      localUserData.userInfo[0] &&
-      !localUserData.userInfo[0].isLoggedIn
-    ) {
-      (window as any).location = "/";
-    }
-  }, [localUserData]);
 
   useEffect(() => {
     (window as any).updateMapUsed = () => setMapUsed(true);
@@ -228,6 +249,7 @@ const Checkout: FC<Props> = () => {
             "Tienda Sofia - Checkout",
             "/checkout"
           );
+          history.push(`/gracias?ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(',')}`);
         } catch (e) {
           showError();
         }
@@ -240,6 +262,7 @@ const Checkout: FC<Props> = () => {
   }, []);
 
   useEffect(() => {
+    // initcheckout event on DataLayer 
     if (userData && (userData as any).email) {
       initCheckout(
         parseFloat(totalAmount.replace(",", ".")),
@@ -251,6 +274,7 @@ const Checkout: FC<Props> = () => {
   }, [userData]);
 
   useEffect(() => {
+    // when there is a new order
     if (order) {
       (async () => {
         try {
@@ -284,6 +308,7 @@ const Checkout: FC<Props> = () => {
             );
             emptyCart();
             setProcessing(false);
+            history.push(`/gracias?ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(',')}`);
           }
         } catch (e) {
           showError();
@@ -308,7 +333,15 @@ const Checkout: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todotixData]);
 
-  const validateOrder = () => {
+  useEffect(() => {
+    if (agency) {
+      setShippingMethod(ShippingMethod.Pickup)
+    } else {
+      setShippingMethod(ShippingMethod.Delivery)
+    }
+  }, [agency])
+
+  const   validateOrder = () => {
     let items: Array<string> = [];
     const special_address = idPriceList > 0
 
@@ -348,7 +381,8 @@ const Checkout: FC<Props> = () => {
     });
 
     let missingField = false;
-    ["firstname", "lastname", "email", "nit"].forEach((key: string) => {
+    // verify if exist "firstname", "email", "nit"
+    ["firstname", "email", "nit"].forEach((key: string) => {
       if (!orderData.billing[key] && !missingField) {
         missingField = true;
         const input = document.querySelector(`[name="billing-${key}"]`);
@@ -371,7 +405,7 @@ const Checkout: FC<Props> = () => {
       }
     });
 
-    if (!mapUsed && !orderData.shipping.id && !special_address) {
+    if (!mapUsed && !orderData.shipping.id && !special_address && !agency) {
       window.scrollTo({
         top:
           (document as any).getElementById("gmap").getBoundingClientRect().top +
@@ -389,10 +423,9 @@ const Checkout: FC<Props> = () => {
       return [];
     }
 
-    if (!missingField && !orderData.shipping.id) {
+    if (!missingField && !orderData.shipping.id && !agency) {
       [
         "firstname",
-        "lastname",
         "phone",
         "phone2",
         "nit",
@@ -430,7 +463,6 @@ const Checkout: FC<Props> = () => {
         }
       });
     }
-
     if (missingField) return [];
     return items;
   };
@@ -439,11 +471,13 @@ const Checkout: FC<Props> = () => {
     setConfirmModalVisible(false);
     const items: Array<string> = validateOrder();
     const special_address = idPriceList > 0
+    const agencyObj = agency ? search("key", agency || "V07", agencies) : null
+
     if (!items.length) return;
 
     setOrder({
-      DIRECCIONID: special_address ? orderData.shipping.street.split("|")[1].replace(/ /g,"") : null,
-      agencia: undefined,
+      DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
+      agencia: agency,
       discount_amount: parseFloat(
         orderData.coupon ? orderData.coupon.discount : 0
       ),
@@ -462,7 +496,7 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.billing.lastname),
         fax: orderData.billing.nit,
         email: orderData.billing.email,
-        telephone: orderData.shipping.phone2,
+        telephone: agency ? agencyObj.telephone :orderData.shipping.phone2,
         country_id: "BO",
         city: escapeSingleQuote(
           localUserData &&
@@ -471,15 +505,16 @@ const Checkout: FC<Props> = () => {
             ? localUserData.userInfo[0].cityName
             : "-"
         ),
-        latitude: String((window as any).latitude),
-        longitude: String((window as any).longitude),
+        latitude: agency ? String(agencyObj.latitude) : String((window as any).latitude),
+        longitude: agency ? String(agencyObj.longitude) : String((window as any).longitude),
         street: escapeSingleQuote(
           special_address ? orderData.shipping.street.split("|")[0] :
+          agency ? agencyObj.street :
           orderData.shipping.id
             ? orderData.shipping.street
             : `${orderData.shipping.address || ""}`
         ),
-        reference: escapeSingleQuote(orderData.shipping.reference)
+        reference: agency ? agencyObj.reference : escapeSingleQuote(orderData.shipping.reference)
       }),
       envio: JSON.stringify({
         entity_id: orderData.shipping.id,
@@ -487,9 +522,10 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.shipping.lastname),
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
-        telephone: orderData.shipping.phone,
+        telephone: agency ? agencyObj.telephone :orderData.shipping.phone,
         street: escapeSingleQuote(
           special_address ? orderData.shipping.street.split("|")[0] :
+          agency ? agencyObj.street :
           orderData.shipping.id
             ? orderData.shipping.street
             : `${orderData.shipping.address || ""}`
@@ -504,8 +540,8 @@ const Checkout: FC<Props> = () => {
         ),
         region: escapeSingleQuote(orderData.shipping.reference),
         country_id: "BO",
-        latitude: String((window as any).latitude),
-        longitude: String((window as any).longitude)
+        latitude: agency ? String(agencyObj.latitude) : String((window as any).latitude),
+        longitude: agency ? String(agencyObj.longitude) : String((window as any).longitude)
       }),
       payment_method: orderData.payment
         ? orderData.payment.method
@@ -534,10 +570,12 @@ const Checkout: FC<Props> = () => {
     }
 
     if (key === "billing") setBillingChange(values);
+    
     (window as any).orderData = {
       ...(window as any).orderData,
       [key]: values
     };
+
     setOrderData((window as any).orderData);
   };
 
@@ -545,11 +583,12 @@ const Checkout: FC<Props> = () => {
     const items: Array<string> | boolean = validateOrder();
     let b2e = false
     try {
-      b2e = idPriceList > 0
+      b2e = idPriceList > 0 || !!(agency)
+
     } catch (e) {
       b2e = false
     }
-    console.log('show', b2e, items.length )
+
     if (!b2e && items.length) setConfirmModalVisible(true);
     if (b2e && items.length) saveOrder();
     // setConfirmModalVisible(true);
@@ -573,6 +612,24 @@ const Checkout: FC<Props> = () => {
         <div className="main-container">
           {!result.length && (
             <CheckoutWrapper>
+              <ShippingMethodWrapper>
+                {shippingMethod === ShippingMethod.Pickup && <>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.5 0.75H4.5L0.75 7.5C0.75 9.5715 2.4285 11.25 4.5 11.25C6.5715 11.25 8.25 9.5715 8.25 7.5C8.25 9.5715 9.9285 11.25 12 11.25C14.0715 11.25 15.75 9.5715 15.75 7.5C15.75 9.5715 17.4285 11.25 19.5 11.25C21.5715 11.25 23.25 9.5715 23.25 7.5L19.5 0.75Z" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20.25 14.25V23.25H3.75V14.25" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.75 23.25V17.25H14.25V23.25" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+
+                  <h4>Retira al Paso</h4>                
+                </>}
+                {shippingMethod === ShippingMethod.Delivery && <>
+                  <svg width="24" height="26" viewBox="0 0 36 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.1905 2L2 14.9524V36H13.3333V24.6667H23.0476V36H34.381V14.9524L18.1905 2Z" stroke="#E30613" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="square"/>
+                  </svg>
+                
+                  <h4>Envío a domicilio</h4>
+                </>}
+              </ShippingMethodWrapper>
               <Title>
                 <h2>{t("checkout.title")}</h2>
                 <button onClick={() => toggleCartModal()}>
@@ -615,11 +672,7 @@ const Checkout: FC<Props> = () => {
               </Cols>
             </CheckoutWrapper>
           )}
-          {!!result.length && (
-            <ThanktWrapper>
-              <Thanks orders={result} />
-            </ThanktWrapper>
-          )}
+
         </div>
       </Wrapper>
     </Suspense>

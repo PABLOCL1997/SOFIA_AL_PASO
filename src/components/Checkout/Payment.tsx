@@ -58,24 +58,37 @@ const green = {
 
 const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, setOrderIsReady }) => {
   const { t } = useTranslation();
-  const CREDIT = 'ccsave'
+  const CREDIT = {
+    title: 'credito',
+    value: 'ccsave'
+  }
+  const POS = {
+    // Con tarjeta en domicilio
+    title: t("checkout.payment.checkmo"),
+    value: "checkmo"
+  }
+  const TODOTIX = {
+    title: t('checkout.payment.todotix'),
+    value: 'todotix'
+  }
+  const CASH = {
+    title: t("checkout.payment.cashondelivery"),
+    value: "cashondelivery"
+  }
   
   const valuesB2E = [
-    { title: 'credito', value: CREDIT }    
+    CASH,
+    CREDIT
   ];
+
   const values = [
-    {
-      title: t("checkout.payment.cashondelivery"),
-      value: "cashondelivery"
-    },
-    {
-      title: t("checkout.payment.checkmo"),
-      value: "checkmo"
-    },
-    {
-      title: t('checkout.payment.todotix'),
-      value: 'todotix'
-    }
+    CASH,
+    POS,
+    TODOTIX
+  ]
+  const valuesPickup = [
+    CASH,
+    POS
   ]
 
   const [option, setOption] = useState('cashondelivery');
@@ -87,7 +100,7 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
     onCompleted: d => {
       setOrderIsReady(true)
       // actualizar valor para que el cliente sepa si le alcanza.
-      if (option === CREDIT) {
+      if (option === CREDIT.value) {
         parseFloat(totalAmount.replace(',', '.')) < d.getB2EUserCredit.creditoDisponible.toFixed(2)
           ? setOrderIsReady(true)
           : setOrderIsReady(false)
@@ -96,7 +109,7 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
   })
 
   const changeOption = (val: string) => {
-    if (val === CREDIT) {
+    if (val === CREDIT.value) {
       setOrderIsReady(false)
       userCredit({
         variables: {
@@ -113,10 +126,15 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
 
   useEffect(() => {
     if(userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
-      changeOption(CREDIT)
       setOptions(valuesB2E)
-      updateOrder('payment', { method: CREDIT });
-    }else {
+      changeOption(CREDIT.value)
+      updateOrder('payment', { method: CREDIT.value });
+    } else if (userData.userInfo[0].agency) {
+      setOptions(valuesPickup)
+      setOption(valuesPickup[0].value)
+      updateOrder('payment', { method: valuesPickup[0].value });
+    }
+    else {
       setOptions(values)
       setOption(values[0].value)
       updateOrder('payment', { method: values[0].value });
@@ -132,7 +150,7 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
           <Switch changeOption={changeOption} option={option} values={options} />
         </div>
         <Disclaimer>{t("checkout.payment.bs_only")}</Disclaimer>
-        {option === CREDIT && (
+        {option === CREDIT.value && (
           <React.Fragment>
             {loadingCredit && (
               <CircleLoader noHeight={true} />

@@ -1,6 +1,6 @@
 import React, { FC, Suspense } from "react";
-import styled from "styled-components";
 import { BREAKPOINT } from "../../utils/constants";
+import styled from "styled-components";
 
 const ArrowButton = styled.div<{ background: string, color: string, rotate: string}>`
     cursor: pointer;
