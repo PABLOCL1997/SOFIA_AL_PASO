@@ -103,15 +103,9 @@ const Wrapper = styled.section`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  
   width: 100%;
   height: 409px;
-  border-radius: 24px;
-  
-  margin-bottom: 80px;
-  
   background-color: RGBA(254,205,0,0.4);
-
 `
 
 const IconWrapper = styled.div`

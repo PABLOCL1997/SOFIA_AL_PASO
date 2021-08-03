@@ -7,7 +7,7 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    padding: 20px 5px;
+    height: 0;
 `
 
 const GoTop = () => {
