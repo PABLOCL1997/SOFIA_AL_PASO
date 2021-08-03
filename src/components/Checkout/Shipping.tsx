@@ -470,7 +470,7 @@ const Shipping: FC<Props> = ({
         <Title>
           <h2>{t("checkout.delivery.title")}</h2>
         </Title>
-        {agencies.map((_agency: Agency, index: number) =>        
+        {/* {agencies.map((_agency: Agency, index: number) =>        
           <CheckboxGroup red={!other} key={index}>
             <input
               type="radio"
@@ -481,7 +481,7 @@ const Shipping: FC<Props> = ({
             />
             <label>Retirar en: {_agency.name} - {_agency.street}</label>
           </CheckboxGroup>
-        )}
+        )} */}
         {userData &&
           userData.details.addresses &&
           userData.details.addresses.map((address: AddressType) => (
