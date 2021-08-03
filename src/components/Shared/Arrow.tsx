@@ -10,8 +10,11 @@ const ArrowButton = styled.div<{ background: string, color: string, rotate: stri
     height: 46px;
     border-radius: 50% ;
     box-shadow: 0px 17px 36px rgba(0, 0, 0, 0.3);
+    position: relative;
+    right: 120px;
+    top: -23px;
 
-    ${({ background, color, rotate }) => 
+    ${({ background, color, rotate }) =>
     `
         background: ${background};
         color: ${color};
@@ -21,6 +24,9 @@ const ArrowButton = styled.div<{ background: string, color: string, rotate: stri
             transform: rotate(${rotate});
         }
     `
+    }
+    @media screen and (max-width: ${BREAKPOINT}) {
+        display: none;
     }
 `
 
