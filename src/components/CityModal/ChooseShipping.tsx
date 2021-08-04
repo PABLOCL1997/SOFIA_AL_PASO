@@ -45,7 +45,7 @@ const Subtitle = styled.h4`
 `
 const Options = styled.ul`
     display:grid;
-    justify-content:center;
+    grid-template-columns: 1fr 1fr;
     column-gap: 24px;
 
     margin-top: 56px;
@@ -137,7 +137,8 @@ const ChooseShipping: FC<Props> = ({
         <Title>¡Bienvenido a Sofía!</Title>
         <Subtitle>¿A dónde enviamos tu pedido?</Subtitle>
         <Options>
-            {/* <Option selected={isAgency} onClick={handleStepPickup}>
+            <Option selected={isAgency} onClick={handleStepPickup}>
+                {/* icono de sucursal */}
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0)">
                     <path d="M32.5 1.25H7.5L1.25 12.5C1.25 15.9525 4.0475 18.75 7.5 18.75C10.9525 18.75 13.75 15.9525 13.75 12.5C13.75 15.9525 16.5475 18.75 20 18.75C23.4525 18.75 26.25 15.9525 26.25 12.5C26.25 15.9525 29.0475 18.75 32.5 18.75C35.9525 18.75 38.75 15.9525 38.75 12.5L32.5 1.25Z" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
@@ -151,10 +152,11 @@ const ChooseShipping: FC<Props> = ({
                     </defs>
                 </svg>
                 <p>Retira al paso</p>
+                {/* show only if selected */}
                 {isAgency && 
                     <em>{street}</em>
                 }
-            </Option> */}
+            </Option>
             <Option selected={!isAgency} onClick={handleStepDelivery}>
                 {/* icono de casa */}
                 <svg width="36" height="38" viewBox="0 0 36 38" fill="none" xmlns="http://www.w3.org/2000/svg">

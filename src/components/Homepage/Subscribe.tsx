@@ -215,7 +215,7 @@ const Subscribe: FC<Props> = () => {
             <img src="/images/tomate-desktop.webp" alt="Tomate" width="261px" height="306px" className="lazyload" />
           </ImageTomato>
           <ImageCarrot>
-            <img src="/images/zanahorias-desktop.webp" alt="Zanahoria" width="184px" height="332px" className="lazyload" />
+            <img src="/images/zanahorias-desktop.web" alt="Zanahoria" width="184px" height="332px" className="lazyload" />
           </ImageCarrot>
           <ImageWeath>
             <img src="/images/trigo-desktop.webp" alt="Trigo" width="252px" height="285px" className="lazyload" />
