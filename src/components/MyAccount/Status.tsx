@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useQuery } from "react-apollo";
 import { ORDER_STATUS } from "../../graphql/user/queries";
 
@@ -8,10 +8,14 @@ type Props = {
 }
 
 const Status: FC<Props> = ({ incremendId }) => {
+  const [status, setStatus] = useState<string>("")
   const { loading, data } = useQuery(ORDER_STATUS, {
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
     variables:{
       incremendId
+    },
+    onCompleted: data => {
+      setStatus(data.sofiawsOrderStatus.status || "RECIBIMOS TU PEDIDO")
     }
   })
   return (
@@ -23,8 +27,8 @@ const Status: FC<Props> = ({ incremendId }) => {
       )}
       {!loading && data && (
         <span
-            className={data.sofiawsOrderStatus.status.toLowerCase().replace(/ /g, "-")}
-        >{data.sofiawsOrderStatus.status}</span>
+            className={status.toLowerCase().replace(/ /g, "-")}
+        >{status}</span>
       )}
 
     </span>
