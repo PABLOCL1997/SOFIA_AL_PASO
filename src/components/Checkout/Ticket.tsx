@@ -346,6 +346,8 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           <span>{t("checkout.ticket.delivery")}</span>
           <b>Bs. 0,00</b>
         </Shipping>
+        {/* only on b2c */}
+        {localUserData && !localUserData?.userInfo[0]?.agency && !localUserData?.userInfo[0]?.idPriceList ?
         <Coupon>
           {!showCoupon && (
             <button onClick={() => setShowCoupon(true)}>
@@ -373,6 +375,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
             </InputBox>
           )}
         </Coupon>
+        : null}
         {Number(discountAmount) > 0 && (
           <Discount>
             <span>{t("checkout.ticket.discount")}</span>
