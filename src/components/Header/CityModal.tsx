@@ -143,6 +143,7 @@ const CityModal: FC<Props> = () => {
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [city, setCity] = useState<User>({});
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
+  const [firstTime, setFirstTime] = useState<boolean>(true);
 
   const [toggleCityModal] = useMutation(SET_USER, {
     variables: { user: { openCityModal: false } as User }
@@ -176,7 +177,8 @@ const CityModal: FC<Props> = () => {
   useEffect(() => {
     toggleCityModal();
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
-    if (!userInfo.cityKey) {
+    if (!userInfo.cityKey && firstTime) {
+      setFirstTime(false)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function (position) {
@@ -211,7 +213,7 @@ const CityModal: FC<Props> = () => {
           },
           function (errors) {
             console.log(errors, 'on error');
-            // changeCity(cities[2]);
+            changeCity(cities[2]);
           },
           {
             timeout: 2000
