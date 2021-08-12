@@ -78,6 +78,8 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
   
   const valuesB2E = [
     CASH,
+    POS,
+    TODOTIX,
     CREDIT
   ];
 
