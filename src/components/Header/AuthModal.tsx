@@ -1,6 +1,6 @@
 import React, { FC, Suspense, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQuery } from "react-apollo";
+import { useLazyQuery, useMutation, useQuery } from "react-apollo";
 import {
   SET_USER,
   SIGN_UP,
@@ -8,11 +8,12 @@ import {
   RECOVER,
   RESET
 } from "../../graphql/user/mutations";
-import { GET_USER } from "../../graphql/user/queries";
+import { DETAILS, GET_USER } from "../../graphql/user/queries";
 import { googleLogin, facebookLogin } from "../../utils/social";
 import { token as StoreToken } from "../../utils/store";
 import { useParams, useHistory } from "react-router-dom";
 import { CloseWrapper, CtaWrapper, Description, Disclaimer, Line, Link, LoaderWrapper, LoginError, Modal, ModalCourtain, PasswordWrapper, SocialButton, Title } from "../AuthModal/style";
+import { findKeyByCity } from "../../utils/string";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -58,7 +59,53 @@ const AuthModal: FC<Props> = () => {
   const [passwordVisible, setPasswordVisible] = useState<Boolean>(false)
   const togglePassword = useRef<HTMLInputElement>(null)
 
+  const [getDetails] = useLazyQuery(DETAILS, {
+    fetchPolicy: "network-only",
+    onCompleted: d => {
+      // if user is logged in and has addresses
+      if (d.details && d.details.addresses && d.details.addresses.length > 0) {
+
+          const defaultAddress = d.details.addresses[0];
+          // find the first b2e address
+          const b2eAddress = d.details.addresses.find((address: any) => address.id_price_list);
+          let fields;
+
+          // if user has a b2e address
+          if (b2eAddress) {
+            // set the default address to b2e address
+            fields = {
+              defaultAddressId: b2eAddress?.id,
+              defaultAddressLabel: b2eAddress?.street,
+              cityKey: findKeyByCity(b2eAddress?.city) || "SC",
+              cityName: b2eAddress?.city,
+              agency: null,
+              idPriceList: b2eAddress?.id_price_list || 0 
+            };
+          } else {
+            // set the default address to the first address
+            fields = {
+              defaultAddressId: defaultAddress?.id,
+              defaultAddressLabel: defaultAddress?.street,
+              cityKey: findKeyByCity(defaultAddress?.city) || "SC",
+              cityName: defaultAddress?.city,
+              agency: null,
+              idPriceList: 0 
+            };
+          }
+
+          updateMainAddress({
+            variables: {
+              user: {
+                ...fields
+              }
+            }
+          })
+        }
+    }
+  });
+
   const [doSignUp] = useMutation(SIGN_UP);
+
   const [doLogin] = useMutation(LOGIN, {
     variables: { email: form.email, password: form.password }
   });
@@ -81,6 +128,7 @@ const AuthModal: FC<Props> = () => {
   const [showSuccess] = useMutation(SET_USER, {
     variables: { user: { showSuccess: t("auth_modal.success") } }
   });
+  const [updateMainAddress] = useMutation(SET_USER, {})
 
   useEffect(() => {
     closeLoginModal();
@@ -98,7 +146,10 @@ const AuthModal: FC<Props> = () => {
   }, [step]);
 
   useEffect(() => {
-    if (user.isLoggedIn) updateUser();
+    if (user.isLoggedIn) {
+      updateUser();
+      getDetails();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -111,7 +162,6 @@ const AuthModal: FC<Props> = () => {
         openLoginModal: false,
         isLoggedIn: true,
         id: response.data.login.id,
-        // TODO Revisar 
         idPriceList: 0
       });
       StoreToken.set(response.data.login.token);
@@ -143,7 +193,8 @@ const AuthModal: FC<Props> = () => {
       setUser({
         openLoginModal: false,
         isLoggedIn: true,
-        id: response.data.signup.id
+        id: response.data.signup.id,
+        idPriceList: 0
       });
       StoreToken.set(response.data.signup.token);
       showSuccess();
