@@ -2,7 +2,7 @@ import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import GoogleMapReact from "google-map-react";
 import Marker, { Maps } from "../MapMarker"
-import { cities, findCity, KeyValue } from "../../utils/string";
+import { cities, findCity, findKeyByCity, KeyValue } from "../../utils/string";
 import StarIcon from "../../assets/images/star.svg";
 
 import useCityPriceList from "../../hooks/useCityPriceList";
@@ -286,35 +286,38 @@ const AddressDetail: FC<Props> = ({
         setCity({
             cityKey: c.key,
             cityName: c.value,
+            defaultAddressLabel: c.value,
             openCityModal: false,
             idPriceList: 0
         });
     };
 
 
-    const handleSetCity = async () => {
+    const handleSetCity = async (isAddress: boolean) => {
         if (agency) {
             setModalStepType(Changes.PickupToDelivery);
         } else {
             setModalStepType(Changes.DeliveryToDelivery);
         }
 
-        if (city && city.cityKey) await setUser();
-
-        if (selectedAddress) {
-            await setUser({
-                variables: {
-                    user: {
-                        defaultAddressId: selectedAddress?.id,
-                        defaultAddressLabel: selectedAddress?.street,
-                        openCityModal: false,
-                        cityKey: selectedAddress?.key,
-                        cityName: selectedAddress?.city,
-                        agency: null,
-                        idPriceList: selectedAddress?.id_price_list || 0 
+        if (isAddress) {
+            if (selectedAddress) {
+                await setUser({
+                    variables: {
+                        user: {
+                            defaultAddressId: selectedAddress?.id,
+                            defaultAddressLabel: selectedAddress?.street,
+                            openCityModal: false,
+                            cityKey: findKeyByCity(selectedAddress?.city) || "SC",
+                            cityName: selectedAddress?.city,
+                            agency: null,
+                            idPriceList: selectedAddress?.id_price_list || 0 
+                        }
                     }
-                }
-            });
+                });
+            }
+        } else {
+            if (city && city.cityKey) await setUser();
         }
 
         setChangeModalVisible(true);
@@ -526,7 +529,7 @@ const AddressDetail: FC<Props> = ({
                         <a onClick={() => setWithMap(true)}>Ver en mapa</a>
                     }
 
-                    <button onClick={handleSetCity}>Confirmar</button>
+                    <button onClick={() => handleSetCity(!(inputs.addresses && !inputs.addresses.length))}>Confirmar</button>
                 </Selector>
             }
 

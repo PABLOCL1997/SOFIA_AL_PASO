@@ -63,6 +63,10 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
       user: {
         openLoginModal: false,
         isLoggedIn: false,
+        cityKey: "SC",
+        cityName: "Santa Cruz",
+        defaultAddressLabel: "Santa Cruz",
+        idPriceList: 0,
         id: null
       }
     }

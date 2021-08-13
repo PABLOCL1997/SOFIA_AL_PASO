@@ -178,6 +178,7 @@ const CityModal: FC<Props> = () => {
     toggleCityModal();
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
     if (!userInfo.cityKey && firstTime) {
+      changeCity(cities[2]);
       setFirstTime(false)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -203,8 +204,7 @@ const CityModal: FC<Props> = () => {
                     else changeCity(cities[2]);
                   }
                 } else {
-                  console.log("not status 200 reverse geocoding");
-                  // changeCity(cities[2]);
+                  // console.log("not status 200 reverse geocoding");
                 }
               }
             };
@@ -212,8 +212,7 @@ const CityModal: FC<Props> = () => {
             Http.send();
           },
           function (errors) {
-            console.log(errors, 'on error');
-            changeCity(cities[2]);
+            // console.log(errors, 'on error');
           },
           {
             timeout: 2000

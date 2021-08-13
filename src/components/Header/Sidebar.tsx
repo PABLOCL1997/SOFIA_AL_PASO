@@ -70,10 +70,11 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
     const [logout] = useMutation(SET_USER, {
         variables: {
           user: {
-            cityKey: "",
-            cityName: "",
+            cityKey: "SC",
+            cityName: "Santa Cruz",
+            defaultAddressLabel: "Santa Cruz",
+            idPriceList: 0,
             defaultAddressId: null,
-            defaultAddressLabel: "",
             openCityModal: false,
             openLoginModal: false,
             isLoggedIn: false,
