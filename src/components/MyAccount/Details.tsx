@@ -618,8 +618,8 @@ const Details: FC<Props> = () => {
     addressInputs?.id_address_ebs ? 
     [
       "phone",
-      "city",
       "address",
+      "city"
     ]
     :
     [
@@ -964,8 +964,8 @@ const Details: FC<Props> = () => {
                  && addressInputs?.id_address_ebs ?
                 [
                   "phone",
+                  "address",
                   "city",
-                  "address"
                 ]
                 :
                 [
@@ -992,6 +992,7 @@ const Details: FC<Props> = () => {
                               onChangeAddress(key, evt.target.value)
                             }
                             value={addressInputs[key] || ""}
+                            disabled={addressInputs?.id_address_ebs}
                           >
                             <option value="">
                               {t("checkout.delivery." + key)}
@@ -1000,7 +1001,9 @@ const Details: FC<Props> = () => {
                               <option key={opt}>{opt}</option>
                             ))}
                           </select>
-                          <Chevron />
+                          {!addressInputs?.id_address_ebs && 
+                            <Chevron />
+                          }
                         </SelectWrapper>
                       )}
                       {(key === "address" || key === "reference") && (
