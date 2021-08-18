@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
 import { useQuery } from "react-apollo";
 import { DETAILS } from "../../graphql/user/queries";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -83,6 +84,8 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
   const [inputs, setInputs] = useState({});
   const { data: userData } = useQuery(DETAILS);
   const specialAddress =  localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
+  const { agency } = useCityPriceList()
+  const [fields, setFields] = useState<string[]>([]);
 
   const onChange = (key: string, value: string) => {
     setInputs({
@@ -118,12 +121,21 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputs]);
 
+  useEffect(() => {
+    if (agency) {
+      setFields(["firstname", "lastname", "email", "nit", "phone"])
+    } else {
+      setFields(["firstname", "lastname", "email", "nit"])
+    }
+
+  }, [agency])
+
   return (
     <Suspense fallback={<Loader />}>
       <Container>
         <Title>{t("checkout.billing.title")}</Title>
         <Form>
-          {["firstname", "lastname", "email", "nit"].map((key: string) => (
+          {fields.map((key: string) => (
             <InputGroup key={key}>
               <label>{t("checkout.billing." + key)}</label>
               <input

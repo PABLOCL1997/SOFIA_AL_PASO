@@ -109,6 +109,19 @@ const Option = styled.li<{ selected: boolean }>`
         padding: 20px 8px;
     }
 `
+
+const Strong = styled.strong`
+    margin-top: 16px;
+    max-width: 203px;
+    span {
+        font-family: MullerBold;
+    }
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+        font-size: 12px;
+    }
+`
+
 interface Props {
     setStep: Function
     setShippingMethod: Function
@@ -168,6 +181,12 @@ const ChooseShipping: FC<Props> = ({
                     <em>{street}</em>
                 }
             </Option>
+            <Strong>
+                ¡Retira en Sofía al Paso dentro de la siguiente hora! Guardamos tu pedido hasta 24 horas.
+            </Strong>
+            <Strong>
+                Realiza tu pedido hasta las <span>17:00</span> y recibe a domicilio el siguiente día (entregas de lunes a sábado)
+            </Strong>
         </Options>    
     </Wrapper>)
 }

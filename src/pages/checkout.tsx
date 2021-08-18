@@ -308,7 +308,8 @@ const Checkout: FC<Props> = () => {
             );
             emptyCart();
             setProcessing(false);
-            history.push(`/gracias?ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(',')}`);
+            const pickup = agency ? agency : "";
+            history.push(`/gracias?ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(',')}&pickup=${pickup}`);
           }
         } catch (e) {
           showError();
@@ -381,8 +382,9 @@ const Checkout: FC<Props> = () => {
     });
 
     let missingField = false;
-    // verify if exist "firstname", "email", "nit"
-    ["firstname", "email", "nit"].forEach((key: string) => {
+    const requiredFields = agency ? ["firstname", "lastname", "email", "nit", "phone"] : ["firstname", "lastname", "email", "nit"]
+    
+    requiredFields.forEach((key: string) => {
       if (!orderData.billing[key] && !missingField) {
         missingField = true;
         const input = document.querySelector(`[name="billing-${key}"]`);
@@ -496,7 +498,7 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.billing.lastname),
         fax: orderData.billing.nit,
         email: orderData.billing.email,
-        telephone: agency ? agencyObj.telephone :orderData.shipping.phone2,
+        telephone: agency ? orderData.billing.phone :orderData.shipping.phone2,
         country_id: "BO",
         city: escapeSingleQuote(
           localUserData &&
@@ -522,7 +524,7 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.shipping.lastname),
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
-        telephone: agency ? agencyObj.telephone :orderData.shipping.phone,
+        telephone: agency ? orderData.billing.phone :orderData.shipping.phone,
         street: escapeSingleQuote(
           special_address ? orderData.shipping.street.split("|")[0] :
           agency ? agencyObj.street :
