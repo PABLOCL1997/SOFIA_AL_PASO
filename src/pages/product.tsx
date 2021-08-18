@@ -11,6 +11,7 @@ import { BREAKPOINT, customStyles } from "../utils/constants";
 import DelayedWrapper from "../components/DelayedWrapper";
 import useProduct from "../hooks/useProduct";
 import useCart from "../hooks/useCart";
+import useCityPriceList from "../hooks/useCityPriceList";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -438,6 +439,7 @@ const Product: FC<Props> = ({
   const { t } = useTranslation();
   const history = useHistory();
   const { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, error } = useProduct("", true)
+  const { agency } = useCityPriceList()
   const { addAndGo } = useCart()
   const [qty, setQty] = useState<number>(1);
 
@@ -629,6 +631,20 @@ const Product: FC<Props> = ({
                     </span>
                   ))}
                 </Categories>
+                { agency ?
+                // when agency show the pickup message
+                  <DeliveryBox>
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="20" cy="20" r="20" fill="#E30613" />
+                      <path d="M 20.0492 10.9912 C 16.1218 10.9912 13 14.0865 13 17.9805 C 13 19.8776 13.7049 21.6748 15.1148 22.9728 C 15.2155 23.0727 19.2435 26.6671 19.3442 26.767 C 19.7471 27.0665 20.3513 27.0665 20.6534 26.767 C 20.7541 26.6671 24.8829 23.0727 24.8829 22.9728 C 26.2927 21.6748 26.9976 19.8776 26.9976 17.9805 C 27.0983 14.0865 23.9766 10.9912 20.0492 10.9912 Z M 20.0492 19.9774 C 18.9414 19.9774 18.0351 19.0788 18.0351 17.9805 C 18.0351 16.8822 18.9414 15.9836 20.0492 15.9836 C 21.1569 15.9836 22.0632 16.8822 22.0632 17.9805 C 22.0632 19.0788 21.1569 19.9774 20.0492 19.9774 Z" fill="white" />
+                  </svg>
+                    <Title>
+                      <span>{t("product.pickup.title")}</span>
+                      <Text>{t("product.pickup.text")}</Text>
+                    </Title>
+                  </DeliveryBox>
+                :
+                // when no agency show the delivery message
                 <DeliveryBox>
                   <FreeDelivery />
                   <Title>
@@ -636,6 +652,7 @@ const Product: FC<Props> = ({
                     <Text>{t("product.delivery.text")}</Text>
                   </Title>
                 </DeliveryBox>
+              }
                 <DeliveryBox>
                   <Quality />
                   <Title>

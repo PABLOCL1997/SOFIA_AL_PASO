@@ -85,6 +85,11 @@ const GridText = styled.div`
   color: var(--font);
   max-width: 200px;
   margin-top: 20px;
+
+  a {
+    text-decoration: underline;
+    color: var(--red);
+  }
 `;
 
 const Disclaimer = styled.div`
@@ -118,9 +123,10 @@ const CtaWrapper = styled.div`
 
 type Props = {
   orders: Array<{ increment_id: string }>;
+  isPickup: boolean;
 };
 
-const Thanks: FC<Props> = ({ orders }) => {
+const Thanks: FC<Props> = ({ orders, isPickup }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -153,7 +159,10 @@ const Thanks: FC<Props> = ({ orders }) => {
           <Box>
             <ThankDelivery />
             <div>
-              <GridText>{t("thankyou.time")}</GridText>
+              {isPickup ? 
+              <GridText>Tu pedido será preparado lo antes posible para retirar dentro de la próxima hora en la agencia Sofía al Paso seleccionada, de Lunes a Domingo (<a href="http://sofiaalpaso.com/" target="_blank">ver horarios</a>)</GridText>
+              :
+              <GridText>{t("thankyou.time")}</GridText>}
             </div>
           </Box>
           <Box>

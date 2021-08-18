@@ -27,21 +27,25 @@ const ThanksPage = () => {
     let params = new URLSearchParams(location.search);
 
     const [result, setResult] = useState<Array<{ increment_id: string}>>();
+    const [isPickup, setIsPickup] = useState<boolean>(false);
 
     useEffect(() => {
         if (params.get("ids")) {
             const orders = params.get("ids")?.split(',').map(increment_id => {
                 return {increment_id: increment_id}});
-            console.log('orders', orders)
             setResult(orders)
         }
+        if (params.get("pickup")) {
+            setIsPickup(true);
+        }
+
     }, []);
 
     return (
         <Wrapper>
             <ThanktWrapper>
                 {result && result ?
-                    <Thanks orders={result} />
+                    <Thanks orders={result} isPickup={isPickup} />
                 : null}
             </ThanktWrapper>
         </Wrapper>

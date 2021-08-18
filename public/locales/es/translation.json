@@ -111,6 +111,10 @@
     "continue_shopping": "Seguir comprando",
     "categories": "CATEGORÍAS",
     "add": "Agregar",
+    "pickup": {
+      "title": "RETIRA AL PASO EN 1 HORA",
+      "text": "Selecciona esta opción y retira tus productos de Sofía al Paso para mayor comodidad."
+    },
     "delivery": {
         "title": "ENVÍO GRATIS AL DÍA SIGUIENTE",
         "text": "Hacé tu pedido hasta las 17:00 de Lunes a Viernes y recibilo al día siguiente"
@@ -270,11 +274,12 @@
       "confirm": "Confirmar"
     },
     "billing": {
-      "title": "1  Datos para facturación",
+      "title": "1. Datos para facturación",
       "firstname": "Nombre",
       "lastname": "Apellido",
       "email": "Email",
       "nit": "NIT/*Carnet identidad",
+      "phone": "*Teléfono",
       "other_person": "Facturar a otra persona",
       "to_me": "Facturarme a mi"
     },
@@ -417,7 +422,8 @@
         "billingFirstname": "Nombre",
         "billingLastname": "Apellido",
         "billingEmail": "Email",
-        "billingNit": "NIT/Carnet identidad"
+        "billingNit": "NIT/Carnet identidad",
+        "billingPhone": "*Teléfono"
       },
       "shipping": {
         "title": "Datos de envío",
