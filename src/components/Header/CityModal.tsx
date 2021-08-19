@@ -161,7 +161,7 @@ const CityModal: FC<Props> = () => {
   const [newAddressText, setNewAddressText] = useState<string>("");
 
   const [step, setStep] = useState<Steps>(Steps.Choosing);
-  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(!!(agency) ? ShippingMethod.Delivery : ShippingMethod.Pickup);
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(agency ? ShippingMethod.Pickup : ShippingMethod.Delivery);
   
   const [userId, setUserId] = useState(0);
 
@@ -170,7 +170,8 @@ const CityModal: FC<Props> = () => {
       cityKey: c.key,
       cityName: c.value,
       openCityModal: false,
-      idPriceList: 0
+      idPriceList: 0,
+      agency: null
     });
   };
 

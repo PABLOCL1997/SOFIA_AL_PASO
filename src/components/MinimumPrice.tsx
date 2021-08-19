@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useQuery, useMutation } from "react-apollo";
 import { GET_USER } from "../graphql/user/queries";
@@ -58,6 +58,7 @@ type Props = {};
 const MinimumPrice: FC<Props> = () => {
   const { data } = useQuery(GET_USER, {});
   const { agency } = useCityPriceList();
+
   const [hideSuccess] = useMutation(SET_USER, {
     variables: { user: { showMinimumPrice: "" } }
   });
@@ -73,7 +74,7 @@ const MinimumPrice: FC<Props> = () => {
         () => {
           hideSuccess();
         },
-        data.userInfo[0].showMinimumPrice.length > 80 ? 6000 : 3000
+        3000
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

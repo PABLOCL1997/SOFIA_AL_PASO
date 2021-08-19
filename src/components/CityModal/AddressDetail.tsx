@@ -271,6 +271,7 @@ const AddressDetail: FC<Props> = ({
     } as Point);
     const [inputs, setInputs] = useState<UserType>({ addresses: [] });
     const [userId, setUserId] = useState(0);
+    const [showMinimumPrice, setShowMinimumPrice] = useState(false);
 
     const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
         fetchPolicy: "network-only",
@@ -288,7 +289,8 @@ const AddressDetail: FC<Props> = ({
             cityName: c.value,
             defaultAddressLabel: c.value,
             openCityModal: false,
-            idPriceList: 0
+            idPriceList: 0,
+            agency: null
         });
     };
 
@@ -356,13 +358,7 @@ const AddressDetail: FC<Props> = ({
 
         setChangeModalVisible(true);
         setNewAddressText(selectedAddress?.name);
-
-        if (minimumPrice) {
-            setUserMinimumPrice({
-              variables: { user: { showMinimumPrice: String(minimumPrice) } }
-            });
-        }
-
+        setShowMinimumPrice(true);
         setStep(Steps.Choosing)
     }
 
@@ -399,6 +395,16 @@ const AddressDetail: FC<Props> = ({
             setagencyKey(agency);
         }
     }, [agency]);
+
+    useEffect(() => {
+        if (minimumPrice && showMinimumPrice) {
+            setShowMinimumPrice(false);
+            setUserMinimumPrice({
+              variables: { user: { showMinimumPrice: String(minimumPrice) } }
+            });
+        }
+    }
+    , [minimumPrice, showMinimumPrice]);
 
     return <>
         <Wrapper withMap={withMap}>
