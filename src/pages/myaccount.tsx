@@ -1,11 +1,8 @@
 import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { MY_ACCOUNT_TITLE } from '../meta';
 import { BREAKPOINT } from '../utils/constants';
-import { token } from '../utils/store';
-import { useMutation } from '@apollo/react-hooks';
-import { SET_USER } from '../graphql/user/mutations';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Sidebar = React.lazy(() => import(/* webpackChunkName: "Sidebar" */'../components/MyAccount/Sidebar'));
@@ -67,47 +64,11 @@ const Container = styled.div`
 
 type Props = {}
 const MyAccount: FC<Props> = () => {
-    const history = useHistory();
-    const timeout = 3000;
-    
     const { pathname } = useLocation();
     const [showDetails, setShowDetails] = useState(pathname.indexOf('ordenes') < 0);
 
-    const [showError] = useMutation(SET_USER, {
-        variables: { user: { showError: "Tu sesion expiro, por favor vuelve a loguearte. Redireccionando a home..." } }
-      });
-
-    const [logout] = useMutation(SET_USER, {
-    variables: {
-        user: {
-        cityKey: "SC",
-        cityName: "Santa Cruz",
-        defaultAddressLabel: "Santa Cruz",
-        idPriceList: 0,
-        defaultAddressId: null,
-        openCityModal: false,
-        openLoginModal: false,
-        isLoggedIn: false,
-        id: null
-        }
-    }
-    });
-
     useEffect(() => {
         document.title = MY_ACCOUNT_TITLE;
-        if (token.get() === 'null'){
-            showError()
-            .then(() => {
-                logout();
-            })
-            .then(() => {
-                setTimeout(() => {
-                    history.push('/')
-                }, timeout);
-            })
-
-                
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
