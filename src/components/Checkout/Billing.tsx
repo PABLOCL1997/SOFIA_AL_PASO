@@ -100,7 +100,8 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
         firstname: userData.details.firstname,
         lastname: userData.details.lastname,
         email: userData.details.email,
-        nit: userData.details.nit
+        nit: userData.details.nit,
+        phone: userData.details.phone
       });
     }
   };
