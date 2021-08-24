@@ -58,7 +58,7 @@ interface FacebookPixelEvent {
 
 const generateFacebookPixelEvent = async (event: any): Promise<FacebookPixelEvent> => {
   const location = window?.location?.pathname || "\/";
-  const mainUrl = "https:\/\/test.tienda.sofia.com.bo"
+  const mainUrl = "https:\/\/tienda.sofia.com.bo"
   const client_ip_address = await publicIp.v4({
     fallbackUrls: [
 			'https://ifconfig.co/ip'
