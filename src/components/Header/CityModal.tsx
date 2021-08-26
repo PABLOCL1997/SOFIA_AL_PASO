@@ -138,22 +138,12 @@ type User = {
 
 const CityModal: FC<Props> = () => {
   const { agency } = useCityPriceList();
-  
   const { data } = useQuery(GET_USER, {});
-  const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [city, setCity] = useState<User>({});
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
-  const [firstTime, setFirstTime] = useState<boolean>(true);
 
   const [toggleCityModal] = useMutation(SET_USER, {
     variables: { user: { openCityModal: false } as User }
-  });
-  const [getDetails, {data: userDetails}] = useLazyQuery(DETAILS, {
-    fetchPolicy: "network-only",
-    onCompleted: d => {
-      setUserId(d.details.id);
-      setInputs(d.details);
-    }
   });
 
   const [changeModalVisible, setChangeModalVisible] = useState(false)
@@ -162,8 +152,7 @@ const CityModal: FC<Props> = () => {
 
   const [step, setStep] = useState<Steps>(Steps.Choosing);
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(agency ? ShippingMethod.Pickup : ShippingMethod.Delivery);
-  
-  const [userId, setUserId] = useState(0);
+
 
   const changeCity = (c: KeyValue) => {
     setCity({
@@ -178,9 +167,8 @@ const CityModal: FC<Props> = () => {
   useEffect(() => {
     toggleCityModal();
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
-    if (!userInfo.cityKey && firstTime) {
+    if (!userInfo.cityKey) {
       changeCity(cities[2]);
-      setFirstTime(false)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function (position) {
@@ -225,34 +213,6 @@ const CityModal: FC<Props> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
-    // setear la direccion por defecto (la primera)
-    if (userId > 0 && inputs.addresses?.length && !userInfo.defaultAddressId) {
-      // showUserAddresses();
-      const street = inputs?.addresses[0].street ?? "";
-      const city = inputs?.addresses[0].city ?? "";
-      let c: KeyValue | undefined = cities.find(
-        (c: KeyValue) => c.value === city
-      );
-      setUser({
-        variables: {
-          user: {
-            defaultAddressId: inputs.addresses[0].id,
-            defaultAddressLabel: street.replace(/ \| /g, " "),
-            cityKey: c ? c.key : "",
-            cityName: c ? c.value : "",
-            openCityModal: false,
-            idPriceList:  0,
-            agency: null
-          }
-        }
-      });
-    }
-    // else if (userId === 0 && !userInfo.cityKey) resetToDefaultCities();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputs]);
 
   useEffect(() => {
     if (city && city.cityKey) setUser();

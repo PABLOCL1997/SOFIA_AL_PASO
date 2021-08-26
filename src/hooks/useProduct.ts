@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks"
 import { CategoryType } from "../graphql/categories/type";
 import { ProductType } from "../graphql/products/type";
@@ -7,9 +7,19 @@ import { GET_B2E_PRODUCT, GET_PRODUCT, GET_PRODUCT_DETAIL, GET_SAP_PRODUCT } fro
 import useCityPriceList from "./useCityPriceList";
 import { trackProduct } from "../utils/dataLayer";
 
+
+function useUrlQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
     const history = useHistory();
     let { prodname } = useParams();
+    let query = useUrlQuery();
+
+    let cityUrl = query.get("ciudad");
+    let agencyUrl = query.get("agencia");
+
     prodname = String(prodname || inlineProdname);
     prodname = prodname.replaceAll("--", "~")
     .split(/-/g)
@@ -33,7 +43,6 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
         },
         onCompleted: d => {
             setProduct(d.productB2E);
-            trackProduct(d.productB2E);
             if (d.productB2E.categories) setCategories(d.productB2E.categories);
             if (d.productB2E.related) setRelated(d.productB2E.related);
             setLoading(false);
@@ -45,6 +54,9 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
                     }
                 });
             }
+            try {
+                trackProduct(d.product);
+            } catch (error) {}
         }
     })
 
@@ -52,7 +64,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
         fetchPolicy: "network-only",
         variables: {
           name: prodname,
-          city,
+          city: city ? city : cityUrl,
           categories: true,
           related: true
         },
@@ -60,19 +72,21 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
           setError(e);
         },
         onCompleted: d => {
-          setProduct(d.product);
-          trackProduct(d.product);
-          if (d.product.categories) setCategories(d.product.categories);
-          if (d.product.related) setRelated(d.product.related);
-          setLoading(false);
+            setProduct(d.product);
+            if (d.product.categories) setCategories(d.product.categories);
+            if (d.product.related) setRelated(d.product.related);
+            setLoading(false);
 
-          if (withDetail) {
-            loadProductDetail({
-                variables: {
-                    name: prodname
-                }
-            });
-        }
+            if (withDetail) {
+                loadProductDetail({
+                    variables: {
+                        name: prodname
+                    }
+                });
+            }
+            try {
+                trackProduct(d.product);
+            } catch (error) {}
         }
     });
 
@@ -100,8 +114,8 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
             loadSapProduct({
                 variables: {
                     name: prodname,
-                    agency,
-                    city
+                    agency: agency ? agency : agencyUrl,
+                    city: city ? city : cityUrl,
                 }
             })
         }
@@ -111,7 +125,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
                 variables:{
                     name: prodname,
                     id_price_list: String(idPriceList),
-                    city,
+                    city: city ? city : cityUrl,
                 }
             })
         }
@@ -120,7 +134,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
             loadProduct({
                 variables: {
                     name: prodname,
-                    city,
+                    city: city ? city : cityUrl,
                     categories: true,
                     related: true
                 }
