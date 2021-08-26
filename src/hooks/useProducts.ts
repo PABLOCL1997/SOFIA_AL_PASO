@@ -26,10 +26,17 @@ type Products = {
     setCategoryId: Function
 }
 
-const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
-    const query = new URLSearchParams(useLocation().search)
-    const pageNumber = parseInt(String(query.get("p")))
+function useUrlQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
+const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
+    let query = useUrlQuery();
+    
+    let cityUrl = query.get("ciudad");
+    let agencyUrl = query.get("agencia");
+    const pageNumber = parseInt(String(query.get("p")))
+    
     const { city, idPriceList, agency } = useCityPriceList()
     const { category_id, category, subcategory, lastlevel, setCategoryId } = useCategory()
     const [loading, setLoading] = useState(true)
@@ -50,21 +57,23 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
     const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
         fetchPolicy: "network-only",
         onCompleted: d => {
-            trackProductList(d.productsB2E.rows)
             setProducts(d.productsB2E.rows)
             setTotal(d.productsB2E.count)
             setLoading(false)
+            try {
+            trackProductList(d.productsB2E.rows)
+            } catch (e) {}
         }
     })
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
         fetchPolicy: "network-only",
         onCompleted: d => {
-            try {
-                trackProductList(d.products.rows)
-            } catch (e) {}
             setProducts(d.products.rows)
             setTotal(d.products.count)
             setLoading(false)
+            try {
+                trackProductList(d.products.rows)
+            } catch (e) {}
         }
     })
 
@@ -98,15 +107,15 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
         getBrands({
             variables: {
             categoryId: category_id || 0,
-            city,      
+            city: city ? city : cityUrl,    
             }
         });
 
-        if (agency) {
+        if (agency || agencyUrl) {
             loadSapProducts({
                 variables: {
-                    agency,
-                    city,
+                    agency: agency ? agency : agencyUrl,
+                    city: city ? city : cityUrl,
                     category_id: search && search.length > 0 ? 0 : category_id || 0,
                     limit,
                     order,
@@ -127,7 +136,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
                     order,
                     offset,
                     search,
-                    city,
+                    city: city ? city : cityUrl,
                     id_price_list: String(idPriceList),
                     onsale: category === "promociones" || onsale,
                     brand: brand
@@ -142,7 +151,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
                     category_id: category_id || 0,
                     limit,
                     order,
-                    city,
+                    city: city ? city : cityUrl,
                     offset: offset,
                     search: search,
                     onsale: category === "promociones" || onsale,
