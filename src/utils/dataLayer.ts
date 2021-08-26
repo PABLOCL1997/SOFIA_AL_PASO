@@ -58,17 +58,17 @@ interface FacebookPixelEvent {
 
 const generateFacebookPixelEvent = async (event: any): Promise<FacebookPixelEvent> => {
   const location = window?.location?.pathname || "\/";
-  const mainUrl = "https:\/\/tienda.sofia.com.bo"
+  const mainUrl = process.env.REACT_APP_SITE_URL;
   const client_ip_address = await publicIp.v4({
     fallbackUrls: [
 			'https://ifconfig.co/ip'
 		]
   })
   const client_user_agent = (window as any)?.userEmail || "anonymous"
-  
-  // enviar en segundos
-  const event_id = new Date().getTime();
-  const event_time = new Date().toISOString().valueOf();
+  // random_id
+  const id = Math.floor(new Date().getTime() / 1000);
+  const event_id = id;
+  const event_time = id;
   const event_source_url = mainUrl + location;
   // const user_data = event.user_data;
 
@@ -113,9 +113,11 @@ export const trackProductList = async (products: Array<ProductType>) => {
       contents: products.map(({ sku: id, stock: quantity } : ProductType) => {return { id, quantity }}),
       content_name,
       content_type,
-      currency      
+      currency,
+      value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + (special_price * (stock || 0) ), 0)      
     });
     (window as any).dataLayer.push(event);
+    (window as any).fbq('track', ViewContentPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) { }
 };
@@ -153,6 +155,7 @@ export const trackProduct = async (product: ProductType) => {
       currency
     });
     (window as any).dataLayer.push(event);
+    (window as any).fbq('track', PageViewPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) { }
 };
@@ -161,7 +164,6 @@ export const trackAddToCart = async (product: ProductType) => {
   try {
     const addToCartPixel = "AddToCart"
     const addToCartGTM = "addToCart"
-
 
     const event = {
       event: addToCartGTM,
@@ -188,13 +190,14 @@ export const trackAddToCart = async (product: ProductType) => {
       event_name: addToCartPixel,
       content_ids: [product.sku],
       content_name: product.name,
-      contents: [{ id: product.sku, quantity: product.stock }],
+      contents: [{ id: product.sku, quantity: product.qty }],
       value: (product.special_price || 0).toFixed(2),
       content_type,
       currency
     });
 
     (window as any).dataLayer.push(event);
+    (window as any).fbq('track', addToCartPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) { }
 };
@@ -261,12 +264,14 @@ export const initCheckout = async (
       event_name: initiateCheckoutPixel,
       content_category,
       content_ids: products.map(({ sku }: ProductType ) => sku),
-      contents: products.map(({ sku: id, stock: quantity } : ProductType) => {return { id, quantity }}),
+      contents: products.map(({ sku: id, qty: quantity } : ProductType) => {return { id, quantity }}),
       currency,
       num_items: products.length,
+      content_type: "product",
       value: products.reduce((acc: number, { special_price, qty }: ProductType) => acc + (special_price * (qty || 0) ), 0)
     });
     (window as any).dataLayer.push(event);
+    (window as any).fbq('track', initiateCheckoutPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
 } catch (e) { }
 };
@@ -311,6 +316,7 @@ export const trackOrder = async (order: TrackOrder, products: Array<ProductType>
       currency
     });
     (window as any).dataLayer.push(event);
+    (window as any).fbq('track', PurchasePixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
 
 } catch (e) { }
