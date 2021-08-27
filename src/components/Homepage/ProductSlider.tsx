@@ -53,13 +53,13 @@ const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
     z-index: 3;
   }
   .slick-arrow.slick-prev > svg {
-    left: -80px;
+    left: 30px;
     @media screen and (max-width: ${BREAKPOINT}) {
       left: -30px;
     }
   }
   .slick-arrow.slick-next > svg {
-    right: -80px;
+    right: 30px;
     @media screen and (max-width: ${BREAKPOINT}) {
       right: -30px;
     }
@@ -138,15 +138,17 @@ const ProductSlider: FC<Props> = ({ products, useArrows, isPromotions, isCategor
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
-          arrows: useArrows,
-          dots: !useArrows
+          arrows: !useArrows,
+          dots: useArrows
         }
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 4,
-          slidesToScroll: 4          
+          slidesToScroll: 4,
+          arrows: !useArrows,
+          dots: useArrows          
         }
       },
       {
