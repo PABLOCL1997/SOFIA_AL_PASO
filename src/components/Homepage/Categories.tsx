@@ -9,31 +9,42 @@ const Slider = React.lazy(() =>
   import(/* webpackChunkName: "Slider" */ "react-slick")
 );
 
-const List = styled.ul`
+const List = styled.div`
   position: relative;
   z-index: 3;
 
   width: 100%;
+
   display:flex;
+
   justify-content: center;
-  column-gap: 24px;
+  column-gap: 40px;
+
+  padding: 20px 40px 0;
   
   background: var(--red);
   
-  padding: 0;
   box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
 
 
   a {
     position: relative;
     text-align: center;
-    font-size: 12px;
-    padding: 20px 24px;
-    
+    font-size: 12px;    
     color: var(--white);
     
     span {
-      font-family: MullerBold;
+      background: var(--red);
+      
+      display: inline-block;
+      font-family: MullerMedium;
+      line-height: 16px;
+      min-height: 54px;
+      
+      span {
+        min-height: 32px;
+        border-bottom: 1px solid var(--red);
+      }
     }
     a, div {
       display: none;
@@ -45,22 +56,24 @@ const List = styled.ul`
     font-family: MullerBold;
     
     span {
-      font-family: MullerBold;
-      padding-bottom: 2px;
-      border-bottom: 1px solid #FFFFFF;
+      font-family: MullerMedium;
+      // padding-bottom: 2px;
+      span {
+        display: block;
+        border-bottom: 1px solid #FFFFFF;
+      }
     }
 
     a, div {
       display: flex;
-      // width: calc(100% + 30px);
-      text-align: left;
+
     }
   }
   `;
 const SubcategoriesWrapper = styled.div`
   background: var(--red);
   border-radius: 0px 0px 8px 8px;
-  margin: 19px 0 0 -24px;
+  margin: 0 0 0 -24px;
   position: absolute;
   z-index: -1;
   display: flex;
@@ -68,23 +81,27 @@ const SubcategoriesWrapper = styled.div`
   justify-content: flex-start;
   row-gap: 14px;
   
-  a {
-    font-family: MullerBold;
+  & > a {
+    font-family: MullerRegular;
     padding: 0 24px;  
     background: var(--red);
-
+    text-align: left;
   }
 
-  a:first-child {
+  & > a:first-child {
     padding-top: 24px;
     box-shadow: inset 0px 2px 3px rgb(0 0 0 / 30%);  
 
   }
-  a:last-child {
+  & > a:last-child {
     padding-bottom: 24px;
   }
   &:hover, &>a:hover   {
     display:flex;
+  }
+  
+  &>a:hover   {
+    text-decoration: underline;
   }
 `;
 
@@ -189,7 +206,6 @@ const Block = styled.div`
   z-index: 1;
 `
 
-
 interface Props {
   isMobile: boolean;
 }
@@ -251,7 +267,9 @@ const Categories: FC<Props> = ({ isMobile }) => {
                 .map(({ name, subcategories }: CategoryType) => (
                   <Link to={`/productos/${toLink(name)}`}>
                       <span>
-                        {name.toUpperCase()}
+                        <span>
+                          {name.toUpperCase()}
+                        </span>
                       </span>
                         {!!(subcategories?.length) && 
                           <SubcategoriesWrapper>

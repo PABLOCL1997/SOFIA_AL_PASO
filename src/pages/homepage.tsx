@@ -45,7 +45,7 @@ const Homepage = () => {
   return (
   <>
     <Header checkout={false} page={undefined} />
-    <Categories isMobile={window.innerWidth <= 768} />
+    <Categories isMobile={window.innerWidth <= 1100} />
     <Hero />
     
 
