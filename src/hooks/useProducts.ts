@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import useCategory from "./useCategory";
 import { OrderColums } from "../graphql/products/type";
 import useCityPriceList from "./useCityPriceList";
+import axios from "axios";
 
 
 type Products = {
@@ -31,6 +32,8 @@ function useUrlQuery() {
 }
 
 const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
+    const logsUrl = process.env.REACT_APP_BACKEND + '/logs-product'; 
+
     let query = useUrlQuery();
     
     let cityUrl = query.get("ciudad");
@@ -48,14 +51,26 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
     )
     const [search, setSearch] = useState(query.get("q"))
     const [page, setPage] = useState(1);
-    const [order, setOrder] = useState<string>(OrderColums[0]);      
+    const [order, setOrder] = useState<string>(OrderColums[0]);
+    const [error, setError] = useState();
+    
+    const errorHandler = (error: any, source: string) => {
+        setError(error);
+        setLoading(false);
+        axios.post(logsUrl, {
+            error,
+            source
+        })
+    };
 
     const [getBrands, { data: brands }] = useLazyQuery(GET_BRANDS,    {
         fetchPolicy: "network-only",
+        onError: (error) => errorHandler(error, "GET_BRANDS_PRODUCTS")
     })
 
     const [loadProductsFromListing] = useLazyQuery(GET_B2E_PRODUCTS, {
         fetchPolicy: "network-only",
+        onError: (error) => errorHandler(error, "GET_B2E_PRODUCTS"),
         onCompleted: d => {
             setProducts(d.productsB2E.rows)
             setTotal(d.productsB2E.count)
@@ -67,6 +82,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
     })
     const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
         fetchPolicy: "network-only",
+        onError: (error) => errorHandler(error, "GET_PRODUCTS"),
         onCompleted: d => {
             setProducts(d.products.rows)
             setTotal(d.products.count)
@@ -79,6 +95,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
 
     const [loadSapProducts] = useLazyQuery(GET_SAP_PRODUCTS, {
         fetchPolicy: "network-only",
+        onError: (error) => errorHandler(error, "GET_SAP_PRODUCTS"),
         onCompleted: d => {
             try {
                 setProducts(d.productsSap.rows)

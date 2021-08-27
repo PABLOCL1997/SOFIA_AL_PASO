@@ -6,6 +6,7 @@ import { ProductType } from "../graphql/products/type";
 import { GET_B2E_PRODUCT, GET_PRODUCT, GET_PRODUCT_DETAIL, GET_SAP_PRODUCT } from "../graphql/products/queries";
 import useCityPriceList from "./useCityPriceList";
 import { trackProduct } from "../utils/dataLayer";
+import axios from "axios";
 
 
 function useUrlQuery() {
@@ -13,6 +14,7 @@ function useUrlQuery() {
 }
 
 const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
+    const logsUrl = process.env.REACT_APP_BACKEND + '/logs-product'; 
     const history = useHistory();
     let { prodname } = useParams();
     let query = useUrlQuery();
@@ -33,14 +35,22 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
 
+    const errorHandler = (error: any, source: string) => {
+        setError(error);
+        setLoading(false);
+        axios.post(logsUrl, {
+            error,
+            source
+        })
+    };
+
     const [ loadProductDetail, { loading: loadingProdDetail, data: dataProdDetail }] = useLazyQuery(GET_PRODUCT_DETAIL, {
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
+        onError: (error) => errorHandler(error, "GET_PRODUCT_DETAIL")
     });
     const [loadProductFromList] = useLazyQuery(GET_B2E_PRODUCT, {
         fetchPolicy: "network-only",
-        onError: (e) => {
-            setError(e);
-        },
+        onError: (e) => errorHandler(e, "GET_B2E_PRODUCT"),
         onCompleted: d => {
             setProduct(d.productB2E);
             if (d.productB2E.categories) setCategories(d.productB2E.categories);
@@ -68,9 +78,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
           categories: true,
           related: true
         },
-        onError: (e) => {
-          setError(e);
-        },
+        onError: (e) => errorHandler(e, "GET_PRODUCT"),
         onCompleted: d => {
             setProduct(d.product);
             if (d.product.categories) setCategories(d.product.categories);
@@ -92,6 +100,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
 
     const [loadSapProduct] = useLazyQuery(GET_SAP_PRODUCT, {
         fetchPolicy: "network-only",
+        onError: (e) => errorHandler(e, "GET_SAP_PRODUCT"),
         onCompleted: d => {
             setProduct(d.productSap)
             setLoading(false);
