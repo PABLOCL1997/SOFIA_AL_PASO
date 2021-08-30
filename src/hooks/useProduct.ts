@@ -74,7 +74,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
         fetchPolicy: "network-only",
         variables: {
           name: prodname,
-          city: city ? city : cityUrl,
+          city: city ? city : "SC",
           categories: true,
           related: true
         },
@@ -124,7 +124,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
                 variables: {
                     name: prodname,
                     agency: agency ? agency : agencyUrl,
-                    city: city ? city : cityUrl,
+                    city: city ? city : "SC",
                 }
             })
         }
@@ -134,7 +134,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
                 variables:{
                     name: prodname,
                     id_price_list: String(idPriceList),
-                    city: city ? city : cityUrl,
+                    city: city ? city : "SC",
                 }
             })
         }
@@ -143,7 +143,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
             loadProduct({
                 variables: {
                     name: prodname,
-                    city: city ? city : cityUrl,
+                    city: city ? city : "SC",
                     categories: true,
                     related: true
                 }

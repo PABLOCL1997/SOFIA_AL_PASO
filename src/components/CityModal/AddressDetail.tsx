@@ -259,7 +259,7 @@ const AddressDetail: FC<Props> = ({
 
     const { data } = useQuery(GET_USER, {});
     const minimumPrice = useMinimumPrice()
-    const { agency, agencies } = useCityPriceList()
+    const { agency, agencies, city: cityHook } = useCityPriceList()
     const [withMap, setWithMap] = useState<boolean>(true);
     const [city, setCity] = useState<User>({});
     const [agencyKey, setagencyKey] = useState<string>("");
@@ -406,6 +406,13 @@ const AddressDetail: FC<Props> = ({
     }
     , [minimumPrice, showMinimumPrice]);
 
+    useEffect(() => {
+        setCity({
+            ...city,
+            cityKey: cityHook,
+        });
+    }, [cityHook]);
+
     return <>
         <Wrapper withMap={withMap}>
 
@@ -478,9 +485,9 @@ const AddressDetail: FC<Props> = ({
                                             id={`city${c.key}`}
                                             name="city"
                                             type="radio"
-                                            checked={!!(
-                                                city && city.cityKey === c.key
-                                            )} />
+                                            checked={
+                                                (city && city.cityKey === c.key) 
+                                            } />
                                         <label>{c.value}</label>
                                     </RadionGroup>
                                 ))}

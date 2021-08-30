@@ -165,7 +165,6 @@ const CityModal: FC<Props> = () => {
   };
 
   useEffect(() => {
-    toggleCityModal();
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
     if (!userInfo.cityKey) {
       changeCity(cities[2]);
@@ -212,7 +211,7 @@ const CityModal: FC<Props> = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     if (city && city.cityKey) setUser();

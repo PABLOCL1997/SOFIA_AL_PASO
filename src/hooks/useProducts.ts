@@ -124,7 +124,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
         getBrands({
             variables: {
             categoryId: category_id || 0,
-            city: city ? city : cityUrl,    
+            city: city ? city : "SC",    
             }
         });
 
@@ -132,7 +132,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
             loadSapProducts({
                 variables: {
                     agency: agency ? agency : agencyUrl,
-                    city: city ? city : cityUrl,
+                    city: city ? city : "SC",
                     category_id: search && search.length > 0 ? 0 : category_id || 0,
                     limit,
                     order,
@@ -153,7 +153,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
                     order,
                     offset,
                     search,
-                    city: city ? city : cityUrl,
+                    city: city ? city : "SC",
                     id_price_list: String(idPriceList),
                     onsale: category === "promociones" || onsale,
                     brand: brand
@@ -168,7 +168,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false ): Products => {
                     category_id: category_id || 0,
                     limit,
                     order,
-                    city: city ? city : cityUrl,
+                    city: city ? city : "SC",
                     offset: offset,
                     search: search,
                     onsale: category === "promociones" || onsale,
