@@ -117,7 +117,7 @@ export const trackProductList = async (products: Array<ProductType>) => {
       value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + (special_price * (stock || 0) ), 0)      
     });
     (window as any).dataLayer.push(event);
-    (window as any).fbq('track', ViewContentPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
+    (window as any).fbq('track', ViewContentPixel, {...pixelEventData}, {event: ViewContentPixel, eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) { }
 };
@@ -155,7 +155,7 @@ export const trackProduct = async (product: ProductType) => {
       currency
     });
     (window as any).dataLayer.push(event);
-    (window as any).fbq('track', PageViewPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
+    (window as any).fbq('track', PageViewPixel, {...pixelEventData}, {event: PageViewPixel, eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) { }
 };
@@ -197,7 +197,7 @@ export const trackAddToCart = async (product: ProductType) => {
     });
 
     (window as any).dataLayer.push(event);
-    (window as any).fbq('track', addToCartPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
+    (window as any).fbq('track', addToCartPixel, {...pixelEventData}, {event: addToCartPixel, eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) { }
 };
@@ -271,7 +271,7 @@ export const initCheckout = async (
       value: products.reduce((acc: number, { special_price, qty }: ProductType) => acc + (special_price * (qty || 0) ), 0)
     });
     (window as any).dataLayer.push(event);
-    (window as any).fbq('track', initiateCheckoutPixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
+    (window as any).fbq('track', initiateCheckoutPixel, {...pixelEventData}, {event: initiateCheckoutPixel, eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
 } catch (e) { }
 };
@@ -316,7 +316,7 @@ export const trackOrder = async (order: TrackOrder, products: Array<ProductType>
       currency
     });
     (window as any).dataLayer.push(event);
-    (window as any).fbq('track', PurchasePixel, {...pixelEventData}, {eventID: pixelEventData.event_id});
+    (window as any).fbq('track', PurchasePixel, {...pixelEventData}, {event: PurchasePixel, eventID: pixelEventData.event_id});
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
 
 } catch (e) { }
