@@ -14,14 +14,13 @@ const Incentivos = () => {
     return (
         <Wrapper>
             <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSffctnxI8fhEcRG-Etr6BzesA0Rovzi7-_Jxmt2ytfyq8xT-Q/viewform?embedded=true"
+                src="https://docs.google.com/forms/d/e/1FAIpQLSd1oE0O5SKuCYO3fA7SkDlfCcgxXLvmQxhrIWAw4JCoZALVvQ/viewform?embedded=true"
                 width="800"
-                height="1500"
+                height="1200"
                 frameBorder="0"
                 marginHeight={0}
-                marginWidth={0}
-            >
-                Loading…
+                marginWidth={0}>
+                    Loading…
             </iframe>
         </Wrapper>
     )
