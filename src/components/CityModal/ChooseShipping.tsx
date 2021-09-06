@@ -150,7 +150,7 @@ const ChooseShipping: FC<Props> = ({
         <Title>¡Bienvenido a Sofía!</Title>
         <Subtitle>¿A dónde enviamos tu pedido?</Subtitle>
         <Options>
-            <Option selected={isAgency} onClick={handleStepPickup}>
+            <Option className="storePickup" selected={isAgency} onClick={handleStepPickup}>
                 {/* icono de sucursal */}
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0)">

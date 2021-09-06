@@ -168,6 +168,14 @@ const App = () => {
           }
         />
         <Route
+          path="/retiro-al-paso"
+          children={
+            <LayoutGeneral>
+              <RetiroAlPaso />
+            </LayoutGeneral>
+          }
+        />
+        <Route
           path="/gracias"
           children={
             <LayoutGeneral>
@@ -214,14 +222,6 @@ const App = () => {
           children={
             <LayoutGeneral>
               <Page404 />
-            </LayoutGeneral>
-          }
-        />
-        <Route
-          path="/retiro-al-paso"
-          children={
-            <LayoutGeneral>
-              <RetiroAlPaso />
             </LayoutGeneral>
           }
         />
