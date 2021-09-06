@@ -11,6 +11,7 @@ import "lazysizes/plugins/unveilhooks/ls.unveilhooks";
 import "lazysizes/plugins/blur-up/ls.blur-up.js";
 import "lazysizes/plugins/object-fit/ls.object-fit.js";
 import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
+import useUser from "../hooks/useUser";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../components/Loader")
@@ -53,26 +54,15 @@ type Props = {
 };
 
 const LayoutGeneral: FC<Props> = ({ children, page }) => {
+  const { logout, toggleLoginModal } = useUser();
   const history = useHistory();
   const [checkout, setCheckout] = useState(
     history.location.pathname === "/checkout"
   );
   const { data } = useQuery(CHECK_TOKEN, { fetchPolicy: "network-only" });
-  const [logout] = useMutation(SET_USER, {
-    variables: {
-      user: {
-        openLoginModal: false,
-        isLoggedIn: false,
-        cityKey: "SC",
-        cityName: "Santa Cruz",
-        defaultAddressLabel: "Santa Cruz",
-        idPriceList: 0,
-        id: null
-      }
-    }
-  });
-
+  
   useEffect(() => {
+      // when user is on any page with token but expired
     if (
       token.get() !== "null" &&
       data &&
@@ -81,7 +71,20 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
     ) {
       logout();
       token.delete();
-      history.push("/");
+
+      setTimeout(() => {
+        toggleLoginModal();
+      }, 0);
+    }
+
+    // when user is on mi-cuenta without token
+    if (token.get() == "null" && history.location.pathname.indexOf('mi-cuenta') > 0) {
+      logout();
+      token.delete();
+
+      setTimeout(() => {
+        toggleLoginModal();
+      }, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);

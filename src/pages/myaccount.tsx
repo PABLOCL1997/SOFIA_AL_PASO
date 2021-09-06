@@ -1,9 +1,8 @@
 import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { MY_ACCOUNT_TITLE } from '../meta';
 import { BREAKPOINT } from '../utils/constants';
-import { token } from '../utils/store';
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../components/Loader'));
 const Sidebar = React.lazy(() => import(/* webpackChunkName: "Sidebar" */'../components/MyAccount/Sidebar'));
@@ -65,13 +64,11 @@ const Container = styled.div`
 
 type Props = {}
 const MyAccount: FC<Props> = () => {
-    const history = useHistory();
     const { pathname } = useLocation();
     const [showDetails, setShowDetails] = useState(pathname.indexOf('ordenes') < 0);
 
     useEffect(() => {
         document.title = MY_ACCOUNT_TITLE;
-        if (token.get() === 'null') history.push('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

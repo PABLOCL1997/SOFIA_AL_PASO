@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import React, { FC, useState } from "react"
-import { SET_USER } from "../../graphql/user/mutations";
+
 import { GET_TOTAL, GET_QTY, GET_CART_ITEMS } from "../../graphql/cart/queries";
 
 import { token } from "../../utils/store";
@@ -26,6 +26,7 @@ import useCategory from "../../hooks/useCategory";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import styled from "styled-components";
 import { toLink } from "../../utils/string";
+import useUser from "../../hooks/useUser";
 
 const Cart = React.lazy(() =>
   import(/* webpackChunkName: "Cart" */ "../Images/Cart")
@@ -59,37 +60,16 @@ type Props = {
     setOpen: Function;
 }
 const Sidebar: FC<Props> = ({ setOpen }) => {
+    const { data: userData } = useQuery(GET_USER, {});
+    const { logout, toggleLoginModal, toggleCartModal } = useUser();
     const history = useHistory();
     const { t } = useTranslation();
     const { categories } = useCategory()
-    const { data: userData } = useQuery(GET_USER, {});
     const { data } = useQuery(GET_CART_ITEMS);
     const [showCategories, setShowCategories] = useState<boolean>(true);
-    const [categoryOpen, setCategoryOpen] = useState<number>(0)
+    const [categoryOpen, setCategoryOpen] = useState<number>(0);
 
-    const [logout] = useMutation(SET_USER, {
-        variables: {
-          user: {
-            cityKey: "SC",
-            cityName: "Santa Cruz",
-            defaultAddressLabel: "Santa Cruz",
-            idPriceList: 0,
-            defaultAddressId: null,
-            openCityModal: false,
-            openLoginModal: false,
-            isLoggedIn: false,
-            id: null
-          }
-        }
-      });
 
-    const [toggleLoginModal] = useMutation(SET_USER, {
-        variables: { user: { openLoginModal: true } }
-    });
-    const [toggleCartModal] = useMutation(SET_USER, {
-        variables: { user: { openCartModal: true } }
-      });
-    
     const myAccount = () => {
         setOpen(false);
         if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
