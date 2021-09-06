@@ -52,6 +52,11 @@ const Thanks = React.lazy(
   () => import(/* webpackChunkName: "Thanks" */ "./pages/thanks")
 );
 
+const RetiroAlPaso = React.lazy(() =>
+  import(/* webpackChunkName: "RetiroAlPaso" */ "./pages/retiroAlPaso")
+);
+
+
 
 const Loader = styled.div`
   display: flex;
@@ -159,6 +164,14 @@ const App = () => {
           children={
             <LayoutGeneral>
               <Checkout />
+            </LayoutGeneral>
+          }
+        />
+        <Route
+          path="/retiro-al-paso"
+          children={
+            <LayoutGeneral>
+              <RetiroAlPaso />
             </LayoutGeneral>
           }
         />
