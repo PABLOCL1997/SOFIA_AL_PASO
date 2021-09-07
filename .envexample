@@ -1,0 +1,5 @@
+REACT_APP_MAGENTO_URL=https://tienda.sofia.com.bo
+REACT_APP_SITE_URL=http://localhost:3000
+REACT_APP_BACKEND=http://localhost:4000/api/v1
+REACT_APP_CACHE_NAME=tienda-sofia-21
+REACT_APP_GRAPHQL=http://localhost:4000/graphql

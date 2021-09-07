@@ -10,7 +10,7 @@ import { GET_CART_ITEMS } from "./graphql/cart/queries";
 import { GET_USER } from "./graphql/user/queries";
 
 export default async () => {
-  const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
+  const httpLink = createHttpLink({ uri: process.env.REACT_APP_GRAPHQL });
 
   const authLink = setContext((_, { headers }) => {
     return {
@@ -149,7 +149,8 @@ export default async () => {
 
   await persistCache({
     cache,
-    storage: window.localStorage
+    storage: window.localStorage,
+    key: process.env.REACT_APP_CACHE_NAME
   });
 
   return client;
