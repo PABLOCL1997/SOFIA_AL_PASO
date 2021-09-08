@@ -5,7 +5,7 @@ const fs = require("fs");
 const app = express();
 const GraphQLClient = require("graphql-request").GraphQLClient
 const redirectMiddleware = require('./src/redirect')
-const client = new GraphQLClient("http://localhost:4000/graphql")
+const client = new GraphQLClient("https://tienda.sofia.com.bo/graphql")
 const cron = require("node-cron");
 const { SitemapStream } = require('sitemap');
 const axios = require("axios")
@@ -46,6 +46,7 @@ const loadPage = async (req, res, meta = {}) => {
   }
 
   let productSchema;
+  let productPrice = 0;
   // add link cano/prev/next if products
   const fullUrl = 'https://' + req.get('host') + req.originalUrl.split("?").shift();
   let relCanon = `<link rel="canonical" href="${fullUrl}" />`
@@ -144,6 +145,11 @@ const loadPage = async (req, res, meta = {}) => {
         related: false,
         categories: false
       })
+      // this is because images comes all together and joined with ,
+      const image = p.product.image.split(',')[0];
+      metadata.meta_keywords = image;
+      productPrice = p.product.special_price;
+
       if (p.product) {
         productSchema = p.product
       }
@@ -166,15 +172,25 @@ const loadPage = async (req, res, meta = {}) => {
       // console.log(error)
     }
   }
+  const headOGTag = `<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#">`
+  const headTag = `<head>`
+  const ogTypeProduct = "og:product"
+  const ogProductPriceCurrency = "BOB"
+
   fs.readFile(`${__dirname}/build/index.html`, "utf8", (err, data) => {
     return res.status(statusCode).send(
       data
+        .replace(/__OG_H1__/g, meta && !!meta.prodName ? String(meta.prodName).split(/-/g).join(" ").toUpperCase() : metadata.title)
         .replace(/__OG_TITLE__/g, metadata.title)
         .replace(/__OG_DESCRIPTION__/g, metadata ? metadata.meta_description : '')
         .replace(/__OG_IMAGE__/g, metadata ? metadata.meta_keywords : '')
-        .replace(/__OG_H1__/g, meta && !!meta.prodName ? String(meta.prodName).split(/-/g).join(" ").toUpperCase() : metadata.title)
+        .replace(/__OG_TYPE__/g, meta.identifier && meta.identifier === PRODUCT ? ogTypeProduct : '')
+        .replace(/__OG_URL__/g, meta.identifier && meta.identifier === PRODUCT ? fullUrl : '')
+        .replace(/__PRODUCT_PRICE_CURRENCY__/g, meta.identifier && meta.identifier === PRODUCT ? ogProductPriceCurrency : '')
+        .replace(/__PRODUCT_PRICE_AMOUNT__/g, meta.identifier && meta.identifier === PRODUCT ? productPrice : '')
         .replace(`<link rel="replace">`, meta.rel ? relCanon.concat(relPrev).concat(relNext) : relCanon)
         .replace(`<script id="replace-schema"></script>`, productSchema && meta.identifier && meta.identifier === PRODUCT ? returnSchema(productSchema, metadata.meta_description) : "" )
+        .replace(headTag, meta.identifier && meta.identifier === PRODUCT ? headOGTag : headTag)
     )
   });
 };
