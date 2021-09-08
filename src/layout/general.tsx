@@ -37,13 +37,17 @@ const Footer = React.lazy(() =>
 
 const Wrapper = styled.div`
   padding: 113px 0 0;
+  &.productpage {
+    padding-top: 30px;
+  }
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0;
     &.productpage {
-      // padding-top: 72px !important;
+      padding-top: 0px;
     }
   }
 `;
+Wrapper.displayName = "GeneralWrapper"
 
 const Content = styled.div`
   min-height: 100vh;
