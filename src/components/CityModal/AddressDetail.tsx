@@ -317,13 +317,28 @@ const AddressDetail: FC<Props> = ({
                         }
                     }
                 });
+                setNewAddressText(selectedAddress?.street)
             }
         } else {
-            if (city && city.cityKey) await setUser();
+            if (city && city.cityKey) {
+                await setUser({
+                    variables: {
+                        user: {
+                            cityKey: city.cityKey,
+                            cityName: findCity(city.cityKey),
+                            defaultAddressLabel: findCity(city.cityKey),
+                            openCityModal: false,
+                            agency: null,
+                            idPriceList: selectedAddress?.id_price_list || 0 
+                        }
+                    }
+
+                })
+                setNewAddressText(findCity(city.cityKey))
+            };
         }
 
         setChangeModalVisible(true);
-        setNewAddressText(selectedAddress?.street)
 
         // if (minimumPrice) {
         //     console.log('price', minimumPrice);
