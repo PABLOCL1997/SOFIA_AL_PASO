@@ -153,7 +153,6 @@ const CityModal: FC<Props> = () => {
   const [step, setStep] = useState<Steps>(Steps.Choosing);
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(agency ? ShippingMethod.Pickup : ShippingMethod.Delivery);
 
-
   const changeCity = (c: KeyValue) => {
     setCity({
       cityKey: c.key,
