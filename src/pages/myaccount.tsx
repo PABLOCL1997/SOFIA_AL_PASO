@@ -1,6 +1,6 @@
 import React, { Suspense, FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { MY_ACCOUNT_TITLE } from '../meta';
 import { BREAKPOINT } from '../utils/constants';
 import { token } from '../utils/store';
