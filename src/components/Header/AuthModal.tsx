@@ -110,7 +110,7 @@ const AuthModal: FC<Props> = () => {
     variables: { email: form.email, password: form.password }
   });
   const [doRecover] = useMutation(RECOVER, {
-    variables: { email: form.email }
+    variables: { email: form.email, url: process.env.REACT_APP_SITE_URL +'/password-reset' }
   });
   const [doReset] = useMutation(RESET, {
     variables: { email: form.email, token, password: form.password }
