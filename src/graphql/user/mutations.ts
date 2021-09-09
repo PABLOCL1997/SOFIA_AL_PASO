@@ -29,9 +29,10 @@ mutation Subscribe($email: String!) {
 `
 
 export const RECOVER = gql`
-mutation Recover($email: String!) {
+mutation Recover($email: String!, $url: String!) {
     recover (
-        email: $email
+        email: $email,
+        url: $url
     ) {
         id
     }
