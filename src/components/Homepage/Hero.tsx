@@ -5,6 +5,7 @@ import useBanners from "../../hooks/useBanners";
 import { Link } from "react-router-dom";
 import Banner from "../../types/Banner";
 import { LazyLoadTypes } from "react-slick"
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 
 const Slider = React.lazy(() =>
@@ -137,6 +138,7 @@ const NextArrow = (props: any) => {
 type Props = {};
 
 const Hero: FC<Props> = () => {
+  const { city } = useCityPriceList();
   const banners = useBanners();
   const typeLazy: LazyLoadTypes = "ondemand"
   const settings = {
@@ -166,7 +168,12 @@ const Hero: FC<Props> = () => {
     </Loader>}>   
       <Container>
           <Slider {...settings}>
-            {React.Children.toArray(banners.reverse().map((banner: Banner) =>
+            {React.Children.toArray(banners.reverse()
+              .filter((banner: Banner) => {
+                return city === "CO" ? banner : 
+                  String(banner.title).match(/cocha/) ? null : banner
+              })
+              .map((banner: Banner) =>
                 <Link to={banner.link}>
                   <img
                     src={process.env.REACT_APP_MAGENTO_URL +"/media/"+ banner.image}

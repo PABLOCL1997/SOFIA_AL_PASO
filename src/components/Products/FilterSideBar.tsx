@@ -46,6 +46,7 @@ import CrossIcon from "../../assets/images/close-modal.svg";
 import RadioIcon from "../../assets/images/radio-btn.svg";
 import RadioIconChecked from "../../assets/images/radio-btn-checked.svg";
 import { fromLink } from "../../utils/string";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 
 const Loader = React.lazy(() =>
@@ -314,6 +315,8 @@ const FilterSideBar: FC<Props> = ({
   const query = new URLSearchParams(useLocation().search);
   const { category, subcategory, lastlevel } = useParams();
 
+  const { city } = useCityPriceList();
+
   const [open, setOpen] = useState(false);
   const brandQuery = query.get("marca")?.split(",");
   const [openModal, setOpenModal] = useState(false);
@@ -553,6 +556,10 @@ const FilterSideBar: FC<Props> = ({
 
             {categories.length &&
               categories
+                .filter((row: CategoryType) => {
+                  return city === "CO" ? row : 
+                    toLink(row.name).match(/cocha-days/) ? null : row
+                })
                 .map((row: CategoryType) => (
                 <Category lvl={1} selected={compare(row)} key={row.entity_id}>
                   <Link to={navigateLink(row)}>
@@ -676,6 +683,10 @@ const FilterSideBar: FC<Props> = ({
                     </Category>
                     {categories.length &&
                       categories
+                      .filter((row: CategoryType) => {
+                        return city === "CO" ? row : 
+                          toLink(row.name).match(/cocha-days/) ? null : row
+                      })
                       .map((row: CategoryType) => (
                         <Category
                           lvl={1}

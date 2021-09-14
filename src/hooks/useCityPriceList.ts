@@ -37,6 +37,7 @@ const useCityPriceList = (): usePriceListType => {
         // update city
         if(userData.userInfo.length && userData.userInfo[0].cityKey) {
           if (userData.userInfo[0].cityKey !== city) {
+            console.log('citykey', userData.userInfo[0].cityKey)
             setCity(userData.userInfo[0].cityKey)
             setAgency(null)
           }
