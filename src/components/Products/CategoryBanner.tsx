@@ -10,8 +10,9 @@ import {
 
 
 import useCategory from "../../hooks/useCategory";
-import { toCatLink } from "../../utils/string";
+import { toCatLink, toLink } from "../../utils/string";
 import { CategoryType } from "../../graphql/categories/type";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 const Loader = React.lazy(() =>
   import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -42,6 +43,7 @@ type Props = {
 };
 
 const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
+  const { city } = useCityPriceList();
   const { categories, tCategory } = useCategory()
 
   const settings = {
@@ -62,16 +64,6 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
     ]
   };
 
-  let history = useHistory();
-
-  const [clientX, setClientX] = useState(0);
-
-  const handleMouseDown = (e: { clientX: any }) => {
-    setClientX(e.clientX);
-  };
-
-
-
   return (
     <Suspense fallback={<Loader />}>
       <Wrapper>
@@ -82,7 +74,12 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
             </Link>
           }
           {/* below code: mostrar campaign en todas la categorias */}
-          {React.Children.toArray(categories.map((category: CategoryType) => 
+          {React.Children.toArray(categories
+          .filter((row: CategoryType) => {
+            return city === "CO" ? row : 
+              toLink(row.name).match(/cocha-days/) ? null : row
+          })
+          .map((category: CategoryType) => 
             category.is_campaign && 
             <Link to={`/productos/${toCatLink(categories, category.name, category.level)}`}>
               <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
