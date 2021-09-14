@@ -21,7 +21,8 @@ const Loader = React.lazy(() =>
 const Container = styled.div<{ featured?: boolean, homeCategories?: boolean}>`
   position: relative;
   background: #ffffff;
-
+  display:flex;
+  flex-direction: column;
   box-shadow: 0px 2px 9px rgb(0 0 0 / 9%);
   border-radius: 16px;
 
@@ -131,10 +132,13 @@ const Title = styled.h2`
   font-family: MullerMedium;
   font-size: 16px;
   line-height: 20px;
-  text-align: center;
+  max-height: 40px;
   color: var(--black);
-
-  margin-bottom: 15px;
+  text-align: center;
+  overflow: hidden;
+  white-space: wrap;
+  text-overflow: ellipsis;
+  margin: 8px 15px 0;
   @media screen and (max-width: ${BREAKPOINT}) {
     height: auto;
   }
@@ -176,11 +180,9 @@ const Pill = styled.div<{ featured: boolean, homeCategories: boolean }>`
   border: 1px solid var(--yellow);
   border-radius: 30px;
   display: flex;
+  align-self: flex-end;
   width: fit-content;
-  margin: 0 auto;
-  position: absolute; 
-  bottom: 32px;
-  left: 64px;
+  margin: 16px auto 22px;
 
   ${({ featured, homeCategories }) =>
    featured || homeCategories ? 
@@ -235,9 +237,13 @@ const Add = styled.button`
   }
 `;
 
+const Block = styled.div`
+  padding-top: 9px;
+`
+
 const Label = styled.div<{ visible?: boolean }>`
   
-  line-height: 12px;
+  // line-height: 12px;
   text-align: left;
   color: #808080;
 
@@ -265,6 +271,14 @@ const OutOfStock = styled.span`
   font-size: 10px;
   line-height: 10px;
   text-transform: uppercase;
+`;
+
+const PriceAndWeight = styled.div`
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 type Props = {
@@ -299,9 +313,9 @@ const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = f
             <img width="32" height="48" src={DiscountIcon} alt="%" />
           </NewDiscount>
         )}
-
+        {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
+        <Block>
           <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
-            {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
               <img
                 className="lazyload"
                 width="200px"
@@ -316,21 +330,42 @@ const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = f
               />
 
             <Title>
-              {capitalizeFirstLetter(product.name)}
+            {product.useKGS
+                ? `${product.name} DE ${Number(product.weight)
+                    .toFixed(2)
+                    .replace(".", ",")} KGS APROX.`
+                : product.name}
+              {/* {capitalizeFirstLetter(product.name)} */}
             </Title>
              {product.maxPerUser > 0 && (
               <MaxUnits>
                 {t("itembox.max_per_user", { units: product.maxPerUser })}
               </MaxUnits>
             )}
+            </Link>
+          </Block>
+          <PriceAndWeight>
             {product.useKGS ?
             <BottomCardHome>
-                <Label visible={product.useKGS}>Peso promedio -&nbsp;</Label>
-                <Weight>{product.weight * 1000}g</Weight>
+              <Label visible={true}>
+              (Bs.{" "}
+                  {(product.special_price / product.weight)
+                    .toFixed(2)
+                    .replace(".", ",")}
+                  / KGS)
+              </Label>
             </BottomCardHome>
-            : null}
+             : null}
             <BottomCardHome>
-              <Label visible={true}>Estimado:&nbsp;</Label>
+            {product.useKGS ?
+              <Label visible={true}>
+                Estimado:&nbsp;
+              </Label>
+            :
+              <Label visible={true}>
+                Precio:&nbsp;
+              </Label>
+            }
               <PriceBox>
                 {discount > 0 && (
                   <DiscountPrice>
@@ -340,12 +375,10 @@ const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = f
 
                 <Price>
                   Bs.{" "}{(product.special_price || 0).toFixed(2).replace(".", ",")}
-                  {" "}{product.useKGS ? 'Kg' : ''}
                 </Price>
               </PriceBox> 
             </BottomCardHome>
-          
-        </Link>
+          </PriceAndWeight>
         {product.stock > 0 ? (
           <Pill featured={featured} homeCategories={homeCategories}>
             <Qty>
