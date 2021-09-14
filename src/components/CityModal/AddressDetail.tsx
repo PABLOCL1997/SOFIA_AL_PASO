@@ -363,8 +363,8 @@ const AddressDetail: FC<Props> = ({
                     defaultAddressId: selectedAddress?.id,
                     defaultAddressLabel: selectedAddress?.name,
                     openCityModal: false,
-                    cityKey: selectedAddress?.city,
-                    cityName: findCity(selectedAddress?.city),
+                    cityKey: findKeyByCity(selectedAddress?.city),
+                    cityName: selectedAddress?.city,
                     agency: selectedAddress?.key,
                     idPriceList: 0
                 }
