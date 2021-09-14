@@ -149,7 +149,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
                 }
             });
         }
-    }, [city, idPriceList, agency])
+    }, [city, idPriceList, agency, prodname])
 
 
     return { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, loading, error }
