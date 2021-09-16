@@ -733,8 +733,20 @@ const Details: FC<Props> = () => {
 
   const editBilling = () => {
     setEditMode(false);
+    setLoading(true);
+    let addressId: any = 0
+    if (inputs.addressId && inputs?.addresses?.length) {
+      // verify that addressId is not in input.addresses 
+      let found = false
+      inputs.addresses.forEach((address: AddressType) => {
+        if (address.id === inputs.addressId) {
+          found = true
+        }
+      })             
+    } else { addressId = inputs.addressId }
+
     setAddressArgs({
-      addressId: inputs.addressId || 0,
+      addressId,
       firstname: inputs.firstname,
       lastname: inputs.lastname,
       email: inputs.email,
