@@ -170,8 +170,11 @@ const Hero: FC<Props> = () => {
           <Slider {...settings}>
             {React.Children.toArray(banners.reverse()
               .filter((banner: Banner) => {
-                return city === "CO" ? banner : 
-                  String(banner.title).match(/cocha/) ? null : banner
+                return city === "SC" ? banner : 
+                  String(banner.title).match(/santacruz/) ? null : banner
+              })
+              .sort((a: Banner, b: Banner) => {
+                return a.order - b.order
               })
               .map((banner: Banner) =>
                 <Link to={banner.link}>
