@@ -76,8 +76,8 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
           {/* below code: mostrar campaign en todas la categorias */}
           {React.Children.toArray(categories
           .filter((row: CategoryType) => {
-            return city === "CO" ? row : 
-              toLink(row.name).match(/cocha-days/) ? null : row
+            return city === "SC" ? row : 
+              toLink(row.name).match(/elay/) ? null : row
           })
           .map((category: CategoryType) => 
             category.is_campaign && 
