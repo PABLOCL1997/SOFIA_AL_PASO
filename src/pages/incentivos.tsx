@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 const Incentivos = () => {
     const { data } = useQuery(GET_PAGES, {
         fetchPolicy: "network-only",
-        variables: { identifier: "sap-incetivos-meses" }
+        variables: { identifier: "sap-incentivos-meses" }
     });
     return (
         <Wrapper>
