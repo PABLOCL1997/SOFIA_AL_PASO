@@ -1,5 +1,7 @@
+import { useQuery } from "@apollo/react-hooks";
 import React from "react";
 import styled from "styled-components";
+import { GET_PAGES } from "../graphql/metadata/queries";
 
 
 const Wrapper = styled.div`
@@ -11,17 +13,14 @@ const Wrapper = styled.div`
 `
 
 const Incentivos = () => {
+    const { data } = useQuery(GET_PAGES, {
+        fetchPolicy: "network-only",
+        variables: { identifier: "sap-incetivos-meses" }
+    });
     return (
         <Wrapper>
-            <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfeEarM0fB1jJNzwfFeXr3E5y8S-9JyOjZS552sGDSReInp7Q/viewform?embedded=true"
-                width="800"
-                height="1200"
-                frameBorder="0"
-                marginHeight={0}
-                marginWidth={0}>
-                    Loading…
-            </iframe>
+            {data && data.pages && data.pages.length > 0 && data.pages[0].content
+            && <div dangerouslySetInnerHTML={{ __html: data.pages[0].content }} />}
         </Wrapper>
     )
 }
