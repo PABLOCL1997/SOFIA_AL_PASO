@@ -56,6 +56,10 @@ const RetiroAlPaso = React.lazy(() =>
   import(/* webpackChunkName: "RetiroAlPaso" */ "./pages/retiroAlPaso")
 );
 
+const Activate = React.lazy(() =>
+  import(/* webpackChunkName: "Activate" */ "./pages/activate")
+);
+
 
 
 const Loader = styled.div`
@@ -92,6 +96,14 @@ const App = () => {
             <LayoutHomepage>
               <Homepage />
             </LayoutHomepage>
+          }
+        />
+        <Route 
+          path="/activacion"
+          children={
+            <LayoutGeneral>
+              <Activate />
+            </LayoutGeneral>
           }
         />
         <Route

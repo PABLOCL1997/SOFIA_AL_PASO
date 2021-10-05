@@ -460,5 +460,71 @@
       "message": "Mensaje"
     },
     "send": "Enviar"
+  },
+  "activate": {
+    "steps": {
+      "benefits": {
+        "title": "Beneficios para colaboradores",
+        "benefits": "Beneficios",
+        "discounts": "Descuentos",
+        "shipping": "Envíos",
+        "copy": "Si eres colaborador de Sofía o de alguna de las empresas en <strong>Convenio Corporativo</strong>, ¡puedes disfrutas de grandes beneficios en Tienda Sofía y Sofía al Paso!",
+        "activate": "activar",
+        "warning": "Recuerda primero iniciar sesión. Si aún no tienes cuenta <sofialink>creala desde aqui.</sofialink>"
+      },
+      "insert_nit": {
+        "title": "Activa tu cuenta de colaborador",
+        "instructions": "Primero, <strong>ingresa tu Carnet de Identidad</strong> (CI) para que busquemos tus datos:",
+        "placeholder": "Carnet de Identidad",
+        "next": "Siguiente",
+        "error": "No se encontro usuario.",
+        "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte."
+      },
+      "confirm_phone": {
+        "title": "Activa tu cuenta de colaborador",
+        "instructions": "<strong>¡Muy bien!</strong> Ahora debes validar que los datos que se muestran a continuación son correctos y te enviaremos un PIN por SMS...",
+        "example_name": "Pablo Aplizar",
+        "example_phone": "78****00",
+        "next": "Siguiente",
+        "back": "Volver",
+        "error": "Error no se pudo enviar el pin, intente mas tarde."
+      },
+      "write_pin": {
+        "title": "Activa tu cuenta de colaborador",
+        "instructions": "<strong>¡Ya casi estamos!</strong> Debes haber recibido un PIN mediante SMS al <strong>{{ phone }}</strong>, debes ingresarlo a continuación:",
+        "time_example": "04:30",
+        "resend": "Volver a enviar SMS",
+        "next": "Siguiente",
+        "back": "Volver",
+        "help": "Si no recibes el SMS o tienes problemas puedes <sofialink>contactarnos aquí.</sofialink>",
+        "error": "El PIN ingresado no es correcto.",
+        "mail_subject": "B2E - Ayuda PIN",
+        "mail_body": "Hola, necesito ayuda con la activacion de Sofia para colaboradores."
+      },
+      "modify_address": {
+        "title": "Cuenta activada",
+        "instructions": "<strong>¡Listo!</strong> Hemos validado exitosamente tus datos, por favor confirma o edita la dirección que tenemos registrada:",
+        "labels": {
+          "address": "Dirección",
+          "phone": "Teléfono",
+          "city": "Ciudad"
+        },
+        "next": "Confirmar"
+      },
+      "congrats": {
+        "title": "Cuenta activada",
+        "buy": {
+          "info": "Ahora que has activado tu cuenta puedes realizar compras a precios preferenciales.",
+          "icon_text": "Beneficios para colaboradores",
+          "call_to_action": "compra con descuento"
+        },
+        "account": {
+          "info": "Recuerda que puedes editar la dirección de entrega en <strong>Mi Cuenta</strong> cuando lo necesites.",
+          "icon_text": "Mi cuenta",
+          "call_to_action": "Editar dirección"
+        }
+      }
+
+    }
   }
 }
