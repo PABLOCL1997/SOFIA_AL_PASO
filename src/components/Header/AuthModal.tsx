@@ -14,6 +14,7 @@ import { token as StoreToken } from "../../utils/store";
 import { useParams, useHistory } from "react-router-dom";
 import { CloseWrapper, CtaWrapper, Description, Disclaimer, Line, Link, LoaderWrapper, LoginError, Modal, ModalCourtain, PasswordWrapper, SocialButton, Title } from "../AuthModal/style";
 import { findKeyByCity } from "../../utils/string";
+import useUser from "../../hooks/useUser";
 
 const Loader = React.lazy(
   () => import(/* webpackChunkName: "Loader" */ "../Loader")
@@ -50,6 +51,7 @@ const AuthModal: FC<Props> = () => {
   let { token } = useParams();
   const history = useHistory();
   const { t } = useTranslation();
+  const { toggleCityModal } = useUser();
   const { data } = useQuery(GET_USER, {});
   const [step, setStep] = useState(Steps.Login);
   const [user, setUser] = useState<User>({});
@@ -104,10 +106,20 @@ const AuthModal: FC<Props> = () => {
     }
   });
 
-  const [doSignUp] = useMutation(SIGN_UP);
+  const [doSignUp] = useMutation(SIGN_UP,{
+    onCompleted: () => {
+      // when user is created successfully pop city modal
+      toggleCityModal()
+    }
+
+    });
 
   const [doLogin] = useMutation(LOGIN, {
-    variables: { email: form.email, password: form.password }
+    variables: { email: form.email, password: form.password },
+    onCompleted: () => {
+      // when user logged in successfully pop city modal
+      toggleCityModal();
+    }
   });
   const [doRecover] = useMutation(RECOVER, {
     variables: { email: form.email, url: process.env.REACT_APP_SITE_URL +'/password-reset' }
