@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
-import { useLazyQuery } from "react-apollo"
+import { useLazyQuery, useMutation } from "react-apollo"
 import { ORDER_MINIMUM_PRICE } from '../graphql/cart/queries'
+import { SET_USER } from '../graphql/user/mutations'
 import useCityPriceList from './useCityPriceList'
 
 const useMinimumPrice = () => {
-  const { city, idPriceList, agency } = useCityPriceList()
+  const topPricePickup: number = 90; // Bs. 90
+  const { city, idPriceList, agency } = useCityPriceList();
+  const [setUserMinimumPrice] = useMutation(SET_USER);
+  
   const [getMinimumPrice] = useLazyQuery(ORDER_MINIMUM_PRICE, {
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'network-only',
     onCompleted: d => {
       if(d && d.minimum_price){
         setMinimumPrice(d.minimum_price)

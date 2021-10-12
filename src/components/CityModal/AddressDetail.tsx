@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import GoogleMapReact from "google-map-react";
 import Marker, { Maps } from "../MapMarker"
@@ -14,7 +14,7 @@ import Agency from "../../types/Agency";
 import { AddressType, UserType } from "../../graphql/user/type";
 import { StarWrap, TooltipStar } from "./styles";
 import { useTranslation } from "react-i18next";
-import useMinimumPrice from "../../hooks/useMinimumPrice";
+
 import { BREAKPOINT } from "../../utils/constants";
 
 const Wrapper = styled.div<{ withMap: boolean }>`
@@ -256,14 +256,14 @@ const AddressDetail: FC<Props> = ({
     setNewAddressText
 }) => {
     const { t } = useTranslation();
-
     const { data } = useQuery(GET_USER, {});
-    const minimumPrice = useMinimumPrice()
     const { agency, agencies, city: cityHook } = useCityPriceList()
     const [withMap, setWithMap] = useState<boolean>(true);
     const [city, setCity] = useState<User>({});
     const [agencyKey, setagencyKey] = useState<string>("");
     const [setUser] = useMutation(SET_USER, { variables: { user: city } });
+    const [setUserMinimumPrice] = useMutation(SET_USER, {});
+
     const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
     const [centerMap, setCenterMap] = useState<Point>({
         lat: parseFloat("-17.80904437441624"),
@@ -271,7 +271,6 @@ const AddressDetail: FC<Props> = ({
     } as Point);
     const [inputs, setInputs] = useState<UserType>({ addresses: [] });
     const [userId, setUserId] = useState(0);
-    const [showMinimumPrice, setShowMinimumPrice] = useState(false);
 
     const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
         fetchPolicy: "network-only",
@@ -280,7 +279,6 @@ const AddressDetail: FC<Props> = ({
             setInputs(d.details);
         }
     });
-    const [setUserMinimumPrice] = useMutation(SET_USER);
 
 
     const changeCity = (c: KeyValue) => {
@@ -339,13 +337,6 @@ const AddressDetail: FC<Props> = ({
         }
 
         setChangeModalVisible(true);
-
-        // if (minimumPrice) {
-        //     console.log('price', minimumPrice);
-        //     setUserMinimumPrice({
-        //       variables: { user: { showMinimumPrice: String(minimumPrice) } }
-        //     });
-        //   }
         setStep(Steps.Choosing)
     }
 
@@ -373,8 +364,10 @@ const AddressDetail: FC<Props> = ({
 
         setChangeModalVisible(true);
         setNewAddressText(selectedAddress?.name);
-        setShowMinimumPrice(true);
-        setStep(Steps.Choosing)
+        setStep(Steps.Choosing);
+        setUserMinimumPrice({
+            variables: { user: { showMinimumPrice: String("show") } }
+        });
     }
 
     useEffect(() => {
@@ -412,16 +405,6 @@ const AddressDetail: FC<Props> = ({
     }, [agency]);
 
     useEffect(() => {
-        if (minimumPrice && showMinimumPrice) {
-            setShowMinimumPrice(false);
-            setUserMinimumPrice({
-              variables: { user: { showMinimumPrice: String(minimumPrice) } }
-            });
-        }
-    }
-    , [minimumPrice, showMinimumPrice]);
-
-    useEffect(() => {
         setCity({
             ...city,
             cityKey: cityHook,
@@ -434,9 +417,9 @@ const AddressDetail: FC<Props> = ({
             {shippingMethod === ShippingMethod.Pickup &&
                 <Selector withMap={withMap}>
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M26 1H6L1 10C1 12.762 3.238 15 6 15C8.762 15 11 12.762 11 10C11 12.762 13.238 15 16 15C18.762 15 21 12.762 21 10C21 12.762 23.238 15 26 15C28.762 15 31 12.762 31 10L26 1Z" stroke="#E30613" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M27 19V31H5V19" stroke="#E30613" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M13 31V23H19V31" stroke="#E30613" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M26 1H6L1 10C1 12.762 3.238 15 6 15C8.762 15 11 12.762 11 10C11 12.762 13.238 15 16 15C18.762 15 21 12.762 21 10C21 12.762 23.238 15 26 15C28.762 15 31 12.762 31 10L26 1Z" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M27 19V31H5V19" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M13 31V23H19V31" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <Title>Retira al paso</Title>
                     <Subtitle withMap={withMap}>Elige tu tienda más cercana</Subtitle>
@@ -478,7 +461,7 @@ const AddressDetail: FC<Props> = ({
             {shippingMethod === ShippingMethod.Delivery &&
                 <Selector withMap={withMap}>
                     <svg width="36" height="38" viewBox="0 0 36 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18.1905 2L2 14.9524V36H13.3333V24.6667H23.0476V36H34.381V14.9524L18.1905 2Z" stroke="#E30613" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="square" />
+                        <path d="M18.1905 2L2 14.9524V36H13.3333V24.6667H23.0476V36H34.381V14.9524L18.1905 2Z" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="square" />
                     </svg>
                     <Title>Envío a domicilio</Title>
                     <Subtitle withMap={withMap}>Selecciona una de tus direcciones guardadas o agrega una nueva:</Subtitle>
