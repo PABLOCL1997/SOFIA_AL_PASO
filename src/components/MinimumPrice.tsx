@@ -6,6 +6,7 @@ import { SET_USER } from "../graphql/user/mutations";
 
 import WarningIcon from "../assets/images/warning-input.svg"
 import useCityPriceList from "../hooks/useCityPriceList";
+import useMinimumPrice from "../hooks/useMinimumPrice";
 
 const Container = styled.span`
   position: fixed;
@@ -58,6 +59,9 @@ type Props = {};
 const MinimumPrice: FC<Props> = () => {
   const { data } = useQuery(GET_USER, {});
   const { agency } = useCityPriceList();
+  const minimumPrice = useMinimumPrice();
+  const AgencyMinimumPrice: number = 100;
+  const [visible, setVisible] = useState(false);
 
   const [hideSuccess] = useMutation(SET_USER, {
     variables: { user: { showMinimumPrice: "" } }
@@ -69,11 +73,15 @@ const MinimumPrice: FC<Props> = () => {
   }, []);
 
   useEffect(() => {
-    if (data.userInfo.length && data.userInfo[0].showMinimumPrice) {
-      setTimeout(
-        () => {
-          hideSuccess();
-        },
+    if (data.userInfo.length
+      && data.userInfo[0].showMinimumPrice
+      && data.userInfo[0].showMinimumPrice.length > 0) {
+        setVisible(true);
+        setTimeout(
+          () => {
+            hideSuccess();
+            setVisible(false);
+          },
         3000
       );
     }
@@ -83,7 +91,7 @@ const MinimumPrice: FC<Props> = () => {
   return (
     <Container
       className={
-        agency && data.userInfo.length && data.userInfo[0].showMinimumPrice ? "visible" : ""
+        agency && visible && minimumPrice < AgencyMinimumPrice ? "visible" : ""
       }
     >
         <CloseWrapper onClick={() => hideSuccess()}>
@@ -94,7 +102,7 @@ const MinimumPrice: FC<Props> = () => {
         </svg>
         </CloseWrapper>
       <img src={WarningIcon} alt="warning" />
-      <span>Recordá que el límite de compra al retirar al paso es de <b>Bs. {data?.userInfo[0]?.showMinimumPrice || 200}</b>.</span>
+      <span>Recordá que el límite de compra al retirar al paso es de <b>Bs. {minimumPrice}</b>.</span>
     </Container>
   );
 };
