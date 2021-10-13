@@ -498,7 +498,7 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.billing.lastname),
         fax: orderData.billing.nit,
         email: orderData.billing.email,
-        telephone: agency ? orderData.billing.phone :orderData.shipping.phone2,
+        telephone: agency ? orderData.billing.phone :orderData.shipping.phone,
         country_id: "BO",
         city: escapeSingleQuote(
           localUserData &&
