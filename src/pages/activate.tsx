@@ -38,7 +38,7 @@ const Activate: FC = () => {
     const NoError: string = "";
 
     const history = useHistory();
-    const { toggleLoginModal } = useUser();
+    const { toggleLoginModal, user } = useUser();
     const [state, setState] = useState<ActivateState>(ActivateState.Benefits);
     const [nit, setNit] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -122,11 +122,8 @@ const Activate: FC = () => {
         setState(ActivateState.Loading);
         
         if (
-            (Token.get() !== "null" &&
-            data &&
-            data.checkToken &&
-            !data.checkToken.status) ||
-            Token.get() === "null"
+            !user.userInfo.length ||
+            !user.userInfo[0].isLoggedIn
           ) {
               toggleLoginModal()
               setState(ActivateState.Benefits);
