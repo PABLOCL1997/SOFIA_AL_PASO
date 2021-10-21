@@ -6,6 +6,8 @@ interface IUseUser {
     toggleCartModal: Function;
     toggleCityModal: Function;
     toggleLoginModal: Function;
+    showAddressInfo: Function;
+    hideAddressInfo: Function;
     logout: Function;
     user: any;
 }
@@ -21,6 +23,16 @@ const useUser = () : IUseUser => {
     });
     const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } }
+    });
+
+    const [showAddressInfo] = useMutation(SET_USER, {});
+    const [hideAddressInfo] = useMutation(SET_USER, {
+        variables: {
+            user: {
+                addressInfo: null,
+                addressType: null
+            }
+        }
     });
     
     const [logout] = useMutation(SET_USER, {
@@ -38,11 +50,12 @@ const useUser = () : IUseUser => {
         }
     });
 
-
     return  {
         toggleCartModal,
         toggleCityModal,
         toggleLoginModal,
+        showAddressInfo,
+        hideAddressInfo,
         logout, 
         user
     }

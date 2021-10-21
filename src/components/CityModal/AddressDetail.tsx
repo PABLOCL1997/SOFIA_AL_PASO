@@ -16,6 +16,7 @@ import { StarWrap, TooltipStar } from "./styles";
 import { useTranslation } from "react-i18next";
 
 import { BREAKPOINT } from "../../utils/constants";
+import useMinimumPrice from "../../hooks/useMinimumPrice";
 
 const Wrapper = styled.div<{ withMap: boolean }>`
     ${({ withMap }) =>
@@ -257,7 +258,8 @@ const AddressDetail: FC<Props> = ({
 }) => {
     const { t } = useTranslation();
     const { data } = useQuery(GET_USER, {});
-    const { agency, agencies, city: cityHook } = useCityPriceList()
+    const minimumPrice = useMinimumPrice()
+    const { agency, agencies, city: cityHook, hasB2EAddress } = useCityPriceList()
     const [withMap, setWithMap] = useState<boolean>(true);
     const [city, setCity] = useState<User>({});
     const [agencyKey, setagencyKey] = useState<string>("");
@@ -286,6 +288,7 @@ const AddressDetail: FC<Props> = ({
             cityKey: c.key,
             cityName: c.value,
             defaultAddressLabel: c.value,
+            defaultAddressId: undefined,
             openCityModal: false,
             idPriceList: 0,
             agency: null
@@ -325,6 +328,7 @@ const AddressDetail: FC<Props> = ({
                             cityKey: city.cityKey,
                             cityName: findCity(city.cityKey),
                             defaultAddressLabel: findCity(city.cityKey),
+                            defaultAddressId: undefined,
                             openCityModal: false,
                             agency: null,
                             idPriceList: selectedAddress?.id_price_list || 0 
@@ -494,7 +498,9 @@ const AddressDetail: FC<Props> = ({
                         // when addresses
                             <>
                                 {inputs.addresses &&
-                                    React.Children.toArray(inputs.addresses.map((address: AddressType) => (
+                                    React.Children.toArray(inputs.addresses
+                                            .filter((address:AddressType) => hasB2EAddress ? address.id_price_list : address )
+                                            .map((address: AddressType) => (
                                         <RadionGroup
                                             selected={selectedAddress?.id === address.id}
                                             onClick={() => {
