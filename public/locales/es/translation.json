@@ -7,7 +7,12 @@
     "products": "Productos",
     "faq": "Preguntas frecuentes",
     "contact": "Contacto",
-    "slogan": "En Sofía se confía."
+    "slogan": "En Sofía se confía.",
+    "employee": {
+      "title": "Modo Colaborador",
+      "description": "",
+      "edit": "Mi Cuenta"
+    }
   },
   "modal": {
     "close": "Continuar",

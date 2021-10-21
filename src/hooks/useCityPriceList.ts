@@ -1,7 +1,7 @@
 // this hook return city and id price list
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import { GET_USER } from '../graphql/user/queries'
+import { DETAILS, GET_USER } from '../graphql/user/queries'
 import { GET_SAP_AGENCIES } from '../graphql/products/queries'
 
 type usePriceListType = {
@@ -9,11 +9,13 @@ type usePriceListType = {
     idPriceList: number,
     agency: string | null,
     setAgency: Function,
-    agencies: any
+    agencies: any,
+    hasB2EAddress: boolean,
 }
 
 const useCityPriceList = (): usePriceListType => {
     const { data: userData } = useQuery(GET_USER, {})
+    const { data: details } = useQuery(DETAILS, {})
     useQuery(GET_SAP_AGENCIES, {
       fetchPolicy: "network-only",
       onCompleted: d => {
@@ -22,9 +24,9 @@ const useCityPriceList = (): usePriceListType => {
   })
   
     const [agencies, setAgencies] = useState([]);
-    const [city, setCity] = useState<string>("SC")
-    const [idPriceList, setIdPriceList] = useState<number>(-1)
-    const [agency, setAgency] = useState<string | null>(null)
+    const [city, setCity] = useState<string>("SC");
+    const [idPriceList, setIdPriceList] = useState<number>(-1);
+    const [agency, setAgency] = useState<string | null>(null);
 
     useEffect(() => {
         // update price list
@@ -50,11 +52,18 @@ const useCityPriceList = (): usePriceListType => {
         }
     }, [userData])
 
+    const hasB2EAddress: boolean = useMemo(() => {
+      if (details?.details && details.details.addresses.length) {
+        const isEmployee = details.details.addresses.some((address: any) => address.id_price_list);
+        return isEmployee;
+      }
+      return false;
+    }, [details])
 
     return { city, idPriceList, agencies,
       agency: userData.userInfo.length && userData.userInfo[0].agency ?
       userData.userInfo[0].agency :
-      null, setAgency }
+      null, setAgency, hasB2EAddress }
 }
 
 export default useCityPriceList

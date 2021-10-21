@@ -1,7 +1,7 @@
 import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { CloseWrapper, Courtain, Modal } from "./styles"
+import * as SC from "./styles"
 import { Changes, ShippingMethod } from "./types";
 
 import DeliveryIcon from "../../assets/images/sap-delivery-icon.svg"
@@ -105,10 +105,10 @@ interface Props {
 const ChangeAddressTypeModal: FC<Props> = ({ text, visible: show, stepType: changeType, setVisible }) => {
     return (
         <Suspense fallback={<></>}>
-            <Courtain
+            <SC.Courtain
                 className={show && "visible"}
             >
-                <Modal>
+                <SC.Modal>
                   {changeType === Changes.PickupToPickup &&
                   <>
                     <Title>Cambiaste de dirección</Title>
@@ -172,16 +172,16 @@ const ChangeAddressTypeModal: FC<Props> = ({ text, visible: show, stepType: chan
                     />
                     </CtaWrapper>
 
-                    <CloseWrapper onClick={() => setVisible(false)}>
+                    <SC.CloseWrapper onClick={() => setVisible(false)}>
                     {/* close */}
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
                       <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
                     </svg>
-                  </CloseWrapper>
+                  </SC.CloseWrapper>
                     
-                </Modal>
-            </Courtain>
+                </SC.Modal>
+            </SC.Courtain>
         </Suspense>
     )
 

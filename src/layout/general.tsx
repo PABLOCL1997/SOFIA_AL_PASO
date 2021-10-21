@@ -36,10 +36,7 @@ const Footer = React.lazy(() =>
 );
 
 const Wrapper = styled.div`
-  padding: 113px 0 0;
-  &.productpage {
-    padding-top: 30px;
-  }
+  padding: 74px 0 0;
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0;
     &.productpage {

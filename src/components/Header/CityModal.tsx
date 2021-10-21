@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC, Suspense, useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { cities, KeyValue } from "../../utils/string";
 import { BREAKPOINT } from "../../utils/constants";
@@ -23,6 +23,10 @@ const AddressDetail = React.lazy(
 
 const ChangeAddressTypeModal = React.lazy(
   () => import(/* webpackChunkName: "ChangeAddressTypeModal" */ "../CityModal/ChangeAddressTypeModal")
+);
+
+const AddressInfoModal = React.lazy(
+  () => import(/* webpackChunkName: "AddressInfoModal" */ "../CityModal/AddressInfoModal")
 );
 
 
@@ -146,7 +150,7 @@ const CityModal: FC<Props> = () => {
     variables: { user: { openCityModal: false } as User }
   });
 
-  const [changeModalVisible, setChangeModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
   const [modalStepType, setModalStepType] = useState<Changes>(Changes.PickupToPickup)
   const [newAddressText, setNewAddressText] = useState<string>("");
 
@@ -211,6 +215,9 @@ const CityModal: FC<Props> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+  
+  // set showInfoModal to true when  data.userInfo[0].addressInfo and data.userInfo[0].addressType has values
+  const modalInfoVisible = useMemo(() => data && data.userInfo && data.userInfo[0] && data.userInfo[0].addressInfo && data.userInfo[0].addressType, [data]);
 
   useEffect(() => {
     if (city && city.cityKey) setUser();
@@ -261,7 +268,7 @@ const CityModal: FC<Props> = () => {
                 shippingMethod={shippingMethod}
                 setShippingMethod={setShippingMethod}
                 setStep={setStep}
-                setChangeModalVisible={setChangeModalVisible}
+                setChangeModalVisible={setModalVisible}
                 setModalStepType={setModalStepType}
                 setNewAddressText={setNewAddressText}
 
@@ -273,9 +280,13 @@ const CityModal: FC<Props> = () => {
 
       <ChangeAddressTypeModal
         text={newAddressText}
-        visible={changeModalVisible}
+        visible={modalVisible}
         stepType={modalStepType}
-        setVisible={setChangeModalVisible}
+        setVisible={setModalVisible}
+      />
+
+      <AddressInfoModal
+        isVisible={modalInfoVisible}
       />
 
     </Suspense>
