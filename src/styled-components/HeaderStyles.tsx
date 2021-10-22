@@ -96,13 +96,13 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   grid-template-rows: 1fr;
-  grid-template-columns: 100px 200px minmax(250px, 450px) 100px 36px 36px;
+  grid-template-columns: 100px 200px minmax(200px, 400px) 100px 150px 36px 36px;
   column-gap: 15px;
   
   margin: 0 auto;
   
   @media screen and (max-width: 768px) {
-    grid-template-columns: 1fr 36px 36px 36px;
+    grid-template-columns: 1fr repeat(4,36px);
     grid-template-rows: 1fr 36px 36px;
     row-gap: 5px;
     column-gap: 5px;

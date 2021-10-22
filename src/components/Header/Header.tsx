@@ -8,6 +8,8 @@ import { SET_USER } from "../../graphql/user/mutations";
 import Search from "../Images/Search";
 import * as SC from "../../styled-components/HeaderStyles";
 
+import Wallet from "../../assets/images/empresa-seleccionado.svg";
+
 import UserIcon from "../../assets/images/profile-ingresar.svg";
 import CartImg from "../../assets/images/Carrito.svg";
 import { trackGoToCartEvent } from "../../utils/dataLayer";
@@ -79,6 +81,11 @@ const Header: FC<Props> = ({ checkout, page }) => {
       toggleLoginModal();
     }
   };
+
+  const goToCollaborators = () => {
+    setOpen(false);
+    history.push("/activacion");
+  }
 
   const addressLabel = () => {
     if (userData.userInfo.length && userData.userInfo[0].defaultAddressLabel) {
@@ -206,6 +213,11 @@ const Header: FC<Props> = ({ checkout, page }) => {
                   <span>{t("header.account")}</span>
               }
             </SC.IngresarWrap>
+            <SC.IngresarWrap onClick={goToCollaborators}>
+              <img width="25" height="24" src={Wallet} alt="wallet" />
+              <span>{t("header.collaborators")}</span>
+            </SC.IngresarWrap>
+            
             <SC.CartWrapper big={bigCart} onClick={showCart}>
               <img width="32" height="24" src={CartImg} alt="Carrito de compras" />
               {data && data.cartItems && data.cartItems.length ?

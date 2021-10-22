@@ -4,9 +4,19 @@ import { useTranslation, Trans } from "react-i18next";
 import * as SC from "./style";
 import * as GSC from "../style";
 import { ActivateProps } from "../props";
+import { useHistory } from "react-router";
 
-const Benefits: FC<ActivateProps> = ({ onNext, onBack }) => {
+interface Props {
+    isEmployee: boolean;
+}
+
+const Benefits: FC<ActivateProps & Props> = ({ onNext, onBack, isEmployee }) => {
     const { t } = useTranslation();
+    const history = useHistory();
+    const goToMyAccount = () => {
+        const url = "/mi-cuenta";
+        return history.push(url);
+    }
     
     return (
         <GSC.Wrapper>
@@ -43,22 +53,29 @@ const Benefits: FC<ActivateProps> = ({ onNext, onBack }) => {
                         }}
                     />
                 </SC.Text>
-                <SC.CallToAction>
-                    <GSC.ButtonPrimary type="button" onClick={() => onNext()}>
-                        {t("activate.steps.benefits.activate")}
-                    </GSC.ButtonPrimary>
-                    <SC.InfoWrapper>
-                        <Info />
-                    </SC.InfoWrapper>
-                    <SC.Info>
-                        <Trans
-                            i18nKey="activate.steps.benefits.warning"
-                            components={{
-                                sofialink: <a href="#openRegister" />
-                            }}
-                        />
-                    </SC.Info>
-                </SC.CallToAction>
+                    {isEmployee ? 
+                        <GSC.ButtonSecondary onClick={goToMyAccount}>
+                            {t("activate.steps.benefits.already_activated")}
+                        </GSC.ButtonSecondary>
+                    :
+                    <SC.CallToAction>
+
+                        <GSC.ButtonPrimary type="button" onClick={() => onNext()}>
+                            {t("activate.steps.benefits.activate")}
+                        </GSC.ButtonPrimary>
+                        <SC.InfoWrapper>
+                            <Info />
+                        </SC.InfoWrapper>
+                        <SC.Info>
+                            <Trans
+                                i18nKey="activate.steps.benefits.warning"
+                                components={{
+                                    sofialink: <a href="#openRegister" />
+                                }}
+                            />
+                        </SC.Info>
+                    </SC.CallToAction>
+                    }
             </GSC.Square>
         </GSC.Wrapper>
     )
