@@ -70,6 +70,24 @@ export const ButtonSecondary = styled.button`
     }
 `
 
+export const ButtonSecondaryLarge = styled.button`
+    width: 100%;
+    font-size: 12px;
+    font-family: MullerBold;
+    
+    text-transform: uppercase;
+    background: #FFFFFF;
+    border: 2px solid var(--red);
+    color: var(--red);
+    box-sizing: border-box;
+    border-radius: 44px;
+    padding: 15px 0;
+
+    &:disabled {
+        opacity: 0.5;
+    }
+`
+
 export const Title = styled.h2`
     font-size: 32px;
     font-family: MullerMedium;

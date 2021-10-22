@@ -117,8 +117,11 @@ const AuthModal: FC<Props> = () => {
   const [doLogin] = useMutation(LOGIN, {
     variables: { email: form.email, password: form.password },
     onCompleted: () => {
-      // when user logged in successfully pop city modal
-      toggleCityModal();
+      const url = "/activacion";
+      // when user logged-in and url is not /activate pop city modal
+      if (history.location.pathname !== url) {
+        toggleCityModal();
+      }
     }
   });
   const [doRecover] = useMutation(RECOVER, {

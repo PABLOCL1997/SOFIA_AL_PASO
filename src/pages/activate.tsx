@@ -17,6 +17,7 @@ import { start, verify } from "../utils/authy";
 import { findKeyByCity, titleCase } from "../utils/string";
 import { token as Token } from "../utils/store";
 import useUser from "../hooks/useUser";
+import useCityPriceList from "../hooks/useCityPriceList";
 
 enum ActivateState {
     Benefits,
@@ -39,6 +40,7 @@ const Activate: FC = () => {
 
     const history = useHistory();
     const { toggleLoginModal, user } = useUser();
+    const { idPriceList } = useCityPriceList();
     const [state, setState] = useState<ActivateState>(ActivateState.Benefits);
     const [nit, setNit] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -55,7 +57,8 @@ const Activate: FC = () => {
     const [error, setError] = useState<string>("");
     const [updateB2EAddress] = useMutation(UPDATE_B2E_ADDRESS)
 
-    const { data: userDetails } = useQuery(DETAILS);
+    const { data: userDetails } = useQuery(DETAILS,
+        { fetchPolicy: "network-only"});
     const { data } = useQuery(CHECK_TOKEN, { fetchPolicy: "network-only" });
     const [getUserDetails] = useLazyQuery(DETAILS, {
         onCompleted: (d) => {
@@ -267,6 +270,7 @@ const Activate: FC = () => {
                 <Benefits
                     onBack={() => setState(ActivateState.Benefits)}
                     onNext={() => handleStart()}
+                    isEmployee={idPriceList > 0}
                     error={error}
                 />
                 : null}
