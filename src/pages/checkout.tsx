@@ -413,23 +413,23 @@ const Checkout: FC<Props> = () => {
       }
     });
 
-    // if (!mapUsed && !orderData.shipping.id && !special_address && !agency) {
-    //   window.scrollTo({
-    //     top:
-    //       (document as any).getElementById("gmap").getBoundingClientRect().top +
-    //       (window as any).scrollY -
-    //       170,
-    //     behavior: "smooth"
-    //   });
-    //   showError({
-    //     variables: {
-    //       user: {
-    //         showError: t("checkout.move_map")
-    //       }
-    //     }
-    //   });
-    //   return [];
-    // }
+    if (!mapUsed && !orderData.shipping.id && !special_address && !agency) {
+      window.scrollTo({
+        top:
+          (document as any).getElementById("gmap").getBoundingClientRect().top +
+          (window as any).scrollY -
+          170,
+        behavior: "smooth"
+      });
+      showError({
+        variables: {
+          user: {
+            showError: t("checkout.move_map")
+          }
+        }
+      });
+      return [];
+    }
 
     if (!missingField && !orderData.shipping.id && !agency) {
       [
