@@ -67,8 +67,6 @@ const Wrapper = styled.div`
 
 const CheckoutWrapper = styled.div``;
 
-const ThanktWrapper = styled.div``;
-
 const Cols = styled.div`
   display: flex;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -327,10 +325,9 @@ const Checkout: FC<Props> = () => {
   useEffect(() => {
     if (todotixData && todotixData.todotix) {
       setProcessing(false);
-      //emptyCart();
+      emptyCart();
       if (todotixData.todotix.url_pasarela_pagos){
         setShowTodotixPayment(true);
-        //window.location = todotixData.todotix.url_pasarela_pagos;
       }
       else
         showError({
