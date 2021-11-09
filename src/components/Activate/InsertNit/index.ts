@@ -1,1 +1,1 @@
-export { default } from "./InsertNit"
+export { default } from "./InsertNit";

@@ -1,13 +1,8 @@
 import gql from "graphql-tag";
 
 export const GET_MIN_PRICE = (data: any) => {
-  const userInfo =
-    data && data.userInfo && data.userInfo.length ? data.userInfo[0] : {};
-  return userInfo.cityKey === "CO"
-    ? 150
-    : userInfo.cityKey === "SC"
-    ? 200
-    : 200;
+  const userInfo = data && data.userInfo && data.userInfo.length ? data.userInfo[0] : {};
+  return userInfo.cityKey === "CO" ? 150 : userInfo.cityKey === "SC" ? 200 : 200;
 };
 
 export const GET_QTY = (cartItems: any) => {
@@ -50,13 +45,13 @@ export const TODOTIX = gql`
 `;
 
 export const COMPARE_PRICES = gql`
-query ComparePrices($prodQty: [ProductQty], $city: String!, $id_price_list:String!){
-  comparePrices(prodQty:$prodQty,city:$city,id_price_list:$id_price_list)
-}
-`
+  query ComparePrices($prodQty: [ProductQty], $city: String!, $id_price_list: String!) {
+    comparePrices(prodQty: $prodQty, city: $city, id_price_list: $id_price_list)
+  }
+`;
 
 export const ORDER_MINIMUM_PRICE = gql`
-query minimumPrice($city: String!, $store: String){
-  minimum_price(city:$city, store: $store)
-}
-`
+  query minimumPrice($city: String!, $store: String) {
+    minimum_price(city: $city, store: $store)
+  }
+`;

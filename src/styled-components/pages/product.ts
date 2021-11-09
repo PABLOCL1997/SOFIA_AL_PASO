@@ -7,7 +7,7 @@ export const Header = styled.div`
   justify-content: space-between;
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 20px;
-    justify-content:  space-between;
+    justify-content: space-between;
   }
 `;
 
@@ -90,7 +90,7 @@ export const Col2 = styled.div`
 
 export const Image = styled.div<{ src: string; srcSet?: string }>`
   height: 354px;
-  background: url(${props => props.src}) no-repeat center center / contain;
+  background: url(${(props) => props.src}) no-repeat center center / contain;
 
   @media screen and (max-width: ${BREAKPOINT}) {
     height: 250px;
@@ -279,7 +279,7 @@ export const EstimatedPrice = styled.div<{ visible?: boolean }>`
   text-align: left;
   color: var(--font);
   padding: 5px 10px;
-  display: ${props => (props.visible ? "block" : "none")};
+  display: ${(props) => (props.visible ? "block" : "none")};
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 5px 0;
   }
@@ -292,7 +292,7 @@ export const Label = styled.div<{ visible?: boolean }>`
   text-align: left;
   color: var(--font);
   padding: 0 10px 5px 0;
-  display: ${props => (props.visible ? "block" : "none")};
+  display: ${(props) => (props.visible ? "block" : "none")};
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 20px;
     line-height: 20px;
@@ -336,7 +336,7 @@ export const OutOfStock = styled.span`
 `;
 
 export const BreadWrap = styled.div`
-  margin: 35px 0;  
+  margin: 35px 0;
   padding: 0;
   ul {
     li {
@@ -361,7 +361,7 @@ export const MainContainer = styled.div`
 
   @media screen and (max-width: 768px) {
     .main-container {
-        padding: 0;
+      padding: 0;
     }
   }
-`
+`;

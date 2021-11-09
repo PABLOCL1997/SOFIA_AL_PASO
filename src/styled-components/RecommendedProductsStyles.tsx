@@ -58,8 +58,7 @@ const CloseWrapper = styled.div`
     opacity: 0.8;
   }
 `;
-const QtyInput = styled.input`
-`
+const QtyInput = styled.input``;
 const Qty = styled.div`
   position: relative;
   display: flex;
@@ -89,7 +88,7 @@ const Qty = styled.div`
     position: absolute;
     cursor: pointer;
     right: 10px;
-    transform: rotate(180deg)
+    transform: rotate(180deg);
   }
 `;
 
@@ -301,14 +300,14 @@ const DeliveryTimeIcon = styled.div`
   padding: 10px;
   border-radius: 20px;
   border: 0;
-  width:40px;
-  height:40px;
-  img{
+  width: 40px;
+  height: 40px;
+  img {
     width: 20px;
     height: 20px;
   }
   @media screen and (max-width: ${BREAKPOINT}) {
-    display:none;
+    display: none;
   }
 `;
 
@@ -321,7 +320,7 @@ const DiscountPercentIcon = styled.div`
   border: 0;
   width: 25px;
   height: 25px;
-  img{
+  img {
     width: 15px;
     height: 14px;
     position: relative;
@@ -329,7 +328,7 @@ const DiscountPercentIcon = styled.div`
     left: -5px;
   }
   @media screen and (max-width: ${BREAKPOINT}) {
-    display:none;
+    display: none;
   }
 `;
 
@@ -367,5 +366,5 @@ export {
   QtyInput,
   DeliveryTimeIcon,
   DiscountPercentIcon,
-  DiscountLabel
-}
+  DiscountLabel,
+};

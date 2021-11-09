@@ -4,12 +4,8 @@ import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
 import { enableGmap, setLatLng } from "../utils/googlemaps";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "./Loader")
-);
-const Crosshair = React.lazy(
-  () => import(/* webpackChunkName: "Crosshair" */ "./Images/Crosshair")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
+const Crosshair = React.lazy(() => import(/* webpackChunkName: "Crosshair" */ "./Images/Crosshair"));
 
 const MapContainer = styled.div`
   margin-top: 40px;
@@ -101,17 +97,15 @@ const Map: FC<Props> = () => {
           console.log(errors);
         },
         {
-          timeout: 5000
+          timeout: 5000,
         }
       );
     }
-  }; 
+  };
 
   useEffect(() => {
     enableGmap();
   }, []);
-
-
 
   return (
     <Suspense fallback={<Loader />}>
@@ -119,10 +113,10 @@ const Map: FC<Props> = () => {
         <h2>{t("checkout.delivery.map.title")}</h2>
         <MapWrapper>
           <Pin>{t("checkout.delivery.map.pin")}</Pin>
-           <Geo onClick={geoLocate}>
+          <Geo onClick={geoLocate}>
             <Crosshair />
             <span>{t("checkout.delivery.map.geo")}</span>
-          </Geo> 
+          </Geo>
           <div id="gmap"></div>
         </MapWrapper>
       </MapContainer>

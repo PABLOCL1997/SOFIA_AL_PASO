@@ -1,5 +1,5 @@
 export interface ActivateProps {
-    onNext: Function;
-    onBack: Function;
-    error: string;
+  onNext: Function;
+  onBack: Function;
+  error: string;
 }

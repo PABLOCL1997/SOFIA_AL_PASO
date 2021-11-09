@@ -1,16 +1,16 @@
 export enum Steps {
-    Choosing,
-    Detailing
+  Choosing,
+  Detailing,
 }
 
 export enum ShippingMethod {
-    Delivery,
-    Pickup
+  Delivery,
+  Pickup,
 }
 
 export enum Changes {
-    DeliveryToPickup,
-    PickupToPickup,
-    PickupToDelivery,
-    DeliveryToDelivery
+  DeliveryToPickup,
+  PickupToPickup,
+  PickupToDelivery,
+  DeliveryToDelivery,
 }

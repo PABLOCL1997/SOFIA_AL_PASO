@@ -5,12 +5,8 @@ import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
 import useProducts from "../../hooks/useProducts";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const ProductSlider = React.lazy(() =>
-  import(/* webpackChunkName: "ProductSlider" */ "./ProductSlider")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const ProductSlider = React.lazy(() => import(/* webpackChunkName: "ProductSlider" */ "./ProductSlider"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 
 const Container = styled.section`
@@ -19,7 +15,7 @@ const Container = styled.section`
   margin: 0 auto 0;
   padding: 0;
   min-height: 421px;
-  
+
   margin-bottom: 40px;
   @media screen and (max-width: ${BREAKPOINT}) {
     min-height: 408px;
@@ -63,7 +59,6 @@ const Container = styled.section`
   }
 `;
 
-
 const CtaWrapper = styled.div`
   text-align: center;
 
@@ -73,26 +68,21 @@ const CtaWrapper = styled.div`
   }
 `;
 
-type Props = {
-};
+type Props = {};
 
 const Promotions: FC<Props> = () => {
   const { t } = useTranslation();
-  const { products } = useProducts(9, true)
+  const { products } = useProducts(9, true);
 
   return (
-      <Container>
-          <ProductSlider products={products} useArrows={window.innerHeight < 600} isPromotions={true} />
-          <CtaWrapper>
-            <Link to="/productos/promociones">
-              <Cta
-                action={() => {}}
-                text={t("homepage.promotions.seeall")}
-                filled={true}
-              />
-            </Link>
-          </CtaWrapper>
-      </Container>
+    <Container>
+      <ProductSlider products={products} useArrows={window.innerHeight < 600} isPromotions={true} />
+      <CtaWrapper>
+        <Link to="/productos/promociones">
+          <Cta action={() => {}} text={t("homepage.promotions.seeall")} filled={true} />
+        </Link>
+      </CtaWrapper>
+    </Container>
   );
 };
 

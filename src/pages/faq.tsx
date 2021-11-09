@@ -6,9 +6,7 @@ import DelayedWrapper from "../components/DelayedWrapper";
 import { useTranslation } from "react-i18next";
 import useMinimumPrice from "../hooks/useMinimumPrice";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 
 const Header = styled.div`
   position: relative;
@@ -66,7 +64,7 @@ const Question = styled.div<{ active: boolean }>`
     line-height: 1.5em;
     letter-spacing: 0.01em;
     color: var(--black);
-    display: ${props => (props.active ? "block" : "none")};
+    display: ${(props) => (props.active ? "block" : "none")};
   }
 `;
 
@@ -112,59 +110,59 @@ type Question = {
 type Props = {};
 const Faq: FC<Props> = () => {
   const { t } = useTranslation();
-  const minimumPrice = useMinimumPrice()
+  const minimumPrice = useMinimumPrice();
 
   const [question, setQuestion] = useState(0);
 
   const questions: Array<Question> = [
     {
       title: `¿Hay un costo mínimo para realizar una compra online?`,
-      text: `Existe hasta el momento un monto mínimo de Bs ${minimumPrice}.-`
+      text: `Existe hasta el momento un monto mínimo de Bs ${minimumPrice}.-`,
     },
     {
       title: `¿Cuánto demora la entrega de los pedidos?`,
-      text: `Se entrega dentro de las 24 horas hábiles de lunes a viernes.`
+      text: `Se entrega dentro de las 24 horas hábiles de lunes a viernes.`,
     },
     {
       title: `¿Cómo sé que mi pedido está registrado?`,
-      text: `Al finalizar tu orden recibirás un correo electrónico con un número de pedido, lo que significa que la orden está registrada.`
+      text: `Al finalizar tu orden recibirás un correo electrónico con un número de pedido, lo que significa que la orden está registrada.`,
     },
     {
       title: `¿Qué ocurre si hay un problema con mi orden, si demora, o no recibí confirmación?`,
-      text: `Puedes  comunicarte al 784 45000 o escribirnos a info@sofia.com.bo`
+      text: `Puedes  comunicarte al 784 45000 o escribirnos a info@sofia.com.bo`,
     },
     {
       title: `¿Cómo puedo cancelar una orden?`,
-      text: `Para cancelar una orden puedes comunicarte al 784 45000 o escribirnos a info@sofia.com.bo, o enviarnos un inbox a nuestro Facebook.`
+      text: `Para cancelar una orden puedes comunicarte al 784 45000 o escribirnos a info@sofia.com.bo, o enviarnos un inbox a nuestro Facebook.`,
     },
     {
       title: `¿Cómo puedo modificar una orden?`,
-      text: `Para modificar una orden puedes comunicarte al  784 45000 o escribirnos a info@sofia.com.bo, o enviarnos un inbox a nuestro Facebook.`
+      text: `Para modificar una orden puedes comunicarte al  784 45000 o escribirnos a info@sofia.com.bo, o enviarnos un inbox a nuestro Facebook.`,
     },
     {
       title: `¿Por qué se canceló mi orden?`,
-      text: `Tu orden se pudo haber cancelado excepcionalmente por falta de stock de los productos que elegiste, de todos modos nos comunicaríamos contigo, primero para corroborar que estás de acuerdo o remplazar por otros productos. También tu orden puede cancelarse porque  la zona que registraste no está dentro de nuestro rango de entrega.`
+      text: `Tu orden se pudo haber cancelado excepcionalmente por falta de stock de los productos que elegiste, de todos modos nos comunicaríamos contigo, primero para corroborar que estás de acuerdo o remplazar por otros productos. También tu orden puede cancelarse porque  la zona que registraste no está dentro de nuestro rango de entrega.`,
     },
     {
       title: `¿Cómo realizo el seguimiento de mi pedido?`,
-      text: `Puedes comunicarte al  784 45000 o escribirnos a info@sofia.com.bo, o enviarnos un inbox a nuestro Facebook.`
+      text: `Puedes comunicarte al  784 45000 o escribirnos a info@sofia.com.bo, o enviarnos un inbox a nuestro Facebook.`,
     },
     {
       title: `¿Cómo puedo devolver un producto?`,
-      text: `Para devolver un producto puedes comunicarte al  78445000 o enviarnos un inbox a nuestro Facebook, pero para esto debe haber una razón que amerite la devolución o el cambio del producto. Nuestro personal de control de calidad se contactará contigo y debes preservar el producto con la cadena de frío adecuada.`
+      text: `Para devolver un producto puedes comunicarte al  78445000 o enviarnos un inbox a nuestro Facebook, pero para esto debe haber una razón que amerite la devolución o el cambio del producto. Nuestro personal de control de calidad se contactará contigo y debes preservar el producto con la cadena de frío adecuada.`,
     },
     {
       title: `¿Está mi domicilio  dentro del radio de entregas de pedidos?`,
-      text: `Prueba  ingresando tu dirección en el mapa, si te permite marcar tu casa es porque sí llegamos hasta esa zona. Nuestro sistema de chequeo corroborará de todos modos si tu domicilio entra en la zona de distribución a hogar.`
+      text: `Prueba  ingresando tu dirección en el mapa, si te permite marcar tu casa es porque sí llegamos hasta esa zona. Nuestro sistema de chequeo corroborará de todos modos si tu domicilio entra en la zona de distribución a hogar.`,
     },
     {
       title: `¿Qué hago si me enviaron producto con fecha corta de vencimiento?`,
-      text: `Los productos se entregan con fechas que se pueden consumir y por políticas de la empresa se pueden entregar todavía. Si tienes alguna consulta o reclamo no dudes en comunicarte con nosotros.`
+      text: `Los productos se entregan con fechas que se pueden consumir y por políticas de la empresa se pueden entregar todavía. Si tienes alguna consulta o reclamo no dudes en comunicarte con nosotros.`,
     },
     {
       title: `¿Cómo realizo un pedido para mi tienda o por mayor?`,
-      text: `Si tienes Código de Cliente: Puedes hacer tu pedido al 784 45000 o con el preventista de tu zona. Para la apertura de código puedes comunicarte a nuestro Whatsapp business y seguir los pasos que te indica o Puedes escribirnos un inbox indicando tu nombre, celular, ciudad y zona de tu tienda para comunicarte con un ejecutivo de ventas.`
-    }
+      text: `Si tienes Código de Cliente: Puedes hacer tu pedido al 784 45000 o con el preventista de tu zona. Para la apertura de código puedes comunicarte a nuestro Whatsapp business y seguir los pasos que te indica o Puedes escribirnos un inbox indicando tu nombre, celular, ciudad y zona de tu tienda para comunicarte con un ejecutivo de ventas.`,
+    },
   ];
 
   useEffect(() => {
@@ -192,9 +190,7 @@ const Faq: FC<Props> = () => {
         <Footer>
           <div className="main-container">
             <h2>{t("faq.footer.title")}</h2>
-            <p
-              dangerouslySetInnerHTML={{ __html: t("faq.footer.contact") }}
-            ></p>
+            <p dangerouslySetInnerHTML={{ __html: t("faq.footer.contact") }}></p>
           </div>
         </Footer>
       </DelayedWrapper>

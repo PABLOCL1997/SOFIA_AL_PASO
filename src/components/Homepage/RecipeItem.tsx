@@ -2,18 +2,10 @@ import React, { FC, Suspense } from "react";
 import styled from "styled-components";
 import { BREAKPOINT } from "../../utils/constants";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const Chart = React.lazy(() =>
-  import(/* webpackChunkName: "Chart" */ "../Images/Chart")
-);
-const Clock = React.lazy(() =>
-  import(/* webpackChunkName: "Clock" */ "../Images/Clock")
-);
-const User = React.lazy(() =>
-  import(/* webpackChunkName: "User" */ "../Images/User")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const Chart = React.lazy(() => import(/* webpackChunkName: "Chart" */ "../Images/Chart"));
+const Clock = React.lazy(() => import(/* webpackChunkName: "Clock" */ "../Images/Clock"));
+const User = React.lazy(() => import(/* webpackChunkName: "User" */ "../Images/User"));
 
 const Container = styled.a`
   max-width: 230px;
@@ -113,30 +105,24 @@ type Props = {
 
 const RecipeItem: FC<Props> = ({ item, index }) => {
   return (
-      <Container href={item.link} target="_blank">
-          <Image
-            className="lazyload"
-            width="230"
-            height="150"
-            src={`/images/recipes/recipe_${index}.webp`}
-            alt={item.title}
-          />
-        <IconBox>
-          <Icon>
-            <Chart />
-            <span>{item.difficulty}</span>
-          </Icon>
-          <Icon>
-            <Clock />
-            <span>{item.mins}</span>
-          </Icon>
-          <Icon>
-            <User />
-            <span>{item.people}</span>
-          </Icon>
-        </IconBox>
-        <Title>{item.title}</Title>
-      </Container>
+    <Container href={item.link} target="_blank">
+      <Image className="lazyload" width="230" height="150" src={`/images/recipes/recipe_${index}.webp`} alt={item.title} />
+      <IconBox>
+        <Icon>
+          <Chart />
+          <span>{item.difficulty}</span>
+        </Icon>
+        <Icon>
+          <Clock />
+          <span>{item.mins}</span>
+        </Icon>
+        <Icon>
+          <User />
+          <span>{item.people}</span>
+        </Icon>
+      </IconBox>
+      <Title>{item.title}</Title>
+    </Container>
   );
 };
 

@@ -16,8 +16,8 @@ export default async () => {
     return {
       headers: {
         ...headers,
-        Authorization: `${token.get()}`
-      }
+        Authorization: `${token.get()}`,
+      },
     };
   });
 
@@ -41,7 +41,7 @@ export default async () => {
         id: Int!
         defaultAddressId: Int
         defaultAddressLabel: String
-        idPriceList: Int,
+        idPriceList: Int
         agency: String
       }
       type Product {
@@ -84,16 +84,9 @@ export default async () => {
           const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
           if (queryResult) {
             let { cartItems } = queryResult;
-            const item = cartItems.findIndex(
-              p => p.entity_id === product.entity_id
-            );
+            const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
             if (item >= 0) {
-              if (
-                product.replace &&
-                cartItems[item].qty === product.qty &&
-                cartItems[item].special_price === product.special_price
-              )
-                return cartItems;
+              if (product.replace && cartItems[item].qty === product.qty && cartItems[item].special_price === product.special_price) return cartItems;
 
               if (!product.replace) {
                 product.qty = Number(product.qty) + Number(cartItems[item].qty);
@@ -117,9 +110,7 @@ export default async () => {
           const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
           if (queryResult) {
             let { cartItems } = queryResult;
-            const item = cartItems.findIndex(
-              p => p.entity_id === product.entity_id
-            );
+            const item = cartItems.findIndex((p) => p.entity_id === product.entity_id);
             if (item >= 0) {
               cartItems.splice(item, 1);
             }
@@ -138,9 +129,9 @@ export default async () => {
             return cartItems;
           }
           return [];
-        }
-      }
-    }
+        },
+      },
+    },
   });
 
   const initData = { cartItems: [], userInfo: [] };
@@ -150,7 +141,7 @@ export default async () => {
   await persistCache({
     cache,
     storage: window.localStorage,
-    key: process.env.REACT_APP_CACHE_NAME
+    key: process.env.REACT_APP_CACHE_NAME,
   });
 
   return client;

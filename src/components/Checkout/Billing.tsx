@@ -6,9 +6,7 @@ import { useQuery } from "react-apollo";
 import { DETAILS } from "../../graphql/user/queries";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
 const Container = styled.div``;
 
@@ -75,7 +73,7 @@ const Other = styled.button`
 
 type Props = {
   updateOrder: Function;
-  localUserData: any
+  localUserData: any;
 };
 
 const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
@@ -83,14 +81,14 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
   const [other, setOther] = useState(false);
   const [inputs, setInputs] = useState({});
   const { data: userData } = useQuery(DETAILS);
-  const specialAddress =  localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0
-  const { agency } = useCityPriceList()
+  const specialAddress = localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0;
+  const { agency } = useCityPriceList();
   const [fields, setFields] = useState<string[]>([]);
 
   const onChange = (key: string, value: string) => {
     setInputs({
       ...inputs,
-      [key]: value
+      [key]: value,
     });
   };
 
@@ -101,7 +99,7 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
         lastname: userData.details.lastname,
         email: userData.details.email,
         nit: userData.details.nit,
-        phone: userData.details.phone
+        phone: userData.details.phone,
       });
     }
   };
@@ -124,12 +122,11 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
 
   useEffect(() => {
     if (agency) {
-      setFields(["firstname", "lastname", "email", "nit", "phone"])
+      setFields(["firstname", "lastname", "email", "nit", "phone"]);
     } else {
-      setFields(["firstname", "lastname", "email", "nit"])
+      setFields(["firstname", "lastname", "email", "nit"]);
     }
-
-  }, [agency])
+  }, [agency]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -151,13 +148,7 @@ const Billing: FC<Props> = ({ updateOrder, localUserData }) => {
             </InputGroup>
           ))}
         </Form>
-        {!specialAddress && (
-        <Other onClick={() => setOther(!other)}>
-          {t(
-            !other ? "checkout.billing.other_person" : "checkout.billing.to_me"
-          )}
-        </Other>
-        )}
+        {!specialAddress && <Other onClick={() => setOther(!other)}>{t(!other ? "checkout.billing.other_person" : "checkout.billing.to_me")}</Other>}
       </Container>
     </Suspense>
   );

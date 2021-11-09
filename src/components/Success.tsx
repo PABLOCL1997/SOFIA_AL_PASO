@@ -29,7 +29,7 @@ type Props = {};
 const Success: FC<Props> = () => {
   const { data } = useQuery(GET_USER, {});
   const [hideSuccess] = useMutation(SET_USER, {
-    variables: { user: { showSuccess: "" } }
+    variables: { user: { showSuccess: "" } },
   });
 
   useEffect(() => {
@@ -49,15 +49,7 @@ const Success: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  return (
-    <Container
-      className={
-        data.userInfo.length && data.userInfo[0].showSuccess ? "visible" : ""
-      }
-    >
-      {data.userInfo.length ? data.userInfo[0].showSuccess : ""}
-    </Container>
-  );
+  return <Container className={data.userInfo.length && data.userInfo[0].showSuccess ? "visible" : ""}>{data.userInfo.length ? data.userInfo[0].showSuccess : ""}</Container>;
 };
 
 export default Success;

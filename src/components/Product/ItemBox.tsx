@@ -5,18 +5,12 @@ import { useTranslation } from "react-i18next";
 import { toLink } from "../../utils/string";
 import { BREAKPOINT, customStyles } from "../../utils/constants";
 import DiscountIcon from "../../assets/images/descuento.svg";
-import {
-  NewDiscount,
-  ProductLink,
-  BottomCard
-} from "../../styled-components/ItemBoxStyles";
+import { NewDiscount, ProductLink, BottomCard } from "../../styled-components/ItemBoxStyles";
 import useCart from "../../hooks/useCart";
 import useProduct from "../../hooks/useProduct";
 import { Link } from "react-router-dom";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
 const Container = styled.div`
   position: relative;
@@ -66,8 +60,6 @@ const Discount = styled.div`
     }
   }
 `;
-
-
 
 const NewLabel = styled.span`
   position: absolute;
@@ -210,7 +202,7 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
   text-align: left;
   color: ${customStyles.black};
   padding: 5px 0;
-  opacity: ${props => (props.visible ? 1 : 0)};
+  opacity: ${(props) => (props.visible ? 1 : 0)};
 `;
 
 const Label = styled.div<{ visible?: boolean }>`
@@ -220,7 +212,7 @@ const Label = styled.div<{ visible?: boolean }>`
   text-align: center;
   color: #808080;
   padding: 5px 10px;
-  opacity: ${props => (props.visible ? 1 : 0)};
+  opacity: ${(props) => (props.visible ? 1 : 0)};
 `;
 
 const MaxUnits = styled.div`
@@ -260,11 +252,10 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
   const { related } = useProduct(product.name);
 
   const replaceWidthFormatImage = (name: string, width: string, format?: string) => {
-    if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`)
-    if (name.includes(".jpeg")) return name.replace(".jpeg", `_${width}.${format ? format : "jpeg"}`)
-    if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`)
-  }
- 
+    if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`);
+    if (name.includes(".jpeg")) return name.replace(".jpeg", `_${width}.${format ? format : "jpeg"}`);
+    if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`);
+  };
 
   const discount = (1 - product.special_price / product.price) * 100;
 
@@ -278,74 +269,44 @@ const ItemBox: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false
         )}
 
         <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
-            {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
-              <img
-                className="lazyload"
-                width="200px"
-                height="200px"
-                srcSet={
-                  webp ?
-                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px", "webp")}` :
-                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},`
-                }
-                style={{ margin: "0 auto", display: "block" }}
-                alt={product.name}
-              />
+          {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
+          <img
+            className="lazyload"
+            width="200px"
+            height="200px"
+            srcSet={webp ? `${replaceWidthFormatImage(product.image.split(",")[0], "200px", "webp")}` : `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},`}
+            style={{ margin: "0 auto", display: "block" }}
+            alt={product.name}
+          />
 
-            <Title>
-              {product.useKGS
-                ? `${product.name} DE ${Number(product.weight)
-                    .toFixed(2)
-                    .replace(".", ",")} KGS APROX.`
-                : product.name}
-              <EstimatedPrice visible={product.useKGS}>
-                (Bs.{" "}
-                {(product.special_price / product.weight)
-                  .toFixed(2)
-                  .replace(".", ",")}
-                / KGS)
-              </EstimatedPrice>
-            </Title>
-             {product.maxPerUser > 0 && (
-              <MaxUnits>
-                {t("itembox.max_per_user", { units: product.maxPerUser })}
-              </MaxUnits>
-            )}
+          <Title>
+            {product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}
+            <EstimatedPrice visible={product.useKGS}>(Bs. {(product.special_price / product.weight).toFixed(2).replace(".", ",")}/ KGS)</EstimatedPrice>
+          </Title>
+          {product.maxPerUser > 0 && <MaxUnits>{t("itembox.max_per_user", { units: product.maxPerUser })}</MaxUnits>}
 
-            <BottomCard>
-              <PriceBox>
-                {discount > 0 && (
-                  <DiscountPrice>
-                    Bs. {product.price.toFixed(2).replace(".", ",")}
-                  </DiscountPrice>
-                )}
+          <BottomCard>
+            <PriceBox>
+              {discount > 0 && <DiscountPrice>Bs. {product.price.toFixed(2).replace(".", ",")}</DiscountPrice>}
 
-                <Price>
-                  Bs.{" "}
-                  {(product.special_price || 0).toFixed(2).replace(".", ",")}
-                </Price>
-              </PriceBox>
-              <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
-            </BottomCard>
+              <Price>Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}</Price>
+            </PriceBox>
+            <Label visible={product.useKGS}>{t("itembox.price_label")}</Label>
+          </BottomCard>
         </Link>
         {product.stock > 0 ? (
           <Pill>
             <Qty>
-              <select
-                defaultValue={1}
-                onChange={event => setQty(Number(event.target.value))}
-              >
-                {[...(Array(dropDownQty).keys() as any)]
-                  .slice(1)
-                  .map((opt: any, index: number) => (
-                    <option key={index} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
+              <select defaultValue={1} onChange={(event) => setQty(Number(event.target.value))}>
+                {[...(Array(dropDownQty).keys() as any)].slice(1).map((opt: any, index: number) => (
+                  <option key={index} value={opt}>
+                    {opt}
+                  </option>
+                ))}
               </select>
               {/* Chevron */}
               <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Qty>
             <Add onClick={() => addAndGo(product, qty, related)}>{t("itembox.add")}</Add>

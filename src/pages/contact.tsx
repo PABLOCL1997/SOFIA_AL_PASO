@@ -1,28 +1,20 @@
 import React, { Suspense, FC, useEffect, useState, useRef } from "react";
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from "@apollo/react-hooks";
 import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
 import { CONTACT_TITLE } from "../meta";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { useTranslation } from "react-i18next";
-import { SET_USER } from '../graphql/user/mutations';
-import { SEND_CONTACT_FORM } from "../graphql/user/mutations"
+import { SET_USER } from "../graphql/user/mutations";
+import { SEND_CONTACT_FORM } from "../graphql/user/mutations";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 
-const Switch = React.lazy(() =>
-  import(/* webpackChunkName: "Switch" */ "../components/Switch")
-);
+const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../components/Switch"));
 
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron")
-);
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../components/Images/Chevron"));
 
-const Cta = React.lazy(() =>
-  import(/* webpackChunkName: "Cta" */ "../components/Cta")
-);
+const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../components/Cta"));
 
 const Header = styled.div`
   position: relative;
@@ -68,13 +60,13 @@ const Container = styled.div`
     text-align: center;
     margin: 20px auto;
 
-    &.footer{
+    &.footer {
       margin: 50px auto;
     }
   }
 `;
 
-const InputGroup = styled.div<{ key: string; }>`
+const InputGroup = styled.div<{ key: string }>`
   display: flex;
   flex-direction: column;
   label {
@@ -86,7 +78,8 @@ const InputGroup = styled.div<{ key: string; }>`
     color: var(--font);
     padding-left: 20px;
   }
-  input, textarea {
+  input,
+  textarea {
     background: var(--whiter);
     border-radius: 44px;
     font-family: MullerMedium;
@@ -103,10 +96,10 @@ const InputGroup = styled.div<{ key: string; }>`
       border: 1px solid var(--red);
     }
   }
-  textarea{
+  textarea {
     resize: none;
   }
-  &.extend{
+  &.extend {
     grid-column-start: 1;
     grid-column-end: 3;
   }
@@ -161,23 +154,23 @@ const Form = styled.div`
       grid-column-end: 3;
     }
   }
-  > div.extend{
+  > div.extend {
     grid-column-start: 1;
     grid-column-end: 3;
 
-    &.center{
+    &.center {
       margin: 0 auto;
     }
   }
 `;
 
 const options: { [key: string]: Array<string> } = {
-  question: ["Productos","Envíos","Reclamo","Prensa","Otra"]
+  question: ["Productos", "Envíos", "Reclamo", "Prensa", "Otra"],
 };
 
 declare global {
   interface Window {
-    grecaptcha:any;
+    grecaptcha: any;
   }
 }
 
@@ -185,104 +178,99 @@ type Props = {};
 const Faq: FC<Props> = () => {
   const { t } = useTranslation();
   const [inputs, setInputs] = useState<any>({
-    question: "Productos"
+    question: "Productos",
   });
   const [sending, setSending] = useState<boolean>(false);
   const [showSuccess] = useMutation(SET_USER, {});
-  const [sendContactForm] = useMutation(SEND_CONTACT_FORM ,{
-    onError: e => console.error('err', e),
-    onCompleted: d => {
+  const [sendContactForm] = useMutation(SEND_CONTACT_FORM, {
+    onError: (e) => console.error("err", e),
+    onCompleted: (d) => {
       if (d.sendcontactform) {
-        return d.sendcontactform.status
+        return d.sendcontactform.status;
       } else {
         return null;
       }
-    }
-  })
+    },
+  });
 
-  const onChange = (
-    key: string,
-    value: string | number | null,
-    preventMap: boolean = false
-  ) => {
-    if (key.indexOf("phone") >= 0 && String(value).length > 8)
-      value = String(value).substring(0, 8);
+  const onChange = (key: string, value: string | number | null, preventMap: boolean = false) => {
+    if (key.indexOf("phone") >= 0 && String(value).length > 8) value = String(value).substring(0, 8);
     setInputs({
       ...inputs,
-      [key]: value
+      [key]: value,
     });
   };
 
   const sendMail = async () => {
-    let items = Object.fromEntries(Object.entries(inputs).filter(([key, value]) => value !== "") )
+    let items = Object.fromEntries(Object.entries(inputs).filter(([key, value]) => value !== ""));
     let isValid = Object.keys(items).length == 7;
 
-    if(!isValid){
+    if (!isValid) {
       showSuccess({
         variables: {
           user: {
-            showModal: "Por favor completar todos los campos."
-          }
-        }
+            showModal: "Por favor completar todos los campos.",
+          },
+        },
       });
-      return
+      return;
     }
 
-    setSending(false)
+    setSending(false);
 
     let result = await sendContactForm({
-      variables:{
+      variables: {
         name: inputs.name,
         email: inputs.email,
         question: inputs.question,
         phone: inputs.phone,
         city: inputs.city,
         country: inputs.country,
-        message: inputs.message
-      }
-    })
+        message: inputs.message,
+      },
+    });
 
-    if(result?.data?.sendcontactform?.status){
+    if (result?.data?.sendcontactform?.status) {
       showSuccess({
         variables: {
           user: {
-            showModal: "Email enviado con éxito"
-          }
-        }
+            showModal: "Email enviado con éxito",
+          },
+        },
       });
     } else {
       showSuccess({
         variables: {
           user: {
-            showModal: "Hubo un error al enviar el mail"
-          }
-        }
+            showModal: "Hubo un error al enviar el mail",
+          },
+        },
       });
     }
 
-    setSending(true)
-  }
+    setSending(true);
+  };
 
   useEffect(() => {
     let desc = `¿No encuentras lo que buscas? Escríbenos a
     info@sofia.com.bo o completa el formulario en nuestra web y nos pondremos en
-    contacto. En Sofía, se confía.`
-    document.getElementsByTagName("meta")[4].content = desc
+    contacto. En Sofía, se confía.`;
+    document.getElementsByTagName("meta")[4].content = desc;
     document.title = CONTACT_TITLE;
 
-    const script = document.createElement("script")
-    script.src = "https://www.google.com/recaptcha/api.js?render=6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr"
+    const script = document.createElement("script");
+    script.src = "https://www.google.com/recaptcha/api.js?render=6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr";
     script.addEventListener("load", () => {
-      window.grecaptcha.ready(function() {
-        window.grecaptcha.execute('6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr', {action: 'submit'}).then((token: any) => {
-          var el = document.getElementsByClassName('grecaptcha-badge')[1] as HTMLElement;
-          el.style.display = 'none';
-          if(token){
-            setSending(true)
+      window.grecaptcha.ready(function () {
+        window.grecaptcha.execute("6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr", { action: "submit" }).then((token: any) => {
+          var el = document.getElementsByClassName("grecaptcha-badge")[1] as HTMLElement;
+          el.style.display = "none";
+          if (token) {
+            setSending(true);
           }
         });
       });
-    })
+    });
     document.body.appendChild(script);
   }, []);
 
@@ -297,25 +285,13 @@ const Faq: FC<Props> = () => {
         <Container>
           <h2>¿Dudas o sugerencias? Escríbenos</h2>
           <Form>
-            {[
-              "name",
-              "email",
-              "question",
-              "phone",
-              "city",
-              "country",
-              "message"
-            ].map((key: string) => {
+            {["name", "email", "question", "phone", "city", "country", "message"].map((key: string) => {
               return (
-                <InputGroup className={key == "message" ? 'extend' : ''} key={key}>
+                <InputGroup className={key == "message" ? "extend" : ""} key={key}>
                   <label>{t("contact.form." + key)}</label>
                   {options[key] && (
                     <SelectWrapper>
-                      <select
-                        name={`${key}`}
-                        onChange={evt => onChange(key, evt.target.value)}
-                        value={options[0]}
-                      >
+                      <select name={`${key}`} onChange={(evt) => onChange(key, evt.target.value)} value={options[0]}>
                         {options[key].map((opt: string) => (
                           <option key={opt}>{opt}</option>
                         ))}
@@ -323,45 +299,25 @@ const Faq: FC<Props> = () => {
                       <Chevron />
                     </SelectWrapper>
                   )}
-                  {key !== "question" && key !== "message" &&
-                  (
+                  {key !== "question" && key !== "message" && (
                     <input
                       name={`${key}`}
                       value={inputs[key] || ""}
-                      onChange={evt => onChange(key, evt.target.value)}
+                      onChange={(evt) => onChange(key, evt.target.value)}
                       pattern={key.indexOf("phone") >= 0 ? "[0-9]*" : ""}
                       type={key.indexOf("phone") >= 0 ? "number" : "text"}
                       placeholder={t("contact.form." + key)}
                     />
                   )}
-                  {key === "message" &&
-                  (
-                    <textarea
-                      name={`${key}`}
-                      value={inputs[key] || ""}
-                      onChange={evt => onChange(key, evt.target.value)}
-                      placeholder={t("contact.form." + key)}
-                    />
-                  )}
+                  {key === "message" && <textarea name={`${key}`} value={inputs[key] || ""} onChange={(evt) => onChange(key, evt.target.value)} placeholder={t("contact.form." + key)} />}
                 </InputGroup>
               );
             })}
             <div className="extend center">
-              <div
-               className="g-recaptcha"
-               data-sitekey="6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr"
-               data-size="invisible"
-               data-badge="inline"
-              >
-              </div>
+              <div className="g-recaptcha" data-sitekey="6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr" data-size="invisible" data-badge="inline"></div>
             </div>
             <div className="extend center">
-              <Cta
-                active={sending}
-                filled={true}
-                text={t("contact.send")}
-                action={sendMail}
-              />
+              <Cta active={sending} filled={true} text={t("contact.send")} action={sendMail} />
             </div>
           </Form>
           <h2 className="footer">¡Gracias por confiar!</h2>

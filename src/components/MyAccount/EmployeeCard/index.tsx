@@ -1,2 +1,1 @@
-import EmployeeCard from "./EmployeeCard"
-
+import EmployeeCard from "./EmployeeCard";

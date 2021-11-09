@@ -9,10 +9,7 @@ import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import useMinimumPrice from "../../hooks/useMinimumPrice";
 
-
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 const DiscountCall = React.lazy(() => import(/* webpackChunkName: "DiscountCall" */ "../Discount"));
 
@@ -211,7 +208,6 @@ const EmployeeMsg = styled.span`
 `;
 
 const ErrorText = styled.div<{ margin: boolean }>`
-
   font-family: MullerMedium;
   font-size: 14px;
   line-height: 14px;
@@ -219,12 +215,11 @@ const ErrorText = styled.div<{ margin: boolean }>`
   color: var(--red);
   border: 0;
   background: none;
-  margin: 20px 0 ${props => (props.margin ? "40px" : "0")};
+  margin: 20px 0 ${(props) => (props.margin ? "40px" : "0")};
   &:hover {
     opacity: 0.8;
   }
 `;
-
 
 type Props = {
   order: Function;
@@ -237,44 +232,44 @@ type Props = {
 
 const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetails, ready }) => {
   const { t } = useTranslation();
-  const minimumPrice = useMinimumPrice()
+  const minimumPrice = useMinimumPrice();
 
   const [type, setType] = useState("");
   const [discount, setDiscount] = useState("0");
   const [discountAmount, setDiscountAmount] = useState<any>(0);
   const [showCoupon, setShowCoupon] = useState(false);
-  const [bsDiscount, setBsDiscount] = useState(0)
+  const [bsDiscount, setBsDiscount] = useState(0);
   let arr: any[] = [];
   const [coupon, setCoupon] = useState("");
   const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
     fetchPolicy: "network-only",
-    onCompleted: d => {
-      const prodQty = d.cartItems.map(({ name, qty}: ProductType)=> { 
-        return {name, qty}
-      })
-      if(localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0){
+    onCompleted: (d) => {
+      const prodQty = d.cartItems.map(({ name, qty }: ProductType) => {
+        return { name, qty };
+      });
+      if (localUserData.userInfo[0].idPriceList && localUserData.userInfo[0].idPriceList > 0) {
         getDiscounts({
-          variables:{
-            city:localUserData?.userInfo[0]?.cityKey || "SC",
-            id_price_list:String(localUserData?.userInfo[0]?.idPriceList) || "0",
-            prodQty
-          }
-        })
+          variables: {
+            city: localUserData?.userInfo[0]?.cityKey || "SC",
+            id_price_list: String(localUserData?.userInfo[0]?.idPriceList) || "0",
+            prodQty,
+          },
+        });
       }
-    }
-  })
-  const  { data } = useQuery(GET_CART_ITEMS, {});
+    },
+  });
+  const { data } = useQuery(GET_CART_ITEMS, {});
   const { data: localUserData } = useQuery(GET_USER, {});
   const [getDiscounts, { data: dataDiscounts }] = useLazyQuery(COMPARE_PRICES, {
     fetchPolicy: "network-only",
-    onCompleted: d => console.log('get disc', d)
-  })
+    onCompleted: (d) => console.log("get disc", d),
+  });
   const [checkCoupon] = useMutation(CHECK_COUPON, {
-    variables: { name: coupon }
+    variables: { name: coupon },
   });
   const totalAmount = GET_TOTAL(data.cartItems);
   const [showError] = useMutation(SET_USER, {
-    variables: { user: { showError: t("checkout.ticket.coupon.error") } }
+    variables: { user: { showError: t("checkout.ticket.coupon.error") } },
   });
 
   const addCoupon = async () => {
@@ -283,10 +278,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
       setType(response.data.coupon.type);
       if (response.data.coupon.type === "%") {
         setDiscount(parseFloat(String(Number(response.data.coupon.discount_amount))).toFixed(2));
-        setDiscountAmount(parseFloat(String(Number(totalAmount.replace(',','.') * response.data.coupon.discount_amount / 100))).toFixed(2))
+        setDiscountAmount(parseFloat(String(Number((totalAmount.replace(",", ".") * response.data.coupon.discount_amount) / 100))).toFixed(2));
       } else {
         setDiscount(String(response.data.coupon.discount_amount));
-        setDiscountAmount(String(response.data.coupon.discount_amount))
+        setDiscountAmount(String(response.data.coupon.discount_amount));
       }
       setCoupon(response.data.coupon.code);
     } catch (e) {
@@ -302,14 +297,14 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
     updateOrder("coupon", {
       coupon,
       discount,
-      type
+      type,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discount]);
 
-  useEffect(()=> {
-    getCartItems()
-  }, [localUserData])
+  useEffect(() => {
+    getCartItems();
+  }, [localUserData]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -318,22 +313,16 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
         <Rows>
           {data &&
             data.cartItems &&
-            data.cartItems.map((product: ProductType, index:number) => (
+            data.cartItems.map((product: ProductType, index: number) => (
               <Row key={product.entity_id}>
                 <span>
-                  {product.qty} x{" "}
-                  {product.useKGS
-                    ? `${product.name} DE ${Number(product.weight)
-                        .toFixed(2)
-                        .replace(".", ",")} KGS APROX.`
-                    : product.name}
+                  {product.qty} x {product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}
                 </span>
                 <span>
                   Bs.{" "}
                   {Number((product?.qty ?? 0) * product.special_price)
                     .toFixed(2)
                     .replace(".", ",")}
-
                 </span>
               </Row>
             ))}
@@ -347,35 +336,22 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           <b>Bs. 0,00</b>
         </Shipping>
         {/* only on b2c */}
-        {localUserData && !localUserData?.userInfo[0]?.agency && !localUserData?.userInfo[0]?.idPriceList ?
-        <Coupon>
-          {!showCoupon && (
-            <button onClick={() => setShowCoupon(true)}>
-              {t("checkout.ticket.coupon.ask")}
-            </button>
-          )}
-          {showCoupon && (
-            <InputBox>
-              <input
-                value={coupon}
-                onChange={evt => setCoupon(evt.target.value)}
-                type="text"
-                placeholder={t("checkout.ticket.coupon.placeholder")}
-              />
-              {Number(discount) === 0 && (
-                <button onClick={addCoupon} className="add">
-                  {t("checkout.ticket.coupon.add")}
-                </button>
-              )}
-              {Number(discount) > 0 && (
-                <button onClick={removeCoupon}>
-                  {t("checkout.ticket.coupon.delete")}
-                </button>
-              )}
-            </InputBox>
-          )}
-        </Coupon>
-        : null}
+        {localUserData && !localUserData?.userInfo[0]?.agency && !localUserData?.userInfo[0]?.idPriceList ? (
+          <Coupon>
+            {!showCoupon && <button onClick={() => setShowCoupon(true)}>{t("checkout.ticket.coupon.ask")}</button>}
+            {showCoupon && (
+              <InputBox>
+                <input value={coupon} onChange={(evt) => setCoupon(evt.target.value)} type="text" placeholder={t("checkout.ticket.coupon.placeholder")} />
+                {Number(discount) === 0 && (
+                  <button onClick={addCoupon} className="add">
+                    {t("checkout.ticket.coupon.add")}
+                  </button>
+                )}
+                {Number(discount) > 0 && <button onClick={removeCoupon}>{t("checkout.ticket.coupon.delete")}</button>}
+              </InputBox>
+            )}
+          </Coupon>
+        ) : null}
         {Number(discountAmount) > 0 && (
           <Discount>
             <span>{t("checkout.ticket.discount")}</span>
@@ -385,42 +361,30 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
         <Line />
         <Total>
           <b>{t("checkout.ticket.total")}</b>
-          <b>
-            Bs.{" "}
-            {String(
-              Number(
-                Number(totalAmount.replace(",", ".")) - parseFloat(discountAmount)
-              ).toFixed(2)
-            ).replace(".", ",")}
-          </b>
+          <b>Bs. {String(Number(Number(totalAmount.replace(",", ".")) - parseFloat(discountAmount)).toFixed(2)).replace(".", ",")}</b>
         </Total>
-        {dataDiscounts && !localUserData?.userInfo[0]?.agency && !!(localUserData && localUserData?.userInfo[0]?.idPriceList && localUserData?.userInfo[0]?.idPriceList > 0) && userDetails.details.employee && (
-          <EmployeeMsg>¡Te has ahorrado Bs. {Number(dataDiscounts?.comparePrices || 0).toFixed(2).replace('.',',')} por ser colaborador!</EmployeeMsg>
-        )}
+        {dataDiscounts &&
+          !localUserData?.userInfo[0]?.agency &&
+          !!(localUserData && localUserData?.userInfo[0]?.idPriceList && localUserData?.userInfo[0]?.idPriceList > 0) &&
+          userDetails.details.employee && (
+            <EmployeeMsg>
+              ¡Te has ahorrado Bs.{" "}
+              {Number(dataDiscounts?.comparePrices || 0)
+                .toFixed(2)
+                .replace(".", ",")}{" "}
+              por ser colaborador!
+            </EmployeeMsg>
+          )}
 
         <CtaWrapper>
-          {!processing && (
-            <Cta
-              active={ready && Number(totalAmount.replace(",", ".")) >= minimumPrice}
-              filled={true}
-              text={t("checkout.ticket.send")}
-              action={order}
-            />
-          )}
+          {!processing && <Cta active={ready && Number(totalAmount.replace(",", ".")) >= minimumPrice} filled={true} text={t("checkout.ticket.send")} action={order} />}
           {processing && (
             <LoaderWrapper>
-              <img
-                src="/images/loader.svg"
-                width="50px"
-                height="50px"
-                alt="loader"
-              />
+              <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
             </LoaderWrapper>
           )}
         </CtaWrapper>
-        {Number(totalAmount.replace(",", ".")) < minimumPrice && (
-          <ErrorText margin={false}>El valor mínimo para la compra es de Bs. {minimumPrice}.</ErrorText>
-        )}
+        {Number(totalAmount.replace(",", ".")) < minimumPrice && <ErrorText margin={false}>El valor mínimo para la compra es de Bs. {minimumPrice}.</ErrorText>}
       </Container>
     </Suspense>
   );

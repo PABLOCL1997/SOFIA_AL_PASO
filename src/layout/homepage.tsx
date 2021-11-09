@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
 import useUser from "../hooks/useUser";
 
-import 'lazysizes'
+import "lazysizes";
 import "lazysizes/plugins/unveilhooks/ls.unveilhooks";
 import "lazysizes/plugins/blur-up/ls.blur-up.js";
 import "lazysizes/plugins/object-fit/ls.object-fit.js";
@@ -33,7 +33,7 @@ const Loader = styled.div`
   img {
     max-width: 100%;
   }
-`
+`;
 
 type Props = {
   page?: string;
@@ -42,14 +42,9 @@ type Props = {
 const LayoutHomepage: FC<Props> = ({ children, page }) => {
   const { data } = useQuery(CHECK_TOKEN, { fetchPolicy: "network-only" });
   const { logout, toggleLoginModal } = useUser();
-  
+
   useEffect(() => {
-    if (
-      token.get() !== "null" &&
-      data &&
-      data.checkToken &&
-      !data.checkToken.status
-    ) {
+    if (token.get() !== "null" && data && data.checkToken && !data.checkToken.status) {
       logout();
       token.delete();
 
@@ -60,13 +55,16 @@ const LayoutHomepage: FC<Props> = ({ children, page }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
   return (
-  <Suspense fallback={<Loader>
-    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-  </Loader>}>
-    <Wrapper className={page ? page : ""}>{children}</Wrapper>
-  </Suspense>
+    <Suspense
+      fallback={
+        <Loader>
+          <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+        </Loader>
+      }
+    >
+      <Wrapper className={page ? page : ""}>{children}</Wrapper>
+    </Suspense>
+  );
+};
 
-  )
-}
-
-export default LayoutHomepage
+export default LayoutHomepage;

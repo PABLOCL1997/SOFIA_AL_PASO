@@ -1,7 +1,7 @@
 import React, { Suspense, FC, useEffect } from "react";
 import styled from "styled-components";
 
-import {  fromLink } from "../utils/string";
+import { fromLink } from "../utils/string";
 import { BREAKPOINT } from "../utils/constants";
 import { PRODUCTS_TITLE } from "../meta";
 import DelayedWrapper from "../components/DelayedWrapper";
@@ -10,24 +10,10 @@ import BreadCrumbs from "../components/Breadcrumbs/Breadcrumbs";
 import useCategory from "../hooks/useCategory";
 import useProducts from "../hooks/useProducts";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
-);
-const ProductList = React.lazy(() =>
-  import(
-    /* webpackChunkName: "ProductList" */ "../components/Products/ProductList"
-  )
-);
-const FilterSideBar = React.lazy(() =>
-  import(
-    /* webpackChunkName: "FilterSideBar" */ "../components/Products/FilterSideBar"
-  )
-);
-const CategoryBanner = React.lazy(() =>
-  import(
-    /* webpackChunkName: "CategoryBanner" */ "../components/Products/CategoryBanner"
-  )
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
+const ProductList = React.lazy(() => import(/* webpackChunkName: "ProductList" */ "../components/Products/ProductList"));
+const FilterSideBar = React.lazy(() => import(/* webpackChunkName: "FilterSideBar" */ "../components/Products/FilterSideBar"));
+const CategoryBanner = React.lazy(() => import(/* webpackChunkName: "CategoryBanner" */ "../components/Products/CategoryBanner"));
 
 const Wrapper = styled.div`
   /*  padding: var(--padding); */
@@ -76,9 +62,8 @@ export const Container = styled.div`
 
 type Props = {};
 const Products: FC<Props> = () => {
-
-  const { categories, category_id, category, subcategory, lastlevel } = useCategory()
-  const { loading, products, total, limit, query, offset, order, search, brand, brands, setOrder, setBrand } = useProducts()
+  const { categories, category_id, category, subcategory, lastlevel } = useCategory();
+  const { loading, products, total, limit, query, offset, order, search, brand, brands, setOrder, setBrand } = useProducts();
 
   useEffect(() => {
     // set title
@@ -90,21 +75,16 @@ const Products: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <div className="main-container">
         <Container>
-
-          <CategoryBanner isMobile={
-                window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
-          } />
+          <CategoryBanner isMobile={window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))} />
 
           <BreadWrap>
             <BreadCrumbs
-              isMobile={
-                window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))
-              }
+              isMobile={window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))}
               alias={[
                 {
                   oldName: "productos",
-                  newName: "Tienda"
-                }
+                  newName: "Tienda",
+                },
               ]}
             />
           </BreadWrap>
@@ -116,40 +96,16 @@ const Products: FC<Props> = () => {
             <Wrapper>
               <Col1>
                 {categories && categories.length && brands && (
-                  <FilterSideBar
-                    categories={categories ? categories : []}
-                    count={total}
-                    offset={offset}
-                    limit={limit}
-                    brands={brands}
-                    order={order}
-                    orderQuery={setOrder}
-                    setBrand={setBrand}
-                  />
+                  <FilterSideBar categories={categories ? categories : []} count={total} offset={offset} limit={limit} brands={brands} order={order} orderQuery={setOrder} setBrand={setBrand} />
                 )}
               </Col1>
               <Col2>
-                {(loading ) && (
+                {loading && (
                   <LoaderWrapper>
-                    <img
-                      src="/images/loader.svg"
-                      width="50px"
-                      height="50px"
-                      alt="loader"
-                    />
+                    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
                   </LoaderWrapper>
                 )}
-                {!loading && brands && (
-                  <ProductList
-                    brands={brands}
-                    orderQuery={setOrder}
-                    products={products}
-                    count={total}
-                    offset={offset}
-                    limit={limit}
-                    parentOrder={order}
-                  />
-                )}
+                {!loading && brands && <ProductList brands={brands} orderQuery={setOrder} products={products} count={total} offset={offset} limit={limit} parentOrder={order} />}
               </Col2>
             </Wrapper>
           </Container>

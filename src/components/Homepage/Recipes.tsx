@@ -5,16 +5,10 @@ import { RecipeType } from "./RecipeItem";
 import { Desktop, Mobile } from "../ResponsiveContainers";
 import { BREAKPOINT } from "../../utils/constants";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
-const RecipeItem = React.lazy(() =>
-  import(/* webpackChunkName: "RecipeItem" */ "./RecipeItem")
-);
-const Slider = React.lazy(() =>
-  import(/* webpackChunkName: "Slider" */ "react-slick")
-);
+const RecipeItem = React.lazy(() => import(/* webpackChunkName: "RecipeItem" */ "./RecipeItem"));
+const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 
 const Container = styled.div`
   background: url(/images/bg.jpg) no-repeat top center / cover;
@@ -108,29 +102,29 @@ const recipesData: Array<RecipeType> = [
     difficulty: "fácil",
     mins: "150m",
     people: 6,
-    link: "https://www.sofia.com.bo/recetas/"
+    link: "https://www.sofia.com.bo/recetas/",
   },
   {
     title: "Pork Belly",
     difficulty: "fácil",
     mins: "40m",
     people: 4,
-    link: "https://www.sofia.com.bo/recetas/"
+    link: "https://www.sofia.com.bo/recetas/",
   },
   {
     title: "Fondo de Pollo",
     difficulty: "fácil",
     mins: "150m",
     people: 6,
-    link: "https://www.sofia.com.bo/recetas/"
+    link: "https://www.sofia.com.bo/recetas/",
   },
   {
     title: "Cordon Bleu",
     difficulty: "fácil",
     mins: "25m",
     people: 4,
-    link: "https://www.sofia.com.bo/recetas/"
-  }
+    link: "https://www.sofia.com.bo/recetas/",
+  },
 ];
 
 type Props = {};
@@ -144,7 +138,7 @@ const Benefits: FC<Props> = () => {
     arrows: false,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
   };
 
   return (
@@ -159,12 +153,7 @@ const Benefits: FC<Props> = () => {
               ))}
             </Grid>
             <CtaWrapper>
-              <Cta
-                blank={true}
-                action={"https://www.sofia.com.bo/recetas/"}
-                text={t("homepage.recipes.seeall")}
-                filled={true}
-              />
+              <Cta blank={true} action={"https://www.sofia.com.bo/recetas/"} text={t("homepage.recipes.seeall")} filled={true} />
             </CtaWrapper>
           </div>
         </Desktop>
@@ -179,12 +168,7 @@ const Benefits: FC<Props> = () => {
               </Slider>
             </SliderContainer>
             <CtaWrapper>
-              <Cta
-                blank={true}
-                action={"https://www.sofia.com.bo/recetas/"}
-                text={t("homepage.recipes.seeall")}
-                filled={true}
-              />
+              <Cta blank={true} action={"https://www.sofia.com.bo/recetas/"} text={t("homepage.recipes.seeall")} filled={true} />
             </CtaWrapper>
           </div>
         </Mobile>

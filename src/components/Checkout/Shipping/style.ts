@@ -26,7 +26,7 @@ export const Title = styled.div`
 `;
 
 export const Form = styled.div<{ hidden: boolean }>`
-  display: ${props => (props.hidden ? "none" : "grid")};
+  display: ${(props) => (props.hidden ? "none" : "grid")};
   grid-template-columns: 1fr 1fr;
   column-gap: 24px;
   row-gap: 30px;
@@ -47,7 +47,7 @@ export const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
     text-transform: uppercase;
     color: var(--font);
     padding-left: 20px;
-    opacity: ${props => (props.withLabel ? "1" : "0")};
+    opacity: ${(props) => (props.withLabel ? "1" : "0")};
   }
   input {
     background: var(--whiter);
@@ -71,7 +71,7 @@ export const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
 export const OtherAddressWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
 
 export const Other = styled.button<{ margin: boolean }>`
   font-family: MullerMedium;
@@ -81,7 +81,7 @@ export const Other = styled.button<{ margin: boolean }>`
   color: var(--red);
   border: 0;
   background: none;
-  margin: 20px 0 ${props => (props.margin ? "40px" : "0")};
+  margin: 20px 0 ${(props) => (props.margin ? "40px" : "0")};
   &:hover {
     opacity: 0.8;
   }
@@ -95,7 +95,7 @@ export const CheckboxGroup = styled.div<{ red: boolean }>`
   margin-bottom: 20px;
   input {
     -webkit-appearance: none;
-    border: 2px solid var(--${props => (props.red ? "red" : "font")});
+    border: 2px solid var(--${(props) => (props.red ? "red" : "font")});
     border-radius: 4px;
     width: 20px;
     height: 20px;
@@ -151,7 +151,7 @@ export const SelectWrapper = styled.div`
 `;
 export const StarWrap = styled.div`
   position: relative;
-  padding:0 0 2px 5px;
+  padding: 0 0 2px 5px;
 
   &:hover {
     > div {

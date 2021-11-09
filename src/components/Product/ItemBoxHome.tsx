@@ -5,23 +5,17 @@ import { useTranslation } from "react-i18next";
 import { capitalizeFirstLetter, toLink } from "../../utils/string";
 import { BREAKPOINT, customStyles } from "../../utils/constants";
 import DiscountIcon from "../../assets/images/descuento.svg";
-import {
-  NewDiscount,
-
-  BottomCardHome
-} from "../../styled-components/ItemBoxStyles";
+import { NewDiscount, BottomCardHome } from "../../styled-components/ItemBoxStyles";
 import useCart from "../../hooks/useCart";
 import { Link } from "react-router-dom";
 import useProduct from "../../hooks/useProduct";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
-const Container = styled.div<{ featured?: boolean, homeCategories?: boolean}>`
+const Container = styled.div<{ featured?: boolean; homeCategories?: boolean }>`
   position: relative;
   background: #ffffff;
-  display:flex;
+  display: flex;
   flex-direction: column;
   box-shadow: 0px 2px 9px rgb(0 0 0 / 9%);
   border-radius: 16px;
@@ -29,8 +23,9 @@ const Container = styled.div<{ featured?: boolean, homeCategories?: boolean}>`
   margin: 20px 10px 15px;
   padding: 14px 10px 22px;
 
-  ${({ featured, homeCategories }) => featured ?
-    `
+  ${({ featured, homeCategories }) =>
+    featured
+      ? `
     margin: 0 16px 0 0; 
     padding: 1px 0 0;
     height: 303px;
@@ -56,8 +51,8 @@ const Container = styled.div<{ featured?: boolean, homeCategories?: boolean}>`
       }
     }
     `
-  : homeCategories ? 
-    `
+      : homeCategories
+      ? `
     margin: 0 16px 0 0;
     padding: 1px 0 0;
     height: 358px;
@@ -91,8 +86,8 @@ const Container = styled.div<{ featured?: boolean, homeCategories?: boolean}>`
       &:first-child {
         margin: 0 16px;
       }
-    ` 
-  : ``}
+    `
+      : ``}
 `;
 
 const NewLabel = styled.span`
@@ -163,9 +158,9 @@ const Price = styled.span`
 `;
 
 const Weight = styled.span`
-font-family: MullerBold;
-color: var(--black);
-`
+  font-family: MullerBold;
+  color: var(--black);
+`;
 
 const DiscountPrice = styled.span`
   color: ${customStyles.darkGrey};
@@ -176,7 +171,7 @@ const DiscountPrice = styled.span`
   line-height: 16px;
 `;
 
-const Pill = styled.div<{ featured: boolean, homeCategories: boolean }>`
+const Pill = styled.div<{ featured: boolean; homeCategories: boolean }>`
   border: 1px solid var(--yellow);
   border-radius: 30px;
   display: flex;
@@ -185,15 +180,14 @@ const Pill = styled.div<{ featured: boolean, homeCategories: boolean }>`
   margin: 16px auto 22px;
 
   ${({ featured, homeCategories }) =>
-   featured || homeCategories ? 
-   `   
+    featured || homeCategories
+      ? `   
    @media screen and (max-width: ${BREAKPOINT}) {
      left: 12px;
      bottom: 24px;
     }
    `
-   :
-  ``}
+      : ``}
 `;
 
 const Qty = styled.div`
@@ -239,15 +233,14 @@ const Add = styled.button`
 
 const Block = styled.div`
   padding-top: 9px;
-`
+`;
 
 const Label = styled.div<{ visible?: boolean }>`
-  
   // line-height: 12px;
   text-align: left;
   color: #808080;
 
-  opacity: ${props => (props.visible ? 1 : 0)};
+  opacity: ${(props) => (props.visible ? 1 : 0)};
 `;
 
 const MaxUnits = styled.div`
@@ -274,7 +267,7 @@ const OutOfStock = styled.span`
 `;
 
 const PriceAndWeight = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
@@ -287,21 +280,20 @@ type Props = {
   dropDownQty?: number;
   webp?: boolean;
   featured?: boolean;
-  homeCategories?: boolean; 
+  homeCategories?: boolean;
 };
 
 const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = false, featured = false, homeCategories = false }) => {
   const { t } = useTranslation();
   const [qty, setQty] = useState<number>(1);
-  const { addAndGo } = useCart()
+  const { addAndGo } = useCart();
   const { related } = useProduct(product.name);
 
   const replaceWidthFormatImage = (name: string, width: string, format?: string) => {
-    if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`)
-    if (name.includes(".jpeg")) return name.replace(".jpeg", `_${width}.${format ? format : "jpeg"}`)
-    if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`)
-  }
- 
+    if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`);
+    if (name.includes(".jpeg")) return name.replace(".jpeg", `_${width}.${format ? format : "jpeg"}`);
+    if (name.includes(".png")) return name.replace(".png", `_${width}.${format ? format : "png"}`);
+  };
 
   const discount = (1 - product.special_price / product.price) * 100;
 
@@ -316,87 +308,50 @@ const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = f
         {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
         <Block>
           <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
-              <img
-                className="lazyload"
-                width="200px"
-                height="200px"
-                srcSet={
-                  webp ?
-                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px", "webp")}` :
-                  `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},`
-                }
-                style={{ margin: "0 auto", display: "block" }}
-                alt={product.name}
-              />
+            <img
+              className="lazyload"
+              width="200px"
+              height="200px"
+              srcSet={webp ? `${replaceWidthFormatImage(product.image.split(",")[0], "200px", "webp")}` : `${replaceWidthFormatImage(product.image.split(",")[0], "200px")},`}
+              style={{ margin: "0 auto", display: "block" }}
+              alt={product.name}
+            />
 
             <Title>
-            {product.useKGS
-                ? `${product.name} DE ${Number(product.weight)
-                    .toFixed(2)
-                    .replace(".", ",")} KGS APROX.`
-                : product.name}
+              {product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}
               {/* {capitalizeFirstLetter(product.name)} */}
             </Title>
-             {product.maxPerUser > 0 && (
-              <MaxUnits>
-                {t("itembox.max_per_user", { units: product.maxPerUser })}
-              </MaxUnits>
-            )}
-            </Link>
-          </Block>
-          <PriceAndWeight>
-            {product.useKGS ?
+            {product.maxPerUser > 0 && <MaxUnits>{t("itembox.max_per_user", { units: product.maxPerUser })}</MaxUnits>}
+          </Link>
+        </Block>
+        <PriceAndWeight>
+          {product.useKGS ? (
             <BottomCardHome>
-              <Label visible={true}>
-              (Bs.{" "}
-                  {(product.special_price / product.weight)
-                    .toFixed(2)
-                    .replace(".", ",")}
-                  / KGS)
-              </Label>
+              <Label visible={true}>(Bs. {(product.special_price / product.weight).toFixed(2).replace(".", ",")}/ KGS)</Label>
             </BottomCardHome>
-             : null}
-            <BottomCardHome>
-            {product.useKGS ?
-              <Label visible={true}>
-                Estimado:&nbsp;
-              </Label>
-            :
-              <Label visible={true}>
-                Precio:&nbsp;
-              </Label>
-            }
-              <PriceBox>
-                {discount > 0 && (
-                  <DiscountPrice>
-                    Bs. {product.price.toFixed(2).replace(".", ",")}
-                  </DiscountPrice>
-                )} 
+          ) : null}
+          <BottomCardHome>
+            {product.useKGS ? <Label visible={true}>Estimado:&nbsp;</Label> : <Label visible={true}>Precio:&nbsp;</Label>}
+            <PriceBox>
+              {discount > 0 && <DiscountPrice>Bs. {product.price.toFixed(2).replace(".", ",")}</DiscountPrice>}
 
-                <Price>
-                  Bs.{" "}{(product.special_price || 0).toFixed(2).replace(".", ",")}
-                </Price>
-              </PriceBox> 
-            </BottomCardHome>
-          </PriceAndWeight>
+              <Price>Bs. {(product.special_price || 0).toFixed(2).replace(".", ",")}</Price>
+            </PriceBox>
+          </BottomCardHome>
+        </PriceAndWeight>
         {product.stock > 0 ? (
           <Pill featured={featured} homeCategories={homeCategories}>
             <Qty>
-              <select
-                defaultValue={1}
-                onChange={event => setQty(Number(event.target.value))}
-              >
-                {[...(Array(dropDownQty).keys() as any)]
-                  .slice(1)
-                  .map((opt: any, index: number) => (
-                    <option key={index} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
+              <select defaultValue={1} onChange={(event) => setQty(Number(event.target.value))}>
+                {[...(Array(dropDownQty).keys() as any)].slice(1).map((opt: any, index: number) => (
+                  <option key={index} value={opt}>
+                    {opt}
+                  </option>
+                ))}
               </select>
               {/* Chevron */}
               <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1 1.38452L5.5 5.077L10 1.38452" stroke="#808080" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Qty>
             <Add onClick={() => addAndGo(product, qty, related)}>{t("itembox.add")}</Add>

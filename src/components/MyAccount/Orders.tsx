@@ -10,16 +10,9 @@ import { ADD_ITEM } from "../../graphql/cart/mutations";
 import { SET_USER } from "../../graphql/user/mutations";
 import Status from "./Status";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const Eye = React.lazy(
-  () => import(/* webpackChunkName: "Eye" */ "../Images/Eye")
-);
-const ContinueArrow = React.lazy(
-  () =>
-    import(/* webpackChunkName: "ContinueArrow" */ "../Images/ContinueArrow")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const Eye = React.lazy(() => import(/* webpackChunkName: "Eye" */ "../Images/Eye"));
+const ContinueArrow = React.lazy(() => import(/* webpackChunkName: "ContinueArrow" */ "../Images/ContinueArrow"));
 
 const Title = styled.div`
   display: flex;
@@ -248,13 +241,7 @@ const Detail = styled.div`
   > div {
     position: relative;
     padding: 25px 40px;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 50%,
-      rgba(255, 255, 255, 0) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);
     @media screen and (max-width: ${BREAKPOINT}) {
       padding: 25px 0;
       background: none;
@@ -403,16 +390,16 @@ type Props = {};
 
 const Orders: FC<Props> = () => {
   const { t } = useTranslation();
-  const NO_ORDER = 0
+  const NO_ORDER = 0;
   const [orderId, setOrderId] = useState(0);
   const [order, setOrder] = useState<UserOrder | any>({});
   const [rOrder, setROrder] = useState<any>({});
   const [rOrderId, setROrderId] = useState<any>({});
   const [addItem] = useMutation(ADD_ITEM);
   const [toggleCartModal] = useMutation(SET_USER, {});
-  
+
   const { data: orders, loading } = useQuery(ORDERS, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
   });
 
   const [getOrder, { loading: orderLoading }] = useLazyQuery(ORDER, {
@@ -422,39 +409,38 @@ const Orders: FC<Props> = () => {
       setOrder(d.order);
     },
   });
-  
+
   const [repeatOrder, { loading: loadingRepeat }] = useLazyQuery(ORDER, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
-      Promise.all( d.order.items.map(async (item: any) => {
-        await addItem({
-          variables: {
-            product: {
-              entity_id: item.entity_id,
-              name: item.name,
-              price: item.price,
-              qty: item.qty,
-              special_price: item.price,
-              sku: item.sku,
-              image: item.image.split(',')[0],
-              fullprice: item.price,
-              category_name: item.category_name,
-              useKGS: false,
-              categories: [],
-              description: false,
+      Promise.all(
+        d.order.items.map(async (item: any) => {
+          await addItem({
+            variables: {
+              product: {
+                entity_id: item.entity_id,
+                name: item.name,
+                price: item.price,
+                qty: item.qty,
+                special_price: item.price,
+                sku: item.sku,
+                image: item.image.split(",")[0],
+                fullprice: item.price,
+                category_name: item.category_name,
+                useKGS: false,
+                categories: [],
+                description: false,
+              },
             },
-          },
+          });
         })
-      })
-      )
-      .then(() => {
+      ).then(() => {
         toggleCartModal({
           variables: {
             user: { openCartModal: true },
           },
         });
-      })
-
+      });
     },
   });
 
@@ -485,14 +471,16 @@ const Orders: FC<Props> = () => {
               orders.orders.map((order: UserOrder) => (
                 <Body key={order.id}>
                   <span>
-                    <button onClick={() => {
-                      setOrderId(order.id)
-                      getOrder({
-                        variables: {
-                          orderId: order.id
-                        }
-                      })
-                      }}>
+                    <button
+                      onClick={() => {
+                        setOrderId(order.id);
+                        getOrder({
+                          variables: {
+                            orderId: order.id,
+                          },
+                        });
+                      }}
+                    >
                       <Eye />
                     </button>
                   </span>
@@ -505,37 +493,32 @@ const Orders: FC<Props> = () => {
                     {order.incrementId}
                   </span>
                   <span>
-                    <b>{t("account.orders.value")}:</b>Bs.{" "}
-                    {order.total.toFixed(2).replace(".", ",")}
+                    <b>{t("account.orders.value")}:</b>Bs. {order.total.toFixed(2).replace(".", ",")}
                   </span>
                   <span>
                     <Status incremendId={order.incrementId} />
                   </span>
 
                   <span>
-                    {loadingRepeat && 
-                      <img src="/images/loader.svg" width="15px" height="15px" alt="loader" />
-                    }
-                    {!loadingRepeat && 
+                    {loadingRepeat && <img src="/images/loader.svg" width="15px" height="15px" alt="loader" />}
+                    {!loadingRepeat && (
                       <button
                         style={borderRedRounded}
                         onClick={() => {
                           repeatOrder({
                             variables: {
-                              orderId: order.id
-                            }
-                          })
+                              orderId: order.id,
+                            },
+                          });
                         }}
                       >
                         {t("account.orders.button")}
                       </button>
-                    }
+                    )}
                   </span>
                 </Body>
               ))}
-            {!loading && orders && !orders.orders.length && (
-              <NoResults>{t("account.orders.no_results")}</NoResults>
-            )}
+            {!loading && orders && !orders.orders.length && <NoResults>{t("account.orders.no_results")}</NoResults>}
           </Grid>
         )}
         {orderId > 0 && orderLoading && (
@@ -550,9 +533,7 @@ const Orders: FC<Props> = () => {
               <span>{t("account.order.back")}</span>
             </HeaderLink>
             <Header>
-              <h2>
-                {t("account.order.title", { increment_id: order.incrementId })}
-              </h2>
+              <h2>{t("account.order.title", { increment_id: order.incrementId })}</h2>
               <span>
                 <Status incremendId={order.incrementId} />
               </span>
@@ -560,20 +541,10 @@ const Orders: FC<Props> = () => {
             <FormWrapper>
               <SectionTitle>{t("account.order.billing.title")}</SectionTitle>
               <Form>
-                {[
-                  "billingFirstname",
-                  "billingLastname",
-                  "billingEmail",
-                  "billingNit",
-                ].map((key: string) => (
+                {["billingFirstname", "billingLastname", "billingEmail", "billingNit"].map((key: string) => (
                   <InputGroup key={key}>
                     <label>{t("account.order.billing." + key)}</label>
-                    <input
-                      value={(order as any)[key] || ""}
-                      readOnly={true}
-                      type={"text"}
-                      placeholder={t("account.order.billing." + key)}
-                    />
+                    <input value={(order as any)[key] || ""} readOnly={true} type={"text"} placeholder={t("account.order.billing." + key)} />
                   </InputGroup>
                 ))}
               </Form>
@@ -581,23 +552,10 @@ const Orders: FC<Props> = () => {
             <FormWrapper>
               <SectionTitle>{t("account.order.shipping.title")}</SectionTitle>
               <Form>
-                {[
-                  "shippingFirstname",
-                  "shippingLastname",
-                  "shippingPhone",
-                  "shippingNit",
-                  "shippingStreet",
-                  "shippingCity",
-                  "shippingReference",
-                ].map((key: string) => (
+                {["shippingFirstname", "shippingLastname", "shippingPhone", "shippingNit", "shippingStreet", "shippingCity", "shippingReference"].map((key: string) => (
                   <InputGroup key={key}>
                     <label>{t("account.order.shipping." + key)}</label>
-                    <input
-                      value={(order as any)[key] || ""}
-                      readOnly={true}
-                      type={"text"}
-                      placeholder={t("account.order.shipping." + key)}
-                    />
+                    <input value={(order as any)[key] || ""} readOnly={true} type={"text"} placeholder={t("account.order.shipping." + key)} />
                   </InputGroup>
                 ))}
               </Form>
@@ -621,27 +579,15 @@ const Orders: FC<Props> = () => {
                   ))}
                 <Subtotal>
                   <b>{t("account.order.subtotal")}</b>
-                  <b>
-                    Bs.{" "}
-                    {order.subtotal &&
-                      order.subtotal.toFixed(2).replace(".", ",")}
-                  </b>
+                  <b>Bs. {order.subtotal && order.subtotal.toFixed(2).replace(".", ",")}</b>
                 </Subtotal>
                 <Envio>
                   <span>{t("account.order.shippingPrice")}</span>
-                  <span>
-                    Bs.{" "}
-                    {order.shippingPrice
-                      ? Number(order.shippingPrice).toFixed(2).replace(".", ",")
-                      : "0,00"}
-                  </span>
+                  <span>Bs. {order.shippingPrice ? Number(order.shippingPrice).toFixed(2).replace(".", ",") : "0,00"}</span>
                 </Envio>
                 <Total>
                   <b>{t("account.order.total")}</b>
-                  <b>
-                    Bs.{" "}
-                    {order.total && order.total.toFixed(2).replace(".", ",")}
-                  </b>
+                  <b>Bs. {order.total && order.total.toFixed(2).replace(".", ",")}</b>
                 </Total>
               </div>
             </Detail>

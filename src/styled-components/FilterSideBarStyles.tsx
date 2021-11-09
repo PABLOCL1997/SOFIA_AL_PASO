@@ -20,15 +20,15 @@ export const TitleWrap = styled.div`
 
 export const LevelSub = styled.div<{ show?: boolean; brandSelected?: boolean }>`
   position: absolute;
-  z-index: ${props => (props.show ? "1" : "-1")};
+  z-index: ${(props) => (props.show ? "1" : "-1")};
   background: white;
-  top: ${props => (props.brandSelected ? "48px" : "48px")};
+  top: ${(props) => (props.brandSelected ? "48px" : "48px")};
   bottom: 0;
   width: 100%;
   right: 0;
   overflow: hidden;
 
-  display: ${props => (props.show ? "flex" : "none")};
+  display: ${(props) => (props.show ? "flex" : "none")};
   flex-direction: column;
 
   padding-top: 5px;
@@ -41,17 +41,15 @@ export const LevelSub = styled.div<{ show?: boolean; brandSelected?: boolean }>`
 
 export const LevelSub2 = styled.div<{ show?: boolean; index?: any }>`
   position: absolute;
-  z-index: ${props => (props.index ? "20" : "0")};
+  z-index: ${(props) => (props.index ? "20" : "0")};
   background: white;
   top: 3px;
   bottom: 0;
   right: 0;
   width: 100%;
   overflow: hidden;
-  display: ${props => (props.show ? "flex" : "none")};
-  flex-direction: column;
-
-  ;
+  display: ${(props) => (props.show ? "flex" : "none")};
+  flex-direction: column; ;
 `;
 
 export const LevelSub3 = styled.div<{ show?: boolean }>`
@@ -63,7 +61,7 @@ export const LevelSub3 = styled.div<{ show?: boolean }>`
   right: 0;
   width: 100%;
   overflow: hidden;
-  display: ${props => (props.show ? "flex" : "flex")};
+  display: ${(props) => (props.show ? "flex" : "flex")};
   flex-direction: column;
   padding-top: 5px;
 
@@ -78,7 +76,7 @@ export const MarcasDesktop = styled.div`
 
 export const MarcasWrap = styled.div<{ hide?: boolean }>`
   margin-top: 30px;
-  display: ${props => (props.hide ? "none" : "block")};
+  display: ${(props) => (props.hide ? "none" : "block")};
   position: relative;
   z-index: 10;
   h3 {
@@ -97,7 +95,7 @@ export const MarcasWrap = styled.div<{ hide?: boolean }>`
 `;
 
 export const MarcasList = styled.ul<{ hide?: boolean }>`
-  display: ${props => (props.hide ? "none" : "block")};
+  display: ${(props) => (props.hide ? "none" : "block")};
 
   position: relative;
   z-index: 10;
@@ -297,9 +295,9 @@ export const Modal = styled.div`
 `;
 
 export const TabContent = styled.div<{ active: boolean; current?: number }>`
-  display: ${props => (props.active ? "block" : "none")};
+  display: ${(props) => (props.active ? "block" : "none")};
   overflow-y: scroll;
-  height: ${props => (props.current === 0 ? "550px" : "auto")};
+  height: ${(props) => (props.current === 0 ? "550px" : "auto")};
 `;
 
 export const TabsBtn = styled.div`
@@ -320,8 +318,7 @@ export const TabsBtn = styled.div`
 `;
 
 export const TabClick = styled.div<{ active: boolean }>`
-  border-bottom: 2px solid
-    ${props => (props.active ? customStyles.red : customStyles.darkGrey)};
+  border-bottom: 2px solid ${(props) => (props.active ? customStyles.red : customStyles.darkGrey)};
 
   width: 100%;
   text-align: center;
@@ -332,8 +329,7 @@ export const TabClick = styled.div<{ active: boolean }>`
     font-size: 14px;
     line-height: 20px;
     font-family: MullerBold;
-    color: ${props =>
-      props.active ? customStyles.red : customStyles.darkGrey};
+    color: ${(props) => (props.active ? customStyles.red : customStyles.darkGrey)};
   }
 `;
 
@@ -358,15 +354,9 @@ export const RadioLi = styled.li`
   }
 `;
 
-
 export const SmallCatImage = styled.img`
-
-
-max-width:18px;
-
-`
+  max-width: 18px;
+`;
 export const TitleCatImage = styled.img`
-
-max-width:22px;
-
-`
+  max-width: 22px;
+`;

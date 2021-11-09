@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Wrapper = styled.div``;
 
 const Main = styled.div<{ show: boolean }>`
-  opacity: ${props => (props.show ? 1 : 0)};
+  opacity: ${(props) => (props.show ? 1 : 0)};
   transition: opacity 0.2s linear;
   min-height: 100vh;
 `;
@@ -12,7 +12,7 @@ const Main = styled.div<{ show: boolean }>`
 const Loader = styled.div<{ noHeader: boolean }>`
   display: flex;
   align-items: center;
-  height: calc(100vh - ${props => (props.noHeader ? "130px" : "260px")});
+  height: calc(100vh - ${(props) => (props.noHeader ? "130px" : "260px")});
   width: 50px;
   margin: 0 auto;
   img {
@@ -25,11 +25,7 @@ type Props = {
   time?: number;
 };
 
-const DelayedWrapper: FC<Props> = ({
-  children,
-  noHeader = false,
-  time = 1000
-}) => {
+const DelayedWrapper: FC<Props> = ({ children, noHeader = false, time = 1000 }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {

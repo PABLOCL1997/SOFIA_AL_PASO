@@ -18,7 +18,7 @@ export const IngresarWrap = styled.div<{ action?: any }>`
   }
 
   @media screen and (max-width: 995px) {
-    display:flex;
+    display: flex;
     justify-content: center;
     span {
       display: none;
@@ -29,7 +29,7 @@ export const IngresarWrap = styled.div<{ action?: any }>`
 export const AddressHeader = styled.div`
   > div {
     grid-template-columns: 20px 100%;
-    display:grid;
+    display: grid;
   }
 
   span {
@@ -46,27 +46,23 @@ export const AddressHeader = styled.div`
     order: 4;
     grid-column: 1 / 5;
   }
-
-  
 `;
 
 export const RightMenu = styled.div`
+  display: flex;
+  align-items: center;
 
-display:flex;
-align-items: center;
+  > div {
+    margin-left: 15px;
+    margin-bottom: 0;
 
->div{
-  margin-left:15px;
-  margin-bottom:0;
-
-  svg{
-    width: 20px;
-    position: relative;
-    top: 3px;
+    svg {
+      width: 20px;
+      position: relative;
+      top: 3px;
+    }
   }
-}
-
-`
+`;
 
 export const Wrapper = styled.div``;
 
@@ -79,7 +75,7 @@ export const Fixed = styled.div<{ shadow: boolean }>`
   left: 0;
   top: 0;
   z-index: 11;
-  box-shadow: ${props => (props.shadow ? "0 0 15px #ccc" : "")};
+  box-shadow: ${(props) => (props.shadow ? "0 0 15px #ccc" : "")};
   @media screen and (max-width: 768px) {
     position: sticky;
     width: 100%;
@@ -98,11 +94,11 @@ export const Container = styled.div`
   grid-template-rows: 1fr;
   grid-template-columns: 100px 200px minmax(200px, 400px) 100px 150px 36px 36px;
   column-gap: 15px;
-  
+
   margin: 0 auto;
-  
+
   @media screen and (max-width: 768px) {
-    grid-template-columns: 1fr repeat(4,36px);
+    grid-template-columns: 1fr repeat(4, 36px);
     grid-template-rows: 1fr 36px 36px;
     row-gap: 5px;
     column-gap: 5px;
@@ -153,7 +149,7 @@ export const CartWrapper = styled.div<any>`
   position: relative;
   transition: all 0.2s linear;
   transform: scale(1);
-  animation: ${props => (props.big ? "pulse 1s infinite;" : "none")};
+  animation: ${(props) => (props.big ? "pulse 1s infinite;" : "none")};
   span {
     font-family: MullerBold;
     font-size: 8px;
@@ -171,7 +167,7 @@ export const CartWrapper = styled.div<any>`
     opacity: 0.8;
   }
   @media (max-width: ${BREAKPOINT}) {
-    display:flex;
+    display: flex;
     justify-content: center;
     span {
       right: 3px;
@@ -180,7 +176,7 @@ export const CartWrapper = styled.div<any>`
 `;
 
 export const MenuWrapper = styled.div<any>`
-  display:flex;
+  display: flex;
   justify-content: center;
   cursor: pointer;
   transition: opacity 0.2s linear;
@@ -250,7 +246,8 @@ export const MenuItem = styled.div`
     width: 20px;
     height: 20px;
   }
-  a, span {
+  a,
+  span {
     text-decoration: none;
     font-family: MullerMedium;
     font-size: 16px;
@@ -357,7 +354,7 @@ export const InputGroup = styled.div`
     grid-column: 1 / 5;
     margin-right: 0;
     height: 36px;
-    
+
     input {
       padding: 0 25px;
     }
@@ -377,7 +374,7 @@ export const InputGroup = styled.div`
   }
 `;
 
-export const Category = styled.div<{ showSubCategories: boolean, isVisible: boolean }>`
+export const Category = styled.div<{ showSubCategories: boolean; isVisible: boolean }>`
   align-items: center;
   margin-bottom: 30px;
   > svg {
@@ -392,10 +389,10 @@ export const Category = styled.div<{ showSubCategories: boolean, isVisible: bool
     color: var(--black);
     margin-left: 30px;
   }
-  ${({ isVisible }) => isVisible ? 'display: block;' : ' display:none; ' }
-  ${({ showSubCategories }) => showSubCategories ? ' li { display: block; }' : ' li { display:none; } '}
+  ${({ isVisible }) => (isVisible ? "display: block;" : " display:none; ")}
+  ${({ showSubCategories }) => (showSubCategories ? " li { display: block; }" : " li { display:none; } ")}
 `;
 
 export const Subcategory = styled.li`
-  margin: 14px 0px 14px 50px;  
-`
+  margin: 14px 0px 14px 50px;
+`;

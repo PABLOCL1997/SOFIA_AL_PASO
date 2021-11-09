@@ -36,25 +36,22 @@ export const Wrapper = styled.div`
 
   .slick-arrow.slick-next {
     background: url(${ArrowNext}) no-repeat center center / contain;
-    right:-32px;
-
+    right: -32px;
   }
 
   .slick-arrow.slick-prev {
     background: url(${ArrowPrev}) no-repeat center center / contain;
-    left:-32px;
+    left: -32px;
   }
 `;
 export const ImageContainer = styled.div<{ bg?: string }>`
   height: 100px;
   width: 100%;
 
-  background: url('${props => props.bg}') no-repeat
-    center center / cover;
+  background: url("${(props) => props.bg}") no-repeat center center / cover;
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    background: url('${props => props.bg}') no-repeat
-    center center / 100%;
+    background: url("${(props) => props.bg}") no-repeat center center / 100%;
   }
 `;
 

@@ -10,5 +10,5 @@ export const customStyles = {
   darkGrey: "#767474",
   black: "#2F2F2F",
   yellow: "#FECD00",
-  red:"#E30613"
+  red: "#E30613",
 };

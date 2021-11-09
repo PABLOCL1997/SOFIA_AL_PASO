@@ -1,7 +1,7 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const GET_USER2E_DETAILS = gql`
-query getB2EUserInfo($nit: String!) {
+  query getB2EUserInfo($nit: String!) {
     getB2EUserDetails(nit: $nit) {
       id_Cliente
       nit
@@ -23,16 +23,16 @@ query getB2EUserInfo($nit: String!) {
         categoriaCliente
       }
     }
-}
-`
+  }
+`;
 
 export const CLIENT_CREDIT = gql`
-query UserCredit ($idClient:Int!, $idAddress: Int!){
-  getB2EUserCredit(idClient: $idClient, idAddress: $idAddress){
-    idCliente
-    idDireccion
-    limiteCredito
-    creditoDisponible
+  query UserCredit($idClient: Int!, $idAddress: Int!) {
+    getB2EUserCredit(idClient: $idClient, idAddress: $idAddress) {
+      idCliente
+      idDireccion
+      limiteCredito
+      creditoDisponible
+    }
   }
-}
-`
+`;
