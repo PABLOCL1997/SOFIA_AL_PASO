@@ -54,11 +54,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const showCart = () => {
     trackGoToCartEvent();
     setOpen(false);
-    // if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
     toggleCartModal();
-    // } else {
-    //   toggleLoginModal();
-    // }
   };
 
   const myAccount = () => {
