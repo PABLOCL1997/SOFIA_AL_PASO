@@ -7,45 +7,28 @@ import { useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { GET_USER, DETAILS } from "../../graphql/user/queries";
 import { cities, KeyValue } from "../../utils/string";
 import { useMutation } from "react-apollo";
-import {
-  SET_USER,
-  ADD_ADDRESS,
-  REMOVE_ADDRESS,
-  UPDATE_B2E_ADDRESS
-} from "../../graphql/user/mutations";
+import { SET_USER, ADD_ADDRESS, REMOVE_ADDRESS, UPDATE_B2E_ADDRESS } from "../../graphql/user/mutations";
 import { UserType, AddressType } from "../../graphql/user/type";
 import { setLatLng } from "../../utils/googlemaps";
 import StarIcon from "../../assets/images/star.svg";
 import { GET_USER2E_DETAILS } from "../../graphql/b2e/queries";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const Pencil = React.lazy(() =>
-  import(/* webpackChunkName: "Pencil" */ "../Images/Pencil")
-);
-const Delete = React.lazy(() =>
-  import(/* webpackChunkName: "Delete" */ "../Images/Delete")
-);
-const Close = React.lazy(() =>
-  import(/* webpackChunkName: "Close" */ "../Images/Close")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const Pencil = React.lazy(() => import(/* webpackChunkName: "Pencil" */ "../Images/Pencil"));
+const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../Images/Delete"));
+const Close = React.lazy(() => import(/* webpackChunkName: "Close" */ "../Images/Close"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../Map"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
-);
-const Switch = React.lazy(() =>
-  import(/* webpackChunkName: "Switch" */ "../Switch")
-);
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
+const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../Switch"));
 
 const gridSpan2CSS = {
-  gridColumn: "1 / span 2"
+  gridColumn: "1 / span 2",
 } as React.CSSProperties;
 
 const emptyCSS = {} as React.CSSProperties;
 const bold = {
-  "fontWeight": "bold"
+  fontWeight: "bold",
 } as React.CSSProperties;
 
 const Title = styled.div`
@@ -203,7 +186,7 @@ const TooltipMobile = styled.div`
   background-color: transparent;
   text-align: left;
   font-size: 12px;
-  padding-top:5px;
+  padding-top: 5px;
   max-width: 220px;
   display: none;
 
@@ -241,7 +224,7 @@ const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
     text-transform: uppercase;
     color: var(--font);
     padding-left: 20px;
-    opacity: ${props => (props.withLabel ? "1" : "0")};
+    opacity: ${(props) => (props.withLabel ? "1" : "0")};
   }
   input {
     background: var(--whiter);
@@ -462,13 +445,13 @@ const Details: FC<Props> = () => {
   const [mapUsed, setMapUsed] = useState(false);
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [addressInputs, setAddressInputs] = useState<any>({
-    addressType: t("checkout.delivery.street")
+    addressType: t("checkout.delivery.street"),
   });
   const [addressArgs, setAddressArgs] = useState<AddressArgs>({ on: false });
   const [addressId, setAddressId] = useState(0);
-  const [loginB2bOpen, setLoginB2bOpen] = useState(false)
+  const [loginB2bOpen, setLoginB2bOpen] = useState(false);
   const [showError] = useMutation(SET_USER, {
-    variables: { user: { showError: t("account.error") } }
+    variables: { user: { showError: t("account.error") } },
   });
   const [setUser] = useMutation(SET_USER, {});
   // const [showSuccess] = useMutation(SET_USER, {
@@ -476,40 +459,38 @@ const Details: FC<Props> = () => {
   // });
 
   const { data: userData } = useQuery(GET_USER, {
-    onCompleted: d => console.log('data', d)
+    onCompleted: (d) => console.log("data", d),
   });
   const [getDetails, { data: userDetails, loading: userLoading }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
-    onCompleted: d => {
+    onCompleted: (d) => {
       getB2EDetails({
         variables: {
-          nit: d.details.nit
-        }
-      })
+          nit: d.details.nit,
+        },
+      });
       setInputs(d.details);
       // checkDefaultAddress(d.details.addresses);
-    }
+    },
   });
-  const [getB2EDetails, { loading: loadingB2EDetails, data: b2eData }] = useLazyQuery(GET_USER2E_DETAILS, {
-  })
+  const [getB2EDetails, { loading: loadingB2EDetails, data: b2eData }] = useLazyQuery(GET_USER2E_DETAILS, {});
   const [deleteAddress] = useMutation(REMOVE_ADDRESS, {
-    variables: { addressId }
+    variables: { addressId },
   });
-  const [updateB2EAddress] = useMutation(UPDATE_B2E_ADDRESS)
+  const [updateB2EAddress] = useMutation(UPDATE_B2E_ADDRESS);
   const [handleAddress] = useMutation(ADD_ADDRESS, { variables: addressArgs });
   const [toggleAddressModal] = useMutation(SET_USER, {
-    variables: { user: { openAddressModal: true } }
+    variables: { user: { openAddressModal: true } },
   });
   const [closeAddressModal] = useMutation(SET_USER, {
-    variables: { user: { openAddressModal: false } }
+    variables: { user: { openAddressModal: false } },
   });
   const toggleActivate = () => {
-    console.log(userData)
-    setLoginB2bOpen(true)
-  }
+    console.log(userData);
+    setLoginB2bOpen(true);
+  };
   const checkDefaultAddress = (addresses: Array<AddressType>) => {
-    const userInfo =
-      userData && userData.userInfo.length ? userData.userInfo[0] : {};
+    const userInfo = userData && userData.userInfo.length ? userData.userInfo[0] : {};
     if (!addresses.length && userInfo.defaultAddressId) {
       setUser({
         variables: {
@@ -518,19 +499,14 @@ const Details: FC<Props> = () => {
             cityName: "",
             openCityModal: true,
             defaultAddressId: undefined,
-            defaultAddressLabel: ""
-          }
-        }
+            defaultAddressLabel: "",
+          },
+        },
       });
-    } else if (
-      addresses.length &&
-      !addresses.some((a: AddressType) => a.id === userInfo.defaultAddressId)
-    ) {
+    } else if (addresses.length && !addresses.some((a: AddressType) => a.id === userInfo.defaultAddressId)) {
       const street = addresses[0].street;
       const city = addresses[0].city;
-      let c: KeyValue | undefined = cities.find(
-        (c: KeyValue) => c.value === city
-      );
+      let c: KeyValue | undefined = cities.find((c: KeyValue) => c.value === city);
       setUser({
         variables: {
           user: {
@@ -538,9 +514,9 @@ const Details: FC<Props> = () => {
             defaultAddressLabel: street?.replace(/ \| /g, " ") ?? "",
             cityKey: c ? c.key : "",
             cityName: c ? c.value : "",
-            openCityModal: false
-          }
-        }
+            openCityModal: false,
+          },
+        },
       });
     }
   };
@@ -548,14 +524,14 @@ const Details: FC<Props> = () => {
   const onChange = (key: string, value: string) => {
     setInputs({
       ...inputs,
-      [key]: value
+      [key]: value,
     });
   };
 
   const onChangeAddress = (key: string, value: string) => {
     setAddressInputs({
       ...addressInputs,
-      [key]: value
+      [key]: value,
     });
     if (key === "city" && value) setLatLng(String(value));
   };
@@ -581,13 +557,12 @@ const Details: FC<Props> = () => {
       zone: street[5] || "",
       neighborhood: street[6] || "",
       phone: phone[0] || "",
-      phone2: phone[1] || ""
+      phone2: phone[1] || "",
     });
     let i = setInterval(() => {
       if ((window as any).map) {
         clearInterval(i);
-        if (address.latitude && address.latitude !== "")
-          setLatLng("", address.latitude, address.longitude);
+        if (address.latitude && address.latitude !== "") setLatLng("", address.latitude, address.longitude);
         else setLatLng(address.city || "");
       }
     }, 10);
@@ -598,63 +573,41 @@ const Details: FC<Props> = () => {
 
     if (!mapUsed && !addressInputs.id) {
       window.scrollTo({
-        top:
-          (document as any).getElementById("gmap").getBoundingClientRect().top +
-          (window as any).scrollY -
-          170,
-        behavior: "smooth"
+        top: (document as any).getElementById("gmap").getBoundingClientRect().top + (window as any).scrollY - 170,
+        behavior: "smooth",
       });
       showError({
         variables: {
           user: {
-            showError: t("checkout.move_map")
-          }
-        }
+            showError: t("checkout.move_map"),
+          },
+        },
       });
       return false;
     }
 
-    let fields = 
-    addressInputs?.id_address_ebs ? 
-    [
-      "phone",
-      "address",
-      "city"
-    ]
-    :
-    [
-      "firstname",
-      "lastname",
-      "phone",
-      "city",
-      "address",
-      "reference"
-    ];
+    let fields = addressInputs?.id_address_ebs ? ["phone", "address", "city"] : ["firstname", "lastname", "phone", "city", "address", "reference"];
 
     fields.forEach((key: string) => {
-      if (
-        (!addressInputs[key] || !addressInputs[key].trim()) &&
-        !missingField
-      ) {
-        if (key === "building_name" && addressInputs.home_type === "Casa")
-          return;
+      if ((!addressInputs[key] || !addressInputs[key].trim()) && !missingField) {
+        if (key === "building_name" && addressInputs.home_type === "Casa") return;
         missingField = true;
         const input = document.querySelector(`[name="shipping-${key}"]`);
         if (input) {
           input.classList.add("error");
           (document as any).getElementById("new-address-modal").scrollTo({
             top: (input as any).offsetTop - 170,
-            behavior: "smooth"
+            behavior: "smooth",
           });
         }
         showError({
           variables: {
             user: {
               showError: t("checkout.missing_field", {
-                field: t("checkout.delivery." + key)
-              })
-            }
-          }
+                field: t("checkout.delivery." + key),
+              }),
+            },
+          },
         });
       }
     });
@@ -665,15 +618,11 @@ const Details: FC<Props> = () => {
   const editAddress = async () => {
     setLoading(true);
     if (!validate()) return;
-    if (
-      userData.userInfo.length &&
-      userData.userInfo[0] &&
-      addressInputs.id === userData.userInfo[0].defaultAddressId
-    ) {
+    if (userData.userInfo.length && userData.userInfo[0] && addressInputs.id === userData.userInfo[0].defaultAddressId) {
       setUser({
         variables: {
-          user: { defaultAddressLabel: `${addressInputs.street}` }
-        }
+          user: { defaultAddressLabel: `${addressInputs.street}` },
+        },
       });
     }
     setAddressArgs({
@@ -692,7 +641,7 @@ const Details: FC<Props> = () => {
       billing: 0,
       id_price_list: addressInputs.id_price_list,
       id_address_ebs: addressInputs.id_address_ebs,
-      on: true
+      on: true,
     });
     if (addressInputs?.id_address_ebs) {
       await updateB2EAddress({
@@ -704,8 +653,8 @@ const Details: FC<Props> = () => {
           Telefono: addressInputs.phone,
           Latitud: String((window as any).latitude),
           Longitud: String((window as any).longitude),
-        }
-      })
+        },
+      });
     }
     setLoading(false);
   };
@@ -727,23 +676,25 @@ const Details: FC<Props> = () => {
       latitude: String((window as any).latitude),
       longitude: String((window as any).longitude),
       billing: 0,
-      on: true
+      on: true,
     });
   };
 
   const editBilling = () => {
     setEditMode(false);
     setLoading(true);
-    let addressId: any = 0
+    let addressId: any = 0;
     if (inputs.addressId && inputs?.addresses?.length) {
-      // verify that addressId is not in input.addresses 
-      let found = false
+      // verify that addressId is not in input.addresses
+      let found = false;
       inputs.addresses.forEach((address: AddressType) => {
         if (address.id === inputs.addressId) {
-          found = true
+          found = true;
         }
-      })             
-    } else { addressId = inputs.addressId }
+      });
+    } else {
+      addressId = inputs.addressId;
+    }
 
     setAddressArgs({
       addressId,
@@ -759,7 +710,7 @@ const Details: FC<Props> = () => {
       latitude: "",
       longitude: "",
       billing: 1,
-      on: true
+      on: true,
     });
   };
 
@@ -820,18 +771,18 @@ const Details: FC<Props> = () => {
 
   const options: { [key: string]: Array<string> } = {
     city: cities.map((c: KeyValue) => c.value),
-    home_type: ["Casa", "Departamento"]
+    home_type: ["Casa", "Departamento"],
   };
 
   const addressTypes = [
     {
       title: t("checkout.delivery.street"),
-      value: t("checkout.delivery.street")
+      value: t("checkout.delivery.street"),
     },
     {
       title: t("checkout.delivery.avenue"),
-      value: t("checkout.delivery.avenue")
-    }
+      value: t("checkout.delivery.avenue"),
+    },
   ];
 
   return (
@@ -841,12 +792,7 @@ const Details: FC<Props> = () => {
           <h2>{t("account.title")}</h2>
           {loading && (
             <LoaderWrapper>
-              <img
-                src="/images/loader.svg"
-                width="50px"
-                height="50px"
-                alt="loader"
-              />
+              <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
             </LoaderWrapper>
           )}
           {!loading && !editMode && (
@@ -863,40 +809,22 @@ const Details: FC<Props> = () => {
         </Title>
         {userLoading && !inputs.email && (
           <LoaderWrapperBig>
-            <img
-              src="/images/loader.svg"
-              width="50px"
-              height="50px"
-              alt="loader"
-            />
+            <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
           </LoaderWrapperBig>
         )}
         {!userLoading && inputs.email && (
           <FormWrapper>
             <SectionTitle>{t("account.data")}</SectionTitle>
             <Form>
-              {[
-                "firstname",
-                "lastname",
-                "email",
-                "nit",
-                "phone",
-                "password"
-              ].map((key: string) => (
+              {["firstname", "lastname", "email", "nit", "phone", "password"].map((key: string) => (
                 <InputGroup key={key} withLabel={true}>
                   <label>{t("account." + key)}</label>
                   <input
                     readOnly={key === "email" || (key !== "key" && !editMode)}
                     value={(inputs as any)[key] || ""}
-                    onChange={evt => onChange(key, evt.target.value)}
+                    onChange={(evt) => onChange(key, evt.target.value)}
                     pattern={key === "phone" || key === "nit" ? "[0-9]*" : ""}
-                    type={
-                      key === "phone" || key === "nit"
-                        ? "number"
-                        : key === "password"
-                          ? "password"
-                          : "text"
-                    }
+                    type={key === "phone" || key === "nit" ? "number" : key === "password" ? "password" : "text"}
                     placeholder={t("account." + key)}
                   />
                 </InputGroup>
@@ -912,58 +840,43 @@ const Details: FC<Props> = () => {
                 <AddressRow key={address.id}>
                   <Street onClick={() => openEditModal(address)}>
                     <StreetSpan>
-
-                        <span title={address.street?.replace(/ \| /g, " ")} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS }>
+                      <span title={address.street?.replace(/ \| /g, " ")} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS}>
                         {" "}
                         {address.street?.replace(/ \| /g, " ")}
                       </span>
-                        {address?.id_price_list ? (
-                          <StarWrap>
-                            <img src={StarIcon} alt="" />
-                            <TooltipStar>
-                              {t("account.tooltip_star_msg")}
-                            </TooltipStar>
-                          </StarWrap>
-                        ): ''}
-
+                      {address?.id_price_list ? (
+                        <StarWrap>
+                          <img src={StarIcon} alt="" />
+                          <TooltipStar>{t("account.tooltip_star_msg")}</TooltipStar>
+                        </StarWrap>
+                      ) : (
+                        ""
+                      )}
                     </StreetSpan>
-
                   </Street>
-                  {address?.id_price_list ? '' :
-                  <DeleteWrapper onClick={() => removeAddress(address)}>
-                    <Delete />
-                  </DeleteWrapper>
-                  }
+                  {address?.id_price_list ? (
+                    ""
+                  ) : (
+                    <DeleteWrapper onClick={() => removeAddress(address)}>
+                      <Delete />
+                    </DeleteWrapper>
+                  )}
                 </AddressRow>
               ))}
           </AddressWrapper>
         )}
-        {!userLoading && (<>
-          <NewAddress>
-            <button onClick={() => toggleAddressModal()}>
-              {t("account.newaddress")}
-            </button>
-          </NewAddress>
-
-        </>
+        {!userLoading && (
+          <>
+            <NewAddress>
+              <button onClick={() => toggleAddressModal()}>{t("account.newaddress")}</button>
+            </NewAddress>
+          </>
         )}
 
-
-
-        <ModalCourtain
-          className={
-            userData.userInfo.length &&
-            userData.userInfo[0].openAddressModal &&
-            "visible"
-          }
-        >
+        <ModalCourtain className={userData.userInfo.length && userData.userInfo[0].openAddressModal && "visible"}>
           <Modal>
             <Header>
-              <HeaderTitle>
-                {addressInputs.id
-                  ? t("account.modal.edit_title")
-                  : t("account.modal.title")}
-              </HeaderTitle>
+              <HeaderTitle>{addressInputs.id ? t("account.modal.edit_title") : t("account.modal.title")}</HeaderTitle>
               <CloseWrapper onClick={() => closeAddressModal()}>
                 <Close />
               </CloseWrapper>
@@ -972,131 +885,62 @@ const Details: FC<Props> = () => {
               <Form>
                 {/* here */}
 
-                {(addressInputs
-                 && addressInputs?.id_address_ebs ?
-                [
-                  "phone",
-                  "address",
-                  "city",
-                ]
-                :
-                [
-                  "firstname",
-                  "lastname",
-                  "phone",
-                  "phone2",
-                  "city",
-                  "address",
-                  "reference"
-                ]).map((key: string) => {
+                {(addressInputs && addressInputs?.id_address_ebs ? ["phone", "address", "city"] : ["firstname", "lastname", "phone", "phone2", "city", "address", "reference"]).map((key: string) => {
                   return (
-                    <InputGroup
-                      withLabel={key !== "street"}
-                      key={key}
-                      style={key === "reference" ? gridSpan2CSS : emptyCSS}
-                    >
+                    <InputGroup withLabel={key !== "street"} key={key} style={key === "reference" ? gridSpan2CSS : emptyCSS}>
                       <label>{t("checkout.delivery." + key)}</label>
                       {options[key] && (
                         <SelectWrapper>
-                          <select
-                            name={`shipping-${key}`}
-                            onChange={evt =>
-                              onChangeAddress(key, evt.target.value)
-                            }
-                            value={addressInputs[key] || ""}
-                            disabled={addressInputs?.id_address_ebs}
-                          >
-                            <option value="">
-                              {t("checkout.delivery." + key)}
-                            </option>
+                          <select name={`shipping-${key}`} onChange={(evt) => onChangeAddress(key, evt.target.value)} value={addressInputs[key] || ""} disabled={addressInputs?.id_address_ebs}>
+                            <option value="">{t("checkout.delivery." + key)}</option>
                             {options[key].map((opt: string) => (
                               <option key={opt}>{opt}</option>
                             ))}
                           </select>
-                          {!addressInputs?.id_address_ebs && 
-                            <Chevron />
-                          }
+                          {!addressInputs?.id_address_ebs && <Chevron />}
                         </SelectWrapper>
                       )}
                       {(key === "address" || key === "reference") && (
                         <input
                           name={`shipping-${key}`}
                           value={addressInputs[key] || ""}
-                          onChange={evt =>
-                            onChangeAddress(key, evt.target.value)
-                          }
+                          onChange={(evt) => onChangeAddress(key, evt.target.value)}
                           type="text"
                           placeholder={t("checkout.delivery." + key + "_ph")}
                         />
                       )}
-                      {key === "street" && (
-                        <Switch
-                          changeOption={(value: string) =>
-                            onChangeAddress("addressType", value)
-                          }
-                          option={addressInputs.addressType}
-                          values={addressTypes}
+                      {key === "street" && <Switch changeOption={(value: string) => onChangeAddress("addressType", value)} option={addressInputs.addressType} values={addressTypes} />}
+                      {key !== "street" && key !== "address" && key !== "reference" && !options[key] && (
+                        <input
+                          name={`shipping-${key}`}
+                          value={addressInputs[key] || ""}
+                          onChange={(evt) => onChangeAddress(key, evt.target.value)}
+                          pattern={key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""}
+                          type={key.indexOf("phone") >= 0 || key === "nit" ? "number" : "text"}
+                          placeholder={t("checkout.delivery." + key)}
                         />
                       )}
-                      {key !== "street" &&
-                        key !== "address" &&
-                        key !== "reference" &&
-                        !options[key] && (
-                          <input
-                            name={`shipping-${key}`}
-                            value={addressInputs[key] || ""}
-                            onChange={evt =>
-                              onChangeAddress(key, evt.target.value)
-                            }
-                            pattern={
-                              key.indexOf("phone") >= 0 || key === "nit"
-                                ? "[0-9]*"
-                                : ""
-                            }
-                            type={
-                              key.indexOf("phone") >= 0 || key === "nit"
-                                ? "number"
-                                : "text"
-                            }
-                            placeholder={t("checkout.delivery." + key)}
-                          />
-                        )}
                     </InputGroup>
                   );
                 })}
               </Form>
-              {userData.userInfo.length &&
-                userData.userInfo[0].openAddressModal && <Map />}
+              {userData.userInfo.length && userData.userInfo[0].openAddressModal && <Map />}
               <CtaWrapper>
-              {!loading && addressInputs.id ? 
-                  <Cta
-                  filled={true}
-                  text={t("account.modal.edit_title")}
-                  action={editAddress}
-                  />
-                  : 
-                  <Cta
-                    filled={true}
-                    text={t("account.modal.add")}
-                    action={addAddress}
-                  />
-              }
+                {!loading && addressInputs.id ? (
+                  <Cta filled={true} text={t("account.modal.edit_title")} action={editAddress} />
+                ) : (
+                  <Cta filled={true} text={t("account.modal.add")} action={addAddress} />
+                )}
 
                 {loading && (
                   <LoaderWrapper>
-                    <img
-                      src="/images/loader.svg"
-                      width="50px"
-                      height="50px"
-                      alt="loader"
-                    />
+                    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
                   </LoaderWrapper>
                 )}
               </CtaWrapper>
             </ModalContainer>
           </Modal>
         </ModalCourtain>
-
       </>
     </Suspense>
   );

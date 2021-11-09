@@ -34,10 +34,10 @@ export const Header = styled.div`
     background: url(${bg}) no-repeat 40% center / cover;
     height: 150px;
 
-    div{
+    div {
       justify-content: center;
 
-      h1{
+      h1 {
         font-size: 26px;
       }
     }
@@ -116,12 +116,12 @@ export const Step = styled.div`
 `;
 
 export const Columns = styled.div<{ align?: string }>`
-  text-align: ${props => (props.align ? props.align : "center")};
+  text-align: ${(props) => (props.align ? props.align : "center")};
 `;
 
-export const TextContainer = styled.div<{align?: string}>`
+export const TextContainer = styled.div<{ align?: string }>`
   width: 55%;
-  margin: ${props => (props.align == "right" ? "0 0 0 auto;" : props.align == "left" ? "0 auto 0 0;" : "0 auto;")}; 
+  margin: ${(props) => (props.align == "right" ? "0 0 0 auto;" : props.align == "left" ? "0 auto 0 0;" : "0 auto;")};
   text-align: left;
 `;
 
@@ -131,11 +131,11 @@ export const Text = styled.p<{ align?: string; maxWidth?: string }>`
   color: #000000;
   font-family: MullerMedium;
 
-  max-width: ${props => (props.maxWidth ? props.maxWidth : "unset")};
+  max-width: ${(props) => (props.maxWidth ? props.maxWidth : "unset")};
 
   @media (max-width: ${BREAKPOINT}) {
     margin-left: auto;
-    margin-right: auto; 
+    margin-right: auto;
     margin-bottom: 15px;
     font-size: 17px;
     text-align: center;
@@ -145,8 +145,8 @@ export const Text = styled.p<{ align?: string; maxWidth?: string }>`
 export const SubText = styled.div<{ marginTop?: string }>`
   font-size: 15px;
   line-height: normal;
-  font-family: 'MullerRegular';
-  margin-top: ${props => (props.marginTop ? props.marginTop : "40px")};
+  font-family: "MullerRegular";
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "40px")};
 
   @media (max-width: ${BREAKPOINT}) {
     text-align: center;
@@ -165,7 +165,7 @@ export const RetireAlPasoDiv = styled.div`
 `;
 
 export const Image = styled.img<{ maxWidth?: string }>`
-  max-width: ${props => (props.maxWidth ? props.maxWidth : "auto")};
+  max-width: ${(props) => (props.maxWidth ? props.maxWidth : "auto")};
   width: 100%;
 
   &.img-3 {

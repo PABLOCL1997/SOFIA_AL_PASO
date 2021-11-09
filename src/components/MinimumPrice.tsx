@@ -4,16 +4,16 @@ import { useQuery, useMutation } from "react-apollo";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 
-import WarningIcon from "../assets/images/warning-input.svg"
+import WarningIcon from "../assets/images/warning-input.svg";
 import useCityPriceList from "../hooks/useCityPriceList";
 import useMinimumPrice from "../hooks/useMinimumPrice";
 
 const Container = styled.span`
   position: fixed;
-//   display: none;
+  //   display: none;
 
   align-items: center;
-  background: #F0F0F0;
+  background: #f0f0f0;
   color: var(--black);
   width: 80vw;
   top: 128px;
@@ -32,12 +32,12 @@ const Container = styled.span`
   }
 
   img {
-      margin-right: 16px;
-      margin-top: -4px;
+    margin-right: 16px;
+    margin-top: -4px;
   }
 
   b {
-      font-family: MullerBold;
+    font-family: MullerBold;
   }
 `;
 
@@ -64,7 +64,7 @@ const MinimumPrice: FC<Props> = () => {
   const [visible, setVisible] = useState(false);
 
   const [hideSuccess] = useMutation(SET_USER, {
-    variables: { user: { showMinimumPrice: "" } }
+    variables: { user: { showMinimumPrice: "" } },
   });
 
   useEffect(() => {
@@ -73,36 +73,29 @@ const MinimumPrice: FC<Props> = () => {
   }, []);
 
   useEffect(() => {
-    if (data.userInfo.length
-      && data.userInfo[0].showMinimumPrice
-      && data.userInfo[0].showMinimumPrice.length > 0) {
-        setVisible(true);
-        setTimeout(
-          () => {
-            hideSuccess();
-            setVisible(false);
-          },
-        3000
-      );
+    if (data.userInfo.length && data.userInfo[0].showMinimumPrice && data.userInfo[0].showMinimumPrice.length > 0) {
+      setVisible(true);
+      setTimeout(() => {
+        hideSuccess();
+        setVisible(false);
+      }, 3000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
-    <Container
-      className={
-        agency && visible && minimumPrice < AgencyMinimumPrice ? "visible" : ""
-      }
-    >
-        <CloseWrapper onClick={() => hideSuccess()}>
+    <Container className={agency && visible && minimumPrice < AgencyMinimumPrice ? "visible" : ""}>
+      <CloseWrapper onClick={() => hideSuccess()}>
         {/* close */}
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
-            <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+          <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+          <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
         </svg>
-        </CloseWrapper>
+      </CloseWrapper>
       <img src={WarningIcon} alt="warning" />
-      <span>Recordá que el límite de compra al retirar al paso es de <b>Bs. {minimumPrice}</b>.</span>
+      <span>
+        Recordá que el límite de compra al retirar al paso es de <b>Bs. {minimumPrice}</b>.
+      </span>
     </Container>
   );
 };

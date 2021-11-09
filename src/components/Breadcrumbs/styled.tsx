@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { BREAKPOINT } from "../../utils/constants";
 
-
 export const ListItem = styled.span`
   color: #767474;
   font-size: 12px;
@@ -10,7 +9,7 @@ export const ListItem = styled.span`
   svg {
     transform: rotate(90deg);
   }
-`
+`;
 
 export const ListItemTitle = styled.span`
   margin: 0;
@@ -18,4 +17,4 @@ export const ListItemTitle = styled.span`
   @media screen and (max-width: ${BREAKPOINT}) {
     margin: 0 6.5px;
   }
-`
+`;

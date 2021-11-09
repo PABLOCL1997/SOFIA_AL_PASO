@@ -22,7 +22,7 @@ export const ModalCourtain = styled.div`
 
 export const Modal = styled.div<{ padding?: string }>`
   position: relative;
-  padding: ${props => (props.padding ? props.padding : "36px 42px 42px")};
+  padding: ${(props) => (props.padding ? props.padding : "36px 42px 42px")};
   background: white;
   border-radius: 20px;
   display: flex;
@@ -76,9 +76,9 @@ export const Title = styled.h2<{ marginBottom?: string; color?: string }>`
   font-family: MullerMedium;
   font-size: 24px;
   line-height: 24px;
-  color: ${props => (props.color ? props.color : "#2F2F2F")};
+  color: ${(props) => (props.color ? props.color : "#2F2F2F")};
 
-  margin-bottom: ${props => (props.marginBottom ? props.marginBottom : "40px")};
+  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : "40px")};
 
   @media (max-width: ${BREAKPOINT}) {
     text-align: center;
@@ -103,9 +103,9 @@ export const Link = styled.span<{ position?: string }>`
   text-decoration-line: underline;
   color: var(--red);
   cursor: pointer;
-  display: ${props => (props.position ? "block" : "inline-block")};
+  display: ${(props) => (props.position ? "block" : "inline-block")};
   width: 100%;
-  text-align: ${props => (props.position ? props.position : "left")};
+  text-align: ${(props) => (props.position ? props.position : "left")};
   margin-bottom: 20px;
   &:hover {
     opacity: 0.8;
@@ -122,8 +122,8 @@ export const CtaWrapper = styled.div<{
     padding: 15px 30px;
     text-transform: uppercase;
   }
-  margin-bottom: ${props => (props.marginBottom ? props.marginBottom : "20px")};
-  margin-top: ${props => (props.marginTop ? props.marginTop : "20px")};
+  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : "20px")};
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "20px")};
 `;
 
 export const Line = styled.div`
@@ -134,7 +134,7 @@ export const Line = styled.div`
 
 export const SocialButton = styled.button<{ network: string }>`
   width: 190px;
-  border: 1px solid var(-- ${props => props.network});
+  border: 1px solid var(--${(props) => props.network});
   background: white;
   padding: 10px 20px;
   display: flex;
@@ -149,14 +149,14 @@ export const SocialButton = styled.button<{ network: string }>`
   b {
     font-size: 12px;
     line-height: 12px;
-    color: var(-- ${props => props.network});
+    color: var(--${(props) => props.network});
   }
   b {
     font-family: MullerBold;
     margin-left: 5px;
   }
   &:hover {
-    background: var(-- ${props => props.network});
+    background: var(--${(props) => props.network});
     * {
       filter: brightness(100);
     }
@@ -175,7 +175,7 @@ export const Disclaimer = styled.div<{ margin?: string }>`
   text-align: center;
   color: #767474;
 
-  margin: ${props => (props.margin ? props.margin : "auto")};
+  margin: ${(props) => (props.margin ? props.margin : "auto")};
 
   span {
     width: auto;
@@ -214,7 +214,7 @@ export const SmallTextBtn = styled.button<{ margin?: string }>`
   border: 0;
   font-family: MullerMedium;
   text-decoration-line: underline;
-  margin: ${props => (props.margin ? props.margin : "auto")};
+  margin: ${(props) => (props.margin ? props.margin : "auto")};
 `;
 
 export const Anchor = styled.a`
@@ -228,8 +228,7 @@ export const Anchor = styled.a`
   border: 0;
   font-family: MullerMedium;
   text-decoration-line: underline;
-
-`
+`;
 
 export const SmallText = styled.p<{ marginBottom?: string }>`
   font-style: normal;
@@ -240,10 +239,10 @@ export const SmallText = styled.p<{ marginBottom?: string }>`
   color: var(--black);
   max-width: 300px;
 
-  margin-bottom: ${props => (props.marginBottom ? props.marginBottom : "20px")};
+  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : "20px")};
 
   &:a {
-    text-decoration: underline; 
+    text-decoration: underline;
     text-transform: none;
   }
 `;
@@ -322,7 +321,7 @@ export const FourCodeInputs = styled.div`
 `;
 
 export const InputCode = styled.input<{ pinError?: boolean }>`
-  border-bottom: ${props => (props.pinError ? "1px solid #E30613 !important" : "")};
+  border-bottom: ${(props) => (props.pinError ? "1px solid #E30613 !important" : "")};
 `;
 
 export const Counter = styled.div`
@@ -338,16 +337,16 @@ export const Counter = styled.div`
 `;
 
 export const InputLabel = styled.label<{ show?: boolean }>`
-  margin: ${props => (props.show ? "0 auto 10px 29px" : "0 auto 2px 29px")};
+  margin: ${(props) => (props.show ? "0 auto 10px 29px" : "0 auto 2px 29px")};
   font-family: MullerMedium;
 
   /* transition: all ease-out 0.4s; */
-  transition: ${props => (props.show ? "all ease-out 0.4s" : "none")};
-  height: ${props => (props.show ? "100%" : "0")};
+  transition: ${(props) => (props.show ? "all ease-out 0.4s" : "none")};
+  height: ${(props) => (props.show ? "100%" : "0")};
   overflow: hidden;
 
-  visibility: ${props => (props.show ? "visible" : "hidden")};
-  opacity: ${props => (props.show ? "1" : "0")};
+  visibility: ${(props) => (props.show ? "visible" : "hidden")};
+  opacity: ${(props) => (props.show ? "1" : "0")};
 
   font-size: 12px;
   line-height: 18px;
@@ -403,7 +402,7 @@ export const ErrorInputMsg = styled.div<{ margin?: string }>`
   display: flex;
   align-items: end;
 
-  margin: ${props => (props.margin ? props.margin : "auto")};
+  margin: ${(props) => (props.margin ? props.margin : "auto")};
 
   span {
     font-family: MullerMedium;

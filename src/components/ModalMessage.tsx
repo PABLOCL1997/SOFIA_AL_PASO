@@ -6,9 +6,7 @@ import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { trackGoToCartEvent } from "../utils/dataLayer";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "./Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
 
 const ModalCourtain = styled.div`
@@ -73,10 +71,10 @@ const ModalMessage: FC<Props> = () => {
   const { t } = useTranslation();
   const { data } = useQuery(GET_USER, {});
   const [hideModal] = useMutation(SET_USER, {
-    variables: { user: { showModal: "" } }
+    variables: { user: { showModal: "" } },
   });
   const [toggleCartModal] = useMutation(SET_USER, {
-    variables: { user: { openCartModal: true } }
+    variables: { user: { openCartModal: true } },
   });
 
   useEffect(() => {
@@ -86,24 +84,15 @@ const ModalMessage: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <ModalCourtain
-        className={
-          data.userInfo.length && data.userInfo[0].showModal && "visible"
-        }
-      >
+      <ModalCourtain className={data.userInfo.length && data.userInfo[0].showModal && "visible"}>
         {data.userInfo.length && data.userInfo[0].showModal && (
           <Modal>
             <Title>{data.userInfo[0].showModal.split("|")[0]}</Title>
             <Text>{data.userInfo[0].showModal.split("|")[1]}</Text>
             <CtaWrapper>
-              <Cta
-                filled={true}
-                text={t("modal.close")}
-                action={() => hideModal()}
-              />
+              <Cta filled={true} text={t("modal.close")} action={() => hideModal()} />
             </CtaWrapper>
-            {data.userInfo[0].showModal.split("|")[0] ===
-              "Producto agregado" && (
+            {data.userInfo[0].showModal.split("|")[0] === "Producto agregado" && (
               <CtaWrapper>
                 <br />
                 <Cta

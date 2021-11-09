@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../Map"));
 
@@ -25,8 +23,7 @@ const ModalCourtain = styled.div`
     display: flex;
   }
 
-
-  @media(min-width:${BREAKPOINT}){
+  @media (min-width: ${BREAKPOINT}) {
     display: none;
   }
 `;
@@ -99,25 +96,14 @@ const ConfirmAddress: FC<Props> = ({ visible, confirm, address, cancel }) => {
             <Title>{t("checkout.confirmaddress.title")}</Title>
             <Text>
               {t("checkout.confirmaddress.message")}&nbsp;
-              <span id="dynamicAddress">
-                {(window as any).formatted_address}
-              </span>
+              <span id="dynamicAddress">{(window as any).formatted_address}</span>
             </Text>
             <Map />
             <br />
             <br />
             <CtaWrapper>
-              <Cta
-                hover={false}
-                text={t("checkout.confirmaddress.close")}
-                action={() => cancel()}
-              />
-              <Cta
-                hover={false}
-                filled={true}
-                text={t("checkout.confirmaddress.confirm")}
-                action={() => confirm()}
-              />
+              <Cta hover={false} text={t("checkout.confirmaddress.close")} action={() => cancel()} />
+              <Cta hover={false} filled={true} text={t("checkout.confirmaddress.confirm")} action={() => confirm()} />
             </CtaWrapper>
           </Modal>
         )}

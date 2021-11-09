@@ -16,12 +16,11 @@ const Container = styled.div<{ page?: string }>`
   flex-direction: row;
   @media screen and (max-width: ${BREAKPOINT}) {
     flex-direction: column;
-    display: ${props => (props.page === "productpage" ? "none" : "")};
+    display: ${(props) => (props.page === "productpage" ? "none" : "")};
   }
   @media screen and (max-width: ${BREAKPOINT}) {
-    background: ${props =>
-      props.page === "productpage" ? "none" : "var(--black)"};
-    min-height: ${props => (props.page === "productpage" ? "108px" : "")};
+    background: ${(props) => (props.page === "productpage" ? "none" : "var(--black)")};
+    min-height: ${(props) => (props.page === "productpage" ? "108px" : "")};
   }
 `;
 
@@ -102,10 +101,10 @@ const FooterWrapper = styled.div`
       color: white;
       margin: 35px 0 0 0;
 
-      > li{
+      > li {
         margin-bottom: 20px;
 
-        div{
+        div {
           width: 160px;
           font-weight: 800;
 
@@ -117,7 +116,7 @@ const FooterWrapper = styled.div`
             width: 0;
           }
 
-          &.open{
+          &.open {
             &:after {
               content: "x";
               float: left;
@@ -131,7 +130,7 @@ const FooterWrapper = styled.div`
         > ul {
           display: none;
 
-          &.open{
+          &.open {
             display: block;
           }
 
@@ -139,7 +138,7 @@ const FooterWrapper = styled.div`
           font-weight: 200;
 
           > li {
-            margin-bottom: 20px
+            margin-bottom: 20px;
           }
         }
       }
@@ -170,20 +169,20 @@ const TablaMagento = styled.div`
       display: none;
     }
 
-    tr{
+    tr {
       th {
         width: 120px;
         font-weight: 600;
         padding: 0 20px 20px 0;
 
         @media screen and (max-width: ${BREAKPOINT}) {
-          &:first-child{
+          &:first-child {
             display: none;
           }
-          &:nth-child(3){
+          &:nth-child(3) {
             display: none;
           }
-          &:nth-child(5){
+          &:nth-child(5) {
             display: none;
           }
         }
@@ -197,7 +196,7 @@ const TablaMagento = styled.div`
         }
       }
     }
-    tr:first-child{
+    tr:first-child {
       height: 30px;
     }
   }
@@ -208,17 +207,17 @@ const ContactWrapper = styled.div`
   margin-top: 30px;
 
   @media screen and (min-width: ${BREAKPOINT}) {
-    > div:first-child{
+    > div:first-child {
       display: none;
     }
   }
 
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-top: 0;
-    > div:first-child{
+    > div:first-child {
       margin-top: 10px;
     }
-    > div:nth-child(2){
+    > div:nth-child(2) {
       margin-bottom: 20px;
     }
   }
@@ -258,31 +257,33 @@ type Props = {
 
 const Footer: FC<Props> = ({ page }) => {
   const { t } = useTranslation();
-  const [ table, setTable ] = useState("");
-  const [ footerList, setFooterList ] = useState<any>([]);
+  const [table, setTable] = useState("");
+  const [footerList, setFooterList] = useState<any>([]);
   const { data: dynamicFooter } = useQuery(GET_PAGES, {
     fetchPolicy: "network-only",
     variables: { identifier: "footer-dinamico" },
-    onCompleted: d => {
-      if(d.pages && d.pages.length > 0){
-        let categories = d.pages[0].content.split('<th>');
+    onCompleted: (d) => {
+      if (d.pages && d.pages.length > 0) {
+        let categories = d.pages[0].content.split("<th>");
         categories.shift();
         categories.forEach((cat: any, i: number) => {
-          categories[i] = cat.slice(0, cat.indexOf('</th>'));
-        })
-        let items = d.pages[0].content.split('<td>');
+          categories[i] = cat.slice(0, cat.indexOf("</th>"));
+        });
+        let items = d.pages[0].content.split("<td>");
         items.shift();
         items.forEach((item: any, i: number) => {
-          items[i] = item.slice(0, item.indexOf('</td>'));
-        })
-        let list = [...categories.map((cat: any, i: number) => {
-          return {id: i+1, name: cat, items: [], active: false};
-        })];
-        for(let i=0; i<categories.length; i++){
+          items[i] = item.slice(0, item.indexOf("</td>"));
+        });
+        let list = [
+          ...categories.map((cat: any, i: number) => {
+            return { id: i + 1, name: cat, items: [], active: false };
+          }),
+        ];
+        for (let i = 0; i < categories.length; i++) {
           let item_index = 1;
-          for(let j=0; j<items.length; j += categories.length){
-            if(items[j+i] !== '&nbsp;'){
-              list[i].items.push({id: item_index, name: items[j+i]})
+          for (let j = 0; j < items.length; j += categories.length) {
+            if (items[j + i] !== "&nbsp;") {
+              list[i].items.push({ id: item_index, name: items[j + i] });
               item_index++;
             }
           }
@@ -290,54 +291,51 @@ const Footer: FC<Props> = ({ page }) => {
         setFooterList(list);
         setTable(d.pages[0].content);
       }
-    }
+    },
   });
 
   const openFooterItem = (e: any) => {
-    let list = [...footerList]
-    list = list.map((item:any) => {
-      if(item.id == e){
+    let list = [...footerList];
+    list = list.map((item: any) => {
+      if (item.id == e) {
         item.active = !item.active;
       }
       return item;
-    })
+    });
     setFooterList(list);
-  }
+  };
 
   return (
     <Suspense fallback={<Loader />}>
       <Container page={page}>
         <FooterWrapper>
           <FooterHeaderImg>
-            <img
-              src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"}
-              className="lazyload"
-              width="80px"
-              alt="Sofía Logo"
-            />
+            <img src={"https://d10nbigpolte6j.cloudfront.net/images/sofia-logo.webp"} className="lazyload" width="80px" alt="Sofía Logo" />
           </FooterHeaderImg>
           <Text>{t("footer.text")}</Text>
           <SloganDiv>
             <Slogan>{t("footer.slogan")}</Slogan>
             <Contact>{t("footer.contact")}</Contact>
           </SloganDiv>
-          {footerList &&
+          {footerList && (
             <ul>
               {footerList.map((item: any) => {
                 return (
                   <li key={`${item.id}-0`}>
-                    <div onClick={() => openFooterItem(item.id)} className={item.active ? "open" : ""}>{item.name}</div>
+                    <div onClick={() => openFooterItem(item.id)} className={item.active ? "open" : ""}>
+                      {item.name}
+                    </div>
                     <ul className={item.active ? "open" : ""}>
-                    {item.items.map((item2: any) => {
-                      return (<li key={`${item.id}-${item2.id}`} dangerouslySetInnerHTML={{ __html: item2.name }}></li>)
-                    })}
+                      {item.items.map((item2: any) => {
+                        return <li key={`${item.id}-${item2.id}`} dangerouslySetInnerHTML={{ __html: item2.name }}></li>;
+                      })}
                     </ul>
-                  </li>)
+                  </li>
+                );
               })}
             </ul>
-          }
-          <TablaMagento dangerouslySetInnerHTML={{ __html: table }}>
-          </TablaMagento>
+          )}
+          <TablaMagento dangerouslySetInnerHTML={{ __html: table }}></TablaMagento>
           <ContactWrapper>
             <div>
               <Slogan>{t("footer.slogan")}</Slogan>
@@ -359,8 +357,7 @@ const Footer: FC<Props> = ({ page }) => {
             </ContactDiv>
             <Disclaimer>
               {t("footer.copy", { year: new Date().getFullYear() })}
-              <DisclaimerDivider>
-              </DisclaimerDivider>
+              <DisclaimerDivider></DisclaimerDivider>
             </Disclaimer>
           </ContactWrapper>
         </FooterWrapper>

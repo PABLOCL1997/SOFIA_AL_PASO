@@ -1,5 +1,5 @@
 export enum ShippingOptions {
-    Employee,
-    Delivery,
-    Pickup
+  Employee,
+  Delivery,
+  Pickup,
 }

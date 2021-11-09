@@ -4,21 +4,11 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const ThankCheck = React.lazy(() =>
-  import(/* webpackChunkName: "ThankCheck" */ "../Images/ThankCheck")
-);
-const ThankDelivery = React.lazy(() =>
-  import(/* webpackChunkName: "ThankDelivery" */ "../Images/ThankDelivery")
-);
-const ThankMail = React.lazy(() =>
-  import(/* webpackChunkName: "ThankMail" */ "../Images/ThankMail")
-);
-const ThankPhone = React.lazy(() =>
-  import(/* webpackChunkName: "ThankPhone" */ "../Images/ThankPhone")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const ThankCheck = React.lazy(() => import(/* webpackChunkName: "ThankCheck" */ "../Images/ThankCheck"));
+const ThankDelivery = React.lazy(() => import(/* webpackChunkName: "ThankDelivery" */ "../Images/ThankDelivery"));
+const ThankMail = React.lazy(() => import(/* webpackChunkName: "ThankMail" */ "../Images/ThankMail"));
+const ThankPhone = React.lazy(() => import(/* webpackChunkName: "ThankPhone" */ "../Images/ThankPhone"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
 
 const Container = styled.div``;
@@ -136,9 +126,7 @@ const Thanks: FC<Props> = ({ orders, isPickup }) => {
       : t("thankyou.mulitple_subtitle") +
         "<br />" +
         t("thankyou.multiple_subtitle_numbers", {
-          increment_ids: orders
-            .map((order: { increment_id: string }) => `#${order.increment_id}`)
-            .join(" y ")
+          increment_ids: orders.map((order: { increment_id: string }) => `#${order.increment_id}`).join(" y "),
         });
 
   return (
@@ -159,10 +147,17 @@ const Thanks: FC<Props> = ({ orders, isPickup }) => {
           <Box>
             <ThankDelivery />
             <div>
-              {isPickup ? 
-              <GridText>Tu pedido será preparado lo antes posible para retirar dentro de la próxima hora en la agencia Sofía al Paso seleccionada, de Lunes a Domingo (<a href="http://sofiaalpaso.com/" target="_blank">ver horarios</a>)</GridText>
-              :
-              <GridText>{t("thankyou.time")}</GridText>}
+              {isPickup ? (
+                <GridText>
+                  Tu pedido será preparado lo antes posible para retirar dentro de la próxima hora en la agencia Sofía al Paso seleccionada, de Lunes a Domingo (
+                  <a href="http://sofiaalpaso.com/" target="_blank">
+                    ver horarios
+                  </a>
+                  )
+                </GridText>
+              ) : (
+                <GridText>{t("thankyou.time")}</GridText>
+              )}
             </div>
           </Box>
           <Box>
@@ -178,11 +173,7 @@ const Thanks: FC<Props> = ({ orders, isPickup }) => {
           <b>{t("thankyou.client.thanks")}</b>
         </Disclaimer>
         <CtaWrapper>
-          <Cta
-            action={() => history.push("/")}
-            text={t("thankyou.go_home")}
-            filled={true}
-          />
+          <Cta action={() => history.push("/")} text={t("thankyou.go_home")} filled={true} />
         </CtaWrapper>
       </Container>
     </Suspense>

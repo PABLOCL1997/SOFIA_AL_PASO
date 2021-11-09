@@ -24,7 +24,7 @@ export const BottomCard = styled.div`
   align-items: flex-end;
   justify-content: space-between;
 
-  margin-bottom:10px;
+  margin-bottom: 10px;
 `;
 
 export const BottomCardHome = styled.div`
@@ -35,4 +35,4 @@ export const BottomCardHome = styled.div`
 
   font-family: MullerRegular;
   font-size: 14px;
-`
+`;

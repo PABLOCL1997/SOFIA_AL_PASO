@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { customStyles, BREAKPOINT } from "../utils/constants";
 
 export const BreadWrap = styled.div`
-  margin: 15px 0;  
+  margin: 15px 0;
   padding: 0;
   ul {
     li {

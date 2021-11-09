@@ -29,7 +29,7 @@ type Props = {};
 const Error: FC<Props> = () => {
   const { data } = useQuery(GET_USER, {});
   const [hideError] = useMutation(SET_USER, {
-    variables: { user: { showError: "" } }
+    variables: { user: { showError: "" } },
   });
 
   useEffect(() => {
@@ -46,15 +46,7 @@ const Error: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  return (
-    <Container
-      className={
-        data.userInfo.length && data.userInfo[0].showError ? "visible" : ""
-      }
-    >
-      {data.userInfo.length ? data.userInfo[0].showError : ""}
-    </Container>
-  );
+  return <Container className={data.userInfo.length && data.userInfo[0].showError ? "visible" : ""}>{data.userInfo.length ? data.userInfo[0].showError : ""}</Container>;
 };
 
 export default Error;

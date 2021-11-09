@@ -6,18 +6,15 @@ export const FiltersWrap = styled.div`
   align-items: center;
   justify-content: flex-end;
 
-
-  @media(max-width:${BREAKPOINT}){
-    display:none;
+  @media (max-width: ${BREAKPOINT}) {
+    display: none;
   }
 `;
 
 export const Results = styled.span`
-
-
   font-size: 14px;
-line-height: 20px;
-color:${customStyles.black};
+  line-height: 20px;
+  color: ${customStyles.black};
 `;
 
 export const Separador = styled.div`
@@ -27,9 +24,4 @@ export const Separador = styled.div`
   margin: 0 10px;
 `;
 
-export const OrderBy = styled.div`
-
-
-
-
-`;
+export const OrderBy = styled.div``;

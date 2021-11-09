@@ -2,18 +2,13 @@ import React, { FC, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
-import { CLIENT_CREDIT } from '../../graphql/b2e/queries';
-import { useLazyQuery, useQuery } from 'react-apollo';
-import CircleLoader from '../CircleLoader';
+import { CLIENT_CREDIT } from "../../graphql/b2e/queries";
+import { useLazyQuery, useQuery } from "react-apollo";
+import CircleLoader from "../CircleLoader";
 import { DETAILS, GET_USER } from "../../graphql/user/queries";
 
-
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const Switch = React.lazy(
-  () => import(/* webpackChunkName: "Switch" */ "../Switch")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../Switch"));
 
 const Container = styled.div`
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -48,101 +43,84 @@ type Props = {
   userDetails: any;
   totalAmount: any;
   setOrderIsReady: Function;
-}
+};
 const red = {
-  color: "red"
-} as React.CSSProperties
+  color: "red",
+} as React.CSSProperties;
 const green = {
-  color: "green"
-} as React.CSSProperties
+  color: "green",
+} as React.CSSProperties;
 
 const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, setOrderIsReady }) => {
   const { t } = useTranslation();
   const CREDIT = {
-    title: 'credito',
-    value: 'ccsave'
-  }
+    title: "credito",
+    value: "ccsave",
+  };
   const POS = {
     // Con tarjeta en domicilio
     title: t("checkout.payment.checkmo"),
-    value: "checkmo"
-  }
+    value: "checkmo",
+  };
   const TODOTIX = {
-    title: t('checkout.payment.todotix'),
-    value: 'todotix'
-  }
+    title: t("checkout.payment.todotix"),
+    value: "todotix",
+  };
   const CASH = {
     title: t("checkout.payment.cashondelivery"),
-    value: "cashondelivery"
-  }
-  
-  const valuesB2E = [
-    CASH,
-    POS,
-    TODOTIX,
-    CREDIT
-  ];
+    value: "cashondelivery",
+  };
 
-  const values = [
-    CASH,
-    POS,
-    TODOTIX
-  ]
-  const valuesPickup = [
-    CASH,
-    POS
-  ]
+  const valuesB2E = [CASH, POS, TODOTIX, CREDIT];
 
-  const [option, setOption] = useState('cashondelivery');
-  const [options, setOptions] = useState(values)
-  
+  const values = [CASH, POS, TODOTIX];
+  const valuesPickup = [CASH, POS];
+
+  const [option, setOption] = useState("cashondelivery");
+  const [options, setOptions] = useState(values);
 
   const [userCredit, { loading: loadingCredit, data: dataCredit }] = useLazyQuery(CLIENT_CREDIT, {
     fetchPolicy: "network-only",
-    onCompleted: d => {
-      setOrderIsReady(true)
+    onCompleted: (d) => {
+      setOrderIsReady(true);
       // actualizar valor para que el cliente sepa si le alcanza.
       if (option === CREDIT.value) {
-        parseFloat(totalAmount.replace(',', '.')) < d.getB2EUserCredit.creditoDisponible.toFixed(2)
-          ? setOrderIsReady(true)
-          : setOrderIsReady(false)
+        parseFloat(totalAmount.replace(",", ".")) < d.getB2EUserCredit.creditoDisponible.toFixed(2) ? setOrderIsReady(true) : setOrderIsReady(false);
       }
-    }
-  })
+    },
+  });
 
   const changeOption = (val: string) => {
     if (val === CREDIT.value) {
-      setOrderIsReady(false)
+      setOrderIsReady(false);
       userCredit({
         variables: {
           idAddress: 0,
-          idClient: parseInt(userDetails?.details?.employee) || 0
-        }
-      })
+          idClient: parseInt(userDetails?.details?.employee) || 0,
+        },
+      });
     } else {
-      setOrderIsReady(true)
+      setOrderIsReady(true);
     }
     setOption(val);
-    updateOrder('payment', { method: val });
-  }
+    updateOrder("payment", { method: val });
+  };
 
   useEffect(() => {
-    if(userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
-      setOptions(valuesB2E)
-      changeOption(CREDIT.value)
-      updateOrder('payment', { method: CREDIT.value });
+    if (userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
+      setOptions(valuesB2E);
+      changeOption(CREDIT.value);
+      updateOrder("payment", { method: CREDIT.value });
     } else if (userData.userInfo[0].agency) {
-      setOptions(valuesPickup)
-      setOption(valuesPickup[0].value)
-      updateOrder('payment', { method: valuesPickup[0].value });
+      setOptions(valuesPickup);
+      setOption(valuesPickup[0].value);
+      updateOrder("payment", { method: valuesPickup[0].value });
+    } else {
+      setOptions(values);
+      setOption(values[0].value);
+      updateOrder("payment", { method: values[0].value });
     }
-    else {
-      setOptions(values)
-      setOption(values[0].value)
-      updateOrder('payment', { method: values[0].value });
-    }
-
-  }, [userData])
+  }, [userData]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -154,13 +132,11 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
         <Disclaimer>{t("checkout.payment.bs_only")}</Disclaimer>
         {option === CREDIT.value && (
           <React.Fragment>
-            {loadingCredit && (
-              <CircleLoader noHeight={true} />
-            )}
+            {loadingCredit && <CircleLoader noHeight={true} />}
             {!loadingCredit && dataCredit && (
-              <p style={parseFloat(totalAmount.replace(',', '.')) < dataCredit.getB2EUserCredit.creditoDisponible.toFixed(2) ? green : red}>
-                Crédito Bs. {String(dataCredit.getB2EUserCredit.creditoDisponible.toFixed(2)).replace('.', ',')}.
-                {parseFloat(totalAmount.replace(',', '.')) < dataCredit.getB2EUserCredit.creditoDisponible.toFixed(2) ? ` Pagar con crédito` : ` No se puede pagar con crédito: Saldo insuficiente.`}
+              <p style={parseFloat(totalAmount.replace(",", ".")) < dataCredit.getB2EUserCredit.creditoDisponible.toFixed(2) ? green : red}>
+                Crédito Bs. {String(dataCredit.getB2EUserCredit.creditoDisponible.toFixed(2)).replace(".", ",")}.
+                {parseFloat(totalAmount.replace(",", ".")) < dataCredit.getB2EUserCredit.creditoDisponible.toFixed(2) ? ` Pagar con crédito` : ` No se puede pagar con crédito: Saldo insuficiente.`}
               </p>
             )}
           </React.Fragment>

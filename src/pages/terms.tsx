@@ -6,9 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_PAGES } from "../graphql/metadata/queries";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../components/Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 
 const Header = styled.div`
   position: relative;
@@ -71,8 +69,8 @@ const Terms: FC<Props> = () => {
   const { t } = useTranslation();
   const { data: terms } = useQuery(GET_PAGES, {
     fetchPolicy: "network-only",
-    variables: { identifier: "terminos-y-condiciones" }
-  })
+    variables: { identifier: "terminos-y-condiciones" },
+  });
 
   useEffect(() => {
     document.title = TERMS_TITLE;
@@ -80,14 +78,12 @@ const Terms: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-        <Header>
-          <div className="main-container">
-            <h2>{t("footer.terms")}</h2>
-          </div>
-        </Header>
-        {terms && terms.pages && terms.pages.length > 0 && terms.pages[0].content && 
-          <QuestionWrapper dangerouslySetInnerHTML={{ __html: terms.pages[0].content }} />
-        }
+      <Header>
+        <div className="main-container">
+          <h2>{t("footer.terms")}</h2>
+        </div>
+      </Header>
+      {terms && terms.pages && terms.pages.length > 0 && terms.pages[0].content && <QuestionWrapper dangerouslySetInnerHTML={{ __html: terms.pages[0].content }} />}
     </Suspense>
   );
 };

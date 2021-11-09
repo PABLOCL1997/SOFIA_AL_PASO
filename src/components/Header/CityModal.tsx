@@ -9,26 +9,15 @@ import { UserType } from "../../graphql/user/type";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { Changes, ShippingMethod, Steps } from "../CityModal/types";
 
-const Loader = React.lazy(
-  () => import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
-const ChooseShipping = React.lazy(
-  () => import(/* webpackChunkName: "ChooseShipping" */ "../CityModal/ChooseShipping")
-);
+const ChooseShipping = React.lazy(() => import(/* webpackChunkName: "ChooseShipping" */ "../CityModal/ChooseShipping"));
 
-const AddressDetail = React.lazy(
-  () => import(/* webpackChunkName: "AddressDetail" */ "../CityModal/AddressDetail")
-);
+const AddressDetail = React.lazy(() => import(/* webpackChunkName: "AddressDetail" */ "../CityModal/AddressDetail"));
 
-const ChangeAddressTypeModal = React.lazy(
-  () => import(/* webpackChunkName: "ChangeAddressTypeModal" */ "../CityModal/ChangeAddressTypeModal")
-);
+const ChangeAddressTypeModal = React.lazy(() => import(/* webpackChunkName: "ChangeAddressTypeModal" */ "../CityModal/ChangeAddressTypeModal"));
 
-const AddressInfoModal = React.lazy(
-  () => import(/* webpackChunkName: "AddressInfoModal" */ "../CityModal/AddressInfoModal")
-);
-
+const AddressInfoModal = React.lazy(() => import(/* webpackChunkName: "AddressInfoModal" */ "../CityModal/AddressInfoModal"));
 
 const Courtain = styled.div<any>`
   position: fixed;
@@ -54,7 +43,7 @@ const Modal = styled.div`
   padding: 50px;
   text-align: center;
   @media screen and (max-width: ${BREAKPOINT}) {
-    width:100%;
+    width: 100%;
     margin: 0 15px;
     padding: 20px 20px;
   }
@@ -82,9 +71,7 @@ const BackWrapper = styled.div`
   &:hover {
     opacity: 0.8;
   }
-
 `;
-
 
 export const Radios = styled.div`
   text-align: left;
@@ -126,7 +113,6 @@ export const RadionGroup = styled.div<any>`
   }
 `;
 
-
 type Props = {};
 
 type User = {
@@ -147,11 +133,11 @@ const CityModal: FC<Props> = () => {
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
 
   const [toggleCityModal] = useMutation(SET_USER, {
-    variables: { user: { openCityModal: false } as User }
+    variables: { user: { openCityModal: false } as User },
   });
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalStepType, setModalStepType] = useState<Changes>(Changes.PickupToPickup)
+  const [modalStepType, setModalStepType] = useState<Changes>(Changes.PickupToPickup);
   const [newAddressText, setNewAddressText] = useState<string>("");
 
   const [step, setStep] = useState<Steps>(Steps.Choosing);
@@ -163,7 +149,7 @@ const CityModal: FC<Props> = () => {
       cityName: c.value,
       openCityModal: false,
       idPriceList: 0,
-      agency: null
+      agency: null,
     });
   };
 
@@ -178,20 +164,15 @@ const CityModal: FC<Props> = () => {
             const longitude = "&longitude=" + position.coords.longitude;
             const query = latitude + longitude + "&localityLanguage=es";
             const Http = new XMLHttpRequest();
-            const bigdatacloud_api =
-              "https://api.bigdatacloud.net/data/reverse-geocode-client?" +
-              query;
+            const bigdatacloud_api = "https://api.bigdatacloud.net/data/reverse-geocode-client?" + query;
             Http.onreadystatechange = function () {
               if (this.readyState == 4) {
                 if (this.status == 200) {
                   const myObj = JSON.parse(this.responseText);
                   if (myObj.principalSubdivision) {
-                    if (myObj.principalSubdivision.indexOf("Cochabamba") >= 0)
-                      changeCity(cities[0]);
-                    else if (myObj.principalSubdivision.indexOf("La Paz") >= 0)
-                      changeCity(cities[1]);
-                    else if (myObj.principalSubdivision.indexOf("El Alto") >= 0)
-                      changeCity(cities[2]);
+                    if (myObj.principalSubdivision.indexOf("Cochabamba") >= 0) changeCity(cities[0]);
+                    else if (myObj.principalSubdivision.indexOf("La Paz") >= 0) changeCity(cities[1]);
+                    else if (myObj.principalSubdivision.indexOf("El Alto") >= 0) changeCity(cities[2]);
                     else changeCity(cities[2]);
                   }
                 } else {
@@ -206,7 +187,7 @@ const CityModal: FC<Props> = () => {
             // console.log(errors, 'on error');
           },
           {
-            timeout: 2000
+            timeout: 2000,
           }
         );
       } else {
@@ -215,7 +196,7 @@ const CityModal: FC<Props> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-  
+
   // set showInfoModal to true when  data.userInfo[0].addressInfo and data.userInfo[0].addressType has values
   const modalInfoVisible = useMemo(() => data && data.userInfo && data.userInfo[0] && data.userInfo[0].addressInfo && data.userInfo[0].addressType, [data]);
 
@@ -226,69 +207,48 @@ const CityModal: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <Courtain
-        className={
-          (data.userInfo.length &&
-            data.userInfo[0].openCityModal)&&
-          "visible"
-        }
-      >
-          <Modal>
-            <CloseWrapper onClick={async () => {
-              setStep(Steps.Choosing)
-              await toggleCityModal()
-            }}>
-              {/* close icon */}
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
-                <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+      <Courtain className={data.userInfo.length && data.userInfo[0].openCityModal && "visible"}>
+        <Modal>
+          <CloseWrapper
+            onClick={async () => {
+              setStep(Steps.Choosing);
+              await toggleCityModal();
+            }}
+          >
+            {/* close icon */}
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+              <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+            </svg>
+          </CloseWrapper>
+          {step === Steps.Detailing && (
+            <BackWrapper onClick={() => setStep(Steps.Choosing)}>
+              {/* back icon */}
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14.5 5.5H1" stroke="#2F2F2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M5.5 1L1 5.5L5.5 10" stroke="#2F2F2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </CloseWrapper>
-            {step === Steps.Detailing && 
-              <BackWrapper onClick={() => setStep(Steps.Choosing)}>
-                {/* back icon */}
-                <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14.5 5.5H1" stroke="#2F2F2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M5.5 1L1 5.5L5.5 10" stroke="#2F2F2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </BackWrapper>
-            }
-            {/* Back Icon above */}
+            </BackWrapper>
+          )}
+          {/* Back Icon above */}
 
-            {step === Steps.Choosing &&
-              <ChooseShipping
-                setShippingMethod={setShippingMethod}
-                setStep={setStep}
-                isAgency={(agency !== null)}
-                street={data?.userInfo[0]?.defaultAddressLabel || ""}
-              />
-              }
-            {step === Steps.Detailing && 
-              <AddressDetail
-                shippingMethod={shippingMethod}
-                setShippingMethod={setShippingMethod}
-                setStep={setStep}
-                setChangeModalVisible={setModalVisible}
-                setModalStepType={setModalStepType}
-                setNewAddressText={setNewAddressText}
-
-              />
-            }
-
-          </Modal>
+          {step === Steps.Choosing && <ChooseShipping setShippingMethod={setShippingMethod} setStep={setStep} isAgency={agency !== null} street={data?.userInfo[0]?.defaultAddressLabel || ""} />}
+          {step === Steps.Detailing && (
+            <AddressDetail
+              shippingMethod={shippingMethod}
+              setShippingMethod={setShippingMethod}
+              setStep={setStep}
+              setChangeModalVisible={setModalVisible}
+              setModalStepType={setModalStepType}
+              setNewAddressText={setNewAddressText}
+            />
+          )}
+        </Modal>
       </Courtain>
 
-      <ChangeAddressTypeModal
-        text={newAddressText}
-        visible={modalVisible}
-        stepType={modalStepType}
-        setVisible={setModalVisible}
-      />
+      <ChangeAddressTypeModal text={newAddressText} visible={modalVisible} stepType={modalStepType} setVisible={setModalVisible} />
 
-      <AddressInfoModal
-        isVisible={modalInfoVisible}
-      />
-
+      <AddressInfoModal isVisible={modalInfoVisible} />
     </Suspense>
   );
 };

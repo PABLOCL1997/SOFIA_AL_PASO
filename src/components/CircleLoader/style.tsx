@@ -5,12 +5,12 @@ export const Wrapper = styled.div``;
 export const Loader = styled.div<{ noHeader?: boolean; noHeight?: boolean }>`
   display: flex;
   align-items: center;
-  height: calc(100vh - ${props => (props.noHeader ? "130px" : "260px")});
+  height: calc(100vh - ${(props) => (props.noHeader ? "130px" : "260px")});
 
   width: 50px;
   margin: 0 auto;
 
-  ${props => {
+  ${(props) => {
     if (props.noHeight) {
       return `
         height: auto;

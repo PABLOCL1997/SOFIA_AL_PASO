@@ -1,1 +1,1 @@
-export { default } from './WritePin';
+export { default } from "./WritePin";

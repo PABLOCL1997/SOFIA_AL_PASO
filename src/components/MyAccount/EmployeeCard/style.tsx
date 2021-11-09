@@ -46,10 +46,9 @@ export const ActivaTitle = styled.div`
   }
 
   @media (max-width: ${BREAKPOINT}) {
-    h4{
+    h4 {
       font-size: 14px;
-    line-height: 20px;
+      line-height: 20px;
     }
-  
   }
 `;

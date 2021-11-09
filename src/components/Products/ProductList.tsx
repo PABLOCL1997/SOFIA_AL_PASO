@@ -7,30 +7,14 @@ import { toLink, fromLink } from "../../utils/string";
 import { BREAKPOINT, customStyles } from "../../utils/constants";
 import { FiltersWrap, Results, Separador, OrderBy } from "../../styled-components/ProductsListStyles";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
-const ItemBox = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox")
-);
-const Search = React.lazy(() =>
-  import(/* webpackChunkName: "Search" */ "../Images/Search")
-);
-const PagerArrowLeft = React.lazy(() =>
-  import(
-    /* webpackChunkName: "PagerArrowLeftPagerArrowLeft" */ "../Images/PagerArrowLeft"
-  )
-);
-const PagerArrowRight = React.lazy(() =>
-  import(/* webpackChunkName: "PagerArrowRight" */ "../Images/PagerArrowRight")
-);
-const Chevron = React.lazy(() =>
-  import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
-);
-const Product = React.lazy(() =>
-  import(/* webpackChunkName: "Product" */ "../../pages/product")
-);
+const ItemBox = React.lazy(() => import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox"));
+const Search = React.lazy(() => import(/* webpackChunkName: "Search" */ "../Images/Search"));
+const PagerArrowLeft = React.lazy(() => import(/* webpackChunkName: "PagerArrowLeftPagerArrowLeft" */ "../Images/PagerArrowLeft"));
+const PagerArrowRight = React.lazy(() => import(/* webpackChunkName: "PagerArrowRight" */ "../Images/PagerArrowRight"));
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
+const Product = React.lazy(() => import(/* webpackChunkName: "Product" */ "../../pages/product"));
 
 const Container = styled.div``;
 
@@ -92,15 +76,14 @@ const SelectBox = styled.div`
   position: relative;
   z-index: 2;
 
-  svg{
-    path{
-      stroke:var(--red);
+  svg {
+    path {
+      stroke: var(--red);
     }
   }
 `;
 
 const Select = styled.div`
-  
   box-sizing: border-box;
   border-radius: 44px;
   padding-top: 4px;
@@ -158,28 +141,28 @@ const Pager = styled.div`
   justify-content: center;
   margin: 0 0 40px;
   flex-wrap: wrap;
-  justify-content:flex-start;
+  justify-content: flex-start;
 `;
-Pager.displayName = 'Pager'
+Pager.displayName = "Pager";
 
 const PageArrow = styled.a<{ allowed: boolean }>`
-  opacity: ${props => (props.allowed ? "1" : ".3")};
+  opacity: ${(props) => (props.allowed ? "1" : ".3")};
   margin: 0 10px;
-  cursor: ${props => (props.allowed ? "pointer" : "default")};
+  cursor: ${(props) => (props.allowed ? "pointer" : "default")};
 `;
-PageArrow.displayName = 'PageArrow'
+PageArrow.displayName = "PageArrow";
 
 const Page = styled.a<{ selected: boolean }>`
-  font-family: ${props => (props.selected ? "MullerRegular" : "MullerRegular")};
+  font-family: ${(props) => (props.selected ? "MullerRegular" : "MullerRegular")};
   font-size: 16px;
-line-height: 20px;
+  line-height: 20px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: ${props => (props.selected ? "var(--red)" : customStyles.black)};
+  color: ${(props) => (props.selected ? "var(--red)" : customStyles.black)};
   margin: 5px;
-  cursor: ${props => (props.selected ? "default" : "pointer")};
+  cursor: ${(props) => (props.selected ? "default" : "pointer")};
 `;
-Page.displayName = 'Page'
+Page.displayName = "Page";
 
 const ProductModal = styled.div`
   position: fixed;
@@ -229,9 +212,8 @@ const Brands = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin: 15px 15px;
-  display:none;
-
-`
+  display: none;
+`;
 
 const Chip = styled.span`
   position: relative;
@@ -239,28 +221,28 @@ const Chip = styled.span`
   margin: 0px 10px 0px 10px;
   border-radius: 10px;
   background-color: var(--f-gray);
-`
+`;
 const Cross = styled.a`
-margin: 0px 15px 0px 15px;
-&:hover {
-  opacity: 1;
-}
-&:before, &:after {
-  position: absolute;
-  right: 10px;
-  content: ' ';
-  height: 14px;
-  width: 2px;
-  background-color: #333;
-}
-&:before {
-  transform: rotate(45deg);
-}
-&:after {
-  transform: rotate(-45deg);
-}
-`
-
+  margin: 0px 15px 0px 15px;
+  &:hover {
+    opacity: 1;
+  }
+  &:before,
+  &:after {
+    position: absolute;
+    right: 10px;
+    content: " ";
+    height: 14px;
+    width: 2px;
+    background-color: #333;
+  }
+  &:before {
+    transform: rotate(45deg);
+  }
+  &:after {
+    transform: rotate(-45deg);
+  }
+`;
 
 type Props = {
   products: Array<ProductType>;
@@ -272,15 +254,7 @@ type Props = {
   brands: any;
 };
 
-const ProductList: FC<Props> = ({
-  products,
-  count,
-  offset,
-  limit,
-  orderQuery,
-  parentOrder,
-  brands
-}) => {
+const ProductList: FC<Props> = ({ products, count, offset, limit, orderQuery, parentOrder, brands }) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const query = new URLSearchParams(useLocation().search);
@@ -289,7 +263,7 @@ const ProductList: FC<Props> = ({
   const [search, setSearch] = useState(query.get("q"));
   const [page, setPage] = useState(query.get("p") ? Number(query.get("p")) : 1);
   const [openOrder, setOpenOrder] = useState(false);
-  const [openFilter, setOpenFilter] = useState(false)
+  const [openFilter, setOpenFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState<ProductType | any>({});
 
@@ -301,13 +275,11 @@ const ProductList: FC<Props> = ({
   const doSearch = () => {
     history.push({
       pathname: "/productos",
-      search: `q=${toLink(search)}`
+      search: `q=${toLink(search)}`,
     });
   };
 
   const [pageHook, setPageHook] = useState(1);
-
-
 
   const move = (fwd: boolean) => {
     if (fwd && page < Math.ceil(count / 9)) return changePage(page + 1);
@@ -316,10 +288,10 @@ const ProductList: FC<Props> = ({
 
   const changePage = (page: number) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    const params = new URLSearchParams(history.location.search);   
-    
-    params.delete("p")
-    params.append("p", String(page))
+    const params = new URLSearchParams(history.location.search);
+
+    params.delete("p");
+    params.append("p", String(page));
 
     history.push({ search: params.toString() });
   };
@@ -345,24 +317,18 @@ const ProductList: FC<Props> = ({
   useEffect(() => {
     setOldUrl(getOldUrl());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-
-
-
   }, []);
 
   return (
     <Suspense fallback={<Loader />}>
-         
       <Container>
         <Toolbox>
           <FiltersWrap>
             <Results>
-            {offset == 0 ? 1 : offset} - {limit+offset > count ? count : limit+offset} de {count} resultados
+              {offset == 0 ? 1 : offset} - {limit + offset > count ? count : limit + offset} de {count} resultados
             </Results>
             <Separador />
-            <OrderBy>
-              
-            </OrderBy>
+            <OrderBy></OrderBy>
           </FiltersWrap>
           <SelectBox>
             <Select onClick={() => setOpenOrder(!openOrder)}>
@@ -385,39 +351,39 @@ const ProductList: FC<Props> = ({
         {!!products.length && (
           <Grid>
             {products.map((product: ProductType) => (
-              <ItemBox
-                key={`ProductEntity#${product.entity_id}`}
-                product={product}
-              />
+              <ItemBox key={`ProductEntity#${product.entity_id}`} product={product} />
             ))}
           </Grid>
         )}
-        {!products.length && (
-          <NoResults>{t("products.product_list.no_results")}</NoResults>
-        )}
+        {!products.length && <NoResults>{t("products.product_list.no_results")}</NoResults>}
         {!!products.length && count > 9 && (
           <Pager>
             <PageArrow
-              onClick={() => {move(false)}}
+              onClick={() => {
+                move(false);
+              }}
               allowed={page > 1}
             >
               <PagerArrowLeft />
             </PageArrow>
             {[...Array(Math.ceil(count / 9))].map((v: any, index: number) => {
-              return(
-              <Page
-                selected={page === index + 1}
-                key={`Page#${index}`}
-                onClick={() => { 
-                  changePage(index + 1)
-                  setPageHook(index + 1)
-                 }}
-              >
-                {index + 1}
-              </Page>
-            )})}
+              return (
+                <Page
+                  selected={page === index + 1}
+                  key={`Page#${index}`}
+                  onClick={() => {
+                    changePage(index + 1);
+                    setPageHook(index + 1);
+                  }}
+                >
+                  {index + 1}
+                </Page>
+              );
+            })}
             <PageArrow
-              onClick={() => {move(true)}}
+              onClick={() => {
+                move(true);
+              }}
               allowed={page < Math.ceil(count / 9)}
             >
               <PagerArrowRight />
@@ -427,11 +393,7 @@ const ProductList: FC<Props> = ({
         {open && (
           <ProductModal>
             <div className="product-modal">
-              <Product
-                closeModal={() => setOpen(false)}
-                oldUrl={oldUrl}
-                inlineProdname={toLink(product.name)}
-              />
+              <Product closeModal={() => setOpen(false)} oldUrl={oldUrl} inlineProdname={toLink(product.name)} />
             </div>
           </ProductModal>
         )}

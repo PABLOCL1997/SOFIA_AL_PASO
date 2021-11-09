@@ -5,7 +5,7 @@ import useMinimumPrice from "../../hooks/useMinimumPrice";
 
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
-import {  trackGoToCheckoutEvent } from "../../utils/dataLayer";
+import { trackGoToCheckoutEvent } from "../../utils/dataLayer";
 
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../../graphql/products/type";
@@ -36,29 +36,20 @@ import {
   Totals,
   UnderBudget,
   UnitPrice,
-  Units
-} from "../CartModal/style"
+  Units,
+} from "../CartModal/style";
 
 import useCart from "../../hooks/useCart";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
-const Delete = React.lazy(
-  () => import(/* webpackChunkName: "Delete" */ "../Images/Delete")
-);
+const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../Images/Delete"));
 
-const Chevron = React.lazy(
-  () => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron")
-);
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
 
-const RecommendedProducts = React.lazy(
-  () => import(/* webpackChunkName: "RecommendedProducts" */ "../Checkout/RecommendedProducts")
-);
-
+const RecommendedProducts = React.lazy(() => import(/* webpackChunkName: "RecommendedProducts" */ "../Checkout/RecommendedProducts"));
 
 type Props = {};
 
@@ -66,14 +57,14 @@ const CartModal: FC<Props> = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const minimumPrice = useMinimumPrice()
-  const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart()
+  const minimumPrice = useMinimumPrice();
+  const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart();
 
   const [relatedProducts, setRelatedProducts] = useState<any>([]);
   const { data: userData } = useQuery(GET_USER, {});
 
   const [toggleLoginModal] = useMutation(SET_USER, {
-    variables: { user: { openLoginModal: true } }
+    variables: { user: { openLoginModal: true } },
   });
 
   const checkout = () => {
@@ -92,26 +83,21 @@ const CartModal: FC<Props> = () => {
     if (cart && cart.cartItems) {
       cart.cartItems.forEach((el: any) => {
         checkoutItems.push(el.entity_id);
-        if(el.related){
+        if (el.related) {
           relProducts = [...relProducts, ...el.related];
         }
-      })
-      relProducts = relProducts.filter((v:any,i:any,a:any)=>a.findIndex((t:any)=>(t.entity_id === v.entity_id))===i)
-      relProducts = relProducts.filter((i:any) => !checkoutItems.includes(i.entity_id))
-      relProducts = relProducts.sort((a:any, b:any) => (a.entity_id > b.entity_id) ? 1 : -1);
+      });
+      relProducts = relProducts.filter((v: any, i: any, a: any) => a.findIndex((t: any) => t.entity_id === v.entity_id) === i);
+      relProducts = relProducts.filter((i: any) => !checkoutItems.includes(i.entity_id));
+      relProducts = relProducts.sort((a: any, b: any) => (a.entity_id > b.entity_id ? 1 : -1));
       setRelatedProducts(relProducts);
     }
-    return relProducts
-  }
+    return relProducts;
+  };
 
   return (
     <Suspense fallback={<Loader />}>
-      <ModalCourtain
-        className={
-          (!userData.userInfo.length || userData.userInfo[0].openCartModal) &&
-          "visible"
-        }
-      >
+      <ModalCourtain className={(!userData.userInfo.length || userData.userInfo[0].openCartModal) && "visible"}>
         <Modal>
           <Header>
             <Title>{t("cart.title")}</Title>
@@ -127,69 +113,40 @@ const CartModal: FC<Props> = () => {
               </svg>
             </CloseWrapper>
           </Header>
-          {parseFloat(totalAmount.replace(",", ".")) <
-            minimumPrice && (
-            <UnderBudget>
-              {t("cart.under_budget", { min_price: minimumPrice })}
-            </UnderBudget>
-          )}
+          {parseFloat(totalAmount.replace(",", ".")) < minimumPrice && <UnderBudget>{t("cart.under_budget", { min_price: minimumPrice })}</UnderBudget>}
 
           {cart && cart.cartItems && cart.cartItems.length > 0 ? (
             <Items>
               {cart &&
                 cart.cartItems &&
-                cart.cartItems
-                  .map((product: ProductType, i: number) => (
-                    <Row key={product.entity_id}>
+                cart.cartItems.map((product: ProductType, i: number) => (
+                  <Row key={product.entity_id}>
                     <Image src={product.image.split(",")[0]}></Image>
                     <NameBox>
-                      <Name>
-                        {product.useKGS
-                          ? `${product.name} DE ${Number(product.weight)
-                              .toFixed(2)
-                              .replace(".", ",")} KGS APROX.`
-                          : product.name}
-                      </Name>
+                      <Name>{product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}</Name>
                       <Units>&nbsp;</Units>
                     </NameBox>
                     <Qty>
-                      <select
-                        defaultValue={product.qty}
-                        onChange={event =>
-                          updateItem(Number(event.target.value), product)
-                        }
-                      >
-                        {[...(Array(21).keys() as any)]
-                          .slice(1)
-                          .map((opt: any, index: number) => (
-                            <option key={index} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
+                      <select defaultValue={product.qty} onChange={(event) => updateItem(Number(event.target.value), product)}>
+                        {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => (
+                          <option key={index} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
                       </select>
                       <Chevron />
                     </Qty>
-                    <UnitPrice>
-                      Bs. {product.special_price.toFixed(2).replace(".", ",")}{" "}
-                      c/u -
-                    </UnitPrice>
-                    <Price>
-                      Bs.{" "}
-                      {(product.special_price * (product.qty ? product.qty : 0))
-                        .toFixed(2)
-                        .replace(".", ",")}
-                    </Price>
+                    <UnitPrice>Bs. {product.special_price.toFixed(2).replace(".", ",")} c/u -</UnitPrice>
+                    <Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace(".", ",")}</Price>
                     <DeleteWrapper onClick={() => removeRow(product)}>
                       <Delete />
                     </DeleteWrapper>
                   </Row>
-
-                  ))}
+                ))}
             </Items>
           ) : (
             <div>
-              <LoaderWrapper>
-              </LoaderWrapper>
+              <LoaderWrapper></LoaderWrapper>
             </div>
           )}
           <Totals>
@@ -200,17 +157,20 @@ const CartModal: FC<Props> = () => {
             <Disclaimer>{t("cart.disclaimer")}</Disclaimer>
             <Toolbox>
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
-              {parseFloat(totalAmount.replace(",", ".")) >=
-                minimumPrice && (
+              {parseFloat(totalAmount.replace(",", ".")) >= minimumPrice && (
                 <CtaWrapper>
-                  <Cta filled={true} text={t("cart.pay")} action={() => {
-                    const relProducts = getRelatedProducts();
-                    if(relProducts.length == 0){
-                      checkout();
-                    } else {
-                      closeCartModal();
-                    }
-                  }} />
+                  <Cta
+                    filled={true}
+                    text={t("cart.pay")}
+                    action={() => {
+                      const relProducts = getRelatedProducts();
+                      if (relProducts.length == 0) {
+                        checkout();
+                      } else {
+                        closeCartModal();
+                      }
+                    }}
+                  />
                 </CtaWrapper>
               )}
             </Toolbox>

@@ -16,14 +16,14 @@ export const Marker = styled.div<{ selected: boolean }>`
   }
 
   svg {
-    ${({ selected })=> selected === true ? 
-      `
+    ${({ selected }) =>
+      selected === true
+        ? `
       fill: #E30613;
-      `:
       `
+        : `
       fill: #767474;
-      `
-    }
+      `}
   }
 
   @keyframes bounce {
@@ -48,8 +48,8 @@ export const Marker = styled.div<{ selected: boolean }>`
 `;
 
 export const Name = styled.span<{ maxWidth?: string }>`
-  font-size: ${props => (props.maxWidth ? "12px" : "16px")};
-  
+  font-size: ${(props) => (props.maxWidth ? "12px" : "16px")};
+
   line-height: 24px;
   display: block;
   width: fit-content;
@@ -73,7 +73,7 @@ export const Name = styled.span<{ maxWidth?: string }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: ${props => (props.maxWidth ? props.maxWidth : "550px")};
+  max-width: ${(props) => (props.maxWidth ? props.maxWidth : "550px")};
 
   top: -15px;
 
@@ -89,7 +89,7 @@ type Props = {
   text?: string;
   name?: string;
   color?: string;
-  maxWidth?:string;
+  maxWidth?: string;
   selected: boolean;
 };
 const MapMarker: FC<Props> = ({ text, name, maxWidth, selected }) => {
@@ -104,9 +104,8 @@ const MapMarker: FC<Props> = ({ text, name, maxWidth, selected }) => {
         /> */}
 
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="12"/>
+          <circle cx="12" cy="12" r="12" />
         </svg>
-
 
         {/*    <div className="pulse" /> */}
       </Marker>
@@ -116,19 +115,17 @@ const MapMarker: FC<Props> = ({ text, name, maxWidth, selected }) => {
 
 export default MapMarker;
 
-
 export const Maps = styled.div`
   width: 100%;
-  height:408px;
+  height: 408px;
   border-radius: 40px;
 
   .gmnoprint {
     display: none;
   }
 
-  > div > div{
+  > div > div {
     border-radius: 14px;
-    
   }
 
   @media (max-width: ${LG}) {
@@ -138,6 +135,5 @@ export const Maps = styled.div`
 
   @media screen and (max-width: ${BREAKPOINT}) {
     margin: 20px 0 0;
-}
-
+  }
 `;

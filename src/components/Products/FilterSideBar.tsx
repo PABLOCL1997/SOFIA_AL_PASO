@@ -2,11 +2,7 @@ import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  CategoryType,
-  SubCategoryLvl3Type,
-  SubCategoryLvl4Type
-} from "../../graphql/categories/type";
+import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from "../../graphql/categories/type";
 import { BREAKPOINT } from "../../utils/constants";
 
 import { search, toLink } from "../../utils/string";
@@ -36,7 +32,7 @@ import {
   RadioWrap,
   RadioLi,
   SmallCatImage,
-  TitleCatImage
+  TitleCatImage,
 } from "../../styled-components/FilterSideBarStyles";
 import CarritoNegro from "../../assets/images/carrito-black.svg";
 import { customStyles } from "../../utils/constants";
@@ -48,15 +44,9 @@ import RadioIconChecked from "../../assets/images/radio-btn-checked.svg";
 import { fromLink } from "../../utils/string";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-
-const FreeDelivery = React.lazy(() =>
-  import(/* webpackChunkName: "FreeDelivery" */ "../Images/FreeDelivery")
-);
-
+const FreeDelivery = React.lazy(() => import(/* webpackChunkName: "FreeDelivery" */ "../Images/FreeDelivery"));
 
 const Container = styled.div`
   position: relative;
@@ -135,7 +125,7 @@ const CategoryList = styled.ul<{ open: boolean; show?: boolean }>`
     border-top:1px solid #F0F0F0;
     border-bottom:1px solid #F0F0F0;
 
-    display:${props => (props.show ? "block !important" : "none !important")};
+    display:${(props) => (props.show ? "block !important" : "none !important")};
 
     @media screen and (max-width: ${BREAKPOINT}) {
         // position: absolute;
@@ -143,7 +133,7 @@ const CategoryList = styled.ul<{ open: boolean; show?: boolean }>`
         width: 100%;
         top: 0;
         // padding-top: 60px;
-        display: ${props => (props.open ? "block" : "block")};
+        display: ${(props) => (props.open ? "block" : "block")};
         border-top:0;
     }
 }
@@ -151,20 +141,14 @@ const CategoryList = styled.ul<{ open: boolean; show?: boolean }>`
 CategoryList.displayName = "CategoryList";
 
 const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
-
   padding: 5px 0;
   cursor: pointer;
 
-
-
-  @media(max-width:${BREAKPOINT}){
+  @media (max-width: ${BREAKPOINT}) {
     margin-bottom: 5px;
   }
 
-
-
-
-/*   &:before {
+  /*   &:before {
     content: "";
     display: block;
     left: 0;
@@ -172,10 +156,10 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
     height: 30px;
     position: absolute;
     border-left: 3px solid
-      ${props => (props.selected ? "var(--yellow)" : "transparent")};
+      ${(props) => (props.selected ? "var(--yellow)" : "transparent")};
   } */
   span {
-  /*   font-family: MullerBold; */
+    /*   font-family: MullerBold; */
   }
   a {
     color: inherit; /* blue colors for links too */
@@ -183,40 +167,34 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
     font-family: MullerMedium;
     font-size: 14px;
     line-height: 20px;
-    color:${customStyles.black};
+    color: ${customStyles.black};
 
-    display:flex;
+    display: flex;
     align-items: center;
 
-   
-   
-
-
-    img{
-      margin-right:7px;
+    img {
+      margin-right: 7px;
     }
 
-    &:hover{
-      text-decoration:underline;
+    &:hover {
+      text-decoration: underline;
     }
-    
   }
 
-  em{
-    font-family:MullerBold;
-    color:${customStyles.black};
+  em {
+    font-family: MullerBold;
+    color: ${customStyles.black};
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.2px;
     text-transform: uppercase;
   }
 
-  .cantidad{
-    color:${customStyles.darkGrey};
+  .cantidad {
+    color: ${customStyles.darkGrey};
     font-size: 14px;
     line-height: 20px;
-    margin-left:2px;
-
+    margin-left: 2px;
   }
 `;
 Category.displayName = "Category";
@@ -299,16 +277,7 @@ type Props = {
   setBrand: Function;
 };
 
-const FilterSideBar: FC<Props> = ({
-  count,
-  categories,
-  brands,
-  order,
-  orderQuery,
-  offset,
-  limit,
-  setBrand
-}) => {
+const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery, offset, limit, setBrand }) => {
   const { t } = useTranslation();
 
   const history = useHistory();
@@ -322,11 +291,7 @@ const FilterSideBar: FC<Props> = ({
   const [openModal, setOpenModal] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
 
-  const navigateLink = (
-    cat: CategoryType,
-    s3cat?: SubCategoryLvl3Type,
-    s4cat?: SubCategoryLvl4Type
-  ) => {
+  const navigateLink = (cat: CategoryType, s3cat?: SubCategoryLvl3Type, s4cat?: SubCategoryLvl4Type) => {
     if (cat.entity_id === 0) {
       return `/productos`;
     } else {
@@ -337,11 +302,7 @@ const FilterSideBar: FC<Props> = ({
     }
   };
 
-  const compare = (
-    cat: CategoryType,
-    s3cat?: SubCategoryLvl3Type,
-    s4cat?: SubCategoryLvl4Type
-  ) => {
+  const compare = (cat: CategoryType, s3cat?: SubCategoryLvl3Type, s4cat?: SubCategoryLvl4Type) => {
     let is = toLink(String(category)) === toLink(cat.name);
     if (s3cat) is = is && toLink(String(subcategory)) === toLink(s3cat.name);
     if (s4cat) is = is && toLink(String(lastlevel)) === toLink(s4cat.name);
@@ -353,8 +314,8 @@ const FilterSideBar: FC<Props> = ({
   const [arrayBrand, setArrayBrand] = useState([
     {
       name: "",
-      toggle: false
-    }
+      toggle: false,
+    },
   ]);
 
   const [brandsSelected, setBrandsSelected] = useState(0);
@@ -364,7 +325,7 @@ const FilterSideBar: FC<Props> = ({
       const toggle = brandQuery?.includes(name);
       return {
         name,
-        toggle
+        toggle,
       };
     });
     setArrayBrand(stateArray);
@@ -378,23 +339,23 @@ const FilterSideBar: FC<Props> = ({
     var toggleQty = arrayBrand.filter(({ toggle }: any) => toggle);
     setBrandsSelected(toggleQty.length);
     if (toggleQty.length) {
-      setBrand(toggleQty.map(({ name }: any) => `'${name}'`).join(','))
+      setBrand(toggleQty.map(({ name }: any) => `'${name}'`).join(","));
     } else {
-      setBrand(null)
+      setBrand(null);
     }
   };
 
   const handleToggleOff = () => {
     let newState = [...arrayBrand];
 
-    newState.forEach(item => {
+    newState.forEach((item) => {
       item.toggle = false;
     });
     setArrayBrand(newState);
 
-    var toggleQty = arrayBrand.filter(item => item.toggle === true);
+    var toggleQty = arrayBrand.filter((item) => item.toggle === true);
     setBrandsSelected(toggleQty.length);
-    setBrand(null)
+    setBrand(null);
   };
 
   useEffect(() => {
@@ -407,13 +368,11 @@ const FilterSideBar: FC<Props> = ({
       params.delete("marca");
     }
     const paramsParsed = params.toString().replaceAll("%2C", ",");
-    
+
     history.push({ search: paramsParsed });
   }, [arrayBrand]);
 
-  const arrayBrandParams = history.location.search
-    .replace("?marca=", "")
-    .split(",");
+  const arrayBrandParams = history.location.search.replace("?marca=", "").split(",");
 
   var sum = 0;
 
@@ -425,10 +384,7 @@ const FilterSideBar: FC<Props> = ({
   var result: any =
     categories.length &&
     categories.filter((obj: any) => {
-      return (
-        obj?.name?.replace(/[^A-Z0-9]+/gi, "_").toLowerCase() ===
-        category?.replace(/[^A-Z0-9]+/gi, "_").toLowerCase()
-      );
+      return obj?.name?.replace(/[^A-Z0-9]+/gi, "_").toLowerCase() === category?.replace(/[^A-Z0-9]+/gi, "_").toLowerCase();
     });
 
   const [hideCat, setHideCat] = useState(0);
@@ -439,18 +395,12 @@ const FilterSideBar: FC<Props> = ({
         cat.name.replace(/[^A-Z0-9]+/gi, "_").toLowerCase() ===
         history.location.pathname
           .split("/")
-          [history.location.pathname.split("/").length - 1].replace(
-            /[^A-Z0-9]+/gi,
-            "_"
-          )
+          [history.location.pathname.split("/").length - 1].replace(/[^A-Z0-9]+/gi, "_")
           .toLowerCase()
     );
 
-
     setHideCat(catFilter && catFilter[0]?.subcategories.length);
   }, []);
-
- 
 
   return (
     <Suspense fallback={<Loader />}>
@@ -465,8 +415,7 @@ const FilterSideBar: FC<Props> = ({
                   search(
                     "name",
                     toLink(category),
-                    categories
-                    .map((category: CategoryType) => {
+                    categories.map((category: CategoryType) => {
                       return { ...category, name: toLink(category.name) };
                     })
                   )?.category_image
@@ -478,26 +427,14 @@ const FilterSideBar: FC<Props> = ({
             ""
           )}
 
-          <h3>
-            {lastlevel
-              ? `${fromLink(subcategory)}: ${fromLink(lastlevel)}`
-              : subcategory
-              ? fromLink(subcategory)
-              : category
-              ? fromLink(category)
-              : "Todos los productos"}
-          </h3>
+          <h3>{lastlevel ? `${fromLink(subcategory)}: ${fromLink(lastlevel)}` : subcategory ? fromLink(subcategory) : category ? fromLink(category) : "Todos los productos"}</h3>
         </TitleWrap>
 
         <OrderFilterXsWrap>
           <ResultadosXs>
-            {offset == 0 ? 1 : offset} -{" "}
-            {limit + offset > count ? count : limit + offset} de {count}{" "}
-            resultados
+            {offset == 0 ? 1 : offset} - {limit + offset > count ? count : limit + offset} de {count} resultados
           </ResultadosXs>
-          <OrderAndFilterBtn onClick={() => setOpenModal(true)}>
-            Ordenar y filtrar
-          </OrderAndFilterBtn>
+          <OrderAndFilterBtn onClick={() => setOpenModal(true)}>Ordenar y filtrar</OrderAndFilterBtn>
         </OrderFilterXsWrap>
 
         {arrayBrandParams.length > 0 && arrayBrandParams[0] !== "" && (
@@ -534,262 +471,147 @@ const FilterSideBar: FC<Props> = ({
         )}
 
         <DesktopCategory>
-          <CategoryList
-            open={open}
-            show={
-              result[0]?.subcategories?.length !== 0 &&
-              hideCat !== 0 &&
-              history.location.pathname.split("/").length !== 5
-            }
-          >
-            <Category
-              onClick={() => {}}
-              selected={!category || category === ""}
-            >
-              {history.location.pathname === "/productos" ||
-              history.location.pathname === "/productos/" ? (
-                <em>Categorías</em>
-              ) : (
-                <em>Subcategorías</em>
-              )}
+          <CategoryList open={open} show={result[0]?.subcategories?.length !== 0 && hideCat !== 0 && history.location.pathname.split("/").length !== 5}>
+            <Category onClick={() => {}} selected={!category || category === ""}>
+              {history.location.pathname === "/productos" || history.location.pathname === "/productos/" ? <em>Categorías</em> : <em>Subcategorías</em>}
             </Category>
 
             {categories.length &&
               categories
                 .filter((row: CategoryType) => {
-                  return city === "CO" ? row : 
-                    toLink(row.name).match(/cocha-days/) ? null : row
+                  return city === "CO" ? row : toLink(row.name).match(/cocha-days/) ? null : row;
                 })
                 .map((row: CategoryType) => (
-                <Category lvl={1} selected={compare(row)} key={row.entity_id}>
-                  <Link to={navigateLink(row)}>
-                    <SmallCatImage src={row.category_image} alt="" />
-                    {row.name}
-                    <span className="cantidad">({row.quantity})</span>
-                  </Link>
+                  <Category lvl={1} selected={compare(row)} key={row.entity_id}>
+                    <Link to={navigateLink(row)}>
+                      <SmallCatImage src={row.category_image} alt="" />
+                      {row.name}
+                      <span className="cantidad">({row.quantity})</span>
+                    </Link>
 
-                  <LevelSub
-                    brandSelected={brandSelected !== ""}
-                    show={compare(row)}
-                  >
-                    {compare(row) &&
-                      row.subcategories &&
-                      !!row.subcategories.length &&
-                      row.subcategories.map((s3row: SubCategoryLvl3Type) => {
-                        return (
-                          <SubCategory
-                            selected={compare(row, s3row)}
-                            key={s3row.entity_id}
-                            lvl={compare(row, s3row)}
-                          >
-                            <span onClick={() => {}}>
-                              <Link to={navigateLink(row, s3row)}>
-                                {s3row.name}
+                    <LevelSub brandSelected={brandSelected !== ""} show={compare(row)}>
+                      {compare(row) &&
+                        row.subcategories &&
+                        !!row.subcategories.length &&
+                        row.subcategories.map((s3row: SubCategoryLvl3Type) => {
+                          return (
+                            <SubCategory selected={compare(row, s3row)} key={s3row.entity_id} lvl={compare(row, s3row)}>
+                              <span onClick={() => {}}>
+                                <Link to={navigateLink(row, s3row)}>
+                                  {s3row.name}
 
-                                <span className="cantidad">
-                                  ({s3row?.quantity})
-                                </span>
-                              </Link>
-                            </span>
+                                  <span className="cantidad">({s3row?.quantity})</span>
+                                </Link>
+                              </span>
 
-                            <LevelSub2
-                              show={compare(row, s3row)}
-                              index={getSum(s3row?.subcategories?.length !== 0)}
-                            >
-                              {compare(row, s3row) &&
-                                s3row.subcategories &&
-                                !!s3row.subcategories.length &&
-                                s3row.subcategories.map(
-                                  (s4row: SubCategoryLvl4Type) => {
+                              <LevelSub2 show={compare(row, s3row)} index={getSum(s3row?.subcategories?.length !== 0)}>
+                                {compare(row, s3row) &&
+                                  s3row.subcategories &&
+                                  !!s3row.subcategories.length &&
+                                  s3row.subcategories.map((s4row: SubCategoryLvl4Type) => {
                                     if (s4row) {
                                       return (
-                                        <SubCategory4
-                                          selected={compare(row, s3row, s4row)}
-                                          key={s4row.entity_id}
-                                          lvl={compare(row, s3row, s4row)}
-                                        >
-                                          <Link
-                                            to={navigateLink(row, s3row, s4row)}
-                                          >
+                                        <SubCategory4 selected={compare(row, s3row, s4row)} key={s4row.entity_id} lvl={compare(row, s3row, s4row)}>
+                                          <Link to={navigateLink(row, s3row, s4row)}>
                                             {s4row.name}
-                                            <span className="cantidad">
-                                              ({s4row.quantity})
-                                            </span>
+                                            <span className="cantidad">({s4row.quantity})</span>
                                           </Link>
                                         </SubCategory4>
                                       );
                                     }
-                                  }
-                                )}
-                            </LevelSub2>
-                          </SubCategory>
-                        );
-                      })}
-                  </LevelSub>
-                </Category>
-              ))}
+                                  })}
+                              </LevelSub2>
+                            </SubCategory>
+                          );
+                        })}
+                    </LevelSub>
+                  </Category>
+                ))}
           </CategoryList>
         </DesktopCategory>
 
         <ModalCourtain className={openModal ? "visible" : ""}>
           {openModal && (
             <Modal>
-              <img
-                src={CrossIcon}
-                className="close"
-                alt=""
-                onClick={() => setOpenModal(false)}
-              />
+              <img src={CrossIcon} className="close" alt="" onClick={() => setOpenModal(false)} />
               <OrderXsTabs>
                 <TabsBtn>
-                  <TabClick
-                    onClick={() => setCurrentTab(0)}
-                    active={currentTab === 0}
-                  >
+                  <TabClick onClick={() => setCurrentTab(0)} active={currentTab === 0}>
                     <span>Filtrar</span>
                   </TabClick>
-                  <TabClick
-                    onClick={() => setCurrentTab(1)}
-                    active={currentTab === 1}
-                  >
+                  <TabClick onClick={() => setCurrentTab(1)} active={currentTab === 1}>
                     <span>Ordenar</span>
                   </TabClick>
                 </TabsBtn>
                 <TabContent active={currentTab === 0} current={currentTab}>
-                  <CategoryList
-                    open={open}
-                    show={
-                      result[0]?.subcategories?.length !== 0 &&
-                      hideCat !== 0 &&
-                      history.location.pathname.split("/").length !== 5
-                    }
-                  >
-                    <Category
-                      onClick={() => {}}
-                      selected={!category || category === ""}
-                    >
-                      {history.location.pathname === "/productos" ||
-                      history.location.pathname === "/productos/" ? (
+                  <CategoryList open={open} show={result[0]?.subcategories?.length !== 0 && hideCat !== 0 && history.location.pathname.split("/").length !== 5}>
+                    <Category onClick={() => {}} selected={!category || category === ""}>
+                      {history.location.pathname === "/productos" || history.location.pathname === "/productos/" ? (
                         <em>Categorías</em>
                       ) : (
-                        <em>
-                          {result[0]?.subcategories?.length !== 0 ? (
-                            "Subcategorías"
-                          ) : (
-                            <br />
-                          )}
-                        </em>
+                        <em>{result[0]?.subcategories?.length !== 0 ? "Subcategorías" : <br />}</em>
                       )}
                     </Category>
                     {categories.length &&
                       categories
-                      .filter((row: CategoryType) => {
-                        return city === "CO" ? row : 
-                          toLink(row.name).match(/cocha-days/) ? null : row
-                      })
-                      .map((row: CategoryType) => (
-                        <Category
-                          lvl={1}
-                          selected={compare(row)}
-                          key={row.entity_id}
-                        >
-                          <Link to={navigateLink(row)}>
-                            <SmallCatImage src={row.category_image} alt="" />
-                            {row.name}
-                            <span className="cantidad">({row?.quantity})</span>
-                          </Link>
+                        .filter((row: CategoryType) => {
+                          return city === "CO" ? row : toLink(row.name).match(/cocha-days/) ? null : row;
+                        })
+                        .map((row: CategoryType) => (
+                          <Category lvl={1} selected={compare(row)} key={row.entity_id}>
+                            <Link to={navigateLink(row)}>
+                              <SmallCatImage src={row.category_image} alt="" />
+                              {row.name}
+                              <span className="cantidad">({row?.quantity})</span>
+                            </Link>
 
-                          <LevelSub show={compare(row)}>
-                            {compare(row) &&
-                              row.subcategories &&
-                              !!row.subcategories.length &&
-                              row.subcategories.map(
-                                (s3row: SubCategoryLvl3Type) => {
+                            <LevelSub show={compare(row)}>
+                              {compare(row) &&
+                                row.subcategories &&
+                                !!row.subcategories.length &&
+                                row.subcategories.map((s3row: SubCategoryLvl3Type) => {
                                   return (
-                                    <SubCategory
-                                      selected={compare(row, s3row)}
-                                      key={s3row.entity_id}
-                                      lvl={compare(row, s3row)}
-                                    >
+                                    <SubCategory selected={compare(row, s3row)} key={s3row.entity_id} lvl={compare(row, s3row)}>
                                       <span onClick={() => {}}>
                                         <Link to={navigateLink(row, s3row)}>
                                           {s3row.name}
-                                          <span className="cantidad">
-                                            ({s3row?.quantity})
-                                          </span>
+                                          <span className="cantidad">({s3row?.quantity})</span>
                                         </Link>
                                       </span>
-                                      <LevelSub2
-                                        show={compare(row, s3row)}
-                                        index={getSum(
-                                          s3row?.subcategories?.length !== 0
-                                        )}
-                                      >
+                                      <LevelSub2 show={compare(row, s3row)} index={getSum(s3row?.subcategories?.length !== 0)}>
                                         {compare(row, s3row) &&
                                           s3row.subcategories &&
                                           !!s3row.subcategories.length &&
-                                          s3row.subcategories.map(
-                                            (s4row: SubCategoryLvl4Type) => {
-                                              if (s4row) {
-                                                return (
-                                                  <SubCategory4
-                                                    selected={compare(
-                                                      row,
-                                                      s3row,
-                                                      s4row
-                                                    )}
-                                                    key={s4row.entity_id}
-                                                    lvl={compare(
-                                                      row,
-                                                      s3row,
-                                                      s4row
-                                                    )}
-                                                  >
-                                                    <Link
-                                                      to={navigateLink(
-                                                        row,
-                                                        s3row,
-                                                        s4row
-                                                      )}
-                                                    >
-                                                      {s4row.name}
-                                                      <span className="cantidad">
-                                                        ({s4row.quantity})
-                                                      </span>
-                                                    </Link>
-                                                  </SubCategory4>
-                                                );
-                                              }
+                                          s3row.subcategories.map((s4row: SubCategoryLvl4Type) => {
+                                            if (s4row) {
+                                              return (
+                                                <SubCategory4 selected={compare(row, s3row, s4row)} key={s4row.entity_id} lvl={compare(row, s3row, s4row)}>
+                                                  <Link to={navigateLink(row, s3row, s4row)}>
+                                                    {s4row.name}
+                                                    <span className="cantidad">({s4row.quantity})</span>
+                                                  </Link>
+                                                </SubCategory4>
+                                              );
                                             }
-                                          )}
+                                          })}
                                       </LevelSub2>
                                     </SubCategory>
                                   );
-                                }
-                              )}
-                          </LevelSub>
-                        </Category>
-                      ))}
+                                })}
+                            </LevelSub>
+                          </Category>
+                        ))}
                   </CategoryList>
                   <ContainerBrands>
-                    <MarcasWrap
-                      hide={
-                        brands && brands.brands && brands.brands.length <= 0
-                      }
-                    >
+                    <MarcasWrap hide={brands && brands.brands && brands.brands.length <= 0}>
                       <h3>{t("products.filter_side_bar.marcas")}</h3>
                     </MarcasWrap>
 
-                    <MarcasList
-                      hide={
-                        brands && brands.brands && brands.brands.length <= 0
-                      }
-                    >
+                    <MarcasList hide={brands && brands.brands && brands.brands.length <= 0}>
                       {brands && brands.brands && brands.brands.length ? (
                         <>
-                          {brands.brands
-                            .map(({ name, quantity }: any, index: number) => (
-                              quantity > 0 ?  (
+                          {brands.brands.map(({ name, quantity }: any, index: number) =>
+                            quantity > 0 ? (
                               <div
                                 className="brand-link"
                                 key={index}
@@ -798,13 +620,7 @@ const FilterSideBar: FC<Props> = ({
                                   handleBrandFilter(index);
                                 }}
                               >
-                                <RadioBtn>
-                                  {arrayBrand[index]?.toggle ? (
-                                    <img src={BrandChecked} alt="" />
-                                  ) : (
-                                    <img src={BrandEmpty} alt="" />
-                                  )}
-                                </RadioBtn>
+                                <RadioBtn>{arrayBrand[index]?.toggle ? <img src={BrandChecked} alt="" /> : <img src={BrandEmpty} alt="" />}</RadioBtn>
                                 <BrandItem onClick={() => {}} selected={index}>
                                   <div>
                                     <h5>{name}</h5>
@@ -812,15 +628,13 @@ const FilterSideBar: FC<Props> = ({
                                   </div>
                                 </BrandItem>
                               </div>
-                              ) : ''
+                            ) : (
+                              ""
                             )
                           )}
                         </>
                       ) : (
-                        <Category
-                          onClick={() => {}}
-                          selected={!category || category === ""}
-                        >
+                        <Category onClick={() => {}} selected={!category || category === ""}>
                           <a key={1}>{t("products.product_list.no_brands")}</a>
                         </Category>
                       )}
@@ -831,28 +645,16 @@ const FilterSideBar: FC<Props> = ({
                   <RadioWrap>
                     <ul>
                       <RadioLi onClick={() => orderQuery("position")}>
-                        {order === "position" ? (
-                          <img src={RadioIconChecked} alt="Posición" />
-                        ) : (
-                          <img src={RadioIcon} alt="Posición" />
-                        )}
+                        {order === "position" ? <img src={RadioIconChecked} alt="Posición" /> : <img src={RadioIcon} alt="Posición" />}
 
                         <span>Posición</span>
                       </RadioLi>
                       <RadioLi onClick={() => orderQuery("weight")}>
-                        {order === "weight" ? (
-                          <img src={RadioIconChecked} alt="Precio" />
-                        ) : (
-                          <img src={RadioIcon} alt="Precio" />
-                        )}
+                        {order === "weight" ? <img src={RadioIconChecked} alt="Precio" /> : <img src={RadioIcon} alt="Precio" />}
                         <span>Precio</span>
                       </RadioLi>
                       <RadioLi onClick={() => orderQuery("price")}>
-                        {order === "price" ? (
-                          <img src={RadioIconChecked} alt="Peso" />
-                        ) : (
-                          <img src={RadioIcon} alt="Peso" />
-                        )}
+                        {order === "price" ? <img src={RadioIconChecked} alt="Peso" /> : <img src={RadioIcon} alt="Peso" />}
                         <span>Peso</span>
                       </RadioLi>
                     </ul>
@@ -866,19 +668,14 @@ const FilterSideBar: FC<Props> = ({
 
       <MarcasDesktop>
         <ContainerBrands>
-          <MarcasWrap
-            hide={brands && brands.brands && brands.brands.length <= 0}
-          >
+          <MarcasWrap hide={brands && brands.brands && brands.brands.length <= 0}>
             <h3>{t("products.filter_side_bar.marcas")}</h3>
           </MarcasWrap>
 
-          <MarcasList
-            hide={brands && brands.brands && brands.brands.length <= 0}
-          >
+          <MarcasList hide={brands && brands.brands && brands.brands.length <= 0}>
             {brands && brands.brands && brands.brands.length ? (
               <>
-                {brands.brands
-                .map(({ name, quantity }: any, index: number) => (
+                {brands.brands.map(({ name, quantity }: any, index: number) =>
                   quantity > 0 ? (
                     <div
                       className="brand-link"
@@ -888,13 +685,7 @@ const FilterSideBar: FC<Props> = ({
                         handleBrandFilter(index);
                       }}
                     >
-                      <RadioBtn>
-                        {arrayBrand[index]?.toggle ? (
-                          <img src={BrandChecked} alt="" />
-                        ) : (
-                          <img src={BrandEmpty} alt="" />
-                        )}
-                      </RadioBtn>
+                      <RadioBtn>{arrayBrand[index]?.toggle ? <img src={BrandChecked} alt="" /> : <img src={BrandEmpty} alt="" />}</RadioBtn>
                       <BrandItem onClick={() => {}} selected={index}>
                         <div>
                           <h5>{name}</h5>
@@ -902,15 +693,13 @@ const FilterSideBar: FC<Props> = ({
                         </div>
                       </BrandItem>
                     </div>
-
-                  ) : ''
-                ))}
+                  ) : (
+                    ""
+                  )
+                )}
               </>
             ) : (
-              <Category
-                onClick={() => {}}
-                selected={!category || category === ""}
-              >
+              <Category onClick={() => {}} selected={!category || category === ""}>
                 <a key={1}>{t("products.product_list.no_brands")}</a>
               </Category>
             )}

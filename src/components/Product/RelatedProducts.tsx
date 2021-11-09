@@ -5,25 +5,15 @@ import { ProductType } from "../../graphql/products/type";
 import { BREAKPOINT } from "../../utils/constants";
 import { LazyLoadTypes } from "react-slick";
 
-const Loader = React.lazy(() =>
-  import(/* webpackChunkName: "Loader" */ "../Loader")
-);
-const Slider = React.lazy(() =>
-  import(/* webpackChunkName: "Slider" */ "react-slick")
-);
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 // const RelatedItem = React.lazy(() =>
 //   import(/* webpackChunkName: "RelatedItem" */ "../RelatedItem")
 // );
-const ItemBoxHome = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBoxHome" */ "./ItemBoxHome")
-);
+const ItemBoxHome = React.lazy(() => import(/* webpackChunkName: "ItemBoxHome" */ "./ItemBoxHome"));
 
-const ArrowLeft = React.lazy(() =>
-  import(/* webpackChunkName: "ArrowLeft" */ "../Images/ArrowLeft.js")
-);
-const ArrowRight = React.lazy(() =>
-  import(/* webpackChunkName: "ArrowRight" */ "../Images/ArrowRight.js")
-);
+const ArrowLeft = React.lazy(() => import(/* webpackChunkName: "ArrowLeft" */ "../Images/ArrowLeft.js"));
+const ArrowRight = React.lazy(() => import(/* webpackChunkName: "ArrowRight" */ "../Images/ArrowRight.js"));
 
 const Container = styled.div`
   position: relative;
@@ -69,7 +59,7 @@ const Title = styled.h2`
   }
 `;
 
-const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
+const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean }>`
   .slick-list {
     display: inline-block;
     padding: 10px 120px 60px;
@@ -107,9 +97,12 @@ const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
   }
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0 20px;
-    ${({ onlyPaddingLeft }) =>  onlyPaddingLeft ? `
+    ${({ onlyPaddingLeft }) =>
+      onlyPaddingLeft
+        ? `
       padding: 0;
-    ` : ``}
+    `
+        : ``}
     .slick-dots {
       bottom: -5px;
       li {
@@ -144,13 +137,11 @@ const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
       * {
         opacity: 0;
         border: none;
-
       }
     }
     .slick-active {
       opacity: 1;
       border: none;
-
     }
   }
 `;
@@ -162,7 +153,7 @@ type Props = {
 
 const RelatedProducts: FC<Props> = ({ products, openModal }) => {
   const { t } = useTranslation();
-  const typeLazy: LazyLoadTypes = "ondemand"
+  const typeLazy: LazyLoadTypes = "ondemand";
 
   const settings = {
     dots: false,
@@ -181,8 +172,8 @@ const RelatedProducts: FC<Props> = ({ products, openModal }) => {
           slidesToShow: 3,
           slidesToScroll: 1,
           arrows: true,
-          dots: false
-        }
+          dots: false,
+        },
       },
       {
         breakpoint: 900,
@@ -190,8 +181,8 @@ const RelatedProducts: FC<Props> = ({ products, openModal }) => {
           slidesToShow: 2,
           slidesToScroll: 2,
           arrows: true,
-          dots: false
-        }
+          dots: false,
+        },
       },
       {
         breakpoint: 600,
@@ -199,23 +190,19 @@ const RelatedProducts: FC<Props> = ({ products, openModal }) => {
           slidesToShow: 1,
           slidesToScroll: 1,
           arrows: false,
-          dots: false
-        }
-      }
-    ]
+          dots: false,
+        },
+      },
+    ],
   };
 
   return (
     <Suspense fallback={<Loader />}>
       <Container>
-          <Title>{t("product.related.title")}</Title>
-          <SliderContainer>
-            <Slider {...settings}>
-              {React.Children.toArray(products.map((product: ProductType) => (
-                  <ItemBoxHome openModal={() => {}} product={product} featured={true} />
-              )))}
-            </Slider>
-          </SliderContainer>
+        <Title>{t("product.related.title")}</Title>
+        <SliderContainer>
+          <Slider {...settings}>{React.Children.toArray(products.map((product: ProductType) => <ItemBoxHome openModal={() => {}} product={product} featured={true} />))}</Slider>
+        </SliderContainer>
       </Container>
     </Suspense>
   );

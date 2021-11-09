@@ -1,112 +1,114 @@
-import React, { FC, Suspense, useState } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
+import React, { FC, Suspense, useState } from "react";
+import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@apollo/react-hooks";
-import { DETAILS } from '../../graphql/user/queries';
+import { DETAILS } from "../../graphql/user/queries";
 import { Link, useLocation } from "react-router-dom";
 import Icon from "../../assets/images/empresa-seleccionado.svg";
 
-const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */'../Loader'));
-const ProfileIcon = React.lazy(() => import(/* webpackChunkName: "ProfileIcon" */'../Images/ProfileIcon'));
-const History = React.lazy(() => import(/* webpackChunkName: "History" */'../Images/History'));
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
+const ProfileIcon = React.lazy(() => import(/* webpackChunkName: "ProfileIcon" */ "../Images/ProfileIcon"));
+const History = React.lazy(() => import(/* webpackChunkName: "History" */ "../Images/History"));
 
 const Name = styled.h2`
-    font-family: MullerMedium;
-    font-size: 16px;
-    line-height: 16px;
-    letter-spacing: 0.01em;
-    color: var(--red);
-    padding: 26px;
-    margin-bottom: 40px;
-`
+  font-family: MullerMedium;
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  color: var(--red);
+  padding: 26px;
+  margin-bottom: 40px;
+`;
 
 const Menu = styled.ul`
-    margin-bottom: 30px;
-`
+  margin-bottom: 30px;
+`;
 
 const Item = styled.li<{ active: boolean }>`
-    display: flex;
-    align-items: center;
-    padding: 8px 26px;
-    margin: 10px 0;
-    border-left: 2px solid ${props => props.active ? 'var(--red)' : 'transparent'};
-    svg {
-        path {
-            stroke: ${props => props.active ? 'var(--red)' : 'var(--font)'}
-        }
+  display: flex;
+  align-items: center;
+  padding: 8px 26px;
+  margin: 10px 0;
+  border-left: 2px solid ${(props) => (props.active ? "var(--red)" : "transparent")};
+  svg {
+    path {
+      stroke: ${(props) => (props.active ? "var(--red)" : "var(--font)")};
     }
-    & > a {
-        font-family: MullerMedium;
-        font-size: 12px;
-        line-height: 12px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--black);
-        margin-left: 10px;
-        text-decoration: none;
-    }
-`
+  }
+  & > a {
+    font-family: MullerMedium;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--black);
+    margin-left: 10px;
+    text-decoration: none;
+  }
+`;
 
-type Props = {}
+type Props = {};
 
 interface AddressEbs {
-    id_direccion: number;
-    id_listaPrecio: number;
-    categoriaCliente: string; 
-    ciudad: string;
-    direccion: string;
-    latitud: string;
-    longitud: string; 
-    provincia: string; 
-    vendedor: string; 
-    vhPrimerTurno: string; 
-    vhSegundoTurno: string; 
+  id_direccion: number;
+  id_listaPrecio: number;
+  categoriaCliente: string;
+  ciudad: string;
+  direccion: string;
+  latitud: string;
+  longitud: string;
+  provincia: string;
+  vendedor: string;
+  vhPrimerTurno: string;
+  vhSegundoTurno: string;
 }
 
 interface AddressMagento {
-    id_address_ebs: number;
-    id_price_list: number;
-    id: number;
-    city: string;
-    firstname: string;
-    lastname: string;
-    latitude: string;
-    longitude: string;
-    nit: string;
-    phone: string;
-    reference: string;
-    street: string;
-    __typename: string;
+  id_address_ebs: number;
+  id_price_list: number;
+  id: number;
+  city: string;
+  firstname: string;
+  lastname: string;
+  latitude: string;
+  longitude: string;
+  nit: string;
+  phone: string;
+  reference: string;
+  street: string;
+  __typename: string;
 }
 
 const Sidebar: FC<Props> = () => {
-    const { t } = useTranslation();
-    const { pathname } = useLocation();
-    const { data } = useQuery(DETAILS, {});
+  const { t } = useTranslation();
+  const { pathname } = useLocation();
+  const { data } = useQuery(DETAILS, {});
 
-    const myAccount = "/mi-cuenta"
-    const orders = "/mi-cuenta/ordenes"
-    const collaborators = "/activacion"
+  const myAccount = "/mi-cuenta";
+  const orders = "/mi-cuenta/ordenes";
+  const collaborators = "/activacion";
 
-    return <Suspense fallback={<Loader />}>
-        <>
-            <Name>{data && data.details && data.details.firstname ? `${data.details.firstname} ${data.details.lastname}` : t('account.sidebar.welcome')}</Name>
-            <Menu>
-                <Item active={pathname.indexOf('ordenes') < 0}>
-                    <ProfileIcon />
-                    <Link to={myAccount}>{t('account.sidebar.personal_info')}</Link>
-                </Item>
-                <Item active={pathname.indexOf('ordenes') >= 0}>
-                    <History />
-                    <Link to={orders}>{t('account.sidebar.history')}</Link>
-                </Item>
-                <Item active={false}>
-                    <img src={Icon} alt="maleta" />
-                    <Link to={collaborators}>{t('account.sidebar.collaborators')}</Link>
-                </Item>
-            </Menu>
-        </>
+  return (
+    <Suspense fallback={<Loader />}>
+      <>
+        <Name>{data && data.details && data.details.firstname ? `${data.details.firstname} ${data.details.lastname}` : t("account.sidebar.welcome")}</Name>
+        <Menu>
+          <Item active={pathname.indexOf("ordenes") < 0}>
+            <ProfileIcon />
+            <Link to={myAccount}>{t("account.sidebar.personal_info")}</Link>
+          </Item>
+          <Item active={pathname.indexOf("ordenes") >= 0}>
+            <History />
+            <Link to={orders}>{t("account.sidebar.history")}</Link>
+          </Item>
+          <Item active={false}>
+            <img src={Icon} alt="maleta" />
+            <Link to={collaborators}>{t("account.sidebar.collaborators")}</Link>
+          </Item>
+        </Menu>
+      </>
     </Suspense>
-}
+  );
+};
 
 export default Sidebar;

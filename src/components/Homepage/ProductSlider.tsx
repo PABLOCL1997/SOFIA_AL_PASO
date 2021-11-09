@@ -2,28 +2,15 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { ProductType } from "../../graphql/products/type";
 import { BREAKPOINT } from "../../utils/constants";
-import { LazyLoadTypes } from "react-slick"
+import { LazyLoadTypes } from "react-slick";
 
+const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
+const ItemBox = React.lazy(() => import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox"));
+const ItemBoxHome = React.lazy(() => import(/* webpackChunkName: "ItemBoxHome" */ "../Product/ItemBoxHome"));
+const ArrowLeft = React.lazy(() => import(/* webpackChunkName: "ArrowLeft" */ "../Images/ArrowLeft.js"));
+const ArrowRight = React.lazy(() => import(/* webpackChunkName: "ArrowRight" */ "../Images/ArrowRight.js"));
 
-const Slider = React.lazy(() =>
-  import(/* webpackChunkName: "Slider" */ "react-slick")
-);
-const ItemBox = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBox" */ "../Product/ItemBox")
-);
-const ItemBoxHome = React.lazy(() =>
-  import(/* webpackChunkName: "ItemBoxHome" */ "../Product/ItemBoxHome")
-);
-const ArrowLeft = React.lazy(() =>
-  import(/* webpackChunkName: "ArrowLeft" */ "../Images/ArrowLeft.js")
-);
-const ArrowRight = React.lazy(() =>
-  import(/* webpackChunkName: "ArrowRight" */ "../Images/ArrowRight.js")
-);
-
-const PromotionsCard = React.lazy(() =>
-  import(/* webpackChunkName: "PromotionsCard" */ "./PromotionsCard")
-);
+const PromotionsCard = React.lazy(() => import(/* webpackChunkName: "PromotionsCard" */ "./PromotionsCard"));
 
 type Props = {
   products: Array<ProductType>;
@@ -32,7 +19,7 @@ type Props = {
   isCategories?: boolean;
 };
 
-const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
+const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean }>`
   .slick-list {
     display: inline-block;
     padding: 10px 120px 60px;
@@ -70,9 +57,12 @@ const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
   }
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0 20px;
-    ${({ onlyPaddingLeft }) =>  onlyPaddingLeft ? `
+    ${({ onlyPaddingLeft }) =>
+      onlyPaddingLeft
+        ? `
       padding: 0;
-    ` : ``}
+    `
+        : ``}
     .slick-dots {
       bottom: -5px;
       li {
@@ -107,20 +97,17 @@ const SliderContainer = styled.div<{ onlyPaddingLeft?: boolean; }>`
       * {
         opacity: 0;
         border: none;
-
       }
     }
     .slick-active {
       opacity: 1;
       border: none;
-
     }
   }
 `;
 
-
 const ProductSlider: FC<Props> = ({ products, useArrows, isPromotions, isCategories }) => {
-  const typeLazy: LazyLoadTypes = "ondemand"
+  const typeLazy: LazyLoadTypes = "ondemand";
   const settings = {
     dots: false,
     infinite: false,
@@ -139,8 +126,8 @@ const ProductSlider: FC<Props> = ({ products, useArrows, isPromotions, isCategor
           slidesToShow: 3,
           slidesToScroll: 3,
           arrows: !useArrows,
-          dots: useArrows
-        }
+          dots: useArrows,
+        },
       },
       {
         breakpoint: 768,
@@ -148,8 +135,8 @@ const ProductSlider: FC<Props> = ({ products, useArrows, isPromotions, isCategor
           slidesToShow: 4,
           slidesToScroll: 4,
           arrows: !useArrows,
-          dots: useArrows          
-        }
+          dots: useArrows,
+        },
       },
       {
         breakpoint: 600,
@@ -157,30 +144,29 @@ const ProductSlider: FC<Props> = ({ products, useArrows, isPromotions, isCategor
           slidesToShow: 2,
           slidesToScroll: 1,
           arrows: useArrows,
-          dots: !useArrows && !isPromotions
-        }
+          dots: !useArrows && !isPromotions,
+        },
       },
-    ]
+    ],
   };
 
   return (
-
-        <SliderContainer onlyPaddingLeft={(isPromotions || isCategories) && window.innerWidth < 600}>
-          <Slider {...settings}>
-            {isPromotions ? 
-            <PromotionsCard />
-            : null}
-            {React.Children.toArray(products.map((product: ProductType) => 
+    <SliderContainer onlyPaddingLeft={(isPromotions || isCategories) && window.innerWidth < 600}>
+      <Slider {...settings}>
+        {isPromotions ? <PromotionsCard /> : null}
+        {React.Children.toArray(
+          products.map((product: ProductType) => (
             <>
-            {isPromotions || isCategories  ? 
-              <ItemBoxHome openModal={() => {}} dropDownQty={6} product={product} webp={true} featured={isPromotions} homeCategories={isCategories} />
-              :
-              <ItemBox openModal={() => {}} dropDownQty={6} product={product} webp={true} />
-            }
+              {isPromotions || isCategories ? (
+                <ItemBoxHome openModal={() => {}} dropDownQty={6} product={product} webp={true} featured={isPromotions} homeCategories={isCategories} />
+              ) : (
+                <ItemBox openModal={() => {}} dropDownQty={6} product={product} webp={true} />
+              )}
             </>
-            ))}
-          </Slider>
-        </SliderContainer>
+          ))
+        )}
+      </Slider>
+    </SliderContainer>
   );
 };
 
