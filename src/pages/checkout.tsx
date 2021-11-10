@@ -429,7 +429,7 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.billing.lastname),
         fax: orderData.billing.nit,
         email: orderData.billing.email,
-        telephone: agency ? orderData.billing.phone : orderData.shipping.phone,
+        telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
         country_id: "BO",
         city: escapeSingleQuote(localUserData && localUserData.userInfo && localUserData.userInfo.length ? localUserData.userInfo[0].cityName : "-"),
         latitude: agency ? String(agencyObj.latitude) : String((window as any).latitude),
@@ -445,7 +445,7 @@ const Checkout: FC<Props> = () => {
         lastname: escapeSingleQuote(orderData.shipping.lastname),
         fax: orderData.shipping.nit,
         email: orderData.billing.email,
-        telephone: agency ? orderData.billing.phone : orderData.shipping.phone,
+        telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
         street: escapeSingleQuote(
           special_address ? orderData.shipping.street.split("|")[0] : agency ? agencyObj.street : orderData.shipping.id ? orderData.shipping.street : `${orderData.shipping.address || ""}`
         ),
