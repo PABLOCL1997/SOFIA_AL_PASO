@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const authyUrl = "https://tienda.sofia.com.bo/api/v1/authy";
+const authyUrl = process.env.REACT_APP_AUTHYURL;
 
 const start = async (cellphone: string, email: string): Promise<string | undefined> => {
   try {
