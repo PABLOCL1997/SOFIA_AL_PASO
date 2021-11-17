@@ -53,7 +53,7 @@ enum Steps {
 }
 
 const EmployeeModal: FC<Props> = ({ show, setShowOpen, setCuentaActiva, userData, userDetails }) => {
-  const authyUrl = "https://tienda.sofia.com.bo/api/v1/authy";
+  const authyUrl = process.env.REACT_APP_AUTHYURL;
 
   const { t } = useTranslation();
   const [loader, setLoader] = useState<Boolean>(false);
