@@ -15,15 +15,11 @@ const Checkout = React.lazy(() => import(/* webpackChunkName: "Checkout" */ "./p
 const Faq = React.lazy(() => import(/* webpackChunkName: "Faq" */ "./pages/faq"));
 const Contact = React.lazy(() => import(/* webpackChunkName: "Faq" */ "./pages/contact"));
 const Terms = React.lazy(() => import(/* webpackChunkName: "Terms" */ "./pages/terms"));
-
+const Coverage = React.lazy(() => import(/* webpackChunkName: "Coverage" */ "./pages/coverage"));
 const Page404 = React.lazy(() => import(/* webpackChunkName: "Page404" */ "./components/Page404"));
-
 const Incentivos = React.lazy(() => import(/* webpackChunkName: "Incentivos" */ "./pages/incentivos"));
-
 const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "./pages/thanks"));
-
 const RetiroAlPaso = React.lazy(() => import(/* webpackChunkName: "RetiroAlPaso" */ "./pages/retiroAlPaso"));
-
 const Activate = React.lazy(() => import(/* webpackChunkName: "Activate" */ "./pages/activate"));
 
 const Loader = styled.div`
@@ -110,6 +106,14 @@ const App = () => {
             children={
               <LayoutGeneral>
                 <Terms />
+              </LayoutGeneral>
+            }
+          />
+          <Route
+            path="/cobertura"
+            children={
+              <LayoutGeneral>
+                <Coverage />
               </LayoutGeneral>
             }
           />
