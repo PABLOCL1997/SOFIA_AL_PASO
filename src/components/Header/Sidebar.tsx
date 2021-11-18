@@ -5,7 +5,7 @@ import { GET_TOTAL, GET_QTY, GET_CART_ITEMS } from "../../graphql/cart/queries";
 
 import { token } from "../../utils/store";
 
-import { Total, CloseRow, CloseWrapper, MenuList, MenuItem, MenuBottom, MenuListTools, CartWrapper, Category, Subcategory } from "../../styled-components/HeaderStyles";
+import { Total, CloseRow, CloseWrapper, MenuList, MenuItem, MenuBottom, MenuListTools, CartWrapper, Category, Subcategory, CartText } from "../../styled-components/HeaderStyles";
 import { Link, useHistory } from "react-router-dom";
 import Cta from "../Cta";
 import { GET_USER } from "../../graphql/user/queries";
@@ -15,8 +15,9 @@ import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type
 import styled from "styled-components";
 import { toLink } from "../../utils/string";
 import useUser from "../../hooks/useUser";
+import CartImg from "../../assets/images/Carrito.svg";
 
-const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../Images/Cart"));
+const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../Images/Cart")); //TODO: DELETE?
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
 
 const ChevronWrapper = styled.div<{ active: boolean }>`
@@ -80,9 +81,10 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
   return (
     <Wrapper>
       <CloseRow>
-        <CartWrapper onClick={showCart}>
-          <Cart />
-          <span>{GET_QTY(data.cartItems)}</span>
+        <CartWrapper onClick={showCart} onSidebar>
+          {/* <Cart /> */}
+          <img width="27" height="19" src={CartImg} alt="Carrito de compras" />
+          <CartText>{GET_QTY(data.cartItems)}</CartText>
         </CartWrapper>
         <Total>Bs. {GET_TOTAL(data.cartItems)}</Total>
         <CloseWrapper onClick={() => setOpen(false)}>
