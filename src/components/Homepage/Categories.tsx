@@ -10,18 +10,12 @@ const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-s
 const List = styled.div`
   position: relative;
   z-index: 3;
-
   width: 100%;
-
   display: flex;
-
   justify-content: center;
   column-gap: 40px;
-
-  padding: 20px 40px 0;
-
+  padding: 0 40px;
   background: var(--red);
-
   box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
 
   a {
@@ -32,14 +26,16 @@ const List = styled.div`
 
     span {
       background: var(--red);
-
       display: inline-block;
       font-family: MullerMedium;
       line-height: 16px;
-      min-height: 54px;
+      height: 100%;
 
       span {
-        min-height: 32px;
+        padding: 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border-bottom: 1px solid var(--red);
       }
     }
@@ -57,7 +53,6 @@ const List = styled.div`
       font-family: MullerMedium;
       // padding-bottom: 2px;
       span {
-        display: block;
         border-bottom: 1px solid #ffffff;
       }
     }
@@ -71,13 +66,14 @@ const List = styled.div`
 const SubcategoriesWrapper = styled.div`
   background: var(--red);
   border-radius: 0px 0px 8px 8px;
-  margin: 0 0 0 -24px;
   position: absolute;
   z-index: -1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   row-gap: 14px;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   & > a {
     font-family: MullerRegular;
@@ -114,12 +110,12 @@ const SubcategoriesMobileWrapper = styled.article<{ visible: boolean; extended: 
   flex-direction: column;
   justify-content: flex-start;
   row-gap: 14px;
-
   padding: 0; 
   max-width: 170px;
   margin: 20px 0 0 -2px;
   background: var(--red);
-
+  left: 50%;
+  transform: translate(-50%, 0);
 
   a {
     font-family: MullerBold;
