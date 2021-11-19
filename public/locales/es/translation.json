@@ -534,5 +534,24 @@
       }
 
     }
+  },
+  "tracking": {
+    "followOrder": "Seguí tu pedido",
+    "instructions": "Ingresá tu número de pedido y tu código de cliente (NIT/CI) para hacer el seguimiento.",
+    "warning": "El número de tracking es enviado a tu e-mail una vez confirmada la compra.",
+    "error": "Código incorrecto",
+    "startSession1": "Iniciá sesión",
+    "startSession2": "para ver todos tu pedidos",
+    "orderNumberTitle": "Pedido no.",
+    "deliverData": {
+      "title": "Datos de la entrega",
+      "date": "Fecha",
+      "estimatedTime": "Hora estimada",
+      "address": "Dirección",
+      "orderDate": "Fecha del pedido",
+      "qty": "Cantidad",
+      "products": "productos",
+      "total": "Total"
+    }
   }
 }
