@@ -7,6 +7,7 @@
     "home": "Home",
     "products": "Productos",
     "faq": "Preguntas frecuentes",
+    "coverage": "Cobertura",
     "contact": "Contacto",
     "slogan": "En Sofía se confía.",
     "employee": {
@@ -553,5 +554,9 @@
       "products": "productos",
       "total": "Total"
     }
+  },
+  "coverage": {
+    "see_map": "Ver mapa",
+    "hide_map": "Ocultar mapa"
   }
 }
