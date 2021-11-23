@@ -12,6 +12,8 @@ import CalendarIcon from "../assets/images/calendar.svg";
 import ClockIcon from "../assets/images/clock.svg";
 import MarkerIcon from "../assets/images/marker.svg";
 import TruckMarkerIcon from "../assets/images/truckMarker.png";
+import TruckIcon from "../assets/images/truckIcon.svg";
+import InfoIcon from "../assets/images/infoIcon.svg";
 import dayjs from "dayjs";
 const es = require("dayjs/locale/es");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
@@ -121,11 +123,11 @@ const Content = styled.div`
       text-align: left;
       margin: 30px auto;
 
-      svg {
+      img {
         display: block;
         float: left;
         margin-right: 10px;
-        height: 30px;
+        margin-bottom: 1px;
       }
     }
 
@@ -209,7 +211,8 @@ const DeliveryDataMainInfoRow = styled.div`
       margin-right: 10px;
       width: 22px;
     }
-    > span {
+    > p {
+      display: inline;
       vertical-align: middle;
     }
 
@@ -328,13 +331,21 @@ type PlaceType = {
   lng: number;
 };
 
+const ORDER_STATUS = {
+  received: "RECIBIMOS TU PEDIDO",
+  onPreparation: "ALISTANDO TU PEDIDO",
+  delivered: "PEDIDO ENTREGADO",
+  notDelivered: "PEDIDO NO ENTREGADO",
+  cancelled: "PEDIDO CANCELADO",
+};
+
 const Tracking: FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [loader, setLoader] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
-  const [showMap, setShowMap] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showMap, setShowMap] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const [trackingInfo, setTrackingInfo] = useState<TrackingInfoType | null>(null);
@@ -387,10 +398,10 @@ const Tracking: FC = () => {
           setTrackingInfoInterval(null);
         }
         setShowModal(true);
-        if (status === "RECIBIMOS TU PEDIDO" || status === "ALISTANDO TU PEDIDO") {
+        if (status === ORDER_STATUS.received || status === ORDER_STATUS.onPreparation) {
           setModalTitle("Pedido en proceso");
           setModalMessage(resMsg);
-        } else if (status === "PEDIDO ENTREGADO") {
+        } else if (status === ORDER_STATUS.delivered) {
           setModalTitle("Pedido entregado");
           const actualArrival = dayjs(resMsg).tz("America/La_Paz");
           setModalMessage(
@@ -398,10 +409,10 @@ const Tracking: FC = () => {
               "HH:mm"
             )} hs.</strong> en <strong>${destinationAddress}</strong>`
           );
-        } else if (status === "PEDIDO NO ENTREGADO") {
+        } else if (status === ORDER_STATUS.notDelivered) {
           setModalTitle("Pedido no entegado");
           setModalMessage(resMsg);
-        } else if (status === "PEDIDO CANCELADO") {
+        } else if (status === ORDER_STATUS.cancelled) {
           setModalTitle("Pedido cancelado");
           setModalMessage(resMsg);
         } else {
@@ -479,43 +490,19 @@ const Tracking: FC = () => {
         <>
           {!showMap && (
             <Header>
-              <svg width="31" height="26" viewBox="0 0 31 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20.3334 2H2V17.889H20.3334V2Z" stroke="#E30613" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M20.3335 8.1113H25.2224L28.8891 11.778V17.8891H20.3335V8.1113Z" stroke="#E30613" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                <path
-                  d="M7.50003 24C9.18757 24 10.5556 22.6319 10.5556 20.9444C10.5556 19.2568 9.18757 17.8888 7.50003 17.8888C5.81248 17.8888 4.44446 19.2568 4.44446 20.9444C4.44446 22.6319 5.81248 24 7.50003 24Z"
-                  stroke="#E30613"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M23.3891 24C25.0766 24 26.4446 22.6319 26.4446 20.9444C26.4446 19.2568 25.0766 17.8888 23.3891 17.8888C21.7015 17.8888 20.3335 19.2568 20.3335 20.9444C20.3335 22.6319 21.7015 24 23.3891 24Z"
-                  stroke="#E30613"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <img src={TruckIcon} alt="truck" />
               <h1>{t("tracking.followOrder")}</h1>
               <h2>{t("tracking.instructions")}</h2>
             </Header>
           )}
           {!showMap && (
             <Content>
-              <input name={"tracking_number"} onChange={(evt) => setTrackingNumber(evt.target.value)} type={"text"} placeholder={"Número de pedido"} />
+              <input name="tracking_number" onChange={(evt) => setTrackingNumber(evt.target.value)} type="text" placeholder="Número de pedido" />
               <p className="disclaimer">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M8 16C3.6 16 0 12.4 0 8C0 3.6 3.6 0 8 0C12.4 0 16 3.6 16 8C16 12.4 12.4 16 8 16ZM8 2C4.7 2 2 4.7 2 8C2 11.3 4.7 14 8 14C11.3 14 14 11.3 14 8C14 4.7 11.3 2 8 2Z"
-                    fill="#2F2F2F"
-                  />
-                  <path d="M9 12H7V7H9V12Z" fill="#2F2F2F" />
-                  <path d="M8 4C8.55228 4 9 4.44772 9 5C9 5.55228 8.55228 6 8 6C7.44772 6 7 5.55228 7 5C7 4.44772 7.44772 4 8 4Z" fill="#2F2F2F" />
-                </svg>
+                <img src={InfoIcon} alt="info" />
                 {t("tracking.warning")}
               </p>
-              <input name={"nit"} onChange={(evt) => setNit(evt.target.value)} type={"nit"} placeholder={"Código de cliente (NIT/CI)"} />
+              <input name="nit" onChange={(evt) => setNit(evt.target.value)} type="text" placeholder="Código de cliente (NIT/CI)" />
               <CtaWrapper>
                 <Cta
                   filled={true}
@@ -523,7 +510,7 @@ const Tracking: FC = () => {
                     window.location.href = `/segui-tu-pedido?orderId=${trackingNumber}&userNit=${nit}`;
                     setLoader(true);
                   }}
-                  text={"Consultar"}
+                  text="Consultar"
                 />
               </CtaWrapper>
               <Link onClick={() => history.push("/")}>{t("tracking.startSession1")}</Link>
@@ -558,43 +545,43 @@ const Tracking: FC = () => {
                   <DeliveryDataMainInfoRow>
                     <div>
                       <img src={CalendarIcon} alt="Fecha" />
-                      <span>{t("tracking.deliverData.date")}</span>
+                      <p>{t("tracking.deliverData.date")}</p>
                     </div>
                     <div>{trackingInfo.projectedArrivalDate}</div>
                   </DeliveryDataMainInfoRow>
                   <DeliveryDataMainInfoRow>
                     <div>
                       <img src={ClockIcon} alt="Horario" />
-                      <span>{t("tracking.deliverData.estimatedTime")}</span>
+                      <p>{t("tracking.deliverData.estimatedTime")}</p>
                     </div>
                     <div>{trackingInfo.projectedArrivalTime}</div>
                   </DeliveryDataMainInfoRow>
                   <DeliveryDataMainInfoRow>
                     <div>
                       <img src={MarkerIcon} alt="Dirección" />
-                      <span>{t("tracking.deliverData.address")}</span>
+                      <p>{t("tracking.deliverData.address")}</p>
                     </div>
                     <div>{trackingInfo.destinationAddress}</div>
                   </DeliveryDataMainInfoRow>
                 </DeliveryDataMainInfo>
                 <div>
                   <DeliveryDataSecondaryInfoRow>
-                    <span>{t("tracking.orderNumberTitle")}</span>
-                    <span>{trackingNumber}</span>
+                    <p>{t("tracking.orderNumberTitle")}</p>
+                    <p>{trackingNumber}</p>
                   </DeliveryDataSecondaryInfoRow>
                   <DeliveryDataSecondaryInfoRow>
-                    <span>{t("tracking.deliverData.orderDate")}</span>
-                    <span>{trackingInfo.orderDate}</span>
+                    <p>{t("tracking.deliverData.orderDate")}</p>
+                    <p>{trackingInfo.orderDate}</p>
                   </DeliveryDataSecondaryInfoRow>
                   <DeliveryDataSecondaryInfoRow>
-                    <span>{t("tracking.deliverData.qty")}</span>
-                    <span>
+                    <p>{t("tracking.deliverData.qty")}</p>
+                    <p>
                       {trackingInfo.quantityProducts} {t("tracking.deliverData.products")}
-                    </span>
+                    </p>
                   </DeliveryDataSecondaryInfoRow>
                   <DeliveryDataSecondaryInfoRow>
-                    <span>{t("tracking.deliverData.total")}</span>
-                    <span>Bs. {trackingInfo.total}</span>
+                    <p>{t("tracking.deliverData.total")}</p>
+                    <p>Bs. {trackingInfo.total}</p>
                   </DeliveryDataSecondaryInfoRow>
                 </div>
               </DeliveryData>
@@ -605,10 +592,10 @@ const Tracking: FC = () => {
               <Modal>
                 <Title>{modalTitle}</Title>
                 <Text dangerouslySetInnerHTML={{ __html: modalMessage }}></Text>
-                <CtaWrapper className={"modalCtaWrapper"}>
+                <CtaWrapper className="modalCtaWrapper">
                   <Cta
                     filled={true}
-                    text={"Ir a inicio"}
+                    text="Ir a inicio"
                     action={() => {
                       if (trackingInfoInterval) {
                         clearInterval(trackingInfoInterval);
