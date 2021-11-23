@@ -1,10 +1,8 @@
-import React, { Suspense, FC, useEffect, useState, useMemo } from "react";
+import React, { Suspense, FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
-import useMinimumPrice from "../hooks/useMinimumPrice";
-
 import { SET_USER } from "../graphql/user/mutations";
 import { BREAKPOINT } from "../utils/constants";
 import { CREATE_ORDER, EMPTY_CART, TODOTIX_ORDER_INFO, SET_TEMP_CART } from "../graphql/cart/mutations";
@@ -23,20 +21,21 @@ const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../co
 const Shipping = React.lazy(() => import(/* webpackChunkName: "Shipping" */ "../components/Checkout/Shipping"));
 const Payment = React.lazy(() => import(/* webpackChunkName: "Payment" */ "../components/Checkout/Payment"));
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket"));
-const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "../components/Checkout/Thanks"));
 const ConfirmAddress = React.lazy(() => import(/* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"));
 
 const Wrapper = styled.div`
   padding: 60px 100px;
   background: var(--bkg);
+  iframe {
+    width: 100%;
+    height: 730px;
+  }
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 20px;
   }
 `;
 
 const CheckoutWrapper = styled.div``;
-
-const ThanktWrapper = styled.div``;
 
 const Cols = styled.div`
   display: flex;
@@ -158,6 +157,7 @@ const Checkout: FC<Props> = () => {
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
   const [agencies, setAgencies] = useState<any>([]);
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(ShippingMethod.Delivery);
+  const [showTodotixPayment, setShowTodotixPayment] = useState(false);
 
   const { data: localUserData } = useQuery(GET_USER, {});
   const { data: userDetails } = useQuery(DETAILS, {});
@@ -282,8 +282,9 @@ const Checkout: FC<Props> = () => {
     if (todotixData && todotixData.todotix) {
       setProcessing(false);
       emptyCart();
-      if (todotixData.todotix.url_pasarela_pagos) window.location = todotixData.todotix.url_pasarela_pagos;
-      else
+      if (todotixData.todotix.url_pasarela_pagos) {
+        setShowTodotixPayment(true);
+      } else
         showError({
           variables: { user: { showError: t("checkout.todotix_error") } },
         });
@@ -513,7 +514,7 @@ const Checkout: FC<Props> = () => {
           cancel={() => setConfirmModalVisible(false)}
         />
         <div className="main-container">
-          {!result.length && (
+          {!showTodotixPayment && !result.length && (
             <CheckoutWrapper>
               <ShippingMethodWrapper>
                 {shippingMethod === ShippingMethod.Pickup && (
@@ -571,6 +572,7 @@ const Checkout: FC<Props> = () => {
               </Cols>
             </CheckoutWrapper>
           )}
+          {showTodotixPayment && <iframe src={todotixData.todotix.url_pasarela_pagos}></iframe>}
         </div>
       </Wrapper>
     </Suspense>
