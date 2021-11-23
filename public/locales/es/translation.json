@@ -272,7 +272,7 @@
     "missing_field": "Por favor complete el campo {{field}}",
     "todotix_error": "La orden fue creada correctamente, pero no se pudo obtener el link de pago",
     "error": "No se pudo generar la orden",
-    "title": "Check out",
+    "title": "Checkout",
     "modify_cart": "Modificar carrito",
     "confirmaddress": {
       "title": "Confirmar dirección",
