@@ -21,6 +21,7 @@ const Incentivos = React.lazy(() => import(/* webpackChunkName: "Incentivos" */ 
 const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "./pages/thanks"));
 const RetiroAlPaso = React.lazy(() => import(/* webpackChunkName: "RetiroAlPaso" */ "./pages/retiroAlPaso"));
 const Activate = React.lazy(() => import(/* webpackChunkName: "Activate" */ "./pages/activate"));
+const Tracking = React.lazy(() => import(/* webpackChunkName: "Tracking" */ "./pages/tracking"));
 
 const Loader = styled.div`
   display: flex;
@@ -66,6 +67,14 @@ const App = () => {
             children={
               <LayoutGeneral>
                 <Activate />
+              </LayoutGeneral>
+            }
+          />
+          <Route
+            path="/segui-tu-pedido"
+            children={
+              <LayoutGeneral>
+                <Tracking />
               </LayoutGeneral>
             }
           />
