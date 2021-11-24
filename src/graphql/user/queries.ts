@@ -52,6 +52,11 @@ export const ORDERS = gql`
       createdAt
       status
       total
+      subtotal
+      shippingStreet
+      shippingCity
+      shippingReference
+      shippingPrice
     }
   }
 `;
@@ -82,6 +87,11 @@ export const ORDER = gql`
         price
         qty
         image
+        weight
+        unit
+        useKgs
+        basePrice
+        rowTotal
       }
       subtotal
       shippingPrice

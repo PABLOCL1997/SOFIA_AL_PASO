@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 import { ApolloProvider } from "react-apollo";
 import "./i18n";
 import createClient from "./apollo";
+import "react-datepicker/dist/react-datepicker.css"
 
 createClient().then((client) => {
   ReactDOM.render(

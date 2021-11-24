@@ -95,3 +95,34 @@ export const findCity = (key: string): string => (cities.find(({ key: _key }) =>
 export const findKeyByCity = (city: string): string => {
   return cities.find(({ value: _city }) => _city === city)?.key || "";
 };
+
+export const mapMonths = (name: string): string => {
+  switch (name) {
+    case "ENE":
+      return "01";
+    case "FEB":
+      return "02";
+    case "MAR":
+      return "03";
+    case "ABR":
+      return "04";
+    case "MAY":
+      return "05";
+    case "JUN":
+      return "06";
+    case "JUL":
+      return "07";
+    case "AGO":
+      return "08";
+    case "SEP":
+      return "09";
+    case "OCT":
+      return "10";
+    case "NOV":
+      return "11";
+    case "DIC":
+      return "12";
+    default:
+      return "01";
+  }
+};

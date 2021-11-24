@@ -32,8 +32,8 @@ const Wrapper = styled.div`
 `;
 Wrapper.displayName = "GeneralWrapper";
 
-const Content = styled.div`
-  min-height: 100vh;
+const Content = styled.div<{ pageUrl?: string }>`
+  min-height: ${(props) => (!props.pageUrl || props.pageUrl === "/" ? "auto" : "100vh")};
 `;
 
 type Props = {
