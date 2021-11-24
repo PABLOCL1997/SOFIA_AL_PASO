@@ -7,7 +7,7 @@ import { GET_USER } from "../../../graphql/user/queries";
 const Tabs = React.lazy(() => import(/* webpackChunkName: "Tabs" */ "../../Tabs"));
 const Details = React.lazy(() => import(/* webpackChunkName: "Details" */ "../Details/Details"));
 const Orders = React.lazy(() => import(/* webpackChunkName: "Orders" */ "../Orders"));
-const Bills = React.lazy(() => import(/* webpackChunkName: "Bills" */ "../Bills"));
+// const Bills = React.lazy(() => import(/* webpackChunkName: "Bills" */ "../Bills"));
 
 type Props = {};
 const Container: FC<Props> = () => {
@@ -50,7 +50,7 @@ const Container: FC<Props> = () => {
 
           {active === "" && <Details />}
           {active === "historial" && <Orders repeatOrder={repeatOrder} id={orderId} setMaskOn={setMaskOn} />}
-          {active === "facturas" && <Bills setMaskOn={setMaskOn} />}
+          {/* {active === "facturas" && <Bills setMaskOn={setMaskOn} />} */}
         </Box>
       </Wrapper>
     </Suspense>

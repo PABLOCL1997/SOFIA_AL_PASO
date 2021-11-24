@@ -31,10 +31,10 @@ const Tabs: FC<Props> = ({ active, setActive }) => {
             {active === "historial" ? <Image src={HistorialTabIconRed} alt="" /> : <Image src={HistorialTabIconGrey} alt="" />}
             <Text active={active === "historial"}>Historial de órdenes</Text>
           </Item>
-          <Item active={active === "facturas"} onClick={() => setActive("facturas")}>
+          {/* <Item active={active === "facturas"} onClick={() => setActive("facturas")}>
             {active === "facturas" ? <Image src={ListaFacturasRed} alt="" /> : <Image src={ListaFacturasGrey} alt="" />}
             <Text active={active === "facturas"}>Listado de facturas</Text>
-          </Item>
+          </Item> */}
           <Item onClick={goToActivacion}>
             <Image src={ColaboradoresTabIconGrey} alt="" />
             <Text>Colaboradores</Text>
