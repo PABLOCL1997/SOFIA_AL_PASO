@@ -12,6 +12,9 @@ export const customStyles = {
   yellow: "#FECD00",
   red: "#E30613",
   burgundy: "#7D0D4E",
+  green: "#01834C",
+  orange: "#F97903",
+  ultraLight: "#FBFCFC",
 };
 
 export const transition = (animation = "ease-in-out", time = "0.4s", delay = "0s") => {
