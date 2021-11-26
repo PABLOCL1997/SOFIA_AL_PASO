@@ -49,7 +49,7 @@ const Success: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  return <Container className={data.userInfo.length && data.userInfo[0].showSuccess ? "visible" : ""}>{data.userInfo.length ? data.userInfo[0].showSuccess : ""}</Container>;
+  return <Container className={data?.userInfo.length && data?.userInfo[0].showSuccess ? "visible" : ""}>{data?.userInfo.length ? data?.userInfo[0].showSuccess : ""}</Container>;
 };
 
 export default Success;

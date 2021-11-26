@@ -84,8 +84,8 @@ const ModalMessage: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <ModalCourtain className={data.userInfo.length && data.userInfo[0].showModal && "visible"}>
-        {data.userInfo.length && data.userInfo[0].showModal && (
+      <ModalCourtain className={data?.userInfo.length && data?.userInfo[0].showModal && "visible"}>
+        {data?.userInfo.length && data?.userInfo[0].showModal && (
           <Modal>
             <Title>{data.userInfo[0].showModal.split("|")[0]}</Title>
             <Text>{data.userInfo[0].showModal.split("|")[1]}</Text>

@@ -75,12 +75,12 @@ const Header: FC<Props> = ({ checkout, page }) => {
   };
 
   const addressLabel = () => {
-    if (userData.userInfo.length && userData.userInfo[0].defaultAddressLabel) {
+    if (userData?.userInfo.length && userData?.userInfo[0].defaultAddressLabel) {
       if (idPriceList > 0) return `${userData.userInfo[0].defaultAddressLabel.split("|")[0]}`;
 
       if (userData.userInfo[0].defaultAddressLabel) return `${userData.userInfo[0].defaultAddressLabel.replace(/ \| /g, " ")}`;
     }
-    if (userData.userInfo.length && userData.userInfo[0].cityName) {
+    if (userData?.userInfo.length && userData?.userInfo[0].cityName) {
       if (userData.userInfo[0].cityName) return `${userData.userInfo[0].cityName}, Bolivia`;
     }
     return "";
@@ -95,7 +95,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
   }, [data]);
 
   useEffect(() => {
-    if (!userData.userInfo.length || !userData.userInfo[0].cityKey || userData.userInfo[0].openCityModal || userData.userInfo[0].openCartModal) {
+    if (!userData?.userInfo.length || !userData?.userInfo[0].cityKey || userData?.userInfo[0].openCityModal || userData?.userInfo[0].openCartModal) {
       document.body.style.overflow = "hidden";
       document.body.style.maxHeight = "none";
     } else {

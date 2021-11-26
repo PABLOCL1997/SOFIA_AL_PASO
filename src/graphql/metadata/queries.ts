@@ -47,3 +47,19 @@ export const GET_PAGES = gql`
     }
   }
 `;
+
+export const GET_TIME_FRAMES = gql`
+  query getStoreTimeFrames($city: String!) {
+    timeFrames(city: $city) {
+      turno {
+        inicio
+        fin
+      }
+      horario_corte {
+        horario
+        mismo_dia
+        dia_anterior
+      }
+    }
+  }
+`;

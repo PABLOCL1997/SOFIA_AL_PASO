@@ -5,9 +5,11 @@ import { useParams, useLocation, useHistory } from "react-router-dom";
 import { GET_CATEGORIES } from "../graphql/categories/queries";
 import { toLink } from "../utils/string";
 import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from "../graphql/categories/type";
+import useCityPriceList from "./useCityPriceList";
 
 const useCategory = () => {
   const history = useHistory();
+  const { city } = useCityPriceList();
   const { category, subcategory, lastlevel } = useParams();
   const categoryName = useLocation().pathname;
   const _category = categoryName ? (categoryName.split("/").length >= 3 ? categoryName.split("/")[2] : "") : "";
@@ -18,7 +20,7 @@ const useCategory = () => {
   const { data, loading } = useQuery(GET_CATEGORIES, {
     fetchPolicy: "network-only",
     variables: {
-      city: userData.userInfo.length && userData.userInfo[0].cityKey ? userData.userInfo[0].cityKey : "SC",
+      city,
     },
     onCompleted: (d) => {
       setCategories(d.categories);
