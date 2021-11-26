@@ -1,22 +1,22 @@
 import React, { FC, Suspense, useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { cities, KeyValue } from "../../utils/string";
-import { setLatLng } from "../../utils/googlemaps";
+import { cities, KeyValue } from "../../../utils/string";
+import { setLatLng } from "../../../utils/googlemaps";
 import { useQuery, useMutation } from "react-apollo";
-import { DETAILS, GET_USER } from "../../graphql/user/queries";
-import { AddressType } from "../../graphql/user/type";
-import { SET_USER } from "../../graphql/user/mutations";
-import { GET_SAP_AGENCIES } from "../../graphql/products/queries";
-import useCityPriceList from "../../hooks/useCityPriceList";
+import { DETAILS, GET_USER } from "../../../graphql/user/queries";
+import { AddressType } from "../../../graphql/user/type";
+import { SET_USER } from "../../../graphql/user/mutations";
+import { GET_SAP_AGENCIES } from "../../../graphql/products/queries";
+import useCityPriceList from "../../../hooks/useCityPriceList";
 
-import * as SC from "./Shipping/style";
+import * as SC from "./style";
 
-const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
-const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../Map"));
-const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../Switch"));
-const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
+const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../Map"));
+const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../Switch"));
+const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../../Images/Chevron"));
 
-const ChooseShipping = React.lazy(() => import(/* webpackChunkName: "ChooseShipping" */ "./Shipping/ChooseShipping"));
+const ChooseShipping = React.lazy(() => import(/* webpackChunkName: "ChooseShipping" */ "./ChooseShipping"));
 
 const gridSpan2CSS = {
   gridColumn: "1 / span 2",

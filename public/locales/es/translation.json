@@ -312,11 +312,18 @@
       "neighborhood": "*Barrio / Urbanización",
       "reference": "*Referencia",
       "reference_ph": "*Indicar Edificio/Casa y otras Referencias",
+      "delivery_date": "*Fecha de entrega",
+      "time_frame": "*Hora estimada de entrega",
       "map": {
         "title": "Ubica el punto correcto en el mapa",
         "pin": "Debes mover el pin hasta tu dirección",
         "geo": "Encontrar mi ubicación"
       }
+    },
+    "delivery_datetime": {
+      "title": "2.1. Fecha de envío",
+      "today": "Hoy",
+      "no_time_frame": "No hay ventanas horarias disponibles para este día."
     },
     "payment": {
       "title": "3. Método de pago",

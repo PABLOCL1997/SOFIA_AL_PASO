@@ -37,7 +37,7 @@ const useCityPriceList = (): usePriceListType => {
       }
     }
     // update city
-    if (userData.userInfo.length && userData.userInfo[0].cityKey) {
+    if (userData?.userInfo.length && userData.userInfo[0].cityKey) {
       if (userData.userInfo[0].cityKey !== city) {
         setCity(userData.userInfo[0].cityKey);
         setAgency(null);
@@ -45,7 +45,7 @@ const useCityPriceList = (): usePriceListType => {
     }
 
     // update agency
-    if (userData.userInfo.length && userData.userInfo[0].agency) {
+    if (userData?.userInfo.length && userData.userInfo[0].agency) {
       if (userData.userInfo[0].agency !== agency) {
         setAgency(userData.userInfo[0].agency);
       }
@@ -60,7 +60,7 @@ const useCityPriceList = (): usePriceListType => {
     return false;
   }, [details]);
 
-  return { city, idPriceList, agencies, agency: userData.userInfo.length && userData.userInfo[0].agency ? userData.userInfo[0].agency : null, setAgency, hasB2EAddress };
+  return { city, idPriceList, agencies, agency: userData && userData.userInfo.length && userData.userInfo[0].agency ? userData.userInfo[0].agency : null, setAgency, hasB2EAddress };
 };
 
 export default useCityPriceList;
