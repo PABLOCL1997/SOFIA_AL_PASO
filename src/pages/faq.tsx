@@ -1,7 +1,6 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
+import React, { Suspense, FC, useState } from "react";
 import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
-import { FAQ_TITLE } from "../meta";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { useTranslation } from "react-i18next";
 import useMinimumPrice from "../hooks/useMinimumPrice";
@@ -164,10 +163,6 @@ const Faq: FC<Props> = () => {
       text: `Si tienes Código de Cliente: Puedes hacer tu pedido al 784 45000 o con el preventista de tu zona. Para la apertura de código puedes comunicarte a nuestro Whatsapp business y seguir los pasos que te indica o Puedes escribirnos un inbox indicando tu nombre, celular, ciudad y zona de tu tienda para comunicarte con un ejecutivo de ventas.`,
     },
   ];
-
-  useEffect(() => {
-    document.title = FAQ_TITLE;
-  }, []);
 
   return (
     <Suspense fallback={<Loader />}>

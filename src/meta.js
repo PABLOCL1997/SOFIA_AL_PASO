@@ -1,10 +1,7 @@
-export const HOMEPAGE_TITLE = "Tienda Sofia - Homepage";
-export const PRODUCTS_TITLE = "Tienda Sofia - Productos";
-export const PRODUCT_TITLE = "Tienda Sofia -";
-export const CHECKOUT_TITLE = "Tienda Sofia - Checkout";
-export const MY_ACCOUNT_TITLE = "Tienda Sofia - Mi Cuenta";
-export const MY_ORDERS_TITLE = "Tienda Sofia - Mi Ordenes";
-export const FAQ_TITLE = "Tienda Sofia - Preguntas Frecuentes";
-export const RETIRO_TITLE = "Tienda Sofia - Retiro al paso";
-export const CONTACT_TITLE = "Tienda Sofia - Contacto";
-export const TERMS_TITLE = "Tienda Sofia - Términos y Condiciones";
+export const PRODUCTS_TITLE = "Sofía al Paso - Productos";
+export const PRODUCT_TITLE = "Sofía al Paso -";
+export const CHECKOUT_TITLE = "Sofía al Paso - Checkout";
+export const MY_ACCOUNT_TITLE = "Sofía al Paso - Mi Cuenta";
+export const MY_ORDERS_TITLE = "Sofía al Paso - Mi Ordenes";
+export const RETIRO_TITLE = "Sofía al Paso - Retiro al paso";
+export const TERMS_TITLE = "Sofía al Paso - Términos y Condiciones";

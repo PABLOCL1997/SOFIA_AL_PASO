@@ -67,14 +67,23 @@ module.exports = {
           .join(" ")
       : "";
   },
-  HOMEPAGE_TITLE: "Tienda Sofia - Homepage",
-  PRODUCTS_TITLE: "Tienda Sofia - Productos",
-  PRODUCT_TITLE: "Tienda Sofia -",
-  CHECKOUT_TITLE: "Tienda Sofia - Checkout",
-  MY_ACCOUNT_TITLE: "Tienda Sofia - Mi Cuenta",
-  MY_ORDERS_TITLE: "Tienda Sofia - Mi Ordenes",
-  FAQ_TITLE: "Tienda Sofia - Preguntas Frecuentes",
-  TERMS_TITLE: "Tienda Sofia - Términos y Condiciones",
+  HOMEPAGE_TITLE: "Sofía al Paso: Envío a domicilio. Pagá como más te convenga",
+  COLLABORATORS_TITLE: "Sofía al Paso: Beneficios para Colaboradores y Convenios",
+  FAQ_TITLE: "Sofía al Paso: Preguntas Frecuentes. ¡Estamos para ayudarte!",
+  CONTACT_TITLE: "Contacta con Sofía al Paso: Cuéntanos tus Dudas y Sugerencias",
+  COVERAGE_TITLE: "Conoce la Cobertura de Envíos de Sofía al Paso",
+  PRODUCTS_TITLE: "Sofía al Paso - Productos",
+  PRODUCT_TITLE: "Sofía al Paso -",
+  CHECKOUT_TITLE: "Sofía al Paso - Checkout",
+  MY_ACCOUNT_TITLE: "Sofía al Paso - Mi Cuenta",
+  MY_ORDERS_TITLE: "Sofía al Paso - Mi Ordenes",
+  TERMS_TITLE: "Sofía al Paso - Términos y Condiciones",
+  RETIRO_TITLE: "Sofía al Paso - Retiro al paso",
+  HOMEPAGE_DESCRIPTION: "En Sofía al Paso encontrarás la más deliciosa carne y los mejores productos alimenticios. ¡Descubre por qué las familias bolivianas nos eligen día a día!",
+  COLLABORATORS_DESCRIPTION: "Descubre los mejores beneficios y descuentos para convenios corporativos y colaboradores internos. ¡Entra y activa tus beneficios en Sofía al Paso!",
+  FAQ_DESCRIPTION: "Trabajamos día a día para estar cerca de los hogares bolivianas con alimentos de alta calidad e inocuidad. ¡Entra, resuelve tus dudas y compra online!",
+  CONTACT_DESCRIPTION: "¿No encuentras lo que buscas? Este es el espacio de Sofía al Paso en el que nos puedes escribir y nos pondremos en contacto contigo. En Sofía, se confía.",
+  COVERAGE_DESCRIPTION: "Entra y mira el mapa con la cobertura de envíos de Sofía al Paso en las ciudades de Cochabamba, El Alto, La Paz, y Santa Cruz.",  
   GET_METADATA: `
   query Metadata($identifier: String!) {
     metadata(identifier: $identifier){
