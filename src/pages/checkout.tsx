@@ -357,7 +357,7 @@ const Checkout: FC<Props> = () => {
   }, [selectedTimeFrame]);
 
   useEffect(() => {
-    if (orderData?.delivery_date && orderData?.shipping && deliveryDate) {
+    if (orderData?.shipping && deliveryDate) {
       orderData.delivery_date = dayjs(deliveryDate).toISOString();
       // calculate time frames for deliveryDate
       const dateComparator: dayjs.OpUnitType = 'days';
