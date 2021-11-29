@@ -1,8 +1,7 @@
-import React, { Suspense, FC, useEffect, useState, useRef } from "react";
+import React, { Suspense, FC, useEffect, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
-import { CONTACT_TITLE } from "../meta";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { useTranslation } from "react-i18next";
 import { SET_USER } from "../graphql/user/mutations";
@@ -252,12 +251,6 @@ const Faq: FC<Props> = () => {
   };
 
   useEffect(() => {
-    let desc = `¿No encuentras lo que buscas? Escríbenos a
-    info@sofia.com.bo o completa el formulario en nuestra web y nos pondremos en
-    contacto. En Sofía, se confía.`;
-    document.getElementsByTagName("meta")[4].content = desc;
-    document.title = CONTACT_TITLE;
-
     const script = document.createElement("script");
     script.src = "https://www.google.com/recaptcha/api.js?render=6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr";
     script.addEventListener("load", () => {

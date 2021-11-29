@@ -5,7 +5,7 @@ const fs = require("fs");
 const app = express();
 const GraphQLClient = require("graphql-request").GraphQLClient;
 const redirectMiddleware = require("./src/redirect");
-const client = new GraphQLClient("https://tienda.sofia.com.bo/graphql");
+const client = new GraphQLClient(process.env.REACT_APP_GRAPHQL);
 const cron = require("node-cron");
 const { SitemapStream } = require("sitemap");
 const axios = require("axios");
@@ -32,6 +32,9 @@ const {
   search,
   rewriteRequest,
   returnSchema,
+  CONTACT_TITLE,
+  COVERAGE_TITLE,
+  COLLABORATORS_DESCRIPTION,
 } = require("./src/meta_server");
 
 app.use(compression());
@@ -221,7 +224,10 @@ app.use(
   })
 );
 app.get("/productos", (req, res) => loadPage(req, res, { title: PRODUCTS_TITLE, identifier: "sofia-products", rel: true }));
+app.get("/activacion", (req, res) => loadPage(req, res, { title: COLLABORATORS_DESCRIPTION, identifier: "sofia-collaborators" }));
 app.get("/preguntas-frecuentes", (req, res) => loadPage(req, res, { title: FAQ_TITLE, identifier: "sofia-faq" }));
+app.get("/contacto", (req, res) => loadPage(req, res, { title: CONTACT_TITLE, identifier: "sofia-contact" }));
+app.get("/cobertura", (req, res) => loadPage(req, res, { title: COVERAGE_TITLE, identifier: "sofia-coverage" }));
 app.get("/terminos-y-condiciones", (req, res) => loadPage(req, res, { title: TERMS_TITLE, identifier: "sofia-tyc" }));
 app.get("/mi-cuenta", (req, res) => loadPage(req, res, { title: MY_ACCOUNT_TITLE, identifier: "sofia-myaccount" }));
 app.get("/mi-cuenta/ordenes", (req, res) => loadPage(req, res, { title: MY_ORDERS_TITLE }));
