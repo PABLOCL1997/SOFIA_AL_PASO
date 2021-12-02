@@ -23,7 +23,7 @@ import useCityPriceList from "../../hooks/useCityPriceList";
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
 const CityModal = React.lazy(() => import(/* webpackChunkName: "CityModal" */ "./CityModal"));
-const AuthModal = React.lazy(() => import(/* webpackChunkName: "AuthModal" */ "./AuthModal"));
+const AuthModal = React.lazy(() => import(/* webpackChunkName: "AuthModal" */ "./AuthModal/"));
 const CartModal = React.lazy(() => import(/* webpackChunkName: "CartModal" */ "./CartModal"));
 
 const Sidebar = React.lazy(() => import(/* webpackChunkName: "Sidebar" */ "./Sidebar"));

@@ -180,7 +180,9 @@
       "disclaimer": {
         "account": "Ya tenés cuenta?",
         "login": "Inicia sesión!"
-      }
+      },
+      "account_already_exists": "El correo electrónico ingresado ya se encuentra registrado.",
+      "minimum_length_password": "La contraseña debe tener al menos 6 caracteres."
     },
     "forgot_password": {
       "title": "Recuperar contraseña",
