@@ -179,6 +179,14 @@ export const LoginError = styled.div`
   margin-left: -15px;
 `;
 
+export const SignUpError = styled.div`
+  font-size: 12px;
+  color: var(--red);
+  max-width: 270px;
+  margin-bottom: 15px;
+  margin-left: -15px;
+`;
+
 export const PasswordWrapper = styled.div`
   position: relative;
   display: flex;

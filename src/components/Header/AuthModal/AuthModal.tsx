@@ -1,17 +1,18 @@
 import React, { FC, Suspense, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLazyQuery, useMutation, useQuery } from "react-apollo";
-import { SET_USER, SIGN_UP, LOGIN, RECOVER, RESET } from "../../graphql/user/mutations";
-import { DETAILS, GET_USER } from "../../graphql/user/queries";
-import { googleLogin, facebookLogin } from "../../utils/social";
-import { token as StoreToken } from "../../utils/store";
+import { SET_USER, SIGN_UP, LOGIN, RECOVER, RESET } from "../../../graphql/user/mutations";
+import { DETAILS, GET_USER } from "../../../graphql/user/queries";
+import { googleLogin, facebookLogin } from "../../../utils/social";
+import { token as StoreToken } from "../../../utils/store";
 import { useParams, useHistory } from "react-router-dom";
-import { CloseWrapper, CtaWrapper, Description, Disclaimer, Line, Link, LoaderWrapper, LoginError, Modal, ModalCourtain, PasswordWrapper, SocialButton, Title } from "../AuthModal/style";
-import { findKeyByCity } from "../../utils/string";
-import useUser from "../../hooks/useUser";
+import { CloseWrapper, CtaWrapper, Description, Disclaimer, Line, Link, LoaderWrapper, LoginError, Modal, ModalCourtain, PasswordWrapper, SignUpError, SocialButton, Title } from "./style";
+import { findKeyByCity } from "../../../utils/string";
+import useUser from "../../../hooks/useUser";
+import { ApolloError } from "apollo-client";
 
-const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
-const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
+const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
+const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Cta"));
 
 type Props = {};
 
@@ -52,6 +53,7 @@ const AuthModal: FC<Props> = () => {
   const [loginError, setLoginError] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState<Boolean>(false);
   const togglePassword = useRef<HTMLInputElement>(null);
+  const [signUpErrorText, setSignUpErrorText] = useState("");
 
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -98,6 +100,17 @@ const AuthModal: FC<Props> = () => {
   });
 
   const [doSignUp] = useMutation(SIGN_UP, {
+    onError: (error: ApolloError) => {
+      const GraphQlError = "GraphQL error: Invalid login or password."
+      const ErrorAlreadyExist = "account_already_exists"
+      const ErrorMinimumLength = "minimum_length_password"
+
+      if (error.message === GraphQlError) {
+        setSignUpErrorText(t(`auth_modal.sign_up.${ErrorAlreadyExist}`));
+      } else {
+        setSignUpErrorText(t(`auth_modal.sign_up.${ErrorMinimumLength}`));
+      }
+    },
     onCompleted: () => {
       // when user is created successfully pop city modal
       toggleCityModal();
@@ -218,6 +231,7 @@ const AuthModal: FC<Props> = () => {
   };
 
   const signUp = async () => {
+    setSignUpErrorText("");
     try {
       if (form.password === "" || form.password !== form.rpassword) throw new Error("error");
       setLoader(true);
@@ -294,7 +308,9 @@ const AuthModal: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <ModalCourtain className={(!data.userInfo.length || data.userInfo[0].openLoginModal) && "visible"}>
+      <ModalCourtain className={
+        (!data.userInfo.length || data.userInfo[0].openLoginModal) &&
+        "visible"}>
         {step === Steps.Login && (
           <Modal>
             {loader && (
@@ -397,6 +413,7 @@ const AuthModal: FC<Props> = () => {
               </svg>
             </CloseWrapper>
             <Title>{t("auth_modal.sign_up.title")}</Title>
+            {signUpErrorText.length > 0 ? <SignUpError>{signUpErrorText}</SignUpError> : null}
             <input
               type="email"
               name="email"
