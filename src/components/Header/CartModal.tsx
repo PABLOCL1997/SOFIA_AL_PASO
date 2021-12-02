@@ -113,8 +113,6 @@ const CartModal: FC<Props> = () => {
               </svg>
             </CloseWrapper>
           </Header>
-          {parseFloat(totalAmount.replace(",", ".")) < minimumPrice && <UnderBudget>{t("cart.under_budget", { min_price: minimumPrice })}</UnderBudget>}
-
           {cart && cart.cartItems && cart.cartItems.length > 0 ? (
             <Items>
               {cart &&
@@ -157,7 +155,7 @@ const CartModal: FC<Props> = () => {
             <Disclaimer>{t("cart.disclaimer")}</Disclaimer>
             <Toolbox>
               <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
-              {parseFloat(totalAmount.replace(",", ".")) >= minimumPrice && (
+              {parseFloat(totalAmount.replace(",", ".")) > 0 && (
                 <CtaWrapper>
                   <Cta
                     filled={true}
