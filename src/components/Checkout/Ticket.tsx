@@ -8,6 +8,7 @@ import { ProductType } from "../../graphql/products/type";
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import useMinimumPrice from "../../hooks/useMinimumPrice";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
@@ -233,11 +234,13 @@ type Props = {
 const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetails, ready }) => {
   const { t } = useTranslation();
   const minimumPrice = useMinimumPrice();
-
+  const { agency } = useCityPriceList();
   const [type, setType] = useState("");
   const [discount, setDiscount] = useState("0");
   const [discountAmount, setDiscountAmount] = useState<any>(0);
   const [showCoupon, setShowCoupon] = useState(false);
+  const [shippingPrice, setShippingPrice] = useState<number>(0);
+
   const [bsDiscount, setBsDiscount] = useState(0);
   let arr: any[] = [];
   const [coupon, setCoupon] = useState("");
@@ -306,6 +309,16 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
     getCartItems();
   }, [localUserData]);
 
+  useEffect(() => {
+    const shippingCost = 15; // Bs. 15
+    const noShippingCost = 0; // Bs. 0
+    if ((totalAmount.replace(",", ".")) < minimumPrice && !agency) {
+      setShippingPrice(shippingCost); 
+    } else {
+      setShippingPrice(noShippingCost);
+    }
+  }, [minimumPrice, totalAmount, agency])
+
   return (
     <Suspense fallback={<Loader />}>
       <Container>
@@ -331,10 +344,17 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           <b>{t("checkout.ticket.subtotal")}</b>
           <b>Bs. {totalAmount}</b>
         </Subtotal>
-        <Shipping>
-          <span>{t("checkout.ticket.delivery")}</span>
-          <b>Bs. 0,00</b>
-        </Shipping>
+        {/* Show shipping price only on b2e, b2c */}
+        {!agency && (
+          <Shipping>
+            <span>{t("checkout.ticket.delivery")}</span>
+            {shippingPrice ? 
+            <b>Bs. {String(shippingPrice.toFixed(2)).replace('.',',')}</b>
+            :
+            <b>GRATIS</b>
+          }
+          </Shipping>
+        )}
         {/* only on b2c */}
         {localUserData && !localUserData?.userInfo[0]?.agency && !localUserData?.userInfo[0]?.idPriceList ? (
           <Coupon>
@@ -361,7 +381,12 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
         <Line />
         <Total>
           <b>{t("checkout.ticket.total")}</b>
-          <b>Bs. {String(Number(Number(totalAmount.replace(",", ".")) - parseFloat(discountAmount)).toFixed(2)).replace(".", ",")}</b>
+          <b>
+            Bs.{" "}
+            {String(
+              Number(shippingPrice + Number(totalAmount.replace(",", ".")) - parseFloat(discountAmount)).toFixed(2)
+            ).replace(".", ",")}
+          </b>
         </Total>
         {dataDiscounts &&
           !localUserData?.userInfo[0]?.agency &&
@@ -377,14 +402,23 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           )}
 
         <CtaWrapper>
-          {!processing && <Cta active={ready && Number(totalAmount.replace(",", ".")) >= minimumPrice} filled={true} text={t("checkout.ticket.send")} action={order} />}
+          {!processing && (
+            <Cta
+              active={ready && Number(totalAmount.replace(",", ".")) > 0}
+              filled={true}
+              text={t("checkout.ticket.send")}
+              action={order}
+            />
+          )}
           {processing && (
             <LoaderWrapper>
               <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
             </LoaderWrapper>
           )}
         </CtaWrapper>
-        {Number(totalAmount.replace(",", ".")) < minimumPrice && <ErrorText margin={false}>El valor mínimo para la compra es de Bs. {minimumPrice}.</ErrorText>}
+        {shippingPrice > 0 ? 
+          <ErrorText margin={false}>A partir de Bs. {minimumPrice} el envio es gratis.</ErrorText>
+        : null}
       </Container>
     </Suspense>
   );

@@ -19,6 +19,8 @@ import { ShippingMethod } from "../components/CityModal/types";
 import { GET_TIME_FRAMES } from "../graphql/metadata/queries";
 import { HorarioCorte, TimeFrame } from "../types/TimeFrame";
 import dayjs from "dayjs";
+import { EBSProduct } from "../types/Product";
+import useMinimumPrice from "../hooks/useMinimumPrice";
 
 const isoWeek = require("dayjs/plugin/isoWeek");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
@@ -179,6 +181,7 @@ const Checkout: FC<Props> = () => {
   const location = useLocation();
   const history = useHistory();
   const { idPriceList, agency, city } = useCityPriceList();
+  const minimumPrice = useMinimumPrice();
 
   const [processing, setProcessing] = useState(false);
   const [userData, setUserData] = useState({});
@@ -411,7 +414,14 @@ const Checkout: FC<Props> = () => {
 
   const validateOrder = () => {
     let items: Array<string> = [];
-    const special_address = idPriceList > 0;
+    const special_address = idPriceList > 0
+    const shippingServiceItem: EBSProduct = {
+      "CODIGO": "670000",
+      "DESCRIPCION": "SERVICIO DE TRANSPORTE DE PRODUCTOS",
+      "CANTIDAD": 1,
+      "UNIDAD": "UNI",
+      "PRECIO": 15
+    }
 
     data &&
       data.cartItems &&
@@ -439,6 +449,33 @@ const Checkout: FC<Props> = () => {
           })
         );
       });
+
+    // if it isn't a pickup order
+    // and order price is less than minimum price add the shipping item
+    if (!agency && Number(totalAmount.replace(',','.')) < minimumPrice) {
+      items.push(
+          JSON.stringify({
+            entity_id: shippingServiceItem.CODIGO,
+            sku: shippingServiceItem.CODIGO,
+            category: "",
+            name: shippingServiceItem.DESCRIPCION,
+            price: shippingServiceItem.PRECIO,
+            quantity: 1,
+            type_id: "simple",
+            addQty: true,
+            toSerialize: {
+              info_buyRequest: {
+                uenc: "",
+                product: shippingServiceItem.CODIGO,
+                form_key: "",
+                related_product: "",
+                super_attribute: {},
+                qty: 1
+              }
+            }
+          })
+      );
+    }
 
     document.querySelectorAll(`.error`).forEach((input: any) => {
       input?.classList.remove("error");
