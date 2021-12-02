@@ -54,7 +54,7 @@ const DeliveryDate: FC<{
                 <SC.DateSquare selected={dayjs(day).isSame(deliveryDate, dateComparator)} onClick={() => handleSelectDay(day)}>
                   <SC.Date>
                     {index === 0 ? `Hoy ` : null}
-                    {`${day.get("date") < 10 ? `0${day.get("date")}` : day.get("date")}/${dayjs().month() + 1 < 10 ? `0${dayjs().month() + 1}` : dayjs().month() + 1}`}
+                    {`${day.get("date") < 10 ? `0${day.get("date")}` : day.get("date")}/${day.get("month") + 1 < 10 ? `0${day.get("month") + 1}` : day.get("month") + 1}`}
                   </SC.Date>
                   <SC.Day>{weekdays[day.get("d")]}</SC.Day>
                 </SC.DateSquare>

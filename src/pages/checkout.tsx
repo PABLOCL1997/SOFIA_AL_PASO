@@ -523,7 +523,7 @@ const Checkout: FC<Props> = () => {
     }
 
     if (!missingField && !orderData.shipping.id && !agency) {
-      ["firstname", "phone", "phone2", "nit", "city", "address", "reference", "date", "time_frame"].forEach((key: string) => {
+      ["firstname", "phone", "phone2", "nit", "city", "address", "reference"].forEach((key: string) => {
         if ((!orderData.shipping[key] || !orderData.shipping[key].trim()) && !missingField) {
           if (key === "building_name" && orderData.shipping.home_type === "Casa") return [];
           missingField = true;
