@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 export const GET_MIN_PRICE = (data: any) => {
   const userInfo = data && data.userInfo && data.userInfo.length ? data.userInfo[0] : {};
-  return userInfo.cityKey === "CO" ? 150 : userInfo.cityKey === "SC" ? 200 : 200;
+  return userInfo.cityKey === "CB" ? 150 : userInfo.cityKey === "SC" ? 200 : 200;
 };
 
 export const GET_QTY = (cartItems: any) => {
