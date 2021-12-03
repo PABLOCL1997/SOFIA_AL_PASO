@@ -24,7 +24,7 @@ export type KeyValue = {
 };
 
 export const cities: Array<KeyValue> = [
-  { key: "CO", value: "Cochabamba" },
+  { key: "CB", value: "Cochabamba" },
   { key: "LP", value: "La Paz" },
   { key: "SC", value: "Santa Cruz" },
   { key: "EA", value: "El Alto" },

@@ -479,7 +479,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
             {categories.length &&
               categories
                 .filter((row: CategoryType) => {
-                  return city === "CO" ? row : toLink(row.name).match(/cocha-days/) ? null : row;
+                  return city === "CB" ? row : toLink(row.name).match(/cocha-days/) ? null : row;
                 })
                 .map((row: CategoryType) => (
                   <Category lvl={1} selected={compare(row)} key={row.entity_id}>
@@ -555,7 +555,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                     {categories.length &&
                       categories
                         .filter((row: CategoryType) => {
-                          return city === "CO" ? row : toLink(row.name).match(/cocha-days/) ? null : row;
+                          return city === "CB" ? row : toLink(row.name).match(/cocha-days/) ? null : row;
                         })
                         .map((row: CategoryType) => (
                           <Category lvl={1} selected={compare(row)} key={row.entity_id}>
