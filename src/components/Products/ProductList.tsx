@@ -333,7 +333,7 @@ const ProductList: FC<Props> = ({ products, count, offset, limit, orderQuery, pa
           <SelectBox>
             <Select onClick={() => setOpenOrder(!openOrder)}>
               <span>{t("products.product_list.order_by")}</span>
-              <b>{t("products.product_list." + parentOrder)}</b>
+              <b>{t("products.product_list." + (parentOrder ? parentOrder : "no_order"))}</b>
               <Chevron />
             </Select>
             {openOrder && (
