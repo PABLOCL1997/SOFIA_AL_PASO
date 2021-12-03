@@ -110,7 +110,7 @@
       "weight": "Peso",
       "price": "Precio",
       "position": "Posición",
-      "no_order": "<Ningun filtro>",
+      "no_order": "<Ningún filtro>",
       "no_brands": "No hay filtros disponibles",
       "no_results": "No se encontraron resultados con los criterios de busqueda actuales."
     }
