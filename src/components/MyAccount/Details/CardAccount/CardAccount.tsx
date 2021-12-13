@@ -38,6 +38,7 @@ export type AddressArgs = {
 };
 
 const CardAccount: FC<Props> = ({ userData, userDetails }) => {
+  const billing = 1; // on this card we only modify billing info
   const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
@@ -56,6 +57,8 @@ const CardAccount: FC<Props> = ({ userData, userDetails }) => {
     let addressId = inputs?.addressId || 0;
 
     if (inputs?.addresses?.length) addressId = inputs.addresses.find((address: AddressType) => address.id === inputs.addressId)?.id ?? addressId;
+    // check if address id exists in the list of addresses
+    if (inputs?.addresses?.length && inputs.addresses.find((address: AddressType) => address.id === addressId)) addressId = 0;
 
     setAddressArgs({
       addressId,
@@ -70,7 +73,7 @@ const CardAccount: FC<Props> = ({ userData, userDetails }) => {
       city: userData.userInfo.length ? userData.userInfo[0].cityName : "",
       latitude: "",
       longitude: "",
-      billing: 1,
+      billing,
       on: true,
     });
   };
@@ -87,7 +90,7 @@ const CardAccount: FC<Props> = ({ userData, userDetails }) => {
     setLoading(false);
   };
 
-  useEffect(() => userDetails.details && setInputs(userDetails.details), [userDetails]);
+  useEffect(() => userDetails?.details && setInputs(userDetails.details), [userDetails]);
 
   useEffect(() => void (addressArgs && addressArgs.on && callAddressMutation()), [addressArgs]); //eslint-disable-line react-hooks/exhaustive-deps
 
