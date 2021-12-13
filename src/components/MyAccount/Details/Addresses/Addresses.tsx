@@ -34,6 +34,7 @@ type Props = {
   };
 };
 const Addresses: FC<Props> = ({ userData, userDetails }) => {
+  const billing = 0; // an address is never billing info
   const { t } = useTranslation();
   const location = useLocation();
   const myRef = useRef(null);
@@ -125,7 +126,7 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
       city: addressInputs.city,
       latitude: String((window as any).latitude),
       longitude: String((window as any).longitude),
-      billing: 0,
+      billing,
       id_price_list: addressInputs.id_price_list,
       id_address_ebs: addressInputs.id_address_ebs,
       on: true,
@@ -162,7 +163,7 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
       city: addressInputs.city,
       latitude: String((window as any).latitude),
       longitude: String((window as any).longitude),
-      billing: 0,
+      billing,
       on: true,
     });
   };
