@@ -7,16 +7,16 @@ import { toLink } from "../utils/string";
 import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from "../graphql/categories/type";
 import useCityPriceList from "./useCityPriceList";
 
-const useCategory = () => {
+const useCategory = (offset = 0) => {
+  const allCategoriesId = 313;
   const history = useHistory();
   const { city } = useCityPriceList();
   const { category, subcategory, lastlevel } = useParams();
   const categoryName = useLocation().pathname;
-  const _category = categoryName ? (categoryName.split("/").length >= 3 ? categoryName.split("/")[2] : "") : "";
-  const _subcategory = categoryName ? (categoryName.split("/").length >= 4 ? categoryName.split("/")[3] : "") : "";
-  const _lastlevel = categoryName ? (categoryName.split("/").length >= 5 ? categoryName.split("/")[4] : "") : "";
+  const _category = categoryName ? (categoryName.split("/").length >= 3 ? categoryName.split("/")[2 + offset] : "") : "";
+  const _subcategory = categoryName ? (categoryName.split("/").length >= 4 ? categoryName.split("/")[3 + offset] : "") : "";
+  const _lastlevel = categoryName ? (categoryName.split("/").length >= 5 ? categoryName.split("/")[4 + offset] : "") : "";
 
-  const { data: userData } = useQuery(GET_USER, {});
   const { data, loading } = useQuery(GET_CATEGORIES, {
     fetchPolicy: "network-only",
     variables: {
@@ -51,16 +51,10 @@ const useCategory = () => {
           entity_id = __category.entity_id;
         }
       }
-      // hay cat s3 o s4, pero no encontro ninguna (!entity_id)
-      if (!entity_id && !!(category || subcategory || lastlevel)) {
-        if ((category !== "promociones" || _category !== "promociones") && (category !== "semana-de-mam%C3%A1-" || _category !== "semana-de-mam%C3%A1-")) {
-          return history.replace("/404");
-        }
-      }
       if (entity_id && entity_id !== category_id) {
         setCategoryId(entity_id);
       } else if (!entity_id) {
-        setCategoryId(0);
+        setCategoryId(allCategoriesId);
         setTCategory(null);
       }
     }

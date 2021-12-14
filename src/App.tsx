@@ -22,6 +22,7 @@ const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "./pages
 const RetiroAlPaso = React.lazy(() => import(/* webpackChunkName: "RetiroAlPaso" */ "./pages/retiroAlPaso"));
 const Activate = React.lazy(() => import(/* webpackChunkName: "Activate" */ "./pages/activate"));
 const Tracking = React.lazy(() => import(/* webpackChunkName: "Tracking" */ "./pages/tracking"));
+const Monitor = React.lazy(() => import(/* webpackChunkName: "Monitor" */ "./pages/monitor"));
 
 const Loader = styled.div`
   display: flex;
@@ -108,6 +109,30 @@ const App = () => {
               <LayoutGeneral>
                 <Contact />
               </LayoutGeneral>
+            }
+          />
+          <Route
+            path="/productos/monitor/:city/:category"
+            children={
+                <Monitor />
+            }
+          />
+          <Route
+            path="/productos/monitor/:city/:category/:subcategory"
+            children={
+                <Monitor />
+            }
+          />
+          <Route
+            path="/productos/monitor/:city/:category/:subcategory/:lastlevel"
+            children={
+                <Monitor />
+            }
+          />
+          <Route
+            path="/productos/monitor/:city"
+            children={
+                <Monitor />
             }
           />
           <Route

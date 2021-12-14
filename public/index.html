@@ -31,7 +31,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             /** init gtm after 3500 seconds - this could be adjusted */
-            setTimeout(initGTM, 7500);
+            // if window.location.href includes monitores
+            if (!window.location.href.includes('monitor')) {
+                setTimeout(initGTM, 7500);
+            }
             setTimeout(initSocialLogin, 3500);
         });
 

@@ -16,7 +16,6 @@ export const NewDiscount = styled.div`
 
 export const ProductLink = styled.a`
   img {
-    transform: scale(0.83);
   }
 `;
 export const BottomCard = styled.div`
