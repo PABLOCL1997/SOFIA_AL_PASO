@@ -129,6 +129,30 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           </Link>
         </MenuItem>
         <MenuItem>
+          {/* tracking */}
+          <svg width="31" height="26" viewBox="0 0 31 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.3334 2H2V17.889H20.3334V2Z" stroke="#E30613" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M20.3335 8.1113H25.2224L28.8891 11.778V17.8891H20.3335V8.1113Z" stroke="#E30613" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M7.50003 24C9.18757 24 10.5556 22.6319 10.5556 20.9444C10.5556 19.2568 9.18757 17.8888 7.50003 17.8888C5.81248 17.8888 4.44446 19.2568 4.44446 20.9444C4.44446 22.6319 5.81248 24 7.50003 24Z"
+              stroke="#E30613"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M23.3891 24C25.0766 24 26.4446 22.6319 26.4446 20.9444C26.4446 19.2568 25.0766 17.8888 23.3891 17.8888C21.7015 17.8888 20.3335 19.2568 20.3335 20.9444C20.3335 22.6319 21.7015 24 23.3891 24Z"
+              stroke="#E30613"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Link onClick={() => setOpen(false)} to="/segui-tu-pedido">
+            {t("header.tracking")}
+          </Link>
+        </MenuItem>
+        <MenuItem>
           {/* contact */}
           <svg width="32" height="32" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.5 4.375L10 11.25L2.5 4.375" stroke="#E30613" strokeLinecap="round" strokeLinejoin="round" />
