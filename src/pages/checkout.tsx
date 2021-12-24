@@ -170,6 +170,8 @@ const Checkout: FC<Props> = () => {
   while(counter < daysRequired) {
     const newDay = dayjs().add(counter, "days");
 
+    if (newDay.date() === 25) continue;
+
     if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
       const nextDay = dayjs().add(counter, "days");
       daysAvailable.push(nextDay);
