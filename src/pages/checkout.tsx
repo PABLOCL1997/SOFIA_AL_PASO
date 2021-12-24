@@ -179,6 +179,7 @@ const Checkout: FC<Props> = () => {
       const nextDay = dayjs().add(counter, "days");
       daysAvailable.push(nextDay);
     }
+    counter++;
   }
 
   const { t } = useTranslation();
