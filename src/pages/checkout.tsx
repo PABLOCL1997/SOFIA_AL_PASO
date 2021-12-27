@@ -170,7 +170,7 @@ const Checkout: FC<Props> = () => {
   while(counter < daysRequired) {
     const newDay = dayjs().add(counter, "days");
 
-    if (newDay.date() === 25) {
+    if (newDay.date() === 31) {
       counter++;
       continue;
     }
