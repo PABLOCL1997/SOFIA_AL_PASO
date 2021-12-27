@@ -2,9 +2,8 @@ import React, { FC, Suspense, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
-import { useQuery, useMutation } from "react-apollo";
+import { useQuery } from "react-apollo";
 import { CHECK_TOKEN } from "../graphql/user/queries";
-import { SET_USER } from "../graphql/user/mutations";
 import { token } from "../utils/store";
 import "lazysizes";
 import "lazysizes/plugins/unveilhooks/ls.unveilhooks";
@@ -31,6 +30,19 @@ const Wrapper = styled.div`
   }
 `;
 Wrapper.displayName = "GeneralWrapper";
+
+const LoaderWrapper = styled.div`
+  background: white;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  border-radius: 20px;
+  img {
+    width: 50px;
+  }
+`;
 
 const Content = styled.div<{ pageUrl?: string }>`
   min-height: ${(props) => (!props.pageUrl || props.pageUrl === "/" ? "auto" : "100vh")};
@@ -88,7 +100,13 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
   }, []);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense
+      fallback={
+        <LoaderWrapper>
+          <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+        </LoaderWrapper>
+      }
+    >
       <Wrapper className={page ? page : ""}>
         <Header checkout={checkout} page={page} />
         <Content>{children}</Content>

@@ -1,15 +1,14 @@
 import React, { Suspense, FC, useState, useEffect } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 import { PRODUCT_TITLE } from "../meta";
 import { fromLink, toCatLink, toLink } from "../utils/string";
 import BreadCrumbs from "../components/Breadcrumbs/Breadcrumbs";
-
 import { CategoryType } from "../graphql/categories/type";
 import { BREAKPOINT } from "../utils/constants";
 
 import * as SC from "../styled-components/pages/product";
-
 import useProduct from "../hooks/useProduct";
 import useCart from "../hooks/useCart";
 import useCityPriceList from "../hooks/useCityPriceList";
@@ -30,6 +29,19 @@ type Props = {
   closeModal?: Function;
   openModal?: Function;
 };
+
+const LoaderWrapper = styled.div`
+  background: white;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  border-radius: 20px;
+  img {
+    width: 50px;
+  }
+`;
 
 const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal, openModal }) => {
   let { prodname } = useParams();
@@ -68,7 +80,13 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal, openModal
   }, []);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense
+      fallback={
+        <LoaderWrapper>
+          <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+        </LoaderWrapper>
+      }
+    >
       <SC.MainContainer>
         <SC.Header>
           {oldUrl && (
@@ -108,7 +126,7 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal, openModal
             <ContinueArrow />
           </SC.HeaderLink>
         </SC.Header>
-        {product && product.entity_id && (
+        {product && product.entity_id ? (
           <SC.Wrapper>
             <SC.Col1>
               <Slider {...settings}>
@@ -202,6 +220,10 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal, openModal
               <SC.Disclaimer>{/*t('product.disclaimer')*/}</SC.Disclaimer>
             </SC.Col2>
           </SC.Wrapper>
+        ) : (
+          <LoaderWrapper>
+            <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
+          </LoaderWrapper>
         )}
         {!!related.length && <RelatedProducts openModal={openModal} products={related} />}
       </SC.MainContainer>

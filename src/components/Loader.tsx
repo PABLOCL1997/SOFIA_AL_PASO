@@ -4,6 +4,8 @@ import styled from "styled-components";
 const Container = styled.span`
   font-size: 24px;
   color: black;
+  width: 100%;
+  height: 100%;
 `;
 
 type Props = {
