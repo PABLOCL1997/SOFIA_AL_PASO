@@ -72,6 +72,8 @@ const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, a
           }
           onSelect={() => toggleAndClickSelector(deliverySelector)}
           onAddAddress={() => {
+            // @ts-ignore
+            document.querySelector("#agregar-nueva-direccion").click();
             document.querySelector("#nueva-direccion")?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         />

@@ -159,7 +159,17 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
 
   const showOther = () => {
     onChange("addressId", null);
-    setAgency(null);
+    setUser({
+      variables: {
+        user: {
+          openCityModal: false,
+          defaultAddressLabel: null,
+          defaultAddressId: 0,
+          idPriceList: null,
+          agency: null,
+        },
+      },
+    });
   };
 
   const addressTypes = [
@@ -235,12 +245,12 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
         {!isEmployee && (
           <>
             <SC.OtherAddressWrapper>
-              <SC.Other onClick={showOther} margin>
+              <SC.Other onClick={showOther} margin id="agregar-nueva-direccion">
                 {t("checkout.delivery.other_address")}
               </SC.Other>
             </SC.OtherAddressWrapper>
 
-            <SC.Form id="nueva-direccion" hidden={addressId}>
+            <SC.Form id="nueva-direccion" hidden={addressId || agency}>
               {["firstname", "lastname", "phone", "phone2", "city", "address", "reference"].map((key: string) => {
                 return (
                   <SC.InputGroup withLabel={key !== "street"} key={key} style={key === "reference" ? gridSpan2CSS : emptyCSS}>
