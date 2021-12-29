@@ -356,7 +356,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           </Shipping>
         )}
         {/* only on b2c */}
-        {localUserData && !localUserData?.userInfo[0]?.agency && !localUserData?.userInfo[0]?.idPriceList ? (
+        {localUserData && !localUserData?.userInfo[0]?.idPriceList ? (
           <Coupon>
             {!showCoupon && <button onClick={() => setShowCoupon(true)}>{t("checkout.ticket.coupon.ask")}</button>}
             {showCoupon && (
