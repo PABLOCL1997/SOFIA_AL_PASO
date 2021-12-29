@@ -38,16 +38,9 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
   const [inputs, setInputs] = useState<any>({
     addressType: t("checkout.delivery.street"),
   });
-  const [agencies, setAgencies] = useState<any>([]);
+
   const { data: localData } = useQuery(GET_USER, {});
   const [showSuccess] = useMutation(SET_USER, {});
-
-  const {} = useQuery(GET_SAP_AGENCIES, {
-    fetchPolicy: "network-only",
-    onCompleted: (d) => {
-      setAgencies(d.agencies);
-    },
-  });
 
   const [other, setOther] = useState(false);
   const { data: userData } = useQuery(DETAILS, {
@@ -56,8 +49,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
   const [setUser] = useMutation(SET_USER);
   const { agency, setAgency, idPriceList } = useCityPriceList();
   const isEmployee = useMemo(() => userData && userData.details && userData.details.employee, [userData]);
-  const newAddress = useMemo(() => !(localData.userInfo.length && localData.userInfo[0].defaultAddressId), [localData]);
-  const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
+  const addressId = useMemo(() => inputs?.addressId, [inputs]);
   const street = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressLabel, [localData]);
 
   const onChange = (key: string, value: string | number | null, preventMap: boolean = false) => {
@@ -167,6 +159,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
 
   const showOther = () => {
     onChange("addressId", null);
+    setAgency(null);
   };
 
   const addressTypes = [
@@ -247,8 +240,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
               </SC.Other>
             </SC.OtherAddressWrapper>
 
-            {/* <Form hidden={!other}> */}
-            <SC.Form id="nueva-direccion" hidden={!newAddress}>
+            <SC.Form id="nueva-direccion" hidden={addressId}>
               {["firstname", "lastname", "phone", "phone2", "city", "address", "reference"].map((key: string) => {
                 return (
                   <SC.InputGroup withLabel={key !== "street"} key={key} style={key === "reference" ? gridSpan2CSS : emptyCSS}>
@@ -284,7 +276,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
             </SC.Form>
           </>
         )}
-        {newAddress && !confirmModalVisible && <Map />}
+        {!addressId && !confirmModalVisible && <Map />}
       </React.Fragment>
     </Suspense>
   );

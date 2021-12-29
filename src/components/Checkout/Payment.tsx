@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useEffect, useState } from "react";
+import React, { FC, Suspense, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../../utils/constants";
@@ -6,6 +6,7 @@ import { CLIENT_CREDIT } from "../../graphql/b2e/queries";
 import { useLazyQuery, useQuery } from "react-apollo";
 import CircleLoader from "../CircleLoader";
 import { DETAILS, GET_USER } from "../../graphql/user/queries";
+import useCityPriceList from "../../hooks/useCityPriceList";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../Switch"));
@@ -77,7 +78,8 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
   const valuesPickup = [CASH, POS];
 
   const [option, setOption] = useState("cashondelivery");
-  const [options, setOptions] = useState(values);
+  const { idPriceList, agency } = useCityPriceList()
+
 
   const [userCredit, { loading: loadingCredit, data: dataCredit }] = useLazyQuery(CLIENT_CREDIT, {
     fetchPolicy: "network-only",
@@ -106,21 +108,12 @@ const Payment: FC<Props> = ({ updateOrder, userData, userDetails, totalAmount, s
     updateOrder("payment", { method: val });
   };
 
-  useEffect(() => {
-    if (userData.userInfo[0].idPriceList && userData.userInfo[0].idPriceList > 0) {
-      setOptions(valuesB2E);
-      changeOption(CREDIT.value);
-      updateOrder("payment", { method: CREDIT.value });
-    } else if (userData.userInfo[0].agency) {
-      setOptions(valuesPickup);
-      setOption(valuesPickup[0].value);
-      updateOrder("payment", { method: valuesPickup[0].value });
-    } else {
-      setOptions(values);
-      setOption(values[0].value);
-      updateOrder("payment", { method: values[0].value });
-    }
-  }, [userData]);
+  const options = useMemo(() => {
+    if (idPriceList) return valuesB2E;
+    if (agency) return valuesPickup;
+    return values;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idPriceList, agency]);
 
   return (
     <Suspense fallback={<Loader />}>
