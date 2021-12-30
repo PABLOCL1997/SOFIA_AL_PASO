@@ -29,16 +29,19 @@ const DeliveryDate: FC<{
   const { t } = useTranslation();
   const dateComparator: dayjs.OpUnitType = "day";
 
-  const weekdays = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-    "Domingo",
-  ];
+  const weekdays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+  // const newDay = today.local().tz("America/La_Paz").add(counter, "days");
+  // const currentDay = parseInt(newDay.format("D"));
+  // const currentMonth = parseInt(newDay.format("M"));
+
+  if (timeFrames?.length && deliveryDate) {
+    const currentDay = parseInt(deliveryDate.format("D"));
+    const currentMonth = parseInt(deliveryDate.format("M"));
+    if (currentDay === 31 && currentMonth === 12) {
+      timeFrames = timeFrames.filter((el: any) => el.turno.inicio !== "13:00" || el.turno.fin !== "16:00");
+    }
+  }
 
   const handleSelectDay = (day: dayjs.Dayjs) => {
     setDeliveryDate(day);
@@ -62,7 +65,7 @@ const DeliveryDate: FC<{
             : null}
         </SC.DateWrapper>
         <SC.TimeWrapper>
-          {timeFrames?.length ? 
+          {timeFrames?.length ? (
             timeFrames.map((timeFrame: TimeFrame, index: number) => (
               <SC.TimeRadio key={`timeFrame#${index}`} selected={JSON.stringify(timeFrame) === JSON.stringify(selectedTimeFrame)}>
                 <SC.Time onClick={() => setSelectedTimeFrame(timeFrame)}>
@@ -78,7 +81,9 @@ const DeliveryDate: FC<{
                 </SC.Time>
               </SC.TimeRadio>
             ))
-            : <>{t("checkout.delivery_datetime.no_time_frame")}</>}
+          ) : (
+            <>{t("checkout.delivery_datetime.no_time_frame")}</>
+          )}
         </SC.TimeWrapper>
       </React.Fragment>
     </Suspense>
