@@ -383,6 +383,7 @@ const Checkout: FC<Props> = () => {
       const tomorrow = dayjs().add(1, "day");
 
       if (dayjs(deliveryDate).isSame(today, dateComparator)) {
+        // TODO: reducir codigo duplicado
         setFilteredTimeFrames(
           timeFrames.filter((timeFrame: TimeFrame) => {
             const hasSameDay = timeFrame.horario_corte.some(
@@ -401,6 +402,7 @@ const Checkout: FC<Props> = () => {
       }
 
       if (dayjs(deliveryDate).isSame(tomorrow, dateComparator)) {
+        // TODO: reducir codigo duplicado
         setFilteredTimeFrames(
           timeFrames.filter((timeFrame: TimeFrame) => {
             const hasBeforeDay = timeFrame.horario_corte.some(
