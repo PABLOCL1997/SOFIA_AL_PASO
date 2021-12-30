@@ -28,12 +28,7 @@ const DeliveryDate: FC<{
 }> = ({ timeFrames, setSelectedTimeFrame, selectedTimeFrame, deliveryDate, setDeliveryDate, daysAvailable }) => {
   const { t } = useTranslation();
   const dateComparator: dayjs.OpUnitType = "day";
-
   const weekdays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-
-  // const newDay = today.local().tz("America/La_Paz").add(counter, "days");
-  // const currentDay = parseInt(newDay.format("D"));
-  // const currentMonth = parseInt(newDay.format("M"));
 
   if (timeFrames?.length && deliveryDate) {
     const currentDay = parseInt(deliveryDate.format("D"));
