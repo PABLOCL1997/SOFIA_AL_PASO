@@ -164,23 +164,8 @@ type OrderData = {
 
 const Checkout: FC<Props> = () => {
   const [daysAvailable, setDaysAvailable] = useState<Array<dayjs.Dayjs>>([]);
-  const daysRequired = 5;
   const SundayKey = 7;
-  let counter = 0;
-  while(counter < daysRequired) {
-    const newDay = dayjs().add(counter, "days");
-
-    if (newDay.date() === 31) {
-      counter++;
-      continue;
-    }
-
-    if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
-      const nextDay = dayjs().add(counter, "days");
-      daysAvailable.push(nextDay);
-    }
-    counter++;
-  }
+  const today = dayjs();
 
   const { t } = useTranslation();
   const location = useLocation();
@@ -244,12 +229,33 @@ const Checkout: FC<Props> = () => {
     },
     onCompleted: (d) => {
       setTimeFrames(d.timeFrames);
-    }
+    },
   });
 
   const totalAmount = GET_TOTAL(data.cartItems);
 
   useEffect(() => {
+    let days: any = [];
+    let daysRequired = 5;
+    let counter = 0;
+    while (counter < daysRequired) {
+      const newDay = today.local().tz("America/La_Paz").add(counter, "days");
+      const currentDay = parseInt(newDay.format("D"));
+      const currentMonth = parseInt(newDay.format("M"));
+
+      if (currentDay === 1 && currentMonth === 1) {
+        counter++;
+        daysRequired++;
+        continue;
+      }
+
+      if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
+        days.push(newDay);
+      }
+      counter++;
+    }
+    setDaysAvailable(days);
+
     (window as any).updateMapUsed = () => setMapUsed(true);
     document.title = CHECKOUT_TITLE;
     (window as any).orderData = {};
@@ -368,65 +374,71 @@ const Checkout: FC<Props> = () => {
     if (orderData?.shipping && deliveryDate) {
       orderData.delivery_date = dayjs(deliveryDate).toISOString();
       // calculate time frames for deliveryDate
-      const dateComparator: dayjs.OpUnitType = 'days';
-      const hourComparator: dayjs.OpUnitType = 'hours';
+      const dateComparator: dayjs.OpUnitType = "days";
+      const hourComparator: dayjs.OpUnitType = "hours";
 
-      const hoursUnitType: dayjs.UnitType = "hours"
-      const minutesUnitType: dayjs.UnitType = "minutes"
+      const hoursUnitType: dayjs.UnitType = "hours";
+      const minutesUnitType: dayjs.UnitType = "minutes";
       const today = dayjs();
-      const tomorrow = dayjs().add(1, 'day');
-
+      const tomorrow = dayjs().add(1, "day");
 
       if (dayjs(deliveryDate).isSame(today, dateComparator)) {
+        // TODO: reducir codigo duplicado
         setFilteredTimeFrames(
-          timeFrames
-          .filter((timeFrame: TimeFrame) => {
-            const hasSameDay = timeFrame.horario_corte.some((horario: HorarioCorte) => 
-              horario.mismo_dia && 
-                dayjs().isBefore(dayjs()
-                .set(hoursUnitType, parseInt(horario.horario.split(':')[0]))
-                .set(minutesUnitType, parseInt(horario.horario.split(':')[1])), hourComparator)
+          timeFrames.filter((timeFrame: TimeFrame) => {
+            const hasSameDay = timeFrame.horario_corte.some(
+              (horario: HorarioCorte) =>
+                horario.mismo_dia &&
+                dayjs().isBefore(
+                  dayjs()
+                    .set(hoursUnitType, parseInt(horario.horario.split(":")[0]))
+                    .set(minutesUnitType, parseInt(horario.horario.split(":")[1])),
+                  hourComparator
+                )
             );
             return hasSameDay ? timeFrame : null;
-          })                
+          })
         );
       }
 
       if (dayjs(deliveryDate).isSame(tomorrow, dateComparator)) {
+        // TODO: reducir codigo duplicado
         setFilteredTimeFrames(
-          timeFrames
-          .filter((timeFrame: TimeFrame) => {
-            const hasBeforeDay = timeFrame.horario_corte.some((horario: HorarioCorte) =>  horario.dia_anterior && 
-                dayjs().isBefore(dayjs()
-                .set(hoursUnitType, parseInt(horario.horario.split(':')[0]))
-                .set(minutesUnitType, parseInt(horario.horario.split(':')[1])), hourComparator)
-            )
+          timeFrames.filter((timeFrame: TimeFrame) => {
+            const hasBeforeDay = timeFrame.horario_corte.some(
+              (horario: HorarioCorte) =>
+                horario.dia_anterior &&
+                dayjs().isBefore(
+                  dayjs()
+                    .set(hoursUnitType, parseInt(horario.horario.split(":")[0]))
+                    .set(minutesUnitType, parseInt(horario.horario.split(":")[1])),
+                  hourComparator
+                )
+            );
             return hasBeforeDay ? timeFrame : null;
           })
-        );      
+        );
       }
 
       // if it is after tomorrow
       if (dayjs(deliveryDate).isAfter(tomorrow, dateComparator)) {
         setFilteredTimeFrames(timeFrames);
       }
-
     }
-
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deliveryDate]);
 
   const validateOrder = () => {
     let items: Array<string> = [];
-    const special_address = idPriceList > 0
+    const special_address = idPriceList > 0;
     const shippingServiceItem: EBSProduct = {
-      "CODIGO": "670000",
-      "DESCRIPCION": "SERVICIO DE TRANSPORTE DE PRODUCTOS",
-      "CANTIDAD": 1,
-      "UNIDAD": "UNI",
-      "PRECIO": 15
-    }
+      CODIGO: "670000",
+      DESCRIPCION: "SERVICIO DE TRANSPORTE DE PRODUCTOS",
+      CANTIDAD: 1,
+      UNIDAD: "UNI",
+      PRECIO: 15,
+    };
 
     data &&
       data.cartItems &&
@@ -457,28 +469,28 @@ const Checkout: FC<Props> = () => {
 
     // if it isn't a pickup order
     // and order price is less than minimum price add the shipping item
-    if (!agency && Number(totalAmount.replace(',','.')) < minimumPrice) {
+    if (!agency && Number(totalAmount.replace(",", ".")) < minimumPrice) {
       items.push(
-          JSON.stringify({
-            entity_id: shippingServiceItem.CODIGO,
-            sku: shippingServiceItem.CODIGO,
-            category: "",
-            name: shippingServiceItem.DESCRIPCION,
-            price: shippingServiceItem.PRECIO,
-            quantity: 1,
-            type_id: "simple",
-            addQty: true,
-            toSerialize: {
-              info_buyRequest: {
-                uenc: "",
-                product: shippingServiceItem.CODIGO,
-                form_key: "",
-                related_product: "",
-                super_attribute: {},
-                qty: 1
-              }
-            }
-          })
+        JSON.stringify({
+          entity_id: shippingServiceItem.CODIGO,
+          sku: shippingServiceItem.CODIGO,
+          category: "",
+          name: shippingServiceItem.DESCRIPCION,
+          price: shippingServiceItem.PRECIO,
+          quantity: 1,
+          type_id: "simple",
+          addQty: true,
+          toSerialize: {
+            info_buyRequest: {
+              uenc: "",
+              product: shippingServiceItem.CODIGO,
+              form_key: "",
+              related_product: "",
+              super_attribute: {},
+              qty: 1,
+            },
+          },
+        })
       );
     }
 
