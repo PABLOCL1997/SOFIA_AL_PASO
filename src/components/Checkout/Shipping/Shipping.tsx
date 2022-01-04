@@ -6,7 +6,6 @@ import { useQuery, useMutation } from "react-apollo";
 import { DETAILS, GET_USER } from "../../../graphql/user/queries";
 import { AddressType } from "../../../graphql/user/type";
 import { SET_USER } from "../../../graphql/user/mutations";
-import { GET_SAP_AGENCIES } from "../../../graphql/products/queries";
 import useCityPriceList from "../../../hooks/useCityPriceList";
 
 import * as SC from "./style";
@@ -15,14 +14,7 @@ const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../L
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../Map"));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../Switch"));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../../Images/Chevron"));
-
 const ChooseShipping = React.lazy(() => import(/* webpackChunkName: "ChooseShipping" */ "./ChooseShipping"));
-
-const gridSpan2CSS = {
-  gridColumn: "1 / span 2",
-} as React.CSSProperties;
-
-const emptyCSS = {} as React.CSSProperties;
 
 type Props = {
   updateOrder: Function;
@@ -42,6 +34,7 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
   const { data: localData } = useQuery(GET_USER, {});
   const [showSuccess] = useMutation(SET_USER, {});
 
+  const [showNewAddress, setShowNewAddress] = useState(false);
   const [other, setOther] = useState(false);
   const { data: userData } = useQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -224,6 +217,12 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
   }, [userData, agency]);
 
   useEffect(() => {
+    if (agency || idPriceList) {
+      setShowNewAddress(false);
+    }
+  }, [agency, idPriceList]);
+
+  useEffect(() => {
     if (!inputs.addressId)
       updateOrder("shipping", {
         ...inputs,
@@ -240,50 +239,56 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
           <h2>{t("checkout.delivery.title")}</h2>
         </SC.Title>
 
-        <ChooseShipping isAgency={!!agency} isEmployee={!!idPriceList} isDelivery={!(agency || idPriceList)} street={street} addressId={addressId} />
+        <ChooseShipping isAgency={!!agency} isEmployee={!!idPriceList} isDelivery={!(agency || idPriceList)} street={street} addressId={addressId} setShowNewAddress={setShowNewAddress} />
 
         {!isEmployee && (
           <>
             <SC.OtherAddressWrapper>
-              <SC.Other onClick={showOther} margin id="agregar-nueva-direccion">
-                {t("checkout.delivery.other_address")}
-              </SC.Other>
+              {!showNewAddress ? (
+                <SC.Other onClick={() => setShowNewAddress(true)} margin>
+                  {t("checkout.delivery.other_address")}
+                </SC.Other>
+              ) : (
+                <SC.OtherDeactivated margin>{t("checkout.delivery.other_address")}</SC.OtherDeactivated>
+              )}
             </SC.OtherAddressWrapper>
 
-            <SC.Form id="nueva-direccion" hidden={addressId || agency}>
-              {["firstname", "lastname", "phone", "phone2", "city", "address", "reference"].map((key: string) => {
-                return (
-                  <SC.InputGroup withLabel={key !== "street"} key={key} style={key === "reference" ? gridSpan2CSS : emptyCSS}>
-                    <label>{t("checkout.delivery." + key)}</label>
-                    {options[key] && (
-                      <SC.SelectWrapper>
-                        <select name={`shipping-${key}`} onChange={(evt) => onChange(key, evt.target.value)} value={inputs[key] || ""}>
-                          <option value="">{t("checkout.delivery." + key)}</option>
-                          {options[key].map((opt: string) => (
-                            <option key={opt}>{opt}</option>
-                          ))}
-                        </select>
-                        <Chevron />
-                      </SC.SelectWrapper>
-                    )}
-                    {(key === "address" || key === "reference") && (
-                      <input name={`shipping-${key}`} value={inputs[key] || ""} onChange={(evt) => onChange(key, evt.target.value)} type="text" placeholder={t("checkout.delivery." + key + "_ph")} />
-                    )}
-                    {key === "street" && <Switch changeOption={(value: string) => onChange("addressType", value)} option={inputs.addressType} values={addressTypes} />}
-                    {key !== "street" && key !== "address" && key !== "reference" && !options[key] && (
-                      <input
-                        name={`shipping-${key}`}
-                        value={inputs[key] || ""}
-                        onChange={(evt) => onChange(key, evt.target.value)}
-                        pattern={key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""}
-                        type={key.indexOf("phone") >= 0 || key === "nit" ? "number" : "text"}
-                        placeholder={t("checkout.delivery." + key)}
-                      />
-                    )}
-                  </SC.InputGroup>
-                );
-              })}
-            </SC.Form>
+            {showNewAddress && (
+              <SC.Form id="nueva-direccion">
+                {["firstname", "lastname", "phone", "phone2", "city", "address", "reference"].map((key: string) => {
+                  return (
+                    <SC.InputGroup withLabel={key !== "street"} key={key}>
+                      <label>{t("checkout.delivery." + key)}</label>
+                      {options[key] && (
+                        <SC.SelectWrapper>
+                          <select name={`shipping-${key}`} onChange={(evt) => onChange(key, evt.target.value)} value={inputs[key] || ""}>
+                            <option value="">{t("checkout.delivery." + key)}</option>
+                            {options[key].map((opt: string) => (
+                              <option key={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <Chevron />
+                        </SC.SelectWrapper>
+                      )}
+                      {(key === "address" || key === "reference") && (
+                        <input name={`shipping-${key}`} value={inputs[key] || ""} onChange={(evt) => onChange(key, evt.target.value)} type="text" placeholder={t("checkout.delivery." + key + "_ph")} />
+                      )}
+                      {key === "street" && <Switch changeOption={(value: string) => onChange("addressType", value)} option={inputs.addressType} values={addressTypes} />}
+                      {key !== "street" && key !== "address" && key !== "reference" && !options[key] && (
+                        <input
+                          name={`shipping-${key}`}
+                          value={inputs[key] || ""}
+                          onChange={(evt) => onChange(key, evt.target.value)}
+                          pattern={key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""}
+                          type={key.indexOf("phone") >= 0 || key === "nit" ? "number" : "text"}
+                          placeholder={t("checkout.delivery." + key)}
+                        />
+                      )}
+                    </SC.InputGroup>
+                  );
+                })}
+              </SC.Form>
+            )}
           </>
         )}
         {!addressId && !confirmModalVisible && <Map />}

@@ -236,7 +236,7 @@ const Checkout: FC<Props> = () => {
 
   useEffect(() => {
     let days: any = [];
-    let daysRequired = 5;
+    let daysRequired = 4;
     let counter = 0;
     while (counter < daysRequired) {
       const newDay = today.local().tz("America/La_Paz").add(counter, "days");
@@ -500,27 +500,28 @@ const Checkout: FC<Props> = () => {
 
     let missingField = false;
     const requiredFields = agency ? ["firstname", "lastname", "email", "nit", "phone"] : ["firstname", "lastname", "email", "nit"];
-
     requiredFields.forEach((key: string) => {
-      if (!orderData.billing[key] && !missingField) {
-        missingField = true;
-        const input = document.querySelector(`[name="billing-${key}"]`);
-        if (input) {
-          input.classList.add("error");
-          window.scrollTo({
-            top: (input as any).offsetTop - 170,
-            behavior: "smooth",
+      if (orderData?.billing) {
+        if (!orderData.billing[key] && !missingField) {
+          missingField = true;
+          const input = document.querySelector(`[name="billing-${key}"]`);
+          if (input) {
+            input.classList.add("error");
+            window.scrollTo({
+              top: (input as any).offsetTop - 170,
+              behavior: "smooth",
+            });
+          }
+          showError({
+            variables: {
+              user: {
+                showError: t("checkout.missing_field", {
+                  field: t("checkout.billing." + key),
+                }),
+              },
+            },
           });
         }
-        showError({
-          variables: {
-            user: {
-              showError: t("checkout.missing_field", {
-                field: t("checkout.billing." + key),
-              }),
-            },
-          },
-        });
       }
     });
 
