@@ -7,6 +7,8 @@ import { DETAILS, GET_USER } from "../../../graphql/user/queries";
 import { AddressType } from "../../../graphql/user/type";
 import { SET_USER } from "../../../graphql/user/mutations";
 import useCityPriceList from "../../../hooks/useCityPriceList";
+import ArrowUp from "../../../assets/images/arrow-up.svg";
+import ArrowDown from "../../../assets/images/arrow-down.svg";
 
 import * as SC from "./style";
 
@@ -244,13 +246,10 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
         {!isEmployee && (
           <>
             <SC.OtherAddressWrapper>
-              {!showNewAddress ? (
-                <SC.Other onClick={() => setShowNewAddress(true)} margin>
-                  {t("checkout.delivery.other_address")}
-                </SC.Other>
-              ) : (
-                <SC.OtherDeactivated margin>{t("checkout.delivery.other_address")}</SC.OtherDeactivated>
-              )}
+              <SC.Other onClick={() => setShowNewAddress(!showNewAddress)} margin>
+                {t("checkout.delivery.other_address")}
+                <SC.ArrowImg src={showNewAddress ? ArrowDown : ArrowUp} />
+              </SC.Other>
             </SC.OtherAddressWrapper>
 
             {showNewAddress && (

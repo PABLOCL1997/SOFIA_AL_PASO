@@ -87,15 +87,6 @@ export const Other = styled.button<{ margin: boolean }>`
   }
 `;
 
-export const OtherDeactivated = styled.p<{ margin: boolean }>`
-  font-family: MullerRegular;
-  font-size: 14px;
-  line-height: 14px;
-  border: 0;
-  background: none;
-  margin: 20px 0 ${(props) => (props.margin ? "40px" : "0")};
-`;
-
 export const CheckboxGroup = styled.div<{ red: boolean }>`
   display: grid;
   grid-template-columns: 20px 1fr 13px;
@@ -215,4 +206,8 @@ export const TooltipStar = styled.div`
   @media (max-width: ${BREAKPOINT}) {
     display: none;
   }
+`;
+
+export const ArrowImg = styled.img`
+  margin-left: 10px;
 `;
