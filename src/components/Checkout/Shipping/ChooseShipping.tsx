@@ -10,9 +10,10 @@ interface Props {
   isDelivery: boolean;
   street: string;
   addressId: number | null;
+  setShowNewAddress: Function;
 }
 
-const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, addressId }) => {
+const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, addressId, setShowNewAddress }) => {
   const { toggleCityModal, showAddressInfo } = useUser();
   const { hasB2EAddress } = useCityPriceList();
 
@@ -73,7 +74,7 @@ const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, a
           onSelect={() => toggleAndClickSelector(deliverySelector)}
           onAddAddress={() => {
             // @ts-ignore
-            document.querySelector("#agregar-nueva-direccion").click();
+            setShowNewAddress(true);
             document.querySelector("#nueva-direccion")?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         />
@@ -96,7 +97,10 @@ const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, a
           });
         }}
         onSelect={() => toggleAndClickSelector(pickupSelector)}
-        onAddAddress={() => toggleAndClickSelector(pickupSelector)}
+        onAddAddress={() => {
+          setShowNewAddress(false);
+          toggleAndClickSelector(pickupSelector);
+        }}
       />
     </React.Fragment>
   );

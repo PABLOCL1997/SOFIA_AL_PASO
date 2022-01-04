@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { BREAKPOINT } from "../../../utils/constants";
 
 export const Title = styled.h2`
   font-family: MullerMedium;
@@ -15,6 +14,11 @@ export const DateWrapper = styled.section`
 
   justify-content: center;
   grid-template-columns: repeat(4, 1fr);
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 24px;
+  }
 `;
 
 export const DateSquare = styled.button<{ selected: boolean }>`
@@ -35,6 +39,10 @@ export const DateSquare = styled.button<{ selected: boolean }>`
     `
         border: 2px solid #E30613;    
     `}
+
+  @media screen and (max-width: 600px) {
+    margin: 0 auto;
+  }
 `;
 
 export const Date = styled.p`

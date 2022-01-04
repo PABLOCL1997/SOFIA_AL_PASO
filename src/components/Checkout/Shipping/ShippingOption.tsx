@@ -57,6 +57,9 @@ const CallToAction = styled.a`
   text-decoration: underline;
 
   cursor: pointer;
+  @media screen and (max-width: 420px) {
+    margin-left: 20px;
+  }
 `;
 
 const ShippingOption: FC<{

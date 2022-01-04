@@ -25,8 +25,8 @@ export const Title = styled.div`
   }
 `;
 
-export const Form = styled.div<{ hidden: boolean }>`
-  display: ${(props) => (props.hidden ? "none" : "grid")};
+export const Form = styled.div`
+  display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 24px;
   row-gap: 30px;
@@ -85,6 +85,15 @@ export const Other = styled.button<{ margin: boolean }>`
   &:hover {
     opacity: 0.8;
   }
+`;
+
+export const OtherDeactivated = styled.p<{ margin: boolean }>`
+  font-family: MullerRegular;
+  font-size: 14px;
+  line-height: 14px;
+  border: 0;
+  background: none;
+  margin: 20px 0 ${(props) => (props.margin ? "40px" : "0")};
 `;
 
 export const CheckboxGroup = styled.div<{ red: boolean }>`
