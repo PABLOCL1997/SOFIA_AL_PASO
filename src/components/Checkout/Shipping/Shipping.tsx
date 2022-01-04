@@ -217,8 +217,8 @@ const Shipping: FC<Props> = ({ updateOrder, orderData, billingChange, confirmMod
   }, [userData, agency]);
 
   useEffect(() => {
-    if (!agency && !idPriceList) {
-      setShowNewAddress(true);
+    if (agency || idPriceList) {
+      setShowNewAddress(false);
     }
   }, [agency, idPriceList]);
 
