@@ -15,12 +15,12 @@ type Props = {
 
 const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isBill = false, nit }) => {
   const history = useHistory();
-  const [statusData, setStatusData] = useState({ status: null });
-  const { loading: statusLoading } = useQuery(ORDER_STATUS, {
-    fetchPolicy: "no-cache",
-    variables: { incremendId: item.orden },
+  const { loading: statusLoading, data: statusData } = useQuery(ORDER_STATUS, {
+    fetchPolicy: "network-only",
+    variables: {
+      incremendId: item.orden,
+    },
     skip: isBill,
-    onCompleted: (d) => !isBill && d.sofiawsOrderStatus && setStatusData(d.sofiawsOrderStatus.status ? d.sofiawsOrderStatus : { status: "RECIBIMOS TU PEDIDO" }),
   });
 
   const onClickTrackingIcon = () => {
@@ -31,13 +31,13 @@ const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isB
     return (
       <EstadoWrapper>
         {statusLoading && <>Cargando</>}
-        {!statusLoading && statusData?.status && (
+        {!statusLoading && statusData?.sofiawsOrderStatus?.status && (
           <>
-            <EstadoCircle color={statusData.status === "PEDIDO ENTREGADO" ? customStyles.green : customStyles.orange}></EstadoCircle>
-            <span>{statusData.status}</span>
-            {(statusData.status === "PEDIDO ENVIADO" || statusData.status === "PEDIDO EN CAMINO" || statusData.status === "PEDIDO EN CAMINO RE-ENTREGA") && (
-              <img src={TrackingIcon} alt="" onClick={onClickTrackingIcon} />
-            )}
+            <EstadoCircle color={statusData.sofiawsOrderStatus.status === "PEDIDO ENTREGADO" ? customStyles.green : customStyles.orange}></EstadoCircle>
+            <span>{statusData.sofiawsOrderStatus.status}</span>
+            {(statusData.sofiawsOrderStatus.status === "PEDIDO ENVIADO" ||
+              statusData.sofiawsOrderStatus.status === "PEDIDO EN CAMINO" ||
+              statusData.sofiawsOrderStatus.status === "PEDIDO EN CAMINO RE-ENTREGA") && <img src={TrackingIcon} alt="" onClick={onClickTrackingIcon} />}
           </>
         )}
       </EstadoWrapper>

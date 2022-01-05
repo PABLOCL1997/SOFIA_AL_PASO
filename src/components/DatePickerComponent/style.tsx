@@ -15,12 +15,11 @@ export const Wrapper = styled.div`
   }
 
   .react-datepicker-popper {
-    left: -164px !important;
     background: #ffffff;
     box-shadow: 6px 6px 64px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     transform: none !important;
-    right: 40px;
+    right: 0px !important;
     top: 50px !important;
     left: unset !important;
 
