@@ -3,11 +3,7 @@ import { useState, useEffect } from "react";
 export const useDeviceDetect = () => {
   const checkForDevice = () => {
     let windowWidth = window.innerWidth;
-    if (windowWidth < 767.98) {
-      return true;
-    } else {
-      return false;
-    }
+    return windowWidth < 767.98;
   };
 
   const [isMobile, setIsMobile] = useState(checkForDevice());
