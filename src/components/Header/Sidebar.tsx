@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/react-hooks";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import { GET_TOTAL, GET_QTY, GET_CART_ITEMS } from "../../graphql/cart/queries";
 
@@ -14,6 +14,7 @@ import useCategory from "../../hooks/useCategory";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import styled from "styled-components";
 import { toLink } from "../../utils/string";
+import { useDeviceDetect } from "../../utils/deviceDetect";
 import useUser from "../../hooks/useUser";
 import CartImg from "../../assets/images/Carrito.svg";
 
@@ -21,7 +22,7 @@ const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../Images/C
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
 
 const ChevronWrapper = styled.div<{ active: boolean }>`
-  margin: 0 10px 0 0;
+  margin: 0 10px 0 10px;
   display: inline;
 
   ${({ active }) =>
@@ -55,6 +56,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
   const { t } = useTranslation();
   const { categories } = useCategory();
   const { data } = useQuery(GET_CART_ITEMS);
+  const { isMobile } = useDeviceDetect();
   const [showCategories, setShowCategories] = useState<boolean>(true);
   const [categoryOpen, setCategoryOpen] = useState<number>(0);
 
@@ -78,6 +80,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
     setOpen(false);
     history.push("/");
   };
+
   return (
     <Wrapper>
       <CloseRow>
@@ -216,17 +219,33 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
                         category.entity_id === categoryOpen ? setCategoryOpen(0) : setCategoryOpen(category.entity_id);
                       }}
                     >
-                      <Link to={`/productos/${toLink(category.name)}`}>{category.name}</Link>{" "}
-                      <ChevronWrapper active={category.entity_id === categoryOpen}>
-                        <Chevron />
-                      </ChevronWrapper>
+                      <Link
+                        onClick={() => {
+                          isMobile && setOpen(false);
+                        }}
+                        to={`/productos/${toLink(category.name)}`}
+                      >
+                        {category.name}
+                      </Link>
+                      {category.subcategories && category.subcategories.length > 0 && (
+                        <ChevronWrapper active={category.entity_id === categoryOpen}>
+                          <Chevron />
+                        </ChevronWrapper>
+                      )}
                     </span>
 
                     {category.subcategories &&
                       React.Children.toArray(
                         category.subcategories.map((subcategory: SubCategoryLvl3Type) => (
                           <Subcategory>
-                            <Link to={`/productos/${toLink(category.name)}/${toLink(subcategory.name)}`}>{subcategory.name}</Link>
+                            <Link
+                              onClick={() => {
+                                isMobile && setOpen(false);
+                              }}
+                              to={`/productos/${toLink(category.name)}/${toLink(subcategory.name)}`}
+                            >
+                              {subcategory.name}
+                            </Link>
                           </Subcategory>
                         ))
                       )}
