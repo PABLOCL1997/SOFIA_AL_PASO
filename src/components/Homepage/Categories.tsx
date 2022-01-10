@@ -1,9 +1,9 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import useCategory from "../../hooks/useCategory";
-import { titleCase, toLink } from "../../utils/string";
+import { toLink } from "../../utils/string";
 
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 
@@ -242,7 +242,16 @@ const Categories: FC<Props> = ({ isMobile }) => {
                     .filter((category: CategoryType) => !category.is_campaign)
                     .map(({ name, entity_id, subcategories }: CategoryType) => (
                       <ListMobile>
-                        <Category active={selectedCategory === entity_id} onClick={() => handleSelectCategory(entity_id)}>
+                        <Category
+                          active={selectedCategory === entity_id}
+                          onClick={() => {
+                            if (subcategories && subcategories.length > 0) {
+                              handleSelectCategory(entity_id);
+                            } else {
+                              window.location.href = `/productos/${toLink(name)}`;
+                            }
+                          }}
+                        >
                           {name}
                         </Category>
                         {!!subcategories?.length && (
