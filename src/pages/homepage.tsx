@@ -4,6 +4,7 @@ const Header = React.lazy(() => import(/* webpackChunkName: "Header" */ "../comp
 const Categories = React.lazy(() => import(/* webpackChunkName: "Categories" */ "../components/Homepage/Categories"));
 const Hero = React.lazy(() => import(/* webpackChunkName: "Hero" */ "../components/Homepage/Hero"));
 const Promotions = React.lazy(() => import(/* webpackChunkName: "Promotions" */ "../components/Homepage/Promotions"));
+const TrackingWarnings = React.lazy(() => import(/* webpackChunkName: "Promotions" */ "../components/Homepage/TrackingWarnings"));
 const Benefits = React.lazy(() => import(/* webpackChunkName: "Benefits" */ "../components/Homepage/Benefits"));
 const ProductSlider = React.lazy(() => import(/* webpackChunkName: "CategorySlider" */ "../components/Homepage/CategorySlider"));
 const GoTop = React.lazy(() => import(/* webpackChunkName: "GoTop" */ "../components/Homepage/GoTop"));
@@ -20,6 +21,10 @@ const Homepage = () => {
       <Header checkout={false} page={undefined} />
       <Categories isMobile={window.innerWidth <= 1100} />
       <Hero />
+
+      <Suspense fallback={<></>}>
+        <TrackingWarnings />
+      </Suspense>
 
       <Suspense fallback={<></>}>
         <Promotions />
