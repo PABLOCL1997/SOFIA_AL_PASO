@@ -79,7 +79,7 @@ const TrackingWarnings: FC = () => {
   const [getWarningsList] = useLazyQuery(ORDERS, {
     fetchPolicy: "no-cache",
     variables: {
-      nit: localUserData.details.nit,
+      nit: localUserData?.details.nit || "0",
       dateFrom: dayjs().subtract(7, "days").format("DD/MM/YYYY"),
       dateTo: dayjs().format("DD/MM/YYYY"),
     },
