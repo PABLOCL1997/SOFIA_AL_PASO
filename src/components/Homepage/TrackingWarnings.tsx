@@ -51,6 +51,7 @@ const WarningElem = styled.div`
 
   @media screen and (max-width: ${BREAKPOINT}) {
     grid-template-columns: 1fr;
+    font-size: 20px;
 
     div:nth-child(2n) {
       margin-bottom: 30px;
