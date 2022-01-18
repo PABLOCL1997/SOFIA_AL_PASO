@@ -16,7 +16,7 @@ type Props = {
 const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isBill = false, nit }) => {
   const history = useHistory();
   const { loading: statusLoading, data: statusData } = useQuery(ORDER_STATUS, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: {
       incremendId: item.orden,
     },
@@ -33,7 +33,7 @@ const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isB
         {statusLoading && <>Cargando</>}
         {!statusLoading && statusData?.sofiawsOrderStatus?.status && (
           <>
-            <EstadoCircle color={statusData.sofiawsOrderStatus.status === "PEDIDO ENTREGADO" ? customStyles.green : customStyles.orange}></EstadoCircle>
+            <EstadoCircle color={statusData.sofiawsOrderStatus.status === greenCondition ? customStyles.green : customStyles.orange}></EstadoCircle>
             <span>{statusData.sofiawsOrderStatus.status}</span>
             {(statusData.sofiawsOrderStatus.status === "PEDIDO ENVIADO" ||
               statusData.sofiawsOrderStatus.status === "PEDIDO EN CAMINO" ||
