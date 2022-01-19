@@ -103,7 +103,7 @@ const TrackingWarnings: FC = () => {
           status: trackOrder.data.getTrackingInfo.status,
           orderId: fData[i].incrementId,
           nit: String(localUserData.details.nit),
-          projectedArrival: fData[i].projectedArrival,
+          projectedArrival: dayjs(trackOrder.data.getTrackingInfo.projectedArrival).tz("America/La_Paz").format("HH:mm"),
         });
       }
 
