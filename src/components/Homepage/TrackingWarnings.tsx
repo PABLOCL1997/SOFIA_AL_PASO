@@ -8,7 +8,13 @@ import { BREAKPOINT } from "../../utils/constants";
 
 import dayjs from "dayjs";
 const advancedFormat = require("dayjs/plugin/advancedFormat");
+const es = require("dayjs/locale/es");
+const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
+const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(advancedFormat);
+dayjs.locale(es);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const TrackingButton = styled.div`
   background-color: var(--red);
