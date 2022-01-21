@@ -14,6 +14,7 @@ import MarkerIcon from "../assets/images/marker.svg";
 import TruckMarkerIcon from "../assets/images/truckMarker.png";
 import TruckIcon from "../assets/images/truckIcon.svg";
 import InfoIcon from "../assets/images/infoIcon.svg";
+import HistorialTabIconRed from "../assets/images/historial-tab-icon.svg";
 import dayjs from "dayjs";
 const es = require("dayjs/locale/es");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
@@ -567,7 +568,12 @@ const Tracking: FC = () => {
                 <div>
                   <DeliveryDataSecondaryInfoRow>
                     <p>{t("tracking.orderNumberTitle")}</p>
-                    <p>{trackingNumber}</p>
+                    <p>
+                      {trackingNumber}{" "}
+                      <a style={{ marginLeft: "10px" }} href={`mi-cuenta?historial&id=${trackingNumber}`} title="Ver Pedido">
+                        <img src={HistorialTabIconRed} />
+                      </a>
+                    </p>
                   </DeliveryDataSecondaryInfoRow>
                   <DeliveryDataSecondaryInfoRow>
                     <p>{t("tracking.deliverData.orderDate")}</p>

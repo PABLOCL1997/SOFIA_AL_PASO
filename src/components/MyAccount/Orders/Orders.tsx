@@ -14,15 +14,15 @@ import { useLazyQuery, useQuery } from "react-apollo";
 import { DETAILS } from "../../../graphql/user/queries";
 import { ORDERS } from "../../../graphql/user/queries";
 import OrderStatus from "../OrderStatus";
-import dayjs from "dayjs";
 import { toLocalDate } from "../../../utils/date";
+
+import dayjs from "dayjs";
+
 const advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
-
 const Detalle = React.lazy(() => import(/* webpackChunkName: "Detalle" */ "../OrderDetails"));
-
 const DatePickerComponent = React.lazy(() => import(/* webpackChunkName: "DatePicker" */ "../../DatePickerComponent"));
 
 type Props = {
@@ -53,7 +53,7 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
     onCompleted: () => getOrders(),
   });
   const [getOrders, { loading: loadingOrders }] = useLazyQuery(ORDERS, {
-    fetchPolicy: "no-cache",
+    fetchPolicy: "cache-and-network",
     variables: {
       nit: userData?.details?.nit || 0,
       dateFrom: dayjs().subtract(30, "days").format("DD/MM/YYYY"),
@@ -67,7 +67,6 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
       fData = fData.map((i: any) => {
         // const deliveryDate = mapMonths(String(i.fechaEntrega).split("-")[1]) + "/" + String(i.fechaEntrega).split("-")[0] + "/" + String(i.fechaEntrega).split("-")[2];
         // const fechaEntrega = i.fechaEntrega ? dayjs(deliveryDate).format("DD/MM/YY") : "";
-        console.log(i);
         return {
           fecha: toLocalDate(i.createdAt),
           // fechaEntrega,

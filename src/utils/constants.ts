@@ -20,3 +20,10 @@ export const customStyles = {
 export const transition = (animation = "ease-in-out", time = "0.4s", delay = "0s") => {
   return `all ${animation} ${time} ${delay}`;
 };
+
+export const statusTracking = {
+  sent: "PEDIDO ENVIADO",
+  ontheway: "PEDIDO EN CAMINO",
+  onthewayDelivery: "PEDIDO EN CAMINO RE-ENTREGA",
+  delivered: "PEDIDO ENTREGADO",
+};

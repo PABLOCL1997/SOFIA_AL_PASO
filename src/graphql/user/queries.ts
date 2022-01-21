@@ -101,9 +101,7 @@ export const ORDER = gql`
 `;
 
 export const ORDER_STATUS = gql`
-  query SofiawsOrderStatus($incremendId: String!) {
-    sofiawsOrderStatus(incremendId: $incremendId) {
-      status
-    }
+  query SofiawsOrderStatus($incrementId: String!) {
+    sofiawsOrderStatus(incrementId: $incrementId)
   }
 `;
