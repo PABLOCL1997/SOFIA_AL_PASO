@@ -1,10 +1,18 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useQuery } from "react-apollo";
 import { useHistory } from "react-router-dom";
 import { ORDER_STATUS } from "../../../graphql/user/queries";
-import { customStyles } from "../../../utils/constants";
+import { customStyles, statusTracking } from "../../../utils/constants";
 import { EstadoCircle, Estado as EstadoWrapper } from "./style";
 import TrackingIcon from "../../../assets/images/trackingIcon.svg";
+import DeliveredInfoIcon from "../../../assets/images/deliveredInfoIcon.svg";
+import dayjs from "dayjs";
+const es = require("dayjs/locale/es");
+const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
+const timezone = require("dayjs/plugin/timezone");
+dayjs.locale(es);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 type Props = {
   item: any;
@@ -16,9 +24,9 @@ type Props = {
 const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isBill = false, nit }) => {
   const history = useHistory();
   const { loading: statusLoading, data: statusData } = useQuery(ORDER_STATUS, {
-    fetchPolicy: "no-cache",
+    fetchPolicy: "cache-and-network",
     variables: {
-      incremendId: item.orden,
+      incrementId: item.orden,
     },
     skip: isBill,
   });
@@ -31,13 +39,14 @@ const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isB
     return (
       <EstadoWrapper>
         {statusLoading && <>Cargando</>}
-        {!statusLoading && statusData?.sofiawsOrderStatus?.status && (
+        {!statusLoading && statusData?.sofiawsOrderStatus && (
           <>
-            <EstadoCircle color={statusData.sofiawsOrderStatus.status === greenCondition ? customStyles.green : customStyles.orange}></EstadoCircle>
-            <span>{statusData.sofiawsOrderStatus.status}</span>
-            {(statusData.sofiawsOrderStatus.status === "PEDIDO ENVIADO" ||
-              statusData.sofiawsOrderStatus.status === "PEDIDO EN CAMINO" ||
-              statusData.sofiawsOrderStatus.status === "PEDIDO EN CAMINO RE-ENTREGA") && <img src={TrackingIcon} alt="" onClick={onClickTrackingIcon} />}
+            <EstadoCircle color={statusData.sofiawsOrderStatus === greenCondition ? customStyles.green : customStyles.orange}></EstadoCircle>
+            <span>{statusData.sofiawsOrderStatus}</span>
+            {(statusData.sofiawsOrderStatus === statusTracking.sent ||
+              statusData.sofiawsOrderStatus === statusTracking.ontheway ||
+              statusData.sofiawsOrderStatus === statusTracking.onthewayDelivery) && <img src={TrackingIcon} alt="" onClick={onClickTrackingIcon} />}
+            {statusData.sofiawsOrderStatus === statusTracking.delivered && <img src={DeliveredInfoIcon} onClick={onClickTrackingIcon} />}
           </>
         )}
       </EstadoWrapper>
