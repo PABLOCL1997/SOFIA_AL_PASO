@@ -16,6 +16,7 @@ import TruckIcon from "../assets/images/truckIcon.svg";
 import InfoIcon from "../assets/images/infoIcon.svg";
 import HistorialTabIconRed from "../assets/images/historial-tab-icon.svg";
 import dayjs from "dayjs";
+import { mapMonths } from "../utils/string";
 const es = require("dayjs/locale/es");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
 const timezone = require("dayjs/plugin/timezone");
@@ -359,8 +360,9 @@ const Tracking: FC = () => {
     onCompleted: (d) => {
       setLoader(false);
       const res = d.getTrackingInfo;
-      const { status, resMsg, destinationAddress, destinationLat, destinationLng, equipmentId, vehicleLat, vehicleLng, quantityProducts, fechaPedido, total } = res;
+      const { status, resMsg, destinationAddress, destinationLat, destinationLng, equipmentId, vehicleLat, vehicleLng, quantityProducts, orderDate, total } = res;
       const projectedArrival = dayjs(res.projectedArrival).tz("America/La_Paz");
+      const fechaPedido = `${orderDate.split("-")[0]}/${mapMonths(orderDate.split("-")[1])}/20${orderDate.split("-")[2]}`;
 
       if (res.status === "OK") {
         setTrackingInfo({
@@ -378,7 +380,7 @@ const Tracking: FC = () => {
           projectedArrivalDate: projectedArrival.format("DD/MM/YYYY"),
           projectedArrivalTime: projectedArrival.format("HH:mm"),
           quantityProducts,
-          orderDate: dayjs(fechaPedido).format("DD/MM/YYYY"),
+          orderDate: fechaPedido,
           total,
         });
         setPlaces([
