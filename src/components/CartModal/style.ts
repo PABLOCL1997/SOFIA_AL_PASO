@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import { BREAKPOINT } from "../../utils/constants";
 
+export const Page = styled.main`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  margin: 40px 0;
+`;
+
 export const ModalCourtain = styled.div`
   position: fixed;
   top: 0;
