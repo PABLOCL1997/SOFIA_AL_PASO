@@ -361,10 +361,11 @@ const Tracking: FC = () => {
       setLoader(false);
       const res = d.getTrackingInfo;
       const { status, resMsg, destinationAddress, destinationLat, destinationLng, equipmentId, vehicleLat, vehicleLng, quantityProducts, orderDate, total } = res;
-      const projectedArrival = dayjs(res.projectedArrival).tz("America/La_Paz");
-      const fechaPedido = `${orderDate.split("-")[0]}/${mapMonths(orderDate.split("-")[1])}/20${orderDate.split("-")[2]}`;
 
       if (res.status === "OK") {
+        const projectedArrival = dayjs(res.projectedArrival).tz("America/La_Paz");
+        const fechaPedido = `${orderDate.split("-")[0]}/${mapMonths(orderDate.split("-")[1])}/20${orderDate.split("-")[2]}`;
+
         setTrackingInfo({
           destinationAddress,
           destinationLat,
