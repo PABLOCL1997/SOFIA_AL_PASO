@@ -77,6 +77,8 @@ type Warning = {
 };
 
 const TrackingWarnings: FC = () => {
+  const today = dayjs();
+  const todayLocal = today.local().tz("America/La_Paz");
   const client = useApolloClient();
   const [warningsList, setWarningsList] = useState<Array<Warning>>([]);
   const { data: localUserData } = useQuery<any>(DETAILS, {
@@ -103,14 +105,17 @@ const TrackingWarnings: FC = () => {
             isB2C: true,
           },
         });
-        trackOrder.data.getTrackingInfo.orderId = fData[i].incrementId;
-        trackOrder.data.getTrackingInfo.nit = String(localUserData.details.nit);
-        results.push({
-          status: trackOrder.data.getTrackingInfo.status,
-          orderId: fData[i].incrementId,
-          nit: String(localUserData.details.nit),
-          projectedArrival: dayjs(trackOrder.data.getTrackingInfo.projectedArrival).tz("America/La_Paz").format("HH:mm"),
-        });
+        const projectedArrival = dayjs(trackOrder.data.getTrackingInfo.projectedArrival).tz("America/La_Paz");
+        if (todayLocal.isBefore(projectedArrival)) {
+          trackOrder.data.getTrackingInfo.orderId = fData[i].numeroPedido;
+          trackOrder.data.getTrackingInfo.nit = String(fData[i].nit);
+          results.push({
+            status: trackOrder.data.getTrackingInfo.status,
+            orderId: fData[i].numeroPedido,
+            nit: String(fData[i].nit),
+            projectedArrival: projectedArrival.format("HH:mm"),
+          });
+        }
       }
 
       results = results.filter((el) => el.status === "OK");
