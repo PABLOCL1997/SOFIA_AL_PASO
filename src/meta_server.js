@@ -84,6 +84,7 @@ module.exports = {
   FAQ_DESCRIPTION: "Trabajamos día a día para estar cerca de los hogares bolivianas con alimentos de alta calidad e inocuidad. ¡Entra, resuelve tus dudas y compra online!",
   CONTACT_DESCRIPTION: "¿No encuentras lo que buscas? Este es el espacio de Sofía al Paso en el que nos puedes escribir y nos pondremos en contacto contigo. En Sofía, se confía.",
   COVERAGE_DESCRIPTION: "Entra y mira el mapa con la cobertura de envíos de Sofía al Paso en las ciudades de Cochabamba, El Alto, La Paz, y Santa Cruz.",  
+  CART_TITLE: "Sofía al Paso - Carrito",
   GET_METADATA: `
   query Metadata($identifier: String!) {
     metadata(identifier: $identifier){

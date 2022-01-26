@@ -1,7 +1,7 @@
-import React, { FC, Suspense, useEffect, useState } from "react";
+import React, { FC, Suspense, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery } from "react-apollo";
-import useMinimumPrice from "../../hooks/useMinimumPrice";
+
 
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
@@ -10,34 +10,7 @@ import { trackGoToCheckoutEvent } from "../../utils/dataLayer";
 import { useHistory } from "react-router-dom";
 import { ProductType } from "../../graphql/products/type";
 
-import {
-  CloseWrapper,
-  Count,
-  CtaWrapper,
-  DeleteWrapper,
-  Disclaimer,
-  Empty,
-  Footer,
-  Header,
-  Items,
-  Image,
-  LoaderWrapper,
-  Modal,
-  ModalCourtain,
-  Name,
-  NameBox,
-  Price,
-  Qty,
-  Row,
-  Subtotal,
-  Title,
-  Toolbox,
-  Total,
-  Totals,
-  UnderBudget,
-  UnitPrice,
-  Units,
-} from "../CartModal/style";
+import * as SC from "../CartModal/style";
 
 import useCart from "../../hooks/useCart";
 
@@ -57,7 +30,6 @@ const CartModal: FC<Props> = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const minimumPrice = useMinimumPrice();
   const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart();
 
   const [relatedProducts, setRelatedProducts] = useState<any>([]);
@@ -97,34 +69,34 @@ const CartModal: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <ModalCourtain className={(!userData.userInfo.length || userData.userInfo[0].openCartModal) && "visible"}>
-        <Modal>
-          <Header>
-            <Title>{t("cart.title")}</Title>
-            <Count>
+      <SC.ModalCourtain className={(!userData.userInfo.length || userData.userInfo[0].openCartModal) && "visible"}>
+        <SC.Modal>
+          <SC.Header>
+            <SC.Title>{t("cart.title")}</SC.Title>
+            <SC.Count>
               <b>{quantity}</b>
               <span>{t("cart.items")}</span>
-            </Count>
-            <CloseWrapper onClick={() => closeCartModal()}>
+            </SC.Count>
+            <SC.CloseWrapper onClick={() => closeCartModal()}>
               {/* close */}
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16 2L2 16" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
                 <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
               </svg>
-            </CloseWrapper>
-          </Header>
-          {cart && cart.cartItems && cart.cartItems.length > 0 ? (
-            <Items>
+            </SC.CloseWrapper>
+          </SC.Header>
+          {cart?.cartItems?.length > 0 ? (
+            <SC.Items>
               {cart &&
                 cart.cartItems &&
                 cart.cartItems.map((product: ProductType, i: number) => (
-                  <Row key={product.entity_id}>
-                    <Image src={product.image.split(",")[0]}></Image>
-                    <NameBox>
-                      <Name>{product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}</Name>
-                      <Units>&nbsp;</Units>
-                    </NameBox>
-                    <Qty>
+                  <SC.Row key={product.entity_id}>
+                    <SC.Image src={product.image.split(",")[0]}></SC.Image>
+                    <SC.NameBox>
+                      <SC.Name>{product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}</SC.Name>
+                      <SC.Units>&nbsp;</SC.Units>
+                    </SC.NameBox>
+                    <SC.Qty>
                       <select defaultValue={product.qty} onChange={(event) => updateItem(Number(event.target.value), product)}>
                         {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => (
                           <option key={index} value={opt}>
@@ -133,30 +105,30 @@ const CartModal: FC<Props> = () => {
                         ))}
                       </select>
                       <Chevron />
-                    </Qty>
-                    <UnitPrice>Bs. {product.special_price.toFixed(2).replace(".", ",")} c/u -</UnitPrice>
-                    <Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace(".", ",")}</Price>
-                    <DeleteWrapper onClick={() => removeRow(product)}>
+                    </SC.Qty>
+                    <SC.UnitPrice>Bs. {product.special_price.toFixed(2).replace(".", ",")} c/u -</SC.UnitPrice>
+                    <SC.Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace(".", ",")}</SC.Price>
+                    <SC.DeleteWrapper onClick={() => removeRow(product)}>
                       <Delete />
-                    </DeleteWrapper>
-                  </Row>
+                    </SC.DeleteWrapper>
+                  </SC.Row>
                 ))}
-            </Items>
+            </SC.Items>
           ) : (
             <div>
-              <LoaderWrapper></LoaderWrapper>
+              <SC.LoaderWrapper></SC.LoaderWrapper>
             </div>
           )}
-          <Totals>
-            <Subtotal>{t("cart.subtotal")}</Subtotal>
-            <Total>Bs. {totalAmount}</Total>
-          </Totals>
-          <Footer>
-            <Disclaimer>{t("cart.disclaimer")}</Disclaimer>
-            <Toolbox>
-              <Empty onClick={() => empty()}>{t("cart.empty")}</Empty>
+          <SC.Totals>
+            <SC.Subtotal>{t("cart.subtotal")}</SC.Subtotal>
+            <SC.Total>Bs. {totalAmount}</SC.Total>
+          </SC.Totals>
+          <SC.Footer>
+            <SC.Disclaimer>{t("cart.disclaimer")}</SC.Disclaimer>
+            <SC.Toolbox>
+              <SC.Empty onClick={() => empty()}>{t("cart.empty")}</SC.Empty>
               {parseFloat(totalAmount.replace(",", ".")) > 0 && (
-                <CtaWrapper>
+                <SC.CtaWrapper>
                   <Cta
                     filled={true}
                     text={t("cart.pay")}
@@ -169,12 +141,12 @@ const CartModal: FC<Props> = () => {
                       }
                     }}
                   />
-                </CtaWrapper>
+                </SC.CtaWrapper>
               )}
-            </Toolbox>
-          </Footer>
-        </Modal>
-      </ModalCourtain>
+            </SC.Toolbox>
+          </SC.Footer>
+        </SC.Modal>
+      </SC.ModalCourtain>
       <RecommendedProducts
         visible={relatedProducts.length > 0}
         items={relatedProducts}
