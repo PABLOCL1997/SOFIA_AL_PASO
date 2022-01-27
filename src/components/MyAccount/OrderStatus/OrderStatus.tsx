@@ -1,7 +1,5 @@
 import React, { FC } from "react";
-import { useQuery } from "react-apollo";
 import { useHistory } from "react-router-dom";
-import { ORDER_STATUS } from "../../../graphql/user/queries";
 import { customStyles, statusTracking } from "../../../utils/constants";
 import { EstadoCircle, Estado as EstadoWrapper } from "./style";
 import TrackingIcon from "../../../assets/images/trackingIcon.svg";
@@ -23,14 +21,6 @@ type Props = {
 
 const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isBill = false, nit }) => {
   const history = useHistory();
-  const { loading: statusLoading, data: statusData } = useQuery(ORDER_STATUS, {
-    fetchPolicy: "cache-and-network",
-    variables: {
-      incrementId: item.orden,
-    },
-    skip: isBill,
-  });
-
   const onClickTrackingIcon = () => {
     history.push(`/segui-tu-pedido?orderId=${item.orden}&userNit=${nit}`);
   };
@@ -38,17 +28,14 @@ const OrderStatus: FC<Props> = ({ item, greenCondition = "PEDIDO ENTREGADO", isB
   if (!isBill) {
     return (
       <EstadoWrapper>
-        {statusLoading && <>Cargando</>}
-        {!statusLoading && statusData?.sofiawsOrderStatus && (
-          <>
-            <EstadoCircle color={statusData.sofiawsOrderStatus === greenCondition ? customStyles.green : customStyles.orange}></EstadoCircle>
-            <span>{statusData.sofiawsOrderStatus}</span>
-            {(statusData.sofiawsOrderStatus === statusTracking.sent ||
-              statusData.sofiawsOrderStatus === statusTracking.ontheway ||
-              statusData.sofiawsOrderStatus === statusTracking.onthewayDelivery) && <img src={TrackingIcon} alt="" onClick={onClickTrackingIcon} />}
-            {statusData.sofiawsOrderStatus === statusTracking.delivered && <img src={DeliveredInfoIcon} onClick={onClickTrackingIcon} />}
-          </>
-        )}
+        <>
+          <EstadoCircle color={item.estado === greenCondition ? customStyles.green : customStyles.orange}></EstadoCircle>
+          <span>{item.estado}</span>
+          {(item.estado === statusTracking.sent || item.estado === statusTracking.ontheway || item.estado === statusTracking.onthewayDelivery) && (
+            <img src={TrackingIcon} alt="" onClick={onClickTrackingIcon} />
+          )}
+          {item.estado === statusTracking.delivered && <img src={DeliveredInfoIcon} onClick={onClickTrackingIcon} />}
+        </>
       </EstadoWrapper>
     );
   } else {
