@@ -10,9 +10,10 @@ import RepeatIcon from "../../../assets/images/repeat.svg";
 import ArrowLeft from "../../../assets/images/arrow.svg";
 
 import { DesktopAndTablet, MobileAndTablet } from "../../ResponsiveContainers";
-import { useLazyQuery, useQuery } from "react-apollo";
+import { useLazyQuery, useQuery, useApolloClient } from "react-apollo";
 import { DETAILS } from "../../../graphql/user/queries";
 import { ORDERS } from "../../../graphql/user/queries";
+import { ORDER_STATUS } from "../../../graphql/user/queries";
 import OrderStatus from "../OrderStatus";
 import { toLocalDate } from "../../../utils/date";
 
@@ -31,10 +32,10 @@ type Props = {
   repeatOrder?: any;
 };
 const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
+  const client = useApolloClient();
   const [currentPage, setCurrentPage] = useState(0);
   const limitPerPage = 7;
-  let pages: any = 0;
-
+  const [pages, setPages] = useState(0);
   const [detalleIndex, setDetalleIndex] = useState(0);
   const [openDetalle, setOpenDetalle] = useState(false);
   const [activeScroll, setActiveScroll] = useState(-1);
@@ -47,11 +48,13 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
   const [rawData, setRawData] = useState<any>([]);
 
   const channel = (name: string) => (name === "WEB" ? ECommerceIcon : name === "CALL CENTER" ? TeleMarketingIcon : SucursalIcon);
+  const scrollToRef = (ref: any) => window.scrollTo({ top: ref.current.offsetTop, behavior: "smooth" });
 
   const { data: userData } = useQuery<any>(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: () => getOrders(),
   });
+
   const [getOrders, { loading: loadingOrders }] = useLazyQuery(ORDERS, {
     fetchPolicy: "cache-and-network",
     variables: {
@@ -59,17 +62,10 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
       dateFrom: dayjs().subtract(30, "days").format("DD/MM/YYYY"),
       dateTo: dayjs().format("DD/MM/YYYY"),
     },
-    onCompleted: (d) => {
-      let fData = d.orders;
-
-      pages = Math.ceil(d.orders.count / limitPerPage);
-
-      fData = fData.map((i: any) => {
-        // const deliveryDate = mapMonths(String(i.fechaEntrega).split("-")[1]) + "/" + String(i.fechaEntrega).split("-")[0] + "/" + String(i.fechaEntrega).split("-")[2];
-        // const fechaEntrega = i.fechaEntrega ? dayjs(deliveryDate).format("DD/MM/YY") : "";
+    onCompleted: async (d) => {
+      const ordersData = d.orders.map((i: any) => {
         return {
           fecha: toLocalDate(i.createdAt),
-          // fechaEntrega,
           orderId: i.id,
           orden: i.incrementId,
           canal: "WEB",
@@ -94,18 +90,25 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
         };
       });
 
-      setRawData(fData);
+      let fData = ordersData
+        .sort((a: { fecha: dayjs.Dayjs }, b: { fecha: dayjs.Dayjs }) => Number(dayjs(b.fecha, "DD/MM/YYYY").format("x")) - Number(dayjs(a.fecha, "DD/MM/YYYY").format("x")))
+        .slice(currentPage, currentPage + 7);
+
+      for (let i = 0; i < fData.length; i++) {
+        const oStatus = await client.query({
+          query: ORDER_STATUS,
+          variables: {
+            incrementId: fData[i].orden,
+          },
+        });
+        fData[i].estado = oStatus.data.sofiawsOrderStatus;
+      }
+
+      setRawData(ordersData);
       setFilteredData(fData);
+      setPages(Math.ceil(ordersData.length / limitPerPage));
     },
   });
-
-  const scrollToRef = (ref: any) => window.scrollTo({ top: ref.current.offsetTop, behavior: "smooth" });
-
-  if (rawData.length && !filteredData.length) {
-    pages = Math.ceil(rawData.length / limitPerPage);
-  } else {
-    pages = Math.ceil(filteredData.length / limitPerPage);
-  }
 
   useEffect(() => {
     if (activeScroll !== -1) {
@@ -161,6 +164,28 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
     }
   }, [rawData]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    async function getFDataPage() {
+      let fData = rawData
+        .sort((a: { fecha: dayjs.Dayjs }, b: { fecha: dayjs.Dayjs }) => Number(dayjs(b.fecha, "DD/MM/YYYY").format("x")) - Number(dayjs(a.fecha, "DD/MM/YYYY").format("x")))
+        .slice(currentPage, currentPage + 7);
+
+      for (let i = 0; i < fData.length; i++) {
+        const oStatus = await client.query({
+          query: ORDER_STATUS,
+          variables: {
+            incrementId: fData[i].orden,
+          },
+        });
+        fData[i].estado = oStatus.data.sofiawsOrderStatus;
+      }
+
+      setFilteredData(fData);
+    }
+
+    getFDataPage();
+  }, [currentPage]);
+
   return (
     <Suspense fallback={<Loader />}>
       <SC.Anchor ref={myRef}></SC.Anchor>
@@ -198,44 +223,41 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
                   )}
                   {!loadingOrders && filteredData.length > 0 ? (
                     <SC.TablaLista>
-                      {filteredData
-                        .sort((a: { fecha: dayjs.Dayjs }, b: { fecha: dayjs.Dayjs }) => Number(dayjs(b.fecha, "DD/MM/YYYY").format("x")) - Number(dayjs(a.fecha, "DD/MM/YYYY").format("x")))
-                        .slice(currentPage, currentPage + 7)
-                        .map((item: any, i: number) => {
-                          return (
-                            <SC.TablaItem key={`TableItem-${i}`}>
-                              <SC.Fecha>{item.fecha}</SC.Fecha>
-                              {/* <SC.Fecha>{item.fechaEntrega}</SC.Fecha> */}
-                              <SC.Order>{item.orden}</SC.Order>
-                              <SC.Canal>
-                                <img src={item.canalImage} alt="" />
-                                <span>{item.canal === "CALL CENTER" ? "Telemarketing" : item.canal === "WEB" ? "Ecommerce" : "Sucursal"}</span>
-                              </SC.Canal>
-                              <SC.Price>Bs. {item.precio}</SC.Price>
-                              <OrderStatus item={item} nit={userData?.details?.nit || 0} />
-                              <SC.VerDetalleBtn
-                                onClick={() => {
-                                  setDetalleIndex(i);
-                                  setOpenDetalle(true);
-                                  setActiveScroll(0);
-                                }}
-                              >
-                                <img src={PlusIcon} alt="+" />
-                                <span>Ver detalle</span>
-                              </SC.VerDetalleBtn>
-                              <SC.RepetirCompraBtn
-                                onClick={() => {
-                                  setDetalleIndex(i);
-                                  setOpenDetalle(true);
-                                  setActiveScroll(0);
-                                }}
-                              >
-                                <img src={RepeatIcon} alt="" />
-                                <span>Repetir compra</span>
-                              </SC.RepetirCompraBtn>
-                            </SC.TablaItem>
-                          );
-                        })}
+                      {filteredData.map((item: any, i: number) => {
+                        return (
+                          <SC.TablaItem key={`TableItem-${i}`}>
+                            <SC.Fecha>{item.fecha}</SC.Fecha>
+                            {/* <SC.Fecha>{item.fechaEntrega}</SC.Fecha> */}
+                            <SC.Order>{item.orden}</SC.Order>
+                            <SC.Canal>
+                              <img src={item.canalImage} alt="" />
+                              <span>{item.canal === "CALL CENTER" ? "Telemarketing" : item.canal === "WEB" ? "Ecommerce" : "Sucursal"}</span>
+                            </SC.Canal>
+                            <SC.Price>Bs. {item.precio}</SC.Price>
+                            <OrderStatus item={item} nit={userData?.details?.nit || 0} />
+                            <SC.VerDetalleBtn
+                              onClick={() => {
+                                setDetalleIndex(i);
+                                setOpenDetalle(true);
+                                setActiveScroll(0);
+                              }}
+                            >
+                              <img src={PlusIcon} alt="+" />
+                              <span>Ver detalle</span>
+                            </SC.VerDetalleBtn>
+                            <SC.RepetirCompraBtn
+                              onClick={() => {
+                                setDetalleIndex(i);
+                                setOpenDetalle(true);
+                                setActiveScroll(0);
+                              }}
+                            >
+                              <img src={RepeatIcon} alt="" />
+                              <span>Repetir compra</span>
+                            </SC.RepetirCompraBtn>
+                          </SC.TablaItem>
+                        );
+                      })}
                     </SC.TablaLista>
                   ) : (
                     <SC.TablaLista></SC.TablaLista>
@@ -316,35 +338,32 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
                   <SC.Tabla>
                     {!loadingOrders && filteredData.length > 0 ? (
                       <SC.TablaLista>
-                        {filteredData
-                          .sort((a: { fecha: dayjs.Dayjs }, b: { fecha: dayjs.Dayjs }) => Number(dayjs(b.fecha, "DD/MM/YYYY").format("x")) - Number(dayjs(a.fecha, "DD/MM/YYYY").format("x")))
-                          .slice(currentPage, currentPage + 7)
-                          .map((item: any, i: any) => {
-                            return (
-                              <SC.TablaItem
-                                key={i}
-                                onClick={() => {
-                                  setDetalleIndex(i);
-                                  setOpenDetalle(true);
-                                  setActiveScroll(0);
-                                }}
-                              >
-                                <SC.TablaItemMobile>
-                                  <OrderStatus item={item} nit={userData?.details?.nit || 0} />
+                        {filteredData.map((item: any, i: any) => {
+                          return (
+                            <SC.TablaItem
+                              key={i}
+                              onClick={() => {
+                                setDetalleIndex(i);
+                                setOpenDetalle(true);
+                                setActiveScroll(0);
+                              }}
+                            >
+                              <SC.TablaItemMobile>
+                                <OrderStatus item={item} nit={userData?.details?.nit || 0} />
 
-                                  <SC.OrderMobile>
-                                    <SC.Order>Orden: {item.orden} •</SC.Order>
+                                <SC.OrderMobile>
+                                  <SC.Order>Orden: {item.orden} •</SC.Order>
 
-                                    <SC.Price>Bs. {item.precio}</SC.Price>
-                                  </SC.OrderMobile>
+                                  <SC.Price>Bs. {item.precio}</SC.Price>
+                                </SC.OrderMobile>
 
-                                  <SC.Fecha>Fecha pedido: {item.fecha}</SC.Fecha>
-                                  <SC.Fecha>Fecha entrega: {item.fechaEntrega}</SC.Fecha>
-                                </SC.TablaItemMobile>
-                                <img src={ArrowLeft} alt=">" />
-                              </SC.TablaItem>
-                            );
-                          })}
+                                <SC.Fecha>Fecha pedido: {item.fecha}</SC.Fecha>
+                                <SC.Fecha>Fecha entrega: {item.fechaEntrega}</SC.Fecha>
+                              </SC.TablaItemMobile>
+                              <img src={ArrowLeft} alt=">" />
+                            </SC.TablaItem>
+                          );
+                        })}
                       </SC.TablaLista>
                     ) : (
                       <SC.TablaLista></SC.TablaLista>
@@ -363,7 +382,6 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
                           <div
                             onClick={() => {
                               setSavedIndex(savedIndex - 1);
-
                               setCurrentPage(currentPage - cantidadDeElementos);
                             }}
                           >
