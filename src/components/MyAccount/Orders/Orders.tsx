@@ -42,7 +42,7 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
   const myRef = useRef(null);
   const [savedIndex, setSavedIndex] = useState(0);
   const cantidadDeElementos = 7;
-
+  const [loadingOrders, setLoadingOrders] = useState(true);
   const [hidePaginator, setHidePaginator] = useState(false);
   const [filteredData, setFilteredData] = useState<any>([]);
   const [rawData, setRawData] = useState<any>([]);
@@ -52,10 +52,13 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
 
   const { data: userData } = useQuery<any>(DETAILS, {
     fetchPolicy: "network-only",
-    onCompleted: () => getOrders(),
+    onCompleted: () => {
+      setLoadingOrders(true);
+      getOrders();
+    },
   });
 
-  const [getOrders, { loading: loadingOrders }] = useLazyQuery(ORDERS, {
+  const [getOrders] = useLazyQuery(ORDERS, {
     fetchPolicy: "cache-and-network",
     variables: {
       nit: userData?.details?.nit || 0,
@@ -107,6 +110,7 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
       setRawData(ordersData);
       setFilteredData(fData);
       setPages(Math.ceil(ordersData.length / limitPerPage));
+      setLoadingOrders(false);
     },
   });
 
@@ -165,6 +169,8 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
   }, [rawData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    setLoadingOrders(true);
+
     async function getFDataPage() {
       let fData = rawData
         .sort((a: { fecha: dayjs.Dayjs }, b: { fecha: dayjs.Dayjs }) => Number(dayjs(b.fecha, "DD/MM/YYYY").format("x")) - Number(dayjs(a.fecha, "DD/MM/YYYY").format("x")))
@@ -181,6 +187,7 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
       }
 
       setFilteredData(fData);
+      setLoadingOrders(false);
     }
 
     getFDataPage();
@@ -209,13 +216,13 @@ const Orders: FC<Props> = ({ setMaskOn, id, repeatOrder }) => {
                   <h5>Estado</h5>
                 </SC.TablaHead>
 
+                {loadingOrders && (
+                  <SC.LoaderWrapper>
+                    <img src="/images/loader.svg" alt="loader" />
+                    <Loader />
+                  </SC.LoaderWrapper>
+                )}
                 <SC.Tabla>
-                  {loadingOrders && (
-                    <SC.LoaderWrapper>
-                      <img src="/images/loader.svg" alt="loader" />
-                      <Loader />
-                    </SC.LoaderWrapper>
-                  )}
                   {!loadingOrders && !rawData.length && (
                     <SC.LoaderWrapper>
                       <div>No hay registros para ese rango de fechas</div>
