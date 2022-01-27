@@ -268,7 +268,7 @@ export const OrderMobile = styled.div`
 `;
 
 export const LoaderWrapper = styled.div`
-  display: flex;
+  display: grid;
   justify-content: center;
   align-items: center;
   min-height: 150px;
