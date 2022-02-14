@@ -1,0 +1,9 @@
+<svg width="272" height="14" viewBox="0 0 272 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11 7L93 7.00001" stroke="#CBCBCB" />
+    <path d="M93 7L179 7.00001" stroke="#CBCBCB" />
+    <path d="M179 7L265 7.00001" stroke="#CBCBCB" />
+    <circle cx="7" cy="7" r="6.5" fill="#FBFCFC" stroke="#E30613" />
+    <circle cx="93" cy="7" r="6.5" fill="white" stroke="#CBCBCB" />
+    <circle cx="179" cy="7" r="6.5" fill="white" stroke="#CBCBCB" />
+    <circle cx="265" cy="7" r="6.5" fill="white" stroke="#CBCBCB" />
+</svg>

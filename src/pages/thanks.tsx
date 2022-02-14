@@ -1,11 +1,9 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BREAKPOINT } from "../utils/constants";
-import { useHistory, useLocation } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
-import { TODOTIX_ORDER_INFO } from "../graphql/cart/mutations";
+import { useLocation } from "react-router-dom";
 
-const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "../components/Checkout/Thanks"));
+const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "../components/Checkout/Steps/Thanks/Thanks"));
 
 const ThanktWrapper = styled.div``;
 

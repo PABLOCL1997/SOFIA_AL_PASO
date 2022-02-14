@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import useCityPriceList from "../../../hooks/useCityPriceList";
-import useUser from "../../../hooks/useUser";
+import useCityPriceList from "../../../../hooks/useCityPriceList";
+import useUser from "../../../../hooks/useUser";
 import ShippingOption from "./ShippingOption";
 import { ShippingOptions } from "./types";
 

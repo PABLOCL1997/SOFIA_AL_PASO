@@ -80,16 +80,12 @@ const EmployeeModal: FC<Props> = ({ show, setShowOpen, setCuentaActiva, userData
       setLoader(false);
     },
     onCompleted: (user) => {
-      console.log(user);
       if (!user.getB2EUserDetails.nombre || !user.getB2EUserDetails.nit) {
         setUnknownNit(true);
-        console.log("no name");
       }
       if (!user.getB2EUserDetails.celular || !user.getB2EUserDetails?.direcciones || !user.getB2EUserDetails?.direcciones.length) {
-        console.log("no celular or direcciones");
         setSteps(Steps.InvalidAccount);
       } else {
-        console.log("ok");
         setClientPhone(user.getB2EUserDetails.celular);
         setEmpresa({ empresa: user.getB2EUserDetails.nombre, numero: user.getB2EUserDetails.celular });
         start(user.getB2EUserDetails.celular);

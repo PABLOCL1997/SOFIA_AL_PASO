@@ -68,7 +68,7 @@ const Facturas: FC<Props> = ({ setMaskOn, page }) => {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       let firstDate = today.subtract(2, "year");
-      console.log(userData);
+
       getBillsHistory({
         variables: {
           nit: userData?.details?.nit || 0,

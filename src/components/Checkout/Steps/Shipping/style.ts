@@ -1,9 +1,16 @@
 import styled from "styled-components";
-import { BREAKPOINT } from "../../../utils/constants";
+import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.div`
   display: flex;
+  position: relative;
+  flex-direction: column;
   margin-bottom: 30px;
+  img {
+    display: none;
+    position: absolute;
+    cursor: pointer;
+  }
   h2 {
     font-family: MullerMedium;
     font-size: 16px;
@@ -19,8 +26,14 @@ export const Title = styled.div`
   }
   @media screen and (max-width: ${BREAKPOINT}) {
     flex-direction: column;
+    h2 {
+      padding-left: 42px;
+    }
     span {
       margin-top: 10px;
+    }
+    img {
+      display: block;
     }
   }
 `;
@@ -207,6 +220,40 @@ export const TooltipStar = styled.div`
     display: none;
   }
 `;
+
+export const Next = {
+  Wrapper: styled.div`
+    display: flex;
+    padding: 64px 0;
+    justify-content: flex-start;
+    button {
+      padding: 14px 48px;
+      font-size: 12px;
+      font-family: MullerMedium;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 20px;
+    }
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: block;
+      padding: 32px 0;
+      
+      * > button {
+        width: 100%;
+      }
+    }
+  `,
+}
+
+export const Back = {
+  Wrapper: styled.div`
+    margin-bottom: 32px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: none;
+    }
+  `,
+}
 
 export const ArrowImg = styled.img`
   margin-left: 10px;

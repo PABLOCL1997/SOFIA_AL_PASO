@@ -13,6 +13,7 @@
     "date-fns": "^2.26.0",
     "dayjs": "^1.10.7",
     "express": "^4.17.1",
+    "formik": "^2.2.9",
     "google-map-react": "^2.1.10",
     "graphql": "^14.6.0",
     "graphql-request": "^3.3.0",
@@ -35,7 +36,8 @@
     "react-slick": "^0.25.2",
     "sitemap": "^7.0.0",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

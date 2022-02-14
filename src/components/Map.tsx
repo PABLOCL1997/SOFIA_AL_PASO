@@ -88,18 +88,22 @@ const Map: FC<Props> = () => {
 
   const geoLocate = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          setLatLng("", position.coords.latitude, position.coords.longitude);
-          if ((window as any).updateMapUsed) (window as any).updateMapUsed();
-        },
-        function (errors) {
-          console.log(errors);
-        },
-        {
-          timeout: 5000,
-        }
-      );
+      try {        
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            setLatLng("", position.coords.latitude, position.coords.longitude);
+            if ((window as any).updateMapUsed) (window as any).updateMapUsed();
+          },
+          function (errors) {
+            console.log(errors);
+          },
+          {
+            timeout: 5000,
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 

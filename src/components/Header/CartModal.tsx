@@ -32,7 +32,7 @@ const CartModal: FC<Props> = () => {
 
   const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart();
 
-  const [relatedProducts, setRelatedProducts] = useState<any>([]);
+  const [relatedProducts, setRelatedProducts] = useState<ProductType[]>([]);
   const { data: userData } = useQuery(GET_USER, {});
 
   const [toggleLoginModal] = useMutation(SET_USER, {
@@ -50,18 +50,18 @@ const CartModal: FC<Props> = () => {
   };
 
   const getRelatedProducts = () => {
-    let relProducts: any = [];
-    let checkoutItems: any = [];
+    let relProducts: ProductType[] = [];
+    let checkoutItems: number[] = [];
     if (cart && cart.cartItems) {
-      cart.cartItems.forEach((el: any) => {
+      cart.cartItems.forEach((el: ProductType) => {
         checkoutItems.push(el.entity_id);
         if (el.related) {
           relProducts = [...relProducts, ...el.related];
         }
       });
-      relProducts = relProducts.filter((v: any, i: any, a: any) => a.findIndex((t: any) => t.entity_id === v.entity_id) === i);
-      relProducts = relProducts.filter((i: any) => !checkoutItems.includes(i.entity_id));
-      relProducts = relProducts.sort((a: any, b: any) => (a.entity_id > b.entity_id ? 1 : -1));
+      relProducts = relProducts.filter((v: ProductType, i: number, a: ProductType[]) => a.findIndex((t: ProductType) => t.entity_id === v.entity_id) === i);
+      relProducts = relProducts.filter((i: ProductType) => !checkoutItems.includes(i.entity_id));
+      relProducts = relProducts.sort((a: ProductType, b: ProductType) => (a.entity_id > b.entity_id ? 1 : -1));
       setRelatedProducts(relProducts);
     }
     return relProducts;
@@ -98,7 +98,7 @@ const CartModal: FC<Props> = () => {
                     </SC.NameBox>
                     <SC.Qty>
                       <select defaultValue={product.qty} onChange={(event) => updateItem(Number(event.target.value), product)}>
-                        {[...(Array(21).keys() as any)].slice(1).map((opt: any, index: number) => (
+                        {[...(Array(21).keys())].slice(1).map((opt: number, index: number) => (
                           <option key={index} value={opt}>
                             {opt}
                           </option>

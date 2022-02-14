@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BREAKPOINT } from "../../../utils/constants";
+import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.h2`
   font-family: MullerMedium;
@@ -17,6 +17,11 @@ export const Form = styled.div`
   @media screen and (max-width: ${BREAKPOINT}) {
     grid-template-columns: 1fr;
     column-gap: 0;
+    row-gap: 12px;
+
+    label {
+      display: none;
+    }
   }
 `;
 
@@ -46,6 +51,13 @@ export const InputGroup = styled.div<{ key: string }>`
     border: 0;
     margin-top: 10px;
   }
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    input {
+      margin: 0;
+      height: 22px;
+    }
+  }
 `;
 
 export const Other = styled.button`
@@ -61,3 +73,28 @@ export const Other = styled.button`
     opacity: 0.8;
   }
 `;
+
+export const Next = {
+  Wrapper: styled.div`
+    display: flex;
+    padding: 64px 0;
+    justify-content: flex-start;
+    button {
+      padding: 14px 48px;
+      font-size: 12px;
+      font-family: MullerMedium;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 20px;
+    }
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: block;
+      padding: 32px 0;
+
+      button {
+        width: 100%;
+      }
+    }
+  `,
+}

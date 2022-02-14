@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { ShippingOptions } from "./types";
 
-import * as Icons from "../../../assets/employee/Icons";
+import * as Icons from "../../../../assets/employee/Icons";
+import { BREAKPOINT } from "../../../../utils/constants";
 
 const Wrapper = styled.div<{ selected: boolean }>`
   border-radius: 12px;
@@ -14,6 +15,12 @@ const Wrapper = styled.div<{ selected: boolean }>`
   padding: 21px 24px 21px 32px;
 
   ${({ selected }) => selected && ` background: #FECD00;`}
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    grid-template-columns: minmax(10px,30px) 1fr 80px;
+    padding: 21px 24px;
+    column-gap: 5px;
+  }
 `;
 
 const TitleStreet = styled.div<{ selected: boolean }>`
@@ -33,7 +40,18 @@ const TitleStreet = styled.div<{ selected: boolean }>`
         p {
             display: none;
         }
-    `}
+    `
+  }
+  @media screen and (max-width: ${BREAKPOINT}) {
+    h3 {
+      font-size: 14px;
+      padding-top: 4px;
+    }
+    p {
+      font-size: 10px;
+    }
+  }
+
 `;
 
 const Chip = styled.p`
@@ -55,10 +73,11 @@ const CallToAction = styled.a`
   color: var(--red);
 
   text-decoration: underline;
-
+  text-align: right;
   cursor: pointer;
-  @media screen and (max-width: 420px) {
-    margin-left: 20px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    text-align: left;
+    font-size: 12px;
   }
 `;
 

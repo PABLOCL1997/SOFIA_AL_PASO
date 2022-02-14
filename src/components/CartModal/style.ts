@@ -88,6 +88,10 @@ export const Title = styled.h2`
   line-height: 24px;
   color: var(--black);
   flex: 1;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    font-size: 18px;
+
+  }
 `;
 
 export const Count = styled.span`
@@ -123,9 +127,8 @@ export const Items = styled.div`
   overflow: auto;
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    max-width: calc(100% - 40px);
-    max-height: calc(100vh - 320px);
-    height: calc(100vh - 320px);
+    width: 100%;
+    padding: 0;
   }
 `;
 
@@ -207,12 +210,18 @@ export const Row = styled.div`
   border-bottom: 1px solid #ccc;
   width: 100%;
   @media screen and (max-width: ${BREAKPOINT}) {
-    grid-template-columns: 115px 1fr 70px;
+    grid-template-columns: 60px 1fr 50px;
+    column-gap: 7px;
   }
 `;
 export const Image = styled.img`
   width: 100px;
   margin-right: 20px;
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    width: 60px;
+    margin: 0;
+  }
 `;
 Image.displayName = "ProductCartImage";
 export const NameBox = styled.div`
@@ -220,6 +229,10 @@ export const NameBox = styled.div`
   flex-direction: column;
   margin-right: 20px;
   flex: 1;
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin: 0;
+  }
 `;
 
 export const Name = styled.h3`
@@ -228,6 +241,9 @@ export const Name = styled.h3`
   line-height: 14px;
   color: var(--black);
   margin-bottom: 5px;
+  @media screen and (max-width: ${BREAKPOINT}) {
+    font-size: 11px;
+  }
 `;
 export const Units = styled.span`
   font-family: MullerMedium;
@@ -244,9 +260,7 @@ export const Qty = styled.div`
   padding: 10px 0;
   border-radius: 30px;
   margin-right: 20px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-right: 0;
-  }
+
   select {
     cursor: pointer;
     -webkit-appearance: none;
@@ -261,6 +275,14 @@ export const Qty = styled.div`
     pointer-events: none;
     position: absolute;
     right: 10px;
+  }
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    margin-right: 0;
+
+    select {
+      padding-left: 7px;
+    }
   }
 `;
 export const UnitPrice = styled.span`
