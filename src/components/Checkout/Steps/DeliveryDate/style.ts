@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.h2`
   font-family: MullerMedium;
@@ -6,6 +7,32 @@ export const Title = styled.h2`
   line-height: 16px;
   color: var(--red);
   margin-bottom: 30px;
+
+  img {
+    display: none;
+    position: absolute;
+    cursor: pointer;
+  }
+  h2 {
+    font-family: MullerMedium;
+    font-size: 16px;
+    line-height: 16px;
+    color: var(--red);
+    flex: 1;
+  }
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    flex-direction: column;
+    h2 {
+      padding-left: 42px;
+    }
+    span {
+      margin-top: 10px;
+    }
+    img {
+      display: block;
+    }
+  }
 `;
 
 export const DateWrapper = styled.section`
@@ -13,17 +40,22 @@ export const DateWrapper = styled.section`
   column-gap: 24px;
 
   justify-content: center;
-  grid-template-columns: repeat(4, 1fr);
+  max-width: 800px;
 
-  @media screen and (max-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 24px;
+  .slick-list {
+    max-width: 450px;
+  }
+
+  @media (max-width: ${BREAKPOINT}) {
+    .slick-list {
+      max-width: 280px;
+    }
   }
 `;
 
 export const DateSquare = styled.button<{ selected: boolean }>`
-  width: 126px;
-  height: 76px;
+  width: 126px !important;
+  height: 76px !important;
 
   background: #ffffff;
 
@@ -58,11 +90,16 @@ export const TimeWrapper = styled.section`
   display: flex;
   justify-content: center;
   column-gap: 24px;
+  row-gap: 10px;
   margin-top: 48px;
+
+  @media screen and (max-width: ${BREAKPOINT}) {
+    flex-direction: column;
+  }
 `;
 
 export const TimeRadio = styled.article<{ selected: boolean }>`
-  padding: 8px 24px;
+  padding: 8px 16px;
   color: var(--black);
   box-sizing: border-box;
   border-radius: 200px;
@@ -96,3 +133,38 @@ export const Radio = styled.input`
 export const Time = styled.label`
   font-size: 14px;
 `;
+
+
+export const Next = {
+  Wrapper: styled.div`
+    display: flex;
+    padding: 64px 0;
+    justify-content: flex-start;
+    button {
+      padding: 14px 48px;
+      font-size: 12px;
+      font-family: MullerMedium;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 20px;
+    }
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: block;
+      padding: 32px 0;
+      
+      button {
+        width: 100%;
+      }
+    }
+  `,
+}
+
+export const Back = {
+  Wrapper: styled.div`
+    margin-bottom: 32px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: none;
+    }
+  `,
+}

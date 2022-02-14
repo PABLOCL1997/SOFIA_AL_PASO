@@ -1,4 +1,7 @@
 {
+  "general": {
+    "next": "Siguiente"
+  },
   "header": {
     "login": "Ingresar",
     "logout": "Salir",
@@ -117,6 +120,8 @@
     }
   },
   "product": {
+    "name_with_kgs": "{{name}} de {{kgs}} KGS APROX.",
+    "name_without_kgs": "{{name}}",
     "continue_shopping": "Seguir comprando",
     "categories": "CATEGORÍAS",
     "add": "Agregar",
@@ -241,7 +246,10 @@
       "wrong_code": "Código incorrecto."   
     }
   },
-
+  "controls": {
+    "back_arrow": "Volver",
+    "edit": "Editar"
+  },
   "employeeModal": {
      "activar_cuenta": "Activar cuenta",
      "carnet_de_identidad": "Carnet de identidad",
@@ -272,17 +280,30 @@
     "city_warning": "Pedimos disculpas por la falta eventual de algunos productos en nuestra tienda virtual.\nLes agradecemos su comprensión."
   },
   "checkout": {
+    "title": "Checkout",
+    "subtitle": "Ver carrito",
     "move_map": "Por favor seleccione su ubicación en el mapa",
     "missing_field": "Por favor complete el campo {{field}}",
     "todotix_error": "La orden fue creada correctamente, pero no se pudo obtener el link de pago",
     "error": "No se pudo generar la orden",
-    "title": "Checkout",
+    "title_delivery": "Recibe en casa",
+    "title_pickup": "Retira al Paso",
     "modify_cart": "Modificar carrito",
     "confirmaddress": {
       "title": "Confirmar dirección",
       "message": "Se enviará el pedido a",
       "close": "Cancelar",
       "confirm": "Confirmar"
+    },
+    "cart": {
+      "title": "Mi pedido",
+      "check_cart": "Ver carrito",
+      "modify_cart": "Modificar carrito",
+      "call_to_action": "Continuar con el checkout"
+    },
+    "review": {
+      "heading": "4. Verifique su pedido",
+      "call_to_action": "Confirmar pedido"
     },
     "billing": {
       "title": "1. Datos para facturación",
@@ -325,7 +346,7 @@
       }
     },
     "delivery_datetime": {
-      "title": "2.1. Fecha de envío",
+      "title": "2.1 Fecha de envío",
       "today": "Hoy",
       "no_time_frame": "No hay ventanas horarias disponibles para este día."
     },
@@ -366,7 +387,7 @@
       },
       "discount": "Descuento",
       "total": "Total",
-      "send": "Enviar pedido"
+      "send": "Confirmar pedido"
     }
   },
   "thankyou": {

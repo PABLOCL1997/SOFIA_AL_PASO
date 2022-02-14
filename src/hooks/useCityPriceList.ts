@@ -16,14 +16,11 @@ type usePriceListType = {
 const useCityPriceList = (): usePriceListType => {
   const { data: userData } = useQuery(GET_USER, {});
   const { data: details } = useQuery(DETAILS, {});
-  useQuery(GET_SAP_AGENCIES, {
+  const { data: agencies } = useQuery(GET_SAP_AGENCIES, {
     fetchPolicy: "network-only",
-    onCompleted: (d) => {
-      setAgencies(d.agencies);
-    },
   });
 
-  const [agencies, setAgencies] = useState([]);
+
   const [city, setCity] = useState<string>("SC");
   const [idPriceList, setIdPriceList] = useState<number>(-1);
   const [agency, setAgency] = useState<string | null>(null);
@@ -60,7 +57,7 @@ const useCityPriceList = (): usePriceListType => {
     return false;
   }, [details]);
 
-  return { city, idPriceList, agencies, agency: userData && userData.userInfo.length && userData.userInfo[0].agency ? userData.userInfo[0].agency : null, setAgency, hasB2EAddress };
+  return { city, idPriceList, agencies: agencies?.agencies, agency: userData && userData.userInfo.length && userData.userInfo[0].agency ? userData.userInfo[0].agency : null, setAgency, hasB2EAddress };
 };
 
 export default useCityPriceList;

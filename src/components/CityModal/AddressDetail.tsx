@@ -409,7 +409,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             <Title>Retira al paso</Title>
             <Subtitle withMap={withMap}>Elige tu tienda más cercana</Subtitle>
             <Addresses withMap={withMap}>
-              {agencies.map((_agency: Agency, index: number) => (
+              {agencies?.length && agencies.map((_agency: Agency, index: number) => (
                 <RadionGroup
                   key={`${_agency.key}#${index}`}
                   className={agencyKey === _agency.key || _agency.key === selectedAddress?.key ? "selected" : ``}
@@ -512,7 +512,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                 fullscreenControl: false,
               }}
             >
-              {shippingMethod === ShippingMethod.Pickup &&
+              {shippingMethod === ShippingMethod.Pickup && agencies?.length &&
                 React.Children.toArray(
                   agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
                     <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />

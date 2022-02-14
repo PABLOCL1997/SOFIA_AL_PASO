@@ -1,17 +1,20 @@
-import { useLazyQuery, useMutation, useQuery } from "@apollo/react-hooks";
+import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import { CHECK_CART, GET_CART_ITEMS, GET_QTY, GET_TOTAL } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { trackAddToCart, trackRemoveFromCart, trackRemoveCartEvent } from "../utils/dataLayer";
 import { useTranslation } from "react-i18next";
-import { ADD_ITEM, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
+import { ADD_ITEM, CHECK_COUPON, DELETE_ITEM, EMPTY_CART } from "../graphql/cart/mutations";
 import { SET_USER } from "../graphql/user/mutations";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useCityPriceList from "./useCityPriceList";
+import useMinimumPrice from "./useMinimumPrice";
+import useUser from "./useUser";
 
 type CartReturn = {
   cart: any;
   quantity: number;
-  totalAmount: any;
+  totalAmount: string;
+  shippingPrice: number;
   hasStock: Function;
   isOverLimit: Function;
   addAndGo: Function;
@@ -21,6 +24,8 @@ type CartReturn = {
   removeRow: Function;
   empty: Function;
   closeCartModal: Function;
+  discountAmount: number;
+  removeCoupon: Function;
 };
 
 type Action = {
@@ -36,8 +41,10 @@ type ActionEmpty = {
 const useCart = (): CartReturn => {
   const { t } = useTranslation();
   const { city, idPriceList, agency } = useCityPriceList();
+  const minimumPrice = useMinimumPrice();
+  const { coupon } = useUser();
   const [totalAmount, setTotalAmount] = useState("0.0");
-  const [quantity, setQuantity] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
 
   const [action, setAction] = useState<Action | ActionEmpty>({ action: "no-action" });
 
@@ -69,12 +76,52 @@ const useCart = (): CartReturn => {
     },
   });
 
+  const shippingPrice = useMemo(() => {
+    const shippingCost = 15; // Bs. 15
+    const noShippingCost = 0; // Bs. 0
+    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && !agency) {
+      return shippingCost; 
+    } else {
+      return noShippingCost;
+    }
+  }, [minimumPrice, totalAmount, agency]);
+
   const [addItem] = useMutation(ADD_ITEM, {});
   const [showSuccess] = useMutation(SET_USER, {});
   const [deleteItem] = useMutation(DELETE_ITEM);
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [closeCartModal] = useMutation(SET_USER, {
     variables: { user: { openCartModal: false } },
+  });
+  const [saveCoupon] = useMutation(SET_USER, {});
+
+  const twoDecimals = (value: number): string => {
+    const valueString = value.toString().replace('.', ',');
+    const valueArray = valueString.split(',');
+    if (valueArray.length > 1) {
+      // return two first valus of valueArray[1]
+      const integers = valueArray[0]
+      const decimal = valueArray[1].substring(0, 2);
+      return `${integers}.${decimal}`;
+    }
+    return String(value);
+  }
+
+  const [checkCoupon] = useMutation(CHECK_COUPON, {
+    variables: { name: coupon },
+    onCompleted: (data) => {
+      const discount_amount: number = data?.coupon?.discount_amount;
+      const discount_type: string = data?.coupon?.type
+
+      if (discount_type === "%") {
+        const total: number = parseFloat(totalAmount.replace(",", ".")) - shippingPrice;        
+        const _discount_amount = (parseFloat(total.toFixed(2)) * discount_amount) / 100; 
+
+        setDiscountAmount(parseFloat(twoDecimals(_discount_amount)));
+      } else {
+        setDiscountAmount(parseFloat(discount_amount.toFixed(2)));
+      }
+    }
   });
   const hasStock = (product: ProductType, qty: number) => {
     return product.stock >= qty;
@@ -188,11 +235,6 @@ const useCart = (): CartReturn => {
     } else if (action.action === "delete") {
       const { product }: Action = action as Action;
 
-      trackRemoveCartEvent();
-      trackRemoveFromCart({
-        ...product,
-        qty: 0,
-      } as ProductType);
       await deleteItem({
         variables: {
           product,
@@ -200,6 +242,12 @@ const useCart = (): CartReturn => {
       });
       setAction({ action: "no-action" });
       if (cart && !cart.cartItems.length) closeCartModal();
+
+      trackRemoveCartEvent();
+      trackRemoveFromCart({
+        ...product,
+        qty: 0,
+      } as ProductType);
     } else if (action.action === "empty") {
       await emptyCart();
       setAction({ action: "no-action" });
@@ -207,9 +255,22 @@ const useCart = (): CartReturn => {
     }
   };
 
+  const removeCoupon = async () => {
+    setDiscountAmount(0);
+    await saveCoupon({
+      variables: { user: { coupon: null } },
+    })
+  };
+
   useEffect(() => {
     getCart();
   }, []);
+
+  useEffect(() => {
+    if (coupon) { 
+      checkCoupon();
+    }
+  }, [coupon]);
 
   useEffect(() => {
     if (action && action.action !== "no-action") {
@@ -220,7 +281,7 @@ const useCart = (): CartReturn => {
 
   useEffect(() => {
     // when city or idPriceList or agency changes, updateCart
-    if ((city || idPriceList || agency) && cart && cart.cartItems) {
+    if ((city || idPriceList || agency) && cart?.cartItems?.length) {
       checkCart({
         variables: {
           city,
@@ -238,13 +299,31 @@ const useCart = (): CartReturn => {
   }, [city, idPriceList, agency]);
 
   useEffect(() => {
-    if (cart && cart.cartItems && cart.cartItems.length) {
-      setQuantity(GET_QTY(cart.cartItems));
-      setTotalAmount(GET_TOTAL(cart.cartItems));
+    if (cart?.cartItems?.length) {
+      setTotalAmount(GET_TOTAL(cart?.cartItems, shippingPrice));
     }
-  }, [cart]);
+  }, [cart, shippingPrice]);
 
-  return { cart, totalAmount, quantity, hasStock, isOverLimit, addAndGo, addItem, updateItem, removeRow, deleteItem, empty, closeCartModal };
+  const quantity = useMemo(() => cart?.cartItems?.length ? GET_QTY(cart.cartItems) : 0, [cart])
+  const total = useMemo(() => (parseFloat(totalAmount.replace(',','.')) - discountAmount).toFixed(2).replace(".", ","), [totalAmount, discountAmount])
+
+  return {
+    cart,
+    totalAmount: total,
+    quantity,
+    shippingPrice,
+    discountAmount,
+    hasStock,
+    isOverLimit,
+    addAndGo,
+    addItem,
+    updateItem,
+    removeRow,
+    deleteItem,
+    empty,
+    closeCartModal,
+    removeCoupon,
+  };
 };
 
 export default useCart;

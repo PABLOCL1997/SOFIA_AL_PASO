@@ -1,10 +1,11 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC, Suspense, useState, useEffect, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_CART_ITEMS, GET_QTY } from "../../graphql/cart/queries";
 import { GET_USER } from "../../graphql/user/queries";
 import { SET_USER } from "../../graphql/user/mutations";
+import { Location } from "../../context/Location"
 import Search from "../Images/Search";
 import * as SC from "../../styled-components/HeaderStyles";
 
@@ -12,6 +13,7 @@ import Wallet from "../../assets/images/empresa-seleccionado.svg";
 
 import LocationIcon from "../../assets/images/locate-icon.svg";
 import UserIcon from "../../assets/images/profile-ingresar.svg";
+import UserCheckout from "../../assets/images/profile-checkout.svg";
 import CartImg from "../../assets/images/Carrito.svg";
 import MenuIcon from "../../assets/images/menuButton.svg";
 import SofiaAlPasoLogo from "../../assets/images/sofiaAlPasoLogo.webp";
@@ -19,13 +21,13 @@ import SofiaAlPasoColaboradoresLogo from "../../assets/images/sofiaAlPasoColabor
 
 import { trackGoToCartEvent } from "../../utils/dataLayer";
 import useCityPriceList from "../../hooks/useCityPriceList";
+import { getStep, Steps } from "../../types/Checkout";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
 const CityModal = React.lazy(() => import(/* webpackChunkName: "CityModal" */ "./CityModal"));
 const AuthModal = React.lazy(() => import(/* webpackChunkName: "AuthModal" */ "./AuthModal/"));
 const CartModal = React.lazy(() => import(/* webpackChunkName: "CartModal" */ "./CartModal"));
-
 const Sidebar = React.lazy(() => import(/* webpackChunkName: "Sidebar" */ "./Sidebar"));
 
 type Props = {
@@ -41,6 +43,14 @@ const Header: FC<Props> = ({ checkout, page }) => {
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("");
+
+  const currentStep = useContext(Location.Context)
+  const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
+  // check with use memo if we are at /checkout
+  const isCheckout = useMemo(() => {
+    return history.location.pathname === "/checkout";
+  }, [history, history?.location?.pathname]);
+
   const { data } = useQuery(GET_CART_ITEMS);
   const { idPriceList } = useCityPriceList();
   const { data: userData } = useQuery(GET_USER, {});
@@ -140,57 +150,85 @@ const Header: FC<Props> = ({ checkout, page }) => {
           <CityModal />
           <CartModal />
         </Suspense>
-        <SC.Container>
+        <SC.Container isCheckout={isCheckout}>
           <SC.HeaderClip isB2E={!!userData?.userInfo[0]?.idPriceList}>
             <SC.HeaderClipTextWrapper>
               <SC.HeaderClipText />
               {!!userData?.userInfo[0]?.idPriceList && <SC.HeaderClipText>Colaboradores</SC.HeaderClipText>}
             </SC.HeaderClipTextWrapper>
           </SC.HeaderClip>
-          <SC.Logo isB2E={!!userData?.userInfo[0]?.idPriceList}>
+          {isCheckout && window.innerWidth < 500 &&
+            <SC.IngresarWrap onClick={myAccount}>
+              <SC.IngresarImg width="32" height="26" src={UserCheckout} alt="login" />
+              {!userData.userInfo.length || !userData.userInfo[0].isLoggedIn ? <SC.IngresarText>{t("header.login")}</SC.IngresarText> : <SC.IngresarText>{t("header.account")}</SC.IngresarText>}
+            </SC.IngresarWrap>
+          }
+          <SC.Logo isB2E={!!userData?.userInfo[0]?.idPriceList} isCheckout={isCheckout}>
             <Link to="/">
             <img src={!userData?.userInfo[0]?.idPriceList ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>
-          <div>
-            <SC.Address onClick={() => toggleCityModal()}>
-              {/* pin */}
-              <img height="25" src={LocationIcon} alt="location" />
-              <SC.AddressText title={addressCity}>{addressCity}</SC.AddressText>
-            </SC.Address>
-          </div>
-          <SC.InputGroup>
-            <Search />
-            {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
-            <SC.InputGroupSearchInput
-              id="product-search"
-              name="product-search"
-              type="search"
-              autoComplete="off"
-              onKeyUp={(evt) => {
-                if (evt.keyCode === 13) handleSearch();
-              }}
-              onChange={({ target: { value } }) => {
-                setNewQuery(value);
-              }}
-              placeholder={t("products.product_list.search_product")}
-            />
-            <Cta filled={true} action={() => handleSearch()} text={t("products.product_list.search")} />
-          </SC.InputGroup>
-          <SC.IngresarWrap onClick={myAccount}>
-            <SC.IngresarImg width="35" height="29" src={UserIcon} alt="login" />
-            {!userData.userInfo.length || !userData.userInfo[0].isLoggedIn ? <SC.IngresarText>{t("header.login")}</SC.IngresarText> : <SC.IngresarText>{t("header.account")}</SC.IngresarText>}
-          </SC.IngresarWrap>
-          <SC.IngresarWrap onClick={goToCollaborators}>
-            <SC.IngresarImg width="25" height="24" src={Wallet} alt="wallet" />
-            <SC.IngresarText>{t("header.collaborators")}</SC.IngresarText>
-          </SC.IngresarWrap>
+          {isCheckout ? (
+            <SC.Steps.Container>
+              {step === Steps.Billing || step === Steps.Cart ? 
+                <SC.Steps.First />            
+              : null}
 
-          <SC.CartWrapper big={bigCart} onClick={showCart}>
-            <SC.IngresarImg width="32" height="24" src={CartImg} alt="Carrito de compras" />
-            {data && data.cartItems && data.cartItems.length ? <SC.CartText>{GET_QTY(data.cartItems)}</SC.CartText> : <SC.CartText>0</SC.CartText>}
-          </SC.CartWrapper>
-          <SC.MenuWrapper onClick={() => setOpen(true)}>
+              {step === Steps.Shipping || step === Steps.Timeframe ?
+                <SC.Steps.Second />           
+              : null}
+
+              {step === Steps.Payment ? 
+                <SC.Steps.Third />             
+              : null}
+              
+              {step === Steps.Review ? 
+                <SC.Steps.Fourth />
+              : null}
+            </SC.Steps.Container>
+          ) : (
+            <>
+              <div>
+                <SC.Address onClick={() => toggleCityModal()}>
+                  {/* pin */}
+                  <img height="25" src={LocationIcon} alt="location" />
+                  <SC.AddressText title={addressCity}>{addressCity}</SC.AddressText>
+                </SC.Address>
+              </div>
+              <SC.InputGroup>
+                <Search />
+                {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
+                <SC.InputGroupSearchInput
+                  id="product-search"
+                  name="product-search"
+                  type="search"
+                  autoComplete="off"
+                  onKeyUp={(evt) => {
+                    if (evt.keyCode === 13) handleSearch();
+                  }}
+                  onChange={({ target: { value } }) => {
+                    setNewQuery(value);
+                  }}
+                  placeholder={t("products.product_list.search_product")}
+                />
+                <Cta filled action={() => handleSearch()} text={t("products.product_list.search")} />
+              </SC.InputGroup>
+              <SC.IngresarWrap onClick={myAccount}>
+                <SC.IngresarImg width="35" height="29" src={UserIcon} alt="login" />
+                {!userData.userInfo.length || !userData.userInfo[0].isLoggedIn ? <SC.IngresarText>{t("header.login")}</SC.IngresarText> : <SC.IngresarText>{t("header.account")}</SC.IngresarText>}
+              </SC.IngresarWrap>
+              <SC.IngresarWrap onClick={goToCollaborators}>
+                <SC.IngresarImg width="25" height="24" src={Wallet} alt="wallet" />
+                <SC.IngresarText>{t("header.collaborators")}</SC.IngresarText>
+              </SC.IngresarWrap>
+
+              <SC.CartWrapper big={bigCart} onClick={showCart}>
+                <SC.IngresarImg width="32" height="24" src={CartImg} alt="Carrito de compras" />
+                {data && data.cartItems && data.cartItems.length ? <SC.CartText>{GET_QTY(data.cartItems)}</SC.CartText> : <SC.CartText>0</SC.CartText>}
+              </SC.CartWrapper>
+            </>
+          )}
+          <SC.MenuWrapper onClick={() => setOpen(true)} isCheckout={isCheckout}>
             {/* menu */}
             <img width="24" height="16" src={MenuIcon} alt="Menu" />
           </SC.MenuWrapper>

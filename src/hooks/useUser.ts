@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMemo } from "react";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
 
@@ -10,6 +11,7 @@ interface IUseUser {
   hideAddressInfo: Function;
   logout: Function;
   user: any;
+  coupon: string | null;
 }
 
 const useUser = (): IUseUser => {
@@ -35,6 +37,10 @@ const useUser = (): IUseUser => {
     },
   });
 
+  const coupon: string | null = useMemo(() => {
+    return user?.userInfo[0]?.coupon;
+  }, [user]);
+
   const [logout] = useMutation(SET_USER, {
     variables: {
       user: {
@@ -58,6 +64,7 @@ const useUser = (): IUseUser => {
     hideAddressInfo,
     logout,
     user,
+    coupon
   };
 };
 

@@ -1,11 +1,9 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { Suspense, FC, useEffect, useState, useContext, useMemo } from "react";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
 
 import { SET_USER } from "../graphql/user/mutations";
-import { BREAKPOINT } from "../utils/constants";
 import { CREATE_ORDER, EMPTY_CART, TODOTIX_ORDER_INFO, SET_TEMP_CART } from "../graphql/cart/mutations";
 import { GET_CART_ITEMS, TODOTIX, GET_TOTAL } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
@@ -21,6 +19,10 @@ import { HorarioCorte, TimeFrame } from "../types/TimeFrame";
 import dayjs from "dayjs";
 import { EBSProduct } from "../types/Product";
 import useMinimumPrice from "../hooks/useMinimumPrice";
+import * as SC from "../styled-components/pages/checkout";
+import { getStep, handleNext, Steps } from "../types/Checkout";
+import { Location } from "../context/Location";
+import { Courtain } from "../context/Courtain";
 
 const isoWeek = require("dayjs/plugin/isoWeek");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
@@ -35,111 +37,14 @@ dayjs.extend(timezone);
 dayjs.locale(es);
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
-const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Billing/"));
-const Shipping = React.lazy(() => import(/* webpackChunkName: "Shipping" */ "../components/Checkout/Shipping/"));
-const Payment = React.lazy(() => import(/* webpackChunkName: "Payment" */ "../components/Checkout/Payment"));
-const DeliveryDate = React.lazy(() => import(/* webpackChunkName: "DeliveryDate" */ "../components/Checkout/DeliveryDate/DeliveryDate"));
+const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Steps/Billing"));
+const Shipping = React.lazy(() => import(/* webpackChunkName: "Shipping" */ "../components/Checkout/Steps/Shipping"));
+const Payment = React.lazy(() => import(/* webpackChunkName: "Payment" */ "../components/Checkout/Steps/Payment"));
+const Review = React.lazy(() => import(/* webpackChunkName: "Review" */ "../components/Checkout/Steps/Review"));
+const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../components/Checkout/Steps/Cart"));
+const DeliveryDate = React.lazy(() => import(/* webpackChunkName: "DeliveryDate" */ "../components/Checkout/Steps/DeliveryDate"));
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket"));
 const ConfirmAddress = React.lazy(() => import(/* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"));
-
-const Wrapper = styled.div`
-  padding: 60px 100px;
-  background: var(--bkg);
-  iframe {
-    width: 100%;
-    height: 730px;
-  }
-  @media screen and (max-width: ${BREAKPOINT}) {
-    padding: 20px;
-  }
-`;
-
-const CheckoutWrapper = styled.div``;
-
-const Cols = styled.div`
-  display: flex;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    flex-direction: column;
-  }
-`;
-
-const Col1 = styled.div`
-  flex: 1;
-`;
-
-const Col2 = styled.div`
-  width: 364px;
-  margin-left: 16px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 40px;
-  }
-`;
-
-const Title = styled.div`
-  display: flex;
-  padding-right: 380px;
-  align-items: center;
-  margin-bottom: 25px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    padding-right: 0;
-  }
-  h2 {
-    flex: 1;
-    font-family: MullerMedium;
-    font-size: 32px;
-    line-height: 32px;
-    color: var(--black);
-  }
-  button {
-    font-family: MullerMedium;
-    font-size: 16px;
-    line-height: 14px;
-    text-align: right;
-    text-decoration-line: underline;
-    color: var(--red);
-    background: none;
-    border: 0;
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-
-const Steps = styled.div`
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    padding: 40px 20px;
-  }
-`;
-
-const Line = styled.div`
-  border-top: 1px solid rgba(0, 0, 0, 0.11);
-  margin: 48px 0;
-`;
-
-const ShippingMethodWrapper = styled.div`
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 14px;
-  margin-bottom: 40px;
-
-  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
-
-  svg {
-    margin-right: 16px;
-  }
-  h4 {
-    margin: 0;
-    padding: 0;
-
-    font-size: 20px;
-    font-family: MullerMedium;
-  }
-`;
 
 type Props = {};
 
@@ -163,9 +68,19 @@ type OrderData = {
 };
 
 const Checkout: FC<Props> = () => {
-  const [daysAvailable, setDaysAvailable] = useState<Array<dayjs.Dayjs>>([]);
+  const [daysAvailable] = useState<Array<dayjs.Dayjs>>([]);
+  const daysRequired = 5;
   const SundayKey = 7;
-  const today = dayjs();
+  let counter = 0;
+  while (counter < daysRequired) {
+    const newDay = dayjs().add(counter, "days");
+
+    if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
+      const nextDay = dayjs().add(counter, "days");
+      daysAvailable.push(nextDay);
+    }
+    counter++;
+  }
 
   const { t } = useTranslation();
   const location = useLocation();
@@ -189,6 +104,10 @@ const Checkout: FC<Props> = () => {
   const [timeFrames, setTimeFrames] = useState<Array<TimeFrame>>([]);
   const [filteredTimeFrames, setFilteredTimeFrames] = useState<Array<TimeFrame>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
+
+  const { setLoading } = useContext(Courtain.Context);
+  const currentStep = useContext(Location.Context);
+  const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
 
   const { data: localUserData } = useQuery(GET_USER, {});
   const { data: userDetails } = useQuery(DETAILS, {});
@@ -222,7 +141,7 @@ const Checkout: FC<Props> = () => {
     },
   });
 
-  const { data: timeFramesData } = useQuery(GET_TIME_FRAMES, {
+  useQuery(GET_TIME_FRAMES, {
     fetchPolicy: "network-only",
     variables: {
       city,
@@ -235,27 +154,6 @@ const Checkout: FC<Props> = () => {
   const totalAmount = GET_TOTAL(data.cartItems);
 
   useEffect(() => {
-    let days: any = [];
-    let daysRequired = 4;
-    let counter = 0;
-    while (counter < daysRequired) {
-      const newDay = today.local().tz("America/La_Paz").add(counter, "days");
-      const currentDay = parseInt(newDay.format("D"));
-      const currentMonth = parseInt(newDay.format("M"));
-
-      if (currentDay === 1 && currentMonth === 1) {
-        counter++;
-        daysRequired++;
-        continue;
-      }
-
-      if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
-        days.push(newDay);
-      }
-      counter++;
-    }
-    setDaysAvailable(days);
-
     (window as any).updateMapUsed = () => setMapUsed(true);
     document.title = CHECKOUT_TITLE;
     (window as any).orderData = {};
@@ -268,6 +166,7 @@ const Checkout: FC<Props> = () => {
               parent_ids: params.get("id"),
             },
           });
+          setLoading(false);
           setResult(
             response.data.todotixPayment.map((co: any) => ({
               entity_id: co.entity_id,
@@ -277,6 +176,7 @@ const Checkout: FC<Props> = () => {
           window.history.pushState("checkout", "Tienda Sofia - Checkout", "/checkout");
           history.push(`/gracias?ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
         } catch (e) {
+          setLoading(false);
           showError();
         }
       })();
@@ -284,6 +184,9 @@ const Checkout: FC<Props> = () => {
       // if this is not a todotix redirect then get user details
       getDetails();
     }
+
+    const body = document.querySelector("body");
+    if (body && window.innerWidth >= 768) body.style.overflow = "unset";
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -300,6 +203,7 @@ const Checkout: FC<Props> = () => {
     if (order) {
       (async () => {
         try {
+          setLoading(true);
           setProcessing(true);
           const response = await createOrder();
           response.data.createOrder.forEach((co: any) => {
@@ -314,6 +218,7 @@ const Checkout: FC<Props> = () => {
             );
           });
           if (orderData.payment && orderData.payment.method === "todotix") {
+            setLoading(false);
             getTodotixLink({
               variables: {
                 orderIds: response.data.createOrder.map((co: any) => co.entity_id),
@@ -328,12 +233,14 @@ const Checkout: FC<Props> = () => {
             );
             emptyCart();
             setProcessing(false);
+            setLoading(false);
             const pickup = agency ? agency : "";
             history.push(`/gracias?ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
           }
         } catch (e) {
           showError();
           setProcessing(false);
+          setLoading(false);
         }
       })();
     }
@@ -343,6 +250,7 @@ const Checkout: FC<Props> = () => {
   useEffect(() => {
     if (todotixData && todotixData.todotix) {
       setProcessing(false);
+      setLoading(false);
       emptyCart();
       if (todotixData.todotix.url_pasarela_pagos) {
         setShowTodotixPayment(true);
@@ -361,7 +269,7 @@ const Checkout: FC<Props> = () => {
       setShippingMethod(ShippingMethod.Delivery);
     }
   }, [agency]);
-
+  
   useEffect(() => {
     if (selectedTimeFrame?.turno?.inicio && selectedTimeFrame?.turno?.fin) {
       orderData.vh_inicio = selectedTimeFrame.turno.inicio;
@@ -371,7 +279,7 @@ const Checkout: FC<Props> = () => {
   }, [selectedTimeFrame]);
 
   useEffect(() => {
-    if (orderData?.shipping && deliveryDate) {
+    if (deliveryDate) {
       orderData.delivery_date = dayjs(deliveryDate).toISOString();
       // calculate time frames for deliveryDate
       const dateComparator: dayjs.OpUnitType = "days";
@@ -701,7 +609,7 @@ const Checkout: FC<Props> = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <Wrapper>
+      <SC.Wrapper>
         <ConfirmAddress
           address={orderData.shipping && orderData.shipping.id && orderData.shipping.street ? orderData.shipping.street.replace(/\|/g, " ") : ""}
           visible={confirmModalVisible}
@@ -710,79 +618,99 @@ const Checkout: FC<Props> = () => {
         />
         <div className="main-container">
           {!showTodotixPayment && !result.length && (
-            <CheckoutWrapper>
-              <ShippingMethodWrapper>
-                {shippingMethod === ShippingMethod.Pickup && (
-                  <>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M19.5 0.75H4.5L0.75 7.5C0.75 9.5715 2.4285 11.25 4.5 11.25C6.5715 11.25 8.25 9.5715 8.25 7.5C8.25 9.5715 9.9285 11.25 12 11.25C14.0715 11.25 15.75 9.5715 15.75 7.5C15.75 9.5715 17.4285 11.25 19.5 11.25C21.5715 11.25 23.25 9.5715 23.25 7.5L19.5 0.75Z"
-                        stroke="#E30613"
-                        stroke-width="2"
-                        stroke-miterlimit="10"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+            <SC.CheckoutWrapper>
+              <SC.ShippingMethodWrapper>
+                <h4>
+                  {step === Steps.Shipping && shippingMethod === ShippingMethod.Pickup ? t("checkout.title_pickup"):
+                    step === Steps.Shipping && shippingMethod === ShippingMethod.Delivery ? t("checkout.title_delivery"):
+                      step === Steps.Cart ? t("checkout.cart.title")
+                      : t("checkout.title")}
+                                    
+                </h4>
+                {step === Steps.Cart ? 
+                  <a href="#" onClick={() => toggleCartModal()}>{t("checkout.cart.modify_cart")}</a>
+                  : <a href="#" onClick={() => handleNext(history, `cart&next=${Steps[step]}`)}>{t("checkout.cart.check_cart")}</a>
+                }
+              </SC.ShippingMethodWrapper>
+              <SC.Cols>
+                <SC.Col1>
+                  {step === Steps.Billing ? (
+                    <SC.Steps>
+                      <Billing updateOrder={updateOrderData } />
+                    </SC.Steps>
+                  ) : null}
+
+                  {step === Steps.Shipping ? (
+                    <SC.Steps>
+                      <Shipping
+                        updateOrder={updateOrderData}
+                        confirmModalVisible={confirmModalVisible}
+                        setOrderIsReady={setOrderIsReady}
                       />
-                      <path d="M20.25 14.25V23.25H3.75V14.25" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                      <path d="M9.75 23.25V17.25H14.25V23.25" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+                    </SC.Steps>
+                  ) : null}
 
-                    <h4>Retira al Paso</h4>
-                  </>
-                )}
-                {shippingMethod === ShippingMethod.Delivery && (
-                  <>
-                    <svg width="24" height="26" viewBox="0 0 36 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18.1905 2L2 14.9524V36H13.3333V24.6667H23.0476V36H34.381V14.9524L18.1905 2Z" stroke="#E30613" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="square" />
-                    </svg>
+                  {step === Steps.Timeframe ? (
+                    <SC.Steps>
+                      <DeliveryDate
+                        daysAvailable={daysAvailable}
+                        timeFrames={filteredTimeFrames}
+                        selectedTimeFrame={selectedTimeFrame}
+                        setSelectedTimeFrame={setSelectedTimeFrame}
+                        setDeliveryDate={setDeliveryDate}
+                        deliveryDate={deliveryDate}
+                      />                      
+                    </SC.Steps>
+                  ): null}
 
-                    <h4>Envío a domicilio</h4>
-                  </>
-                )}
-              </ShippingMethodWrapper>
-              <Title>
-                <h2>{t("checkout.title")}</h2>
-                <button onClick={() => toggleCartModal()}>{t("checkout.modify_cart")}</button>
-              </Title>
-              <Cols>
-                <Col1>
-                  <Steps>
-                    <Billing updateOrder={updateOrderData} localUserData={localUserData} />
-                    <Line />
-                    <Shipping
-                      updateOrder={updateOrderData}
-                      orderData={orderData}
-                      billingChange={billingChange}
-                      confirmModalVisible={confirmModalVisible}
-                      localUserData={localUserData}
-                      setOrderIsReady={setOrderIsReady}
-                    />
-                    {!agency && (
-                      <>
-                        <Line />
-                        <DeliveryDate
-                          daysAvailable={daysAvailable}
-                          timeFrames={filteredTimeFrames}
-                          selectedTimeFrame={selectedTimeFrame}
-                          setSelectedTimeFrame={setSelectedTimeFrame}
-                          setDeliveryDate={setDeliveryDate}
-                          deliveryDate={deliveryDate}
-                        />
-                      </>
-                    )}
-                    <Line />
-                    <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userData={localUserData} userDetails={userDetails} />
-                  </Steps>
-                </Col1>
-                <Col2>
-                  <Ticket ready={orderIsReady} userDetails={userDetails} userData={localUserData} processing={processing} updateOrder={updateOrderData} order={showConfirmAddress} />
-                </Col2>
-              </Cols>
-            </CheckoutWrapper>
+                  {step === Steps.Payment ? (
+                    <SC.Steps>
+                      <Payment
+                        setOrderIsReady={setOrderIsReady}
+                        totalAmount={totalAmount}
+                        updateOrder={updateOrderData}
+                        userDetails={userDetails}
+                        orderData={orderData}
+                      />
+                    </SC.Steps>
+                  ) : null}
+
+                  {step === Steps.Review ? (
+                    <SC.Steps>
+                      <Review
+                        orderData={orderData}
+                        confirmOrder={showConfirmAddress}
+                        deliveryDate={deliveryDate}
+                        selectedTimeFrame={selectedTimeFrame}
+                        updateOrder={updateOrderData}
+                      />
+                    </SC.Steps>
+                  ) : null}
+
+                  {step === Steps.Cart ? (
+                    <SC.Steps>
+                      <Cart showGoBack updateOrder={updateOrderData} />
+                    </SC.Steps>
+                  ): null}
+                </SC.Col1>
+                <SC.Col2>
+                  <Ticket
+                    ready={orderIsReady}
+                    userDetails={userDetails}
+                    userData={localUserData}
+                    processing={processing}
+                    updateOrder={updateOrderData}
+                    order={showConfirmAddress}
+                    step={step}
+                  />
+                </SC.Col2>
+              </SC.Cols>
+            </SC.CheckoutWrapper>
           )}
+
           {showTodotixPayment && <iframe src={todotixData.todotix.url_pasarela_pagos}></iframe>}
         </div>
-      </Wrapper>
+      </SC.Wrapper>
     </Suspense>
   );
 };

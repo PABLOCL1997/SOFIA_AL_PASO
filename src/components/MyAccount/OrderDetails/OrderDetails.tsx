@@ -94,7 +94,6 @@ const OrderDetails: FC<Props> = ({ data, setOpenDetalle, userData, repeatOrder }
 
       const showList = orderData.order.items.map((item: any) => {
         const found = search("sku", item.sku, c.products.rows);
-        console.log(item);
         if (found) {
           return {
             ...item,

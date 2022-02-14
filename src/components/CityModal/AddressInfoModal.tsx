@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useUser from "../../hooks/useUser";
 import { BREAKPOINT } from "../../utils/constants";
-import { ShippingOptions } from "../Checkout/Shipping/types";
+import { ShippingOptions } from "../Checkout/Steps/Shipping/types";
 
 import * as SC from "./styles";
 import * as Icons from "../../assets/employee/Icons";

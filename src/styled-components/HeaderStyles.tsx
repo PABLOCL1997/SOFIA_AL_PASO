@@ -70,7 +70,7 @@ export const Fixed = styled.div<{ shadow: boolean }>`
   }
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{ isCheckout: boolean }>`
   display: grid;
   padding: 15px 40px;
   align-items: center;
@@ -90,6 +90,10 @@ export const Container = styled.div`
     grid-template-rows: 1fr 36px;
     gap: 30px 7px;
     padding: 40px 15px 30px 15px;
+    ${ ({ isCheckout }) => isCheckout ? `
+      padding: 40px 15px 10px 15px;
+      row-gap: 11px;
+    ` : null }
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.07);
     top: 0;
     left: 0;
@@ -171,13 +175,22 @@ export const HeaderClipText = styled.span`
   height: 100%;
 `;
 
-export const Logo = styled.div<{ isB2E?: boolean }>`
+export const Logo = styled.div<{ isB2E?: boolean, isCheckout: boolean }>`
   cursor: pointer;
 
   img {
     height: ${({ isB2E }) => (!isB2E ? "30px" : "34px")};
   }
 
+  ${({ isCheckout}) => isCheckout ? `
+  @media screen and (max-width: ${BREAKPOINT}) {
+    display: grid;
+    order: 0;
+    grid-column: 3 / 4;
+    margin-left: 15px;
+  }
+  
+  `:`
   @media screen and (max-width: ${BREAKPOINT}) {
     order: 1;
 
@@ -189,6 +202,8 @@ export const Logo = styled.div<{ isB2E?: boolean }>`
       gap: 5px;
     }
   }
+  `
+} 
 `;
 
 export const LogoText = styled.span`
@@ -253,7 +268,7 @@ export const CartWrapper = styled.div<{ big?: boolean; onSidebar?: boolean }>`
   &:hover {
     opacity: 0.8;
   }
-  @media (max-width: ${BREAKPOINT}) {
+  @media screen and (max-width: ${BREAKPOINT}) {
     display: flex;
     justify-content: center;
     order: ${({ onSidebar }) => (onSidebar ? "unset" : 2)};
@@ -277,12 +292,12 @@ export const CartText = styled.span`
   justify-content: center;
   border: 1px solid ${customStyles.red};
 
-  @media (max-width: ${BREAKPOINT}) {
+  @media screen and (max-width: ${BREAKPOINT}) {
     right: 0;
   }
 `;
 
-export const MenuWrapper = styled.div<any>`
+export const MenuWrapper = styled.div<{ isCheckout: boolean }>`
   display: flex;
   justify-content: center;
   cursor: pointer;
@@ -295,9 +310,19 @@ export const MenuWrapper = styled.div<any>`
     opacity: 0.8;
   }
 
+
+
+  ${({ isCheckout}) => isCheckout ? `
+  display: grid;
   @media screen and (max-width: ${BREAKPOINT}) {
-    order: 2;
+    order: 0;
+    grid-column: 6 / 7 ;
   }
+  `:`
+    @media screen and (max-width: ${BREAKPOINT}) {
+      order: 2;
+    }
+  `}
 `;
 
 export const SideMenu = styled.div<any>`
@@ -460,7 +485,7 @@ export const InputGroup = styled.div`
     }
   }
 
-  @media (max-width: ${BREAKPOINT}) {
+  @media screen and (max-width: ${BREAKPOINT}) {
     order: 3;
     grid-column: 1 / -1;
     margin-right: 0;
@@ -495,7 +520,7 @@ export const InputGroupSearchInput = styled.input`
     font-family: MullerRegular;
   }
 
-  @media (max-width: ${BREAKPOINT}) {
+  @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0 25px;
   }
 `;
@@ -522,3 +547,68 @@ export const Category = styled.div<{ showSubCategories: boolean; isVisible: bool
 export const Subcategory = styled.li`
   margin: 14px 0px 14px 50px;
 `;
+
+const StepDesktop = `
+  width: 100%;
+  height: 44px;
+`
+
+const StepMobile = `
+  height: 16px;
+`
+
+const backgroundImage = (url: string) => `
+  background: url('${url}') no-repeat center center / contain;
+`
+
+export const Steps = {
+  Container: styled.nav`
+    display: grid;
+    grid-column: 2 / 7;
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      display: flex;
+      justify-content: center;
+      grid-column: 1 / 7;
+      order: 2;
+    }
+
+  `,
+  First: styled.picture`
+    ${StepDesktop}
+    ${backgroundImage('/images/checkout/steps/first-desktop.svg')}
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      ${StepMobile}
+      ${backgroundImage('/images/checkout/steps/first-mobile.svg')}
+    }
+  `,
+  Second: styled.picture`
+    ${StepDesktop}
+    ${backgroundImage('/images/checkout/steps/second-desktop.svg')}
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      ${StepMobile}
+      ${backgroundImage('/images/checkout/steps/second-mobile.svg')}
+    }  
+  `,
+  Third: styled.picture`
+    ${StepDesktop}
+    ${backgroundImage('/images/checkout/steps/third-desktop.svg')}
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      ${StepMobile}
+      ${backgroundImage('/images/checkout/steps/third-mobile.svg')}
+    }    
+  `,
+  Fourth: styled.picture`
+    ${StepDesktop}
+    ${backgroundImage('/images/checkout/steps/fourth-desktop.svg')}
+
+    @media screen and (max-width: ${BREAKPOINT}) {
+      ${StepMobile}
+      ${backgroundImage('/images/checkout/steps/fourth-mobile.svg')}
+    }    
+  `
+  
+}
