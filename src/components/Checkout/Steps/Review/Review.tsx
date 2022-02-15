@@ -192,7 +192,7 @@ const Review = ({
 
             <SC.Footer.Wrapper>
                 <SC.Footer.Total>
-                    <em>{t("ticket.total")}</em>
+                    <em>{t("checkout.ticket.total")}</em>
                     <strong>Bs. {totalAmount}</strong>
                 </SC.Footer.Total>
                 <SC.Footer.Cta>
