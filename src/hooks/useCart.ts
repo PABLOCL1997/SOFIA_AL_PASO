@@ -24,6 +24,7 @@ type CartReturn = {
   removeRow: Function;
   empty: Function;
   closeCartModal: Function;
+  checkCart: Function;
   discountAmount: number;
   removeCoupon: Function;
 };
@@ -322,6 +323,7 @@ const useCart = (): CartReturn => {
     deleteItem,
     empty,
     closeCartModal,
+    checkCart,
     removeCoupon,
   };
 };

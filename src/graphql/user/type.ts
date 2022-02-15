@@ -54,3 +54,16 @@ export type UserType = {
   employee_old?: string;
   employee?: string;
 };
+
+export type UserDetails = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  nit: string;
+  phone: string;
+  addressId: number;
+  employee_old: string;
+  employee: string;
+  addresses: Array<AddressType>;
+};

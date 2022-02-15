@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { SET_USER } from "../graphql/user/mutations";
 import { CREATE_ORDER, EMPTY_CART, TODOTIX_ORDER_INFO, SET_TEMP_CART } from "../graphql/cart/mutations";
-import { GET_CART_ITEMS, TODOTIX, GET_TOTAL } from "../graphql/cart/queries";
+import { GET_CART_ITEMS, TODOTIX, GET_TOTAL, CHECK_CART } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
@@ -23,6 +23,7 @@ import * as SC from "../styled-components/pages/checkout";
 import { getStep, handleNext, Steps } from "../types/Checkout";
 import { Location } from "../context/Location";
 import { Courtain } from "../context/Courtain";
+import { UserDetails } from "../graphql/user/type";
 
 const isoWeek = require("dayjs/plugin/isoWeek");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
@@ -89,7 +90,7 @@ const Checkout: FC<Props> = () => {
   const minimumPrice = useMinimumPrice();
 
   const [processing, setProcessing] = useState(false);
-  const [userData, setUserData] = useState({});
+
   const [order, setOrder] = useState<OrderData>();
   const [orderData, setOrderData] = useState<any>({});
   const [orderIsReady, setOrderIsReady] = useState<boolean>(true);
@@ -113,10 +114,10 @@ const Checkout: FC<Props> = () => {
   const { data: userDetails } = useQuery(DETAILS, {});
   const { data } = useQuery(GET_CART_ITEMS);
 
-  const [getDetails] = useLazyQuery(DETAILS, {
+  const [getDetails, { data: userData }] = useLazyQuery<UserDetails>(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
-      setUserData(d.details);
+
     },
   });
   const [getTodotixLink, { data: todotixData }] = useLazyQuery(TODOTIX);
@@ -150,6 +151,96 @@ const Checkout: FC<Props> = () => {
       setTimeFrames(d.timeFrames);
     },
   });
+
+  const [checkAndNewOrder] = useLazyQuery(CHECK_CART, {
+    fetchPolicy: "network-only",
+    variables: {
+      city,
+      id_price_list: idPriceList,
+      agency,
+      cart: JSON.stringify(
+        data?.cartItems?.map((p: ProductType) => ({
+          entity_id: p.entity_id,
+          qty: p.qty,
+        }))
+      ),
+    },
+    onCompleted: (data: any) => {
+      const cartItems: ProductType[] = JSON.parse(data.checkCart.cart)
+      if (cartItems && cartItems.length > 0) {
+        setConfirmModalVisible(false);
+        const items: Array<string> = validateOrder(cartItems);
+        // control: no items
+        if (!items.length) return;
+        // show modal only on b2c, not on b2b nor pickup
+        if (!(idPriceList > 0 || !!agency)) setConfirmModalVisible(true);
+        
+        const special_address = idPriceList > 0;
+        const agencyObj = agency ? search("key", agency || "V07", agencies) : null;
+        
+        if (!items.length) return;
+
+        const firstname = escapeSingleQuote(orderData.shipping.firstname)
+        const lastname = escapeSingleQuote(orderData.shipping.lastname)
+        const email = orderData?.billing?.email;
+        const country_id = "BO"
+        const street = escapeSingleQuote(
+          special_address ? orderData.shipping.street.split("|")[0] :
+            agency ? agencyObj.street : orderData.shipping.id ?
+              orderData.shipping.street : `${orderData.shipping.address || ""}`
+        )
+        const latitude = agency ? String(agencyObj.latitude) : String((window as any).latitude)
+        const longitude = agency ? String(agencyObj.longitude) : String((window as any).longitude)
+
+        setOrder({
+          DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
+          agencia: agency,
+          discount_amount: parseFloat(orderData.coupon ? orderData.coupon.discount : 0),
+          discount_type: orderData?.coupon?.type || "",
+          coupon_code: orderData?.coupon?.coupon || "",
+          items,
+          delivery_price: 0,
+          customer_email: email,
+          customer_firstname: firstname,
+          customer_lastname: lastname,
+          facturacion: JSON.stringify({
+            addressId: userData?.addressId || 0,
+            firstname: firstname,
+            lastname: lastname,
+            fax: orderData.billing.nit,
+            email,
+            telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
+            country_id,
+            city: escapeSingleQuote(localUserData?.userInfo[0]?.cityName || "SC"),
+            latitude,
+            longitude,
+            street,
+            reference: agency ? agencyObj.reference : escapeSingleQuote(orderData.shipping.reference),
+          }),
+          envio: JSON.stringify({
+            entity_id: orderData.shipping.id,
+            firstname: escapeSingleQuote(orderData.shipping.firstname),
+            lastname: escapeSingleQuote(orderData.shipping.lastname),
+            fax: orderData.shipping.nit,
+            email,
+            telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
+            street,
+            city: escapeSingleQuote(orderData.shipping.city || localUserData.userInfo[0].cityName || "SC"),
+            region: escapeSingleQuote(orderData.shipping.reference),
+            country_id,
+            latitude,
+            longitude,
+          }),
+          payment_method: orderData.payment ? orderData.payment.method : "cashondelivery",
+          vh_inicio: orderData.vh_inicio,
+          vh_fin: orderData.vh_fin,
+          delivery_date: orderData.delivery_date,
+        });
+      } else {
+        showError();
+      }
+    }
+  })
 
   const totalAmount = GET_TOTAL(data.cartItems);
 
@@ -337,7 +428,7 @@ const Checkout: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deliveryDate]);
 
-  const validateOrder = () => {
+  const validateOrder = (cartItems: ProductType[]) => {
     let items: Array<string> = [];
     const special_address = idPriceList > 0;
     const shippingServiceItem: EBSProduct = {
@@ -348,32 +439,30 @@ const Checkout: FC<Props> = () => {
       PRECIO: 15,
     };
 
-    data &&
-      data.cartItems &&
-      data.cartItems.forEach((product: ProductType) => {
-        items.push(
-          JSON.stringify({
-            entity_id: product.entity_id,
-            sku: product.sku,
-            category: product.category_name ? product.category_name.toLowerCase().trim() : "",
-            name: product.name,
-            price: product.special_price ? product.special_price : product.price,
-            quantity: product.qty,
-            type_id: "simple",
-            addQty: true,
-            toSerialize: {
-              info_buyRequest: {
-                uenc: "",
-                product: product.entity_id,
-                form_key: "",
-                related_product: "",
-                super_attribute: {},
-                qty: product.qty,
-              },
+    cartItems.forEach((product: ProductType) => {
+      items.push(
+        JSON.stringify({
+          entity_id: product.entity_id,
+          sku: product.sku,
+          category: product.category_name ? product.category_name.toLowerCase().trim() : "",
+          name: product.name,
+          price: product.special_price || product.price,
+          quantity: product.qty,
+          type_id: "simple",
+          addQty: true,
+          toSerialize: {
+            info_buyRequest: {
+              uenc: "",
+              product: product.entity_id,
+              form_key: "",
+              related_product: "",
+              super_attribute: {},
+              qty: product.qty,
             },
-          })
-        );
-      });
+          },
+        })
+      );
+    });
 
     // if it isn't a pickup order
     // and order price is less than minimum price add the shipping item
@@ -506,61 +595,7 @@ const Checkout: FC<Props> = () => {
   };
 
   const saveOrder = () => {
-    setConfirmModalVisible(false);
-    const items: Array<string> = validateOrder();
-    const special_address = idPriceList > 0;
-    const agencyObj = agency ? search("key", agency || "V07", agencies) : null;
-
-    if (!items.length) return;
-
-    setOrder({
-      DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
-      agencia: agency,
-      discount_amount: parseFloat(orderData.coupon ? orderData.coupon.discount : 0),
-      discount_type: orderData.coupon ? orderData.coupon.type : "",
-      coupon_code: orderData.coupon ? orderData.coupon.coupon : "",
-      items: items,
-      delivery_price: 0,
-      customer_email: orderData.billing.email,
-      customer_firstname: escapeSingleQuote(orderData.billing.firstname),
-      customer_lastname: escapeSingleQuote(orderData.billing.lastname),
-      facturacion: JSON.stringify({
-        addressId: userData && (userData as any).addressId ? (userData as any).addressId : 0,
-        firstname: escapeSingleQuote(orderData.billing.firstname),
-        lastname: escapeSingleQuote(orderData.billing.lastname),
-        fax: orderData.billing.nit,
-        email: orderData.billing.email,
-        telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
-        country_id: "BO",
-        city: escapeSingleQuote(localUserData && localUserData.userInfo && localUserData.userInfo.length ? localUserData.userInfo[0].cityName : "-"),
-        latitude: agency ? String(agencyObj.latitude) : String((window as any).latitude),
-        longitude: agency ? String(agencyObj.longitude) : String((window as any).longitude),
-        street: escapeSingleQuote(
-          special_address ? orderData.shipping.street.split("|")[0] : agency ? agencyObj.street : orderData.shipping.id ? orderData.shipping.street : `${orderData.shipping.address || ""}`
-        ),
-        reference: agency ? agencyObj.reference : escapeSingleQuote(orderData.shipping.reference),
-      }),
-      envio: JSON.stringify({
-        entity_id: orderData.shipping.id,
-        firstname: escapeSingleQuote(orderData.shipping.firstname),
-        lastname: escapeSingleQuote(orderData.shipping.lastname),
-        fax: orderData.shipping.nit,
-        email: orderData.billing.email,
-        telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
-        street: escapeSingleQuote(
-          special_address ? orderData.shipping.street.split("|")[0] : agency ? agencyObj.street : orderData.shipping.id ? orderData.shipping.street : `${orderData.shipping.address || ""}`
-        ),
-        city: escapeSingleQuote(orderData.shipping.city || (localUserData && localUserData.userInfo && localUserData.userInfo.length ? localUserData.userInfo[0].cityName : "-")),
-        region: escapeSingleQuote(orderData.shipping.reference),
-        country_id: "BO",
-        latitude: agency ? String(agencyObj.latitude) : String((window as any).latitude),
-        longitude: agency ? String(agencyObj.longitude) : String((window as any).longitude),
-      }),
-      payment_method: orderData.payment ? orderData.payment.method : "cashondelivery",
-      vh_inicio: orderData.vh_inicio,
-      vh_fin: orderData.vh_fin,
-      delivery_date: orderData.delivery_date,
-    });
+    checkAndNewOrder();
   };
 
   const updateOrderData = (key: string, values: any) => {
@@ -591,20 +626,6 @@ const Checkout: FC<Props> = () => {
     };
 
     setOrderData((window as any).orderData);
-  };
-
-  const showConfirmAddress = () => {
-    const items: Array<string> | boolean = validateOrder();
-    let b2e = false;
-    try {
-      b2e = idPriceList > 0 || !!agency;
-    } catch (e) {
-      b2e = false;
-    }
-
-    if (!b2e && items.length) setConfirmModalVisible(true);
-    if (b2e && items.length) saveOrder();
-    // setConfirmModalVisible(true);
   };
 
   return (
@@ -679,7 +700,7 @@ const Checkout: FC<Props> = () => {
                     <SC.Steps>
                       <Review
                         orderData={orderData}
-                        confirmOrder={showConfirmAddress}
+                        confirmOrder={saveOrder}
                         deliveryDate={deliveryDate}
                         selectedTimeFrame={selectedTimeFrame}
                         updateOrder={updateOrderData}
@@ -700,7 +721,7 @@ const Checkout: FC<Props> = () => {
                     userData={localUserData}
                     processing={processing}
                     updateOrder={updateOrderData}
-                    order={showConfirmAddress}
+                    order={saveOrder}
                     step={step}
                   />
                 </SC.Col2>
