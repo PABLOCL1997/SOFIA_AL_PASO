@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { handleNext, ICoupon } from "../../../../types/Checkout";
@@ -8,60 +8,57 @@ import edit from "../../../../assets/images/edit-checkout.svg";
 
 import * as SC from "./style";
 import useCart from "../../../../hooks/useCart";
-import useCityPriceList from "../../../../hooks/useCityPriceList";
-import { TimeFrame } from "../../../../types/TimeFrame";
 import { weekdays } from "../../../../utils/validations";
 import Cart from "../Cart";
+import { OrderData } from "../../../../types/Order";
+import useUser from "../../../../hooks/useUser";
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
 
 const previousStep = "payment";
 const billingFields = ["firstname", "lastname", "email", "nit"];
-const shippingFields = ["firstname", "lastname", "phone", "nit", "street", "city", "reference"];
 const paymentFields = ["method"];
-const billing = "billing";
-const timeframe = "timeframe";
-const shipping = "shipping";
-const payment = "payment";
+const redirectReview = '&next=review'
+const billing = `billing${redirectReview}` ;
+const timeframe = `timeframe${redirectReview}`;
+const shipping = `shipping${redirectReview}`;
+const payment = `payment${redirectReview}`;
 
-const getDeliveryDate = (deliveryDate: dayjs.Dayjs | null): string | null => {
-    if (!deliveryDate) return null;
-    return `${deliveryDate?.get("date") < 10 ?
-                `0${deliveryDate?.get("date")}`:
-                    deliveryDate?.get("date")}/${deliveryDate?.get("month") + 1 < 10 ?
-                        `0${deliveryDate?.get("month") + 1}`:
-                            deliveryDate?.get("month") + 1}` || null
+const getDeliveryDayOfWeek = (deliveryDate: string): string | null => {
+    const date = dayjs(deliveryDate);
+    if (!date || !date.isValid()) return null;
+    return weekdays[date.get("d")] || null
+}
+const getDeliveryDate = (deliveryDate: string): string | null => {
+    const date = dayjs(deliveryDate);
+    if (!date || !date.isValid()) return null;
+    return `${date?.get("date") < 10 ?
+                `0${date?.get("date")}`:
+                    date?.get("date")}/${date?.get("month") + 1 < 10 ?
+                        `0${date?.get("month") + 1}`:
+                            date?.get("month") + 1}` || null
   }
   
 
 const Review = ({
         orderData,
         confirmOrder,
-        deliveryDate, 
-        selectedTimeFrame,
         updateOrder
     }: {
-        orderData: any,
+        orderData: OrderData,
         confirmOrder: Function
-        deliveryDate: dayjs.Dayjs | null,
-        selectedTimeFrame: TimeFrame | null,
         updateOrder: (field: string, values: ICoupon) => void
     }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const { totalAmount } = useCart();
-    const { agency } = useCityPriceList();
+    const { store } = useUser();
     
     const paymentMethod: string = useMemo(() => {
         return t("checkout.payment." + orderData?.payment?.method || "checkmo") || ""
     }, [t, orderData, orderData?.payment?.method]);
 
-    useEffect(() => {
-        if (!orderData.shipping
-            || !orderData.billing
-            || !orderData.payment) {
-            history.push("/checkout");
-        }
-    }, [history, orderData]);
+    const shippingFields = useMemo(() => store === 'EXPRESS' ? ["firstname", "lastname", "phone", "nit", "street", "city"]
+    :["firstname", "lastname", "phone", "nit", "street", "city", "reference"], [store]);
 
     return (
         <>
@@ -83,13 +80,14 @@ const Review = ({
             </SC.Title.Container>
 
             <SC.Content.Billing.Fields>
-                {orderData?.billing && billingFields.map((field: string) => (
+                {billingFields.map((field: string) => (
                     <SC.Content.InputGroup key={field} >
                         <label>{t("checkout.billing." + field)}</label>
                         <input
                             readOnly
                             name={`billing-${field}`}
-                            value={orderData?.billing[field] || ""}
+                            // @ts-ignore
+                            value={orderData.billing[field] || ""}
                             pattern={field === "nit" ? "[0-9]*" : ""}
                             type={field === "nit" ? "number" : "text"}
                             placeholder={t("checkout.billing." + field)}
@@ -108,28 +106,33 @@ const Review = ({
             </SC.Title.Container>
 
             <SC.Content.Shipping.Fields>
-            {orderData?.shipping && shippingFields.map((key: string) => {
-                return orderData?.shipping[key] && (
+            {shippingFields.map((key: string) =>
                   <SC.Content.InputGroup key={key}>
                     <label>{t("checkout.delivery." + key)}</label>
                     {(key === "street" || key === "reference") && (
-                      <input readOnly name={`shipping-${key}`} value={orderData.shipping[key] || ""} type="text" placeholder={t("checkout.delivery." + key + "_ph")} />
+                        <input
+                            readOnly
+                            name={`shipping-${key}`}
+                            value={orderData.shipping[key] || ""}
+                            type="text"
+                            placeholder={t("checkout.delivery." + key )}
+                        />
                     )}
                     {key !== "street" && key !== "street" && key !== "reference" && (
                       <input
                         readOnly
                         name={`shipping-${key}`}
+                        // @ts-ignore
                         value={key === "phone" && orderData?.shipping[key]?.length > 0 ? String(orderData.shipping[key]).split("|")[0] : orderData.shipping[key] || ""}
                         type="text"
                         placeholder={t("checkout.delivery." + key)}
                       />
                     )}
                   </SC.Content.InputGroup>
-                );
-              })}                
+            )}                
             </SC.Content.Shipping.Fields>
             
-            {!agency && <>
+            {(store === 'B2E' || store === 'ECOMMERCE') && <>
                 <SC.Title.Container>
                     <SC.Title.Label>
                         {t("checkout.delivery_datetime.title")}
@@ -142,18 +145,16 @@ const Review = ({
                 <SC.Content.Timeframe.Fields>
                     <SC.Content.Timeframe.Info key={"delivery_date"} >
                         {/* e.g Jueves */}
-                        {deliveryDate ? 
-                            weekdays[deliveryDate.get("d")]
-                        : null}
+                        {getDeliveryDayOfWeek(orderData?.delivery_date || "")}
                         {" "}
                         {/* e.g 04/02 */}
-                        {getDeliveryDate(deliveryDate)}
-                        {" - "}
+                        {getDeliveryDate(orderData?.delivery_date || "")}
+                        {" "}
                         {/* e.g 13:00 - 17:00 */}
-                        {selectedTimeFrame?.turno?.inicio &&
-                            selectedTimeFrame?.turno?.fin ?
-                                `${selectedTimeFrame?.turno?.inicio} - ${selectedTimeFrame?.turno?.fin} hs`
-                        : null}
+                        {orderData.vh_inicio}
+                        {" - "}
+                        {orderData.vh_fin}
+
                     </SC.Content.Timeframe.Info>
                 </SC.Content.Timeframe.Fields>
             </>}
@@ -169,7 +170,7 @@ const Review = ({
             </SC.Title.Container>
 
             <SC.Content.Payment.Fields>
-                {orderData?.payment?.method && paymentFields.map((field: string) => (
+                {paymentFields.map((field: string) => (
                     <SC.Content.InputGroup key={field} >
                         <label>{t("checkout.payment.title").replace("3. ", "")}</label>
                         <input

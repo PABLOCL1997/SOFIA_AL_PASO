@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useMemo } from "react";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
+import { OrderType } from "../types/Order";
 
 interface IUseUser {
   toggleCartModal: Function;
@@ -11,6 +12,7 @@ interface IUseUser {
   hideAddressInfo: Function;
   logout: Function;
   user: any;
+  store: OrderType;
   coupon: string | null;
 }
 
@@ -56,6 +58,10 @@ const useUser = (): IUseUser => {
     },
   });
 
+  const store: OrderType = useMemo(() => {
+    return user?.userInfo[0]?.store || 'ECOMMERCE';
+  }, [user])
+
   return {
     toggleCartModal,
     toggleCityModal,
@@ -64,6 +70,7 @@ const useUser = (): IUseUser => {
     hideAddressInfo,
     logout,
     user,
+    store,
     coupon
   };
 };

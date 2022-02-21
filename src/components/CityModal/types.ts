@@ -6,6 +6,8 @@ export enum Steps {
 export enum ShippingMethod {
   Delivery,
   Pickup,
+  Express,
+  Store,
 }
 
 export enum Changes {

@@ -76,19 +76,17 @@ export const Content = {
   InputGroup: styled.div<{ key: string }>`
     display: flex;
     flex-direction: column;
+    padding-left: 20px;
     label {
       font-family: MullerMedium;
       font-size: 10px;
       line-height: 10px;
       letter-spacing: 0.01em;
-      text-transform: uppercase;
       color: var(--font);
-      padding-left: 20px;
     }
     input,
     em {
       background: none;
-      border-radius: 44px;
       font-family: MullerMedium;
       font-size: 14px;
       line-height: 14px;
@@ -96,7 +94,7 @@ export const Content = {
       align-items: center;
       letter-spacing: 0.01em;
       color: var(--black);
-      padding: 12px 20px;
+      padding: 0 0 6px;
       border: 0;
       margin-top: 10px;
     }

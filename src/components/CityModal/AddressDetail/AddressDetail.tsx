@@ -1,213 +1,29 @@
 import React, { FC, useState, useEffect } from "react";
-import styled from "styled-components";
 import GoogleMapReact from "google-map-react";
-import Marker, { Maps } from "../MapMarker";
-import { cities, findCity, findKeyByCity, KeyValue } from "../../utils/string";
-import StarIcon from "../../assets/images/star.svg";
+import Marker, { Maps } from "../../MapMarker";
+import { cities, findCity, findKeyByCity, KeyValue } from "../../../utils/string";
+import StarIcon from "../../../assets/images/star.svg";
 
-import useCityPriceList from "../../hooks/useCityPriceList";
-import { Changes, ShippingMethod, Steps } from "./types";
+import useCityPriceList from "../../../hooks/useCityPriceList";
+import { Changes, ShippingMethod, Steps } from "../types";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/react-hooks";
-import { DETAILS, GET_USER } from "../../graphql/user/queries";
-import { SET_USER } from "../../graphql/user/mutations";
-import Agency from "../../types/Agency";
-import { AddressType, UserType } from "../../graphql/user/type";
-import { StarWrap, TooltipStar } from "./styles";
+import { DETAILS, GET_USER } from "../../../graphql/user/queries";
+import { SET_USER } from "../../../graphql/user/mutations";
+import Agency from "../../../types/Agency";
+import { AddressType, UserType } from "../../../graphql/user/type";
+import { StarWrap, TooltipStar } from "../styles";
 import { useTranslation } from "react-i18next";
 
-import { BREAKPOINT } from "../../utils/constants";
-import useMinimumPrice from "../../hooks/useMinimumPrice";
+import { OrderType } from "../../../types/Order";
+import Map, { Circle } from "../../Map";
+import { setLatLng, findNearestPointFromArray } from "../../../utils/googlemaps";
 
-const Wrapper = styled.div<{ withMap: boolean }>`
-  ${({ withMap }) =>
-    withMap
-      ? `
-            display: grid;
-            grid-template-columns: 300px 500px;       
-        `
-      : `
-            display: flex;
-            justify-content: center;
-        `}
+import PickupIcon from "../../../assets/images/ChooseShipping/pickup-icon";
+import DeliveryIcon from "../../../assets/images/ChooseShipping/delivery-icon";
+import ExpressIcon from "../../../assets/images/ChooseShipping/express-icon";
 
-  @media screen and (max-width: ${BREAKPOINT}) {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-  }
-`;
+import * as SC from "./style";
 
-const Selector = styled.div<{ withMap: boolean }>`
-  display: flex;
-  flex-direction: column;
-
-  ${({ withMap }) => withMap && `margin-right: 48px;`}
-
-  ${({ withMap }) =>
-    withMap
-      ? `
-    align-items: flex-start;
-    justify-content: flex-start;
-    `
-      : `
-    align-items: center;
-    justify-content: center;
-    `}
-
-    svg {
-    margin-top: 30px;
-    @media screen and (max-width: ${BREAKPOINT}) {
-      margin-top: 15px;
-      width: 30px;
-    }
-  }
-
-  a {
-    font-family: MullerMedium;
-
-    width: 100%;
-    ${({ withMap }) =>
-      withMap
-        ? `
-        margin: 24px 0 40px;
-        `
-        : `
-        margin: 24px 0 40px;
-        `}
-    font-size: 12px;
-    line-height: 16px;
-    /* identical to box height, or 133% */
-    color: var(--red);
-
-    text-align: center;
-
-    @media screen and (max-width: ${BREAKPOINT}) {
-      margin: 0px 0 10px;
-    }
-  }
-
-  button {
-    align-self: flex-end;
-    font-family: MullerBold;
-    text-transform: uppercase;
-    color: white;
-    ${({ withMap }) => (withMap ? `width: 100%;` : `width: 300px;`)}
-
-    height: 39px;
-    left: 260px;
-    top: 617px;
-
-    /* Rojo Sofía */
-    border: none;
-    background: #e30613;
-    box-shadow: 0px 8px 29px rgba(227, 6, 19, 0.39);
-    border-radius: 44px;
-
-    @media screen and (max-width: ${BREAKPOINT}) {
-      font-size: 12px;
-    }
-  }
-  @media screen and (max-width: ${BREAKPOINT}) {
-    align-items: center;
-    justify-content: center;
-    margin-right: 0;
-  }
-`;
-
-const Title = styled.h3`
-  margin-top: 17px;
-  font-family: MullerMedium;
-
-  font-size: 24px;
-  line-height: 32px;
-
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-top: 10px;
-    align-text: center;
-    font-size: 20px;
-  }
-`;
-const Subtitle = styled.h4<{ withMap: boolean }>`
-  margin-top: 8px;
-  font-family: MullerMedium;
-
-  font-size: 16px;
-  line-height: 20px;
-  max-width: 300px;
-  ${({ withMap }) => (withMap ? ` text-align: left;` : ` text-align: center;`)}
-
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-top: 6px;
-    font-size: 14px;
-  }
-`;
-
-const Addresses = styled.div<{ withMap: boolean }>`
-  width: 100%;
-  margin: 10px 0;
-  display: flex;
-  ${({ withMap }) =>
-    withMap
-      ? `   align-items: flex-start;
-        justify-content: flex-start;`
-      : `   align-items: flex-start;
-        justify-content: flex-start;
-        margin-left: 120px;
-    `}
-
-  flex-direction: column;
-  flex-grow: 1;
-  max-height: 230px;
-  overflow: auto;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    margin-left: 0px;
-  }
-`;
-const RadionGroup = styled.div<{ selected: boolean }>`
-  /* display: flex; */
-  display: grid;
-  grid-template-columns: 16px 1fr;
-
-  padding: 5px 10px;
-  border-radius: 30px;
-  margin-top: 10px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  text-align: left;
-  &.selected {
-    border: 1px solid var(--red);
-  }
-  input {
-    cursor: pointer;
-    -webkit-appearance: none;
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    border-radius: 100%;
-    border: 1px solid var(--red);
-    &:checked {
-      background: var(--red);
-      box-shadow: 0 0 0 3px white inset;
-    }
-  }
-  label {
-    cursor: pointer;
-    font-family: MullerMedium;
-    font-size: 14px;
-    line-height: 14px;
-    ${({ selected }) =>
-      selected
-        ? `
-        color: var(--red);
-        `
-        : `
-        color: var(--black);
-        `}
-    margin-left: 10px;
-  }
-`;
 interface Props {
   setStep: Function;
   setShippingMethod: Function;
@@ -238,13 +54,14 @@ interface Point {
 const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, setChangeModalVisible, setModalStepType, setNewAddressText }) => {
   const { t } = useTranslation();
   const { data } = useQuery(GET_USER, {});
-  const minimumPrice = useMinimumPrice();
-  const { agency, agencies, city: cityHook, hasB2EAddress } = useCityPriceList();
+  const { agency, setAgency, agencies, express, city: cityHook, hasB2EAddress } = useCityPriceList();
   const [withMap, setWithMap] = useState<boolean>(true);
   const [city, setCity] = useState<User>({});
   const [agencyKey, setagencyKey] = useState<string>("");
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
   const [setUserMinimumPrice] = useMutation(SET_USER, {});
+  const [setStore] = useMutation(SET_USER, { variables: { user: { store: 'ECOMMERCE' } } });
+  const [isSelectingGeo, setIsSelectingGeo] = useState<boolean>(true);
 
   const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
   const [centerMap, setCenterMap] = useState<Point>({
@@ -253,8 +70,9 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   } as Point);
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [userId, setUserId] = useState(0);
+  const [circleRadius, setCircleRadius] = useState(0);
 
-  const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
+  const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       setUserId(d.details.id);
@@ -275,6 +93,9 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   };
 
   const handleSetCity = async (isAddress: boolean) => {
+    const store: OrderType = selectedAddress?.id_price_list > 0 ? 'B2E' : 'ECOMMERCE'
+    setStore({ variables: { user: { store }} })
+    
     if (agency) {
       setModalStepType(Changes.PickupToDelivery);
     } else {
@@ -282,6 +103,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     }
 
     if (isAddress) {
+      // selects an address
       if (selectedAddress) {
         await setUser({
           variables: {
@@ -299,6 +121,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
         setNewAddressText(selectedAddress?.street);
       }
     } else {
+      // selects a city
       if (city && city.cityKey) {
         await setUser({
           variables: {
@@ -322,6 +145,9 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   };
 
   const handleSetAgency = async () => {
+    const store: OrderType  = "PICKUP"
+    setStore({ variables: { user: { store }} })
+
     // TODO determine if store to store or another
     if (agency) {
       setModalStepType(Changes.PickupToPickup);
@@ -350,6 +176,58 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
       variables: { user: { showMinimumPrice: String("show") } },
     });
   };
+
+  const handleSetExpress = async () => {
+    const store: OrderType  = "EXPRESS"
+    setStore({ variables: { user: { store }} })
+
+    const lat = isSelectingGeo ? (window as any).latitude : selectedAddress?.latitude;
+    const lng = isSelectingGeo ? (window as any).longitude : selectedAddress?.longitude;
+
+    const nearestAgency: any = findNearestPointFromArray(
+      { lat, lng },
+      express.map((a: Agency) => ({ ...a, lat: a.latitude, lng: a.longitude }))
+    ) as Point;
+    if (nearestAgency?.key) {
+      const defaultAddressId = isSelectingGeo ? 0 : selectedAddress?.id;
+      const defaultAddressLabel = isSelectingGeo ? (window as any).infowindow.content : selectedAddress?.street;
+      const cityKey = isSelectingGeo ? "SC" : findKeyByCity(selectedAddress?.city);
+      const cityName = isSelectingGeo ? "Santa Cruz" : selectedAddress?.city;
+
+      setAgency(nearestAgency.key);
+      await setUser({
+        variables: {
+          user: {
+            defaultAddressId,
+            defaultAddressLabel,
+            openCityModal: false,
+            cityKey,
+            cityName,
+            agency: nearestAgency.key,
+            idPriceList: 0,
+          },
+        },
+      });
+    }
+
+  }
+
+  const handleAddressGeo = async ({ lat, lng }: Point) => {
+    try {
+      setLatLng("", lat, lng);
+
+      const nearestAgency: any = findNearestPointFromArray(
+        { lat, lng },
+        express.map((a: Agency) => ({ ...a, lat: a.latitude, lng: a.longitude }))
+      ) as Point;
+      if (nearestAgency?.key) {
+        setAgency(nearestAgency.key);
+      }
+    } catch (error) {
+      console.log("no se pudo establecer la ubicacion", error);
+    }
+  }
+
 
   useEffect(() => {
     if (data.userInfo.length && data.userInfo[0].cityKey) {
@@ -391,30 +269,70 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
 
   return (
     <>
-      <Wrapper withMap={withMap}>
+      <SC.Wrapper withMap={withMap}>
+        {shippingMethod === ShippingMethod.Express && (
+          <SC.Selector withMap={withMap}>
+            <ExpressIcon />
+            <SC.Title>Envío Express</SC.Title>
+            <SC.Subtitle withMap={withMap}>Recibe en 90 minutos</SC.Subtitle>
+            <SC.Addresses withMap={withMap}>
+                <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
+                  <input
+                    type="radio"
+                    name="manual_geo"
+                    id=""
+                    checked={isSelectingGeo}
+                  />
+                  <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
+                </SC.RadionGroup>
+                {inputs.addresses &&
+                  React.Children.toArray(
+                    inputs.addresses
+                      .filter((address: AddressType) => (hasB2EAddress ? address.id_price_list : address))
+                      .map((address: AddressType) => (
+                        <SC.RadionGroup
+                          selected={!isSelectingGeo && (selectedAddress?.id === address.id)}
+                          onClick={() => {
+                            setShippingMethod(ShippingMethod.Express);
+                            setIsSelectingGeo(false);
+                            setSelectedAddress({ ...address });
+                            handleAddressGeo({
+                              lat: parseFloat(address?.latitude || "0"),
+                              lng: parseFloat(address?.longitude || "0"),
+                            } as Point);
+                          }}
+                        >
+                          <input readOnly id={`city${address.id}`} name="city" type="radio" checked={!isSelectingGeo && !!(selectedAddress?.id === address.id)} />
+                          <label>
+                            {address?.street?.replace(/ \| /g, " ")}
+                            {address?.id_price_list ? (
+                              <StarWrap>
+                                <img src={StarIcon} alt="" />
+                                <TooltipStar>{t("account.tooltip_star_msg")}</TooltipStar>
+                              </StarWrap>
+                            ) : null}
+                          </label>
+                        </SC.RadionGroup>
+                      ))
+                  )}
+            </SC.Addresses>
+            <button onClick={() => handleSetExpress()}>Confirmar</button>
+          </SC.Selector>
+        )}
+
         {shippingMethod === ShippingMethod.Pickup && (
-          <Selector withMap={withMap}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M26 1H6L1 10C1 12.762 3.238 15 6 15C8.762 15 11 12.762 11 10C11 12.762 13.238 15 16 15C18.762 15 21 12.762 21 10C21 12.762 23.238 15 26 15C28.762 15 31 12.762 31 10L26 1Z"
-                stroke="#E30613"
-                strokeWidth="2.6"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path d="M27 19V31H5V19" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M13 31V23H19V31" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <Title>Retira al paso</Title>
-            <Subtitle withMap={withMap}>Elige tu tienda más cercana</Subtitle>
-            <Addresses withMap={withMap}>
+          <SC.Selector withMap={withMap}>
+            <PickupIcon />
+            <SC.Title>Retira al paso</SC.Title>
+            <SC.Subtitle withMap={withMap}>Elige tu tienda más cercana</SC.Subtitle>
+            <SC.Addresses withMap={withMap}>
               {agencies?.length && agencies.map((_agency: Agency, index: number) => (
-                <RadionGroup
+                <SC.RadionGroup
                   key={`${_agency.key}#${index}`}
                   className={agencyKey === _agency.key || _agency.key === selectedAddress?.key ? "selected" : ``}
                   selected={false}
                   onClick={() => {
+                    setShippingMethod(ShippingMethod.Pickup);
                     setSelectedAddress({ ..._agency, isAgency: true });
                     setagencyKey(_agency.key);
                     setCenterMap({
@@ -425,28 +343,26 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                 >
                   <input readOnly name="agency" checked={agencyKey === _agency.key || _agency.key === selectedAddress?.key} type="radio" />
                   <label>{_agency.name}</label>
-                </RadionGroup>
+                </SC.RadionGroup>
               ))}
-            </Addresses>
+            </SC.Addresses>
             {withMap ? <a onClick={() => setWithMap(false)}>Cerrar el mapa</a> : <a onClick={() => setWithMap(true)}>Ver en mapa</a>}
 
             <button onClick={handleSetAgency}>Confirmar</button>
-          </Selector>
+          </SC.Selector>
         )}
 
         {shippingMethod === ShippingMethod.Delivery && (
-          <Selector withMap={withMap}>
-            <svg width="36" height="38" viewBox="0 0 36 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18.1905 2L2 14.9524V36H13.3333V24.6667H23.0476V36H34.381V14.9524L18.1905 2Z" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="square" />
-            </svg>
-            <Title>Envío a domicilio</Title>
-            <Subtitle withMap={withMap}>Selecciona una de tus direcciones guardadas o agrega una nueva:</Subtitle>
-            <Addresses withMap={withMap}>
+          <SC.Selector withMap={withMap}>
+            <DeliveryIcon />
+            <SC.Title>Envío a domicilio</SC.Title>
+            <SC.Subtitle withMap={withMap}>Selecciona una de tus direcciones guardadas o agrega una nueva:</SC.Subtitle>
+            <SC.Addresses withMap={withMap}>
               {/* when no addresses */}
               {inputs.addresses && !inputs.addresses.length ? (
                 <>
                   {cities.map((c: KeyValue) => (
-                    <RadionGroup
+                    <SC.RadionGroup
                       selected={true}
                       key={c.key}
                       onClick={() => {
@@ -456,7 +372,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                     >
                       <input readOnly id={`city${c.key}`} name="city" type="radio" checked={city && city.cityKey === c.key} />
                       <label>{c.value}</label>
-                    </RadionGroup>
+                    </SC.RadionGroup>
                   ))}
                 </>
               ) : (
@@ -467,9 +383,10 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                       inputs.addresses
                         .filter((address: AddressType) => (hasB2EAddress ? address.id_price_list : address))
                         .map((address: AddressType) => (
-                          <RadionGroup
+                          <SC.RadionGroup
                             selected={selectedAddress?.id === address.id}
                             onClick={() => {
+                              setShippingMethod(ShippingMethod.Delivery);
                               setSelectedAddress({ ...address });
                               setCenterMap({
                                 lat: parseFloat(address?.latitude || "0"),
@@ -487,23 +404,39 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                                 </StarWrap>
                               ) : null}
                             </label>
-                          </RadionGroup>
+                          </SC.RadionGroup>
                         ))
                     )}
                 </>
               )}
-            </Addresses>
+            </SC.Addresses>
             {withMap ? <a onClick={() => setWithMap(false)}>Cerrar el mapa</a> : <a onClick={() => setWithMap(true)}>Ver en mapa</a>}
 
             <button onClick={() => handleSetCity(!(inputs.addresses && !inputs.addresses.length))}>Confirmar</button>
-          </Selector>
+          </SC.Selector>
         )}
+
+        {shippingMethod === ShippingMethod.Store && (
+          <SC.Selector withMap={withMap}>
+            <ExpressIcon />      
+            <SC.Title>Envío Express</SC.Title>
+            <SC.Subtitle withMap={withMap}>Verifica tu sucursal mas cercana</SC.Subtitle>
+            {withMap ? <a onClick={() => setWithMap(false)}>Cerrar el mapa</a> : <a onClick={() => setWithMap(true)}>Ver en mapa</a>}
+
+            <button onClick={() => {}}>Confirmar</button>
+          </SC.Selector>
+        )}
+
 
         {withMap && (
           <Maps>
+            {shippingMethod === ShippingMethod.Express &&
+              <Map />
+            }
+            {(shippingMethod !== ShippingMethod.Express) &&
             <GoogleMapReact
               bootstrapURLKeys={{
-                key: "AIzaSyD-ytvHpafjsy_r9WbqGTj09_wkYuQAjSk",
+                key: "AIzaSyDkzapVsE8dx0rclt3nQzew_JzZs4BOGw4",
               }}
               defaultZoom={15}
               defaultCenter={centerMap}
@@ -511,11 +444,21 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
               options={{
                 fullscreenControl: false,
               }}
+              onGoogleApiLoaded={({ map, maps }) => {
+
+              }}
             >
               {shippingMethod === ShippingMethod.Pickup && agencies?.length &&
                 React.Children.toArray(
                   agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
-                    <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />
+                    <Marker
+                      lat={parseFloat(latitude)}
+                      lng={parseFloat(longitude)}
+                      text={street}
+                      name={name}
+                      maxWidth={"400px"}
+                      selected={!!(key === selectedAddress?.key || key === agency)}
+                    />
                   ))
                 )}
               {shippingMethod === ShippingMethod.Delivery &&
@@ -533,10 +476,17 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                     />
                   ))
                 )}
+
+              {shippingMethod === ShippingMethod.Store &&
+                  express.map(({ name, street, latitude, longitude }: Agency) => 
+                    <PickupIcon lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={true} />
+                  )
+              }
             </GoogleMapReact>
+            }
           </Maps>
         )}
-      </Wrapper>
+      </SC.Wrapper>
     </>
   );
 };

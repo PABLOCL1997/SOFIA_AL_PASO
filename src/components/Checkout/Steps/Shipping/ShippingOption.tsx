@@ -101,12 +101,15 @@ const ShippingOption: FC<{
       {option === ShippingOptions.Employee ? <Icons.Employee /> : null}
       {option === ShippingOptions.Delivery ? <Icons.Delivery /> : null}
       {option === ShippingOptions.Pickup ? <Icons.Pickup /> : null}
+      {option === ShippingOptions.Express ? <Icons.Express /> : null}
       {/* if it isn't selected shouldn't show street */}
       <TitleStreet selected={isSelected}>
         <h3>{title}</h3>
         <p>{street}</p>
       </TitleStreet>
-      <CallToAction onClick={!hasValidAddress ? onAddAddress : isSelected ? onInfo : onSelect}>{!hasValidAddress ? addAddressText : isSelected ? infoText : selectText}</CallToAction>
+      <CallToAction onClick={onSelect}>
+        {selectText}
+      </CallToAction>
     </Wrapper>
   );
 };

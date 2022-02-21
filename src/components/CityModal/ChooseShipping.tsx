@@ -2,6 +2,12 @@ import React, { FC, Suspense, useState, useEffect } from "react";
 import { ShippingMethod, Steps } from "./types";
 import styled from "styled-components";
 import { BREAKPOINT } from "../../utils/constants";
+import { Trans, useTranslation, UseTranslationOptions } from "react-i18next";
+import PickupIcon from "../../assets/images/ChooseShipping/pickup-icon";
+import DeliveryIcon from "../../assets/images/ChooseShipping/delivery-icon";
+import ExpressIcon from "../../assets/images/ChooseShipping/express-icon";
+import useUser from "../../hooks/useUser";
+import { OrderType } from "../../types/Order";
 
 const Wrapper = styled.section`
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -45,7 +51,7 @@ const Subtitle = styled.h4`
 `;
 const Options = styled.ul`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 24px;
 
   margin-top: 56px;
@@ -61,6 +67,7 @@ const Option = styled.li<{ selected: boolean }>`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
     
     cursor:pointer;
     ${({ selected }) =>
@@ -103,6 +110,20 @@ const Option = styled.li<{ selected: boolean }>`
         }
     }
 
+    strong {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      padding: 2px 5px;
+      background-color: var(--red);
+      color: var(--white);
+
+      cursor: pointer;
+      z-index: 2;
+    }
+
     @media screen and (max-width: ${BREAKPOINT}) {
         padding: 20px 8px;
     }
@@ -111,7 +132,7 @@ const Option = styled.li<{ selected: boolean }>`
 const Strong = styled.strong`
   margin-top: 16px;
   max-width: 203px;
-  span {
+  strong {
     font-family: MullerBold;
   }
 
@@ -120,65 +141,62 @@ const Strong = styled.strong`
   }
 `;
 
-interface Props {
-  setStep: Function;
-  setShippingMethod: Function;
-  isAgency: boolean;
-  street: string;
-}
-
-const ChooseShipping: FC<Props> = ({ setStep, setShippingMethod, isAgency, street }) => {
-  const handleStepPickup = () => {
-    setShippingMethod(ShippingMethod.Pickup);
+const ChooseShipping: FC<{
+    setStep: Function;
+    setShippingMethod: Function;
+    street: string;
+  }> = ({ setStep, setShippingMethod, street }) => {
+  const { t } = useTranslation("", { keyPrefix: "citymodal" } as UseTranslationOptions);
+  const handleStep = (step: ShippingMethod) => {
+    setShippingMethod(step);
     setStep(Steps.Detailing);
-  };
-  const handleStepDelivery = () => {
-    setShippingMethod(ShippingMethod.Delivery);
-    setStep(Steps.Detailing);
-  };
+  }
+  const { store } : { store: OrderType } = useUser();
 
   return (
     <Wrapper>
-      <Title>¡Bienvenido a Sofía!</Title>
-      <Subtitle>¿A dónde enviamos tu pedido?</Subtitle>
+      <Title>{t("welcome")}</Title>
+      <Subtitle>{t("subtitle")}</Subtitle>
       <Options>
-        <Option className="storePickup" selected={isAgency} onClick={handleStepPickup}>
-          {/* icono de sucursal */}
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clipPath="url(#clip0)">
-              <path
-                d="M32.5 1.25H7.5L1.25 12.5C1.25 15.9525 4.0475 18.75 7.5 18.75C10.9525 18.75 13.75 15.9525 13.75 12.5C13.75 15.9525 16.5475 18.75 20 18.75C23.4525 18.75 26.25 15.9525 26.25 12.5C26.25 15.9525 29.0475 18.75 32.5 18.75C35.9525 18.75 38.75 15.9525 38.75 12.5L32.5 1.25Z"
-                stroke="#E30613"
-                strokeWidth="2.6"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path d="M33.75 23.75V38.75H6.25V23.75" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M16.25 38.75V28.75H23.75V38.75" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-            </g>
-            <defs>
-              <clipPath id="clip0">
-                <rect width="40" height="40" fill="white" />
-              </clipPath>
-            </defs>
-          </svg>
-          <p>Retira al paso</p>
+        <Option
+          className="storePickup"
+          selected={store === "PICKUP"}
+          onClick={() => handleStep(ShippingMethod.Pickup)}
+        >
+          <PickupIcon />
+          <p>{t("pickup_title")}</p>
           {/* show only if selected */}
-          {isAgency && <em>{street}</em>}
+          {store === "PICKUP" && <em>{street}</em>}
         </Option>
-        <Option className="delivery" selected={!isAgency} onClick={handleStepDelivery}>
-          {/* icono de casa */}
-          <svg width="36" height="38" viewBox="0 0 36 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.1905 2L2 14.9524V36H13.3333V24.6667H23.0476V36H34.381V14.9524L18.1905 2Z" stroke="#E30613" strokeWidth="2.6" strokeMiterlimit="10" strokeLinecap="square" />
-          </svg>
-          <p>Recibe en casa</p>
+        <Option
+          selected={store === "EXPRESS"}
+          className="storeExpress"
+          onClick={() => handleStep(ShippingMethod.Express)}
+        >
+          <ExpressIcon 
+          />
+          <p
+          onClick={() => handleStep(ShippingMethod.Express)}
+          
+          >{t("express_title")}</p>
+          <strong onClick={() => handleStep(ShippingMethod.Store)}>{t("new_brand")}</strong>
+        </Option>
+        <Option
+          className="delivery"
+          selected={store === "B2E" || store === "ECOMMERCE"}
+          onClick={() => handleStep(ShippingMethod.Delivery)}
+        >
+          <DeliveryIcon />
+          <p>{t("delivery_title")}</p>
           {/* show only if selected */}
-          {!isAgency && <em>{street}</em>}
+          {(store === "B2E" || store === "ECOMMERCE") && <em>{street}</em>}
         </Option>
-        <Strong>¡Retira en Sofía al Paso dentro de la siguiente hora! Guardamos tu pedido hasta 24 horas.</Strong>
+        <Strong>{t("pickup_description")}</Strong>
         <Strong>
-          Realiza tu pedido hasta las <span>17:00</span> y recibe a domicilio el siguiente día (entregas de lunes a sábado)
+          <Trans i18nKey={t("express_description")} components={{ strong: <strong /> }} />
+        </Strong>        
+        <Strong>
+          <Trans i18nKey={t("delivery_description")} components={{ strong: <strong /> }} />
         </Strong>
       </Options>
     </Wrapper>

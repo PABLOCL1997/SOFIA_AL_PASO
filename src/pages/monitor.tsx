@@ -1,11 +1,12 @@
-import React, { Suspense, FC, useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useQuery } from 'react-apollo';
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from 'styled-components';
 import ItemBoxMonitor from '../components/Product/ItemBoxMonitor';
 import { GET_PRODUCTS } from '../graphql/products/queries';
 import { ProductType } from '../graphql/products/type';
 import useCategory from '../hooks/useCategory';
+import { useUrlQuery } from '../hooks/useUrlQuery';
 
 
 const Wrapper = styled.main`
@@ -22,16 +23,12 @@ const Wrapper = styled.main`
     height: 100vh;
 `
 
-function useUrlQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 // shows a screen with products by city 
 // it shouldn't have a header just the products in a grid 
 const ProductsMonitor = () => {
   const isMonitors = true;
   const order = "position";
-  const { city } = useParams();
+  const { city } = useParams<{ city: string }>();
   const { category_id } = useCategory(2);
   let query = useUrlQuery();
 

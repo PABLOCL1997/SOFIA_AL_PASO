@@ -2,10 +2,9 @@ import React, { FC, Suspense, useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { cities, KeyValue } from "../../utils/string";
 import { BREAKPOINT } from "../../utils/constants";
-import { useMutation, useQuery, useLazyQuery } from "react-apollo";
+import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../../graphql/user/mutations";
-import { GET_USER, DETAILS } from "../../graphql/user/queries";
-import { UserType } from "../../graphql/user/type";
+import { GET_USER } from "../../graphql/user/queries";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { Changes, ShippingMethod, Steps } from "../CityModal/types";
 
@@ -232,7 +231,12 @@ const CityModal: FC<Props> = () => {
           )}
           {/* Back Icon above */}
 
-          {step === Steps.Choosing && <ChooseShipping setShippingMethod={setShippingMethod} setStep={setStep} isAgency={agency !== null} street={data?.userInfo[0]?.defaultAddressLabel || ""} />}
+          {step === Steps.Choosing &&
+            <ChooseShipping
+              setShippingMethod={setShippingMethod}
+              setStep={setStep}
+              street={data?.userInfo[0]?.defaultAddressLabel || ""}
+          />}
           {step === Steps.Detailing && (
             <AddressDetail
               shippingMethod={shippingMethod}

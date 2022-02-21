@@ -86,12 +86,15 @@
     "max_per_user": "Max. {{units}} unidades por cliente"
   },
   "citymodal": {
-    "title": "¿A qué ciudad enviamos tu pedido?",
-    "text": "Por ahora estamos haciendo entregas solo en estas ciudades, elegí donde quieras recibir el pedido:",
-    "title_alt": "¿A qué dirección enviamos tu pedido?",
-    "text_alt": "Selecciona una de tus direcciones guardadas o agrega una nueva:",
-    "add_address": "Agregar una nueva dirección",
-    "take_away": "Cambiaste de ciudad a sucursal|Recorda que tenes que pasar a buscar tu pedido"
+    "welcome": "¡Bienvenido a Sofía!",
+    "subtitle": "¿A dónde enviamos tu pedido?",
+    "delivery_title": "Recibe en casa",
+    "pickup_title": "Retira al paso",
+    "express_title": "Envío Express",
+    "new_brand": "¡Nuevo!",
+    "delivery_description": "Realiza tu pedido hasta las <strong>17:00</strong> y recibe a domicilio el siguiente día (entregas de lunes a sábado)",
+    "pickup_description": "Retirá tu pedido en el paso de la tienda.",
+    "express_description": "¡Pide online y recibe en menos de <strong>90 minutos</strong>!"
   },
   "products": {
     "filter_side_bar": {

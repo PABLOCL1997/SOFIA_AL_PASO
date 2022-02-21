@@ -2,40 +2,26 @@ import React, { Suspense, FC, useEffect, useState, useContext, useMemo } from "r
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { CHECKOUT_TITLE } from "../meta";
 import { useTranslation } from "react-i18next";
-
 import { SET_USER } from "../graphql/user/mutations";
 import { CREATE_ORDER, EMPTY_CART, TODOTIX_ORDER_INFO, SET_TEMP_CART } from "../graphql/cart/mutations";
-import { GET_CART_ITEMS, TODOTIX, GET_TOTAL, CHECK_CART } from "../graphql/cart/queries";
+import { TODOTIX, CHECK_CART } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
-import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { trackOrder, initCheckout } from "../utils/dataLayer";
 import { escapeSingleQuote, search } from "../utils/string";
-import useCityPriceList from "../hooks/useCityPriceList";
-import { GET_SAP_AGENCIES } from "../graphql/products/queries";
-import { ShippingMethod } from "../components/CityModal/types";
-import { GET_TIME_FRAMES } from "../graphql/metadata/queries";
-import { HorarioCorte, TimeFrame } from "../types/TimeFrame";
-import dayjs from "dayjs";
 import { EBSProduct } from "../types/Product";
-import useMinimumPrice from "../hooks/useMinimumPrice";
-import * as SC from "../styled-components/pages/checkout";
 import { getStep, handleNext, Steps } from "../types/Checkout";
+import { Order, OrderData, orderDataInitValues } from "../types/Order";
 import { Location } from "../context/Location";
 import { Courtain } from "../context/Courtain";
 import { UserDetails } from "../graphql/user/type";
+import { DETAILS, GET_USER } from "../graphql/user/queries";
 
-const isoWeek = require("dayjs/plugin/isoWeek");
-const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
-const timezone = require("dayjs/plugin/timezone");
-const weekday = require("dayjs/plugin/weekday");
-const es = require("dayjs/locale/es");
-
-dayjs.extend(weekday);
-dayjs.extend(isoWeek);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.locale(es);
+import * as SC from "../styled-components/pages/checkout";
+import useUser from "../hooks/useUser";
+import useCityPriceList from "../hooks/useCityPriceList";
+import useMinimumPrice from "../hooks/useMinimumPrice";
+import useCart from "../hooks/useCart";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Steps/Billing"));
@@ -45,65 +31,22 @@ const Review = React.lazy(() => import(/* webpackChunkName: "Review" */ "../comp
 const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../components/Checkout/Steps/Cart"));
 const DeliveryDate = React.lazy(() => import(/* webpackChunkName: "DeliveryDate" */ "../components/Checkout/Steps/DeliveryDate"));
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket"));
-const ConfirmAddress = React.lazy(() => import(/* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"));
 
-type Props = {};
-
-type OrderData = {
-  discount_amount: number;
-  discount_type: string;
-  coupon_code: string;
-  items: Array<string>;
-  delivery_price: number;
-  customer_email: string;
-  customer_firstname: string;
-  customer_lastname: string;
-  facturacion: string;
-  envio: string;
-  payment_method: string;
-  DIRECCIONID?: string | null;
-  agencia?: string | null;
-  vh_inicio?: string | null;
-  vh_fin?: string | null;
-  delivery_date?: string | null;
-};
-
-const Checkout: FC<Props> = () => {
-  const [daysAvailable] = useState<Array<dayjs.Dayjs>>([]);
-  const daysRequired = 5;
-  const SundayKey = 7;
-  let counter = 0;
-  while (counter < daysRequired) {
-    const newDay = dayjs().add(counter, "days");
-
-    if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
-      const nextDay = dayjs().add(counter, "days");
-      daysAvailable.push(nextDay);
-    }
-    counter++;
-  }
-
+const Checkout = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
-  const { idPriceList, agency, city } = useCityPriceList();
+  const { idPriceList, agency, city, agencies } = useCityPriceList();
+  const { store } = useUser()
   const minimumPrice = useMinimumPrice();
+  const { cart: data, totalAmount } = useCart()
 
   const [processing, setProcessing] = useState(false);
-
-  const [order, setOrder] = useState<OrderData>();
-  const [orderData, setOrderData] = useState<any>({});
+  const [order, setOrder] = useState<Order>();
+  const [orderData, setOrderData] = useState<OrderData>(orderDataInitValues);
   const [orderIsReady, setOrderIsReady] = useState<boolean>(true);
-  const [billingChange, setBillingChange] = useState<any>({});
-  const [mapUsed, setMapUsed] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
-  const [agencies, setAgencies] = useState<any>([]);
-  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(ShippingMethod.Delivery);
-  const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame | null>(null);
-  const [deliveryDate, setDeliveryDate] = useState<dayjs.Dayjs | null>(null);
-  const [timeFrames, setTimeFrames] = useState<Array<TimeFrame>>([]);
-  const [filteredTimeFrames, setFilteredTimeFrames] = useState<Array<TimeFrame>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
 
   const { setLoading } = useContext(Courtain.Context);
@@ -112,15 +55,14 @@ const Checkout: FC<Props> = () => {
 
   const { data: localUserData } = useQuery(GET_USER, {});
   const { data: userDetails } = useQuery(DETAILS, {});
-  const { data } = useQuery(GET_CART_ITEMS);
 
   const [getDetails, { data: userData }] = useLazyQuery<UserDetails>(DETAILS, {
     fetchPolicy: "network-only",
-    onCompleted: (d) => {
-
-    },
   });
   const [getTodotixLink, { data: todotixData }] = useLazyQuery(TODOTIX);
+  const [removeCoupon] = useMutation(SET_USER, {
+    variables: { user: { coupon: null } },
+  });
   const [toggleCartModal] = useMutation(SET_USER, {
     variables: { user: { openCartModal: true } },
   });
@@ -134,22 +76,6 @@ const Checkout: FC<Props> = () => {
   const [emptyCart] = useMutation(EMPTY_CART, { variables: {} });
   const [showError] = useMutation(SET_USER, {
     variables: { user: { showError: t("checkout.error") } },
-  });
-  useQuery(GET_SAP_AGENCIES, {
-    fetchPolicy: "network-only",
-    onCompleted: (d) => {
-      setAgencies(d.agencies);
-    },
-  });
-
-  useQuery(GET_TIME_FRAMES, {
-    fetchPolicy: "network-only",
-    variables: {
-      city,
-    },
-    onCompleted: (d) => {
-      setTimeFrames(d.timeFrames);
-    },
   });
 
   const [checkAndNewOrder] = useLazyQuery(CHECK_CART, {
@@ -176,30 +102,32 @@ const Checkout: FC<Props> = () => {
         if (!(idPriceList > 0 || !!agency)) setConfirmModalVisible(true);
         
         const special_address = idPriceList > 0;
-        const agencyObj = agency ? search("key", agency || "V07", agencies) : null;
-        
+        const agencyObj = agency ? search("key", agency, agencies) : null;
+        const isPickup = store === 'PICKUP';
         if (!items.length) return;
 
+        const delivery_price = store === 'EXPRESS' ? 15 : 0;
         const firstname = escapeSingleQuote(orderData.shipping.firstname)
         const lastname = escapeSingleQuote(orderData.shipping.lastname)
         const email = orderData?.billing?.email;
         const country_id = "BO"
         const street = escapeSingleQuote(
           special_address ? orderData.shipping.street.split("|")[0] :
-            agency ? agencyObj.street : orderData.shipping.id ?
+            isPickup ? agencyObj.street : orderData.shipping.id ?
               orderData.shipping.street : `${orderData.shipping.address || ""}`
         )
-        const latitude = agency ? String(agencyObj.latitude) : String((window as any).latitude)
-        const longitude = agency ? String(agencyObj.longitude) : String((window as any).longitude)
+        const latitude = isPickup ? String(agencyObj.latitude) : String((window as any).latitude)
+        const longitude = isPickup ? String(agencyObj.longitude) : String((window as any).longitude)
 
         setOrder({
-          DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
+          SISTEMA: store,
           agencia: agency,
-          discount_amount: parseFloat(orderData.coupon ? orderData.coupon.discount : 0),
+          items,
+          delivery_price,
+          DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
+          discount_amount: orderData.coupon.discount,
           discount_type: orderData?.coupon?.type || "",
           coupon_code: orderData?.coupon?.coupon || "",
-          items,
-          delivery_price: 0,
           customer_email: email,
           customer_firstname: firstname,
           customer_lastname: lastname,
@@ -209,13 +137,13 @@ const Checkout: FC<Props> = () => {
             lastname: lastname,
             fax: orderData.billing.nit,
             email,
-            telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
+            telephone: isPickup && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
             country_id,
             city: escapeSingleQuote(localUserData?.userInfo[0]?.cityName || "SC"),
             latitude,
             longitude,
             street,
-            reference: agency ? agencyObj.reference : escapeSingleQuote(orderData.shipping.reference),
+            reference: isPickup ? agencyObj.reference : escapeSingleQuote(orderData.shipping.reference),
           }),
           envio: JSON.stringify({
             entity_id: orderData.shipping.id,
@@ -223,7 +151,7 @@ const Checkout: FC<Props> = () => {
             lastname: escapeSingleQuote(orderData.shipping.lastname),
             fax: orderData.shipping.nit,
             email,
-            telephone: agency && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
+            telephone: isPickup && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
             street,
             city: escapeSingleQuote(orderData.shipping.city || localUserData.userInfo[0].cityName || "SC"),
             region: escapeSingleQuote(orderData.shipping.reference),
@@ -236,18 +164,15 @@ const Checkout: FC<Props> = () => {
           vh_fin: orderData.vh_fin,
           delivery_date: orderData.delivery_date,
         });
+        removeCoupon();
       } else {
         showError();
       }
     }
   })
 
-  const totalAmount = GET_TOTAL(data.cartItems);
-
   useEffect(() => {
-    (window as any).updateMapUsed = () => setMapUsed(true);
     document.title = CHECKOUT_TITLE;
-    (window as any).orderData = {};
     let params = new URLSearchParams(location.search);
     if (params.get("id")) {
       (async () => {
@@ -264,6 +189,7 @@ const Checkout: FC<Props> = () => {
               increment_id: co.increment_id,
             }))
           );
+          initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email || "Guest", data.cartItems);
           window.history.pushState("checkout", "Tienda Sofia - Checkout", "/checkout");
           history.push(`/gracias?ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
         } catch (e) {
@@ -282,14 +208,6 @@ const Checkout: FC<Props> = () => {
   }, []);
 
   useEffect(() => {
-    // initcheckout event on DataLayer
-    if (userData && (userData as any).email) {
-      initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email, data.cartItems);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData]);
-
-  useEffect(() => {
     // when there is a new order
     if (order) {
       (async () => {
@@ -302,7 +220,7 @@ const Checkout: FC<Props> = () => {
               {
                 increment_id: co.increment_id,
                 total: parseFloat(totalAmount.replace(",", ".")),
-                coupon: orderData.coupon ? orderData.coupon.coupon : "",
+                coupon: orderData.coupon.coupon || "",
                 email: orderData.billing ? orderData.billing.email : "",
               },
               data.cartItems
@@ -325,7 +243,8 @@ const Checkout: FC<Props> = () => {
             emptyCart();
             setProcessing(false);
             setLoading(false);
-            const pickup = agency ? agency : "";
+            const pickup = store === "PICKUP" ? agency : "";
+            initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email, data.cartItems);
             history.push(`/gracias?ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
           }
         } catch (e) {
@@ -353,84 +272,10 @@ const Checkout: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todotixData]);
 
-  useEffect(() => {
-    if (agency) {
-      setShippingMethod(ShippingMethod.Pickup);
-    } else {
-      setShippingMethod(ShippingMethod.Delivery);
-    }
-  }, [agency]);
-  
-  useEffect(() => {
-    if (selectedTimeFrame?.turno?.inicio && selectedTimeFrame?.turno?.fin) {
-      orderData.vh_inicio = selectedTimeFrame.turno.inicio;
-      orderData.vh_fin = selectedTimeFrame.turno.fin;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimeFrame]);
-
-  useEffect(() => {
-    if (deliveryDate) {
-      orderData.delivery_date = dayjs(deliveryDate).toISOString();
-      // calculate time frames for deliveryDate
-      const dateComparator: dayjs.OpUnitType = "days";
-      const hourComparator: dayjs.OpUnitType = "hours";
-
-      const hoursUnitType: dayjs.UnitType = "hours";
-      const minutesUnitType: dayjs.UnitType = "minutes";
-      const today = dayjs();
-      const tomorrow = dayjs().add(1, "day");
-
-      if (dayjs(deliveryDate).isSame(today, dateComparator)) {
-        // TODO: reducir codigo duplicado
-        setFilteredTimeFrames(
-          timeFrames.filter((timeFrame: TimeFrame) => {
-            const hasSameDay = timeFrame.horario_corte.some(
-              (horario: HorarioCorte) =>
-                horario.mismo_dia &&
-                dayjs().isBefore(
-                  dayjs()
-                    .set(hoursUnitType, parseInt(horario.horario.split(":")[0]))
-                    .set(minutesUnitType, parseInt(horario.horario.split(":")[1])),
-                  hourComparator
-                )
-            );
-            return hasSameDay ? timeFrame : null;
-          })
-        );
-      }
-
-      if (dayjs(deliveryDate).isSame(tomorrow, dateComparator)) {
-        // TODO: reducir codigo duplicado
-        setFilteredTimeFrames(
-          timeFrames.filter((timeFrame: TimeFrame) => {
-            const hasBeforeDay = timeFrame.horario_corte.some(
-              (horario: HorarioCorte) =>
-                horario.dia_anterior &&
-                dayjs().isBefore(
-                  dayjs()
-                    .set(hoursUnitType, parseInt(horario.horario.split(":")[0]))
-                    .set(minutesUnitType, parseInt(horario.horario.split(":")[1])),
-                  hourComparator
-                )
-            );
-            return hasBeforeDay ? timeFrame : null;
-          })
-        );
-      }
-
-      // if it is after tomorrow
-      if (dayjs(deliveryDate).isAfter(tomorrow, dateComparator)) {
-        setFilteredTimeFrames(timeFrames);
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deliveryDate]);
 
   const validateOrder = (cartItems: ProductType[]) => {
     let items: Array<string> = [];
-    const special_address = idPriceList > 0;
+
     const shippingServiceItem: EBSProduct = {
       CODIGO: "670000",
       DESCRIPCION: "SERVICIO DE TRANSPORTE DE PRODUCTOS",
@@ -466,7 +311,7 @@ const Checkout: FC<Props> = () => {
 
     // if it isn't a pickup order
     // and order price is less than minimum price add the shipping item
-    if (!agency && Number(totalAmount.replace(",", ".")) < minimumPrice) {
+    if (store !== 'PICKUP' && store !== 'EXPRESS' && Number(totalAmount.replace(",", ".")) < minimumPrice) {
       items.push(
         JSON.stringify({
           entity_id: shippingServiceItem.CODIGO,
@@ -496,51 +341,36 @@ const Checkout: FC<Props> = () => {
     });
 
     let missingField = false;
-    const requiredFields = agency ? ["firstname", "lastname", "email", "nit", "phone"] : ["firstname", "lastname", "email", "nit"];
+    const requiredFields = store === 'EXPRESS' || store === 'PICKUP' ? ["firstname", "lastname", "email", "nit", "phone"] : ["firstname", "lastname", "email", "nit"];
     requiredFields.forEach((key: string) => {
-      if (orderData?.billing) {
-        if (!orderData.billing[key] && !missingField) {
-          missingField = true;
-          const input = document.querySelector(`[name="billing-${key}"]`);
-          if (input) {
-            input.classList.add("error");
-            window.scrollTo({
-              top: (input as any).offsetTop - 170,
-              behavior: "smooth",
-            });
-          }
-          showError({
-            variables: {
-              user: {
-                showError: t("checkout.missing_field", {
-                  field: t("checkout.billing." + key),
-                }),
-              },
-            },
+      // @ts-ignore
+      if (!(orderData.billing[key]) && !missingField) {
+        missingField = true;
+        const input = document.querySelector(`[name="billing-${key}"]`);
+        if (input) {
+          input.classList.add("error");
+          window.scrollTo({
+            top: (input as any).offsetTop - 170,
+            behavior: "smooth",
           });
         }
+        showError({
+          variables: {
+            user: {
+              showError: t("checkout.missing_field", {
+                field: t("checkout.billing." + key),
+              }),
+            },
+          },
+        });
       }
     });
 
-    if (!mapUsed && !orderData.shipping.id && !special_address && !agency) {
-      window.scrollTo({
-        top: (document as any).getElementById("gmap").getBoundingClientRect().top + (window as any).scrollY - 170,
-        behavior: "smooth",
-      });
-      showError({
-        variables: {
-          user: {
-            showError: t("checkout.move_map"),
-          },
-        },
-      });
-      return [];
-    }
-
-    if (!missingField && !orderData.shipping.id && !agency) {
-      ["firstname", "phone", "phone2", "nit", "city", "address", "reference"].forEach((key: string) => {
+    if (!missingField && !orderData.shipping.id && store !== 'PICKUP') {
+      const shippingFields = store === 'EXPRESS' ? ["firstname", "phone", "nit", "city", "address"] : ["firstname", "phone", "phone2", "nit", "city", "address", "reference"]
+      shippingFields.forEach((key: string) => {
+        // @ts-ignore        
         if ((!orderData.shipping[key] || !orderData.shipping[key].trim()) && !missingField) {
-          if (key === "building_name" && orderData.shipping.home_type === "Casa") return [];
           missingField = true;
 
           const input = document.querySelector(`[name="shipping-${key}"]`);
@@ -564,9 +394,10 @@ const Checkout: FC<Props> = () => {
       });
     }
 
-    if (!agency) {
+    if (store !== 'EXPRESS' && store !== 'PICKUP') {
       ["delivery_date", "vh_inicio", "vh_fin"].forEach((key: string, index: number) => {
         const keys = ["delivery_date", "time_frame"];
+        // @ts-ignore
         if (!orderData[key] && !missingField) {
           missingField = true;
 
@@ -599,51 +430,41 @@ const Checkout: FC<Props> = () => {
   };
 
   const updateOrderData = (key: string, values: any) => {
+    setOrderData({
+      ...orderData,
+      [key]: values,
+    });
+
     if (key === "billing" && values.email) {
       setTempCart({
         variables: {
           email: values.email,
           items: JSON.stringify({
             firstname: values.firstname || "",
-            items: data.cartItems.map((product: ProductType) => {
+            items: data?.cartItems?.map((product: ProductType) => {
               return {
                 name: product.name || "",
                 image: product.image || "",
                 price: product.special_price || 0,
                 qty: product.qty || 0,
               };
-            }),
+            }) || [],
           }),
         },
       });
     }
-
-    if (key === "billing") setBillingChange(values);
-
-    (window as any).orderData = {
-      ...(window as any).orderData,
-      [key]: values,
-    };
-
-    setOrderData((window as any).orderData);
   };
 
   return (
     <Suspense fallback={<Loader />}>
       <SC.Wrapper>
-        <ConfirmAddress
-          address={orderData.shipping && orderData.shipping.id && orderData.shipping.street ? orderData.shipping.street.replace(/\|/g, " ") : ""}
-          visible={confirmModalVisible}
-          confirm={saveOrder}
-          cancel={() => setConfirmModalVisible(false)}
-        />
         <div className="main-container">
           {!showTodotixPayment && !result.length && (
             <SC.CheckoutWrapper>
               <SC.ShippingMethodWrapper>
                 <h4>
-                  {step === Steps.Shipping && shippingMethod === ShippingMethod.Pickup ? t("checkout.title_pickup"):
-                    step === Steps.Shipping && shippingMethod === ShippingMethod.Delivery ? t("checkout.title_delivery"):
+                  {step === Steps.Shipping && store === 'PICKUP' ? t("checkout.title_pickup"):
+                    step === Steps.Shipping && store !== 'PICKUP' ? t("checkout.title_delivery"):
                       step === Steps.Cart ? t("checkout.cart.title")
                       : t("checkout.title")}
                                     
@@ -657,7 +478,7 @@ const Checkout: FC<Props> = () => {
                 <SC.Col1>
                   {step === Steps.Billing ? (
                     <SC.Steps>
-                      <Billing updateOrder={updateOrderData } />
+                      <Billing updateOrder={updateOrderData} />
                     </SC.Steps>
                   ) : null}
 
@@ -667,6 +488,7 @@ const Checkout: FC<Props> = () => {
                         updateOrder={updateOrderData}
                         confirmModalVisible={confirmModalVisible}
                         setOrderIsReady={setOrderIsReady}
+                        orderData={orderData}
                       />
                     </SC.Steps>
                   ) : null}
@@ -674,12 +496,9 @@ const Checkout: FC<Props> = () => {
                   {step === Steps.Timeframe ? (
                     <SC.Steps>
                       <DeliveryDate
-                        daysAvailable={daysAvailable}
-                        timeFrames={filteredTimeFrames}
-                        selectedTimeFrame={selectedTimeFrame}
-                        setSelectedTimeFrame={setSelectedTimeFrame}
-                        setDeliveryDate={setDeliveryDate}
-                        deliveryDate={deliveryDate}
+                        updateOrder={updateOrderData}
+                        setOrderData={setOrderData}
+                        orderData={orderData}
                       />                      
                     </SC.Steps>
                   ): null}
@@ -701,8 +520,6 @@ const Checkout: FC<Props> = () => {
                       <Review
                         orderData={orderData}
                         confirmOrder={saveOrder}
-                        deliveryDate={deliveryDate}
-                        selectedTimeFrame={selectedTimeFrame}
                         updateOrder={updateOrderData}
                       />
                     </SC.Steps>

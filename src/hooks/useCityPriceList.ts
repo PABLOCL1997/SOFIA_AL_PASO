@@ -2,14 +2,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
-import { GET_SAP_AGENCIES } from "../graphql/products/queries";
+import { GET_EXPRESS_AGENCIES, GET_SAP_AGENCIES } from "../graphql/products/queries";
+import Agency from "../types/Agency";
 
 type usePriceListType = {
   city: string;
   idPriceList: number;
   agency: string | null;
   setAgency: Function;
-  agencies: any;
+  agencies: Array<Agency>;
+  express: Array<Agency>;
   hasB2EAddress: boolean;
 };
 
@@ -19,6 +21,10 @@ const useCityPriceList = (): usePriceListType => {
   const { data: agencies } = useQuery(GET_SAP_AGENCIES, {
     fetchPolicy: "network-only",
   });
+  const { data: express } = useQuery(GET_EXPRESS_AGENCIES, {
+    fetchPolicy: "network-only",
+  });
+
 
 
   const [city, setCity] = useState<string>("SC");
@@ -57,7 +63,14 @@ const useCityPriceList = (): usePriceListType => {
     return false;
   }, [details]);
 
-  return { city, idPriceList, agencies: agencies?.agencies, agency: userData && userData.userInfo.length && userData.userInfo[0].agency ? userData.userInfo[0].agency : null, setAgency, hasB2EAddress };
+  return {
+    city,
+    idPriceList,
+    agencies: agencies?.agencies,
+    express: express?.express,
+    agency: userData?.userInfo[0]?.agency || null,
+    setAgency,
+    hasB2EAddress };
 };
 
 export default useCityPriceList;

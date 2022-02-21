@@ -43,7 +43,7 @@ const useCart = (): CartReturn => {
   const { t } = useTranslation();
   const { city, idPriceList, agency } = useCityPriceList();
   const minimumPrice = useMinimumPrice();
-  const { coupon } = useUser();
+  const { coupon, store } = useUser();
   const [totalAmount, setTotalAmount] = useState("0.0");
   const [discountAmount, setDiscountAmount] = useState(0);
 
@@ -80,7 +80,9 @@ const useCart = (): CartReturn => {
   const shippingPrice = useMemo(() => {
     const shippingCost = 15; // Bs. 15
     const noShippingCost = 0; // Bs. 0
-    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && !agency) {
+    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && 
+      store !== 'PICKUP' && store !== 'EXPRESS'
+    ) {
       return shippingCost; 
     } else {
       return noShippingCost;

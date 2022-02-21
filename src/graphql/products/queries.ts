@@ -162,6 +162,23 @@ export const GET_SAP_AGENCIES = gql`
   }
 `;
 
+export const GET_EXPRESS_AGENCIES = gql`
+  query Express {
+    express {
+      id
+      key
+      city
+      name
+      street
+      telephone
+      latitude
+      longitude
+      reference
+      horario_texto
+    }
+  }
+`;
+
 export const GET_SAP_PRODUCTS = gql`
   query ProductsSap($category_id: Int!, $limit: Int!, $offset: Int!, $agency: String!, $city: String!, $onsale: Boolean, $order: String, $search: String, $brand: String) {
     productsSap(category_id: $category_id, limit: $limit, offset: $offset, onsale: $onsale, search: $search, agency: $agency, city: $city, order: $order, brand: $brand) {

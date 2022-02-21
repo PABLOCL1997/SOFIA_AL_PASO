@@ -43,6 +43,7 @@ import RadioIcon from "../../assets/images/radio-btn.svg";
 import RadioIconChecked from "../../assets/images/radio-btn-checked.svg";
 import { fromLink } from "../../utils/string";
 import useCityPriceList from "../../hooks/useCityPriceList";
+import { useUrlQuery } from "../../hooks/useUrlQuery";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
@@ -281,7 +282,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
   const { t } = useTranslation();
 
   const history = useHistory();
-  const query = new URLSearchParams(useLocation().search);
+  const query = useUrlQuery();
   const { category, subcategory, lastlevel } = useParams();
 
   const { city } = useCityPriceList();

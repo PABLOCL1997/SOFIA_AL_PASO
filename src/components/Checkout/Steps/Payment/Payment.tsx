@@ -1,19 +1,19 @@
 import React, { FC, Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { CLIENT_CREDIT } from "../../../../graphql/b2e/queries";
 import { useLazyQuery } from "react-apollo";
-import CircleLoader from "../../../CircleLoader";
-import * as SC from "./style";
 import { useHistory } from "react-router-dom";
+import { CLIENT_CREDIT } from "../../../../graphql/b2e/queries";
 import { handleNext } from "../../../../types/Checkout";
-import useCityPriceList from "../../../../hooks/useCityPriceList";
+import useUser from "../../../../hooks/useUser";
+import CircleLoader from "../../../CircleLoader";
 import arrow from "../../../../assets/images/arrow-back-checkout.svg";
+import * as SC from "./style";
+import { useUrlQuery } from "../../../../hooks/useUrlQuery";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../../Switch"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
 
-const nextStep = "review";
 const previousStep = "shipping";
 
 const Payment: FC<{
@@ -30,14 +30,16 @@ const Payment: FC<{
   orderData
 }) => {
   const { t } = useTranslation();
+  const { store } = useUser();
   const history = useHistory();
+  const query = useUrlQuery();
+  const nextStep = query.get("next") || "review";
 
   const CREDIT = {
     title: "credito",
     value: "ccsave",
   };
   const POS = {
-    // Con tarjeta en domicilio
     title: t("checkout.payment.checkmo"),
     value: "checkmo",
   };
@@ -49,11 +51,13 @@ const Payment: FC<{
     title: t("checkout.payment.cashondelivery"),
     value: "cashondelivery",
   };
-  const { idPriceList, agency } = useCityPriceList();
-  const valuesB2E = [CASH, POS, TODOTIX, CREDIT];
 
-  const values = [CASH, POS, TODOTIX];
-  const valuesPickup = [CASH, POS];
+  const paymentConfig = {
+    'EXPRESS': [CASH],
+    'PICKUP': [CASH, POS],
+    'ECOMMERCE': [CASH, POS, TODOTIX],
+    'B2E': [CASH, POS, TODOTIX, CREDIT],
+  }
 
   const [userCredit, { loading: loadingCredit, data: dataCredit }] = useLazyQuery(CLIENT_CREDIT, {
     fetchPolicy: "network-only",
@@ -86,17 +90,10 @@ const Payment: FC<{
   }, [orderData]);
 
   const options = useMemo(() => {
-    if (idPriceList) { 
-      updateOrder("payment", { method: CREDIT.value });
-      return valuesB2E;
-    }
-    if (agency) {
-      updateOrder("payment", { method: valuesPickup[0].value });
-      return valuesPickup;
-    }
-    updateOrder("payment", { method: values[0].value });
-    return values;
-  }, [idPriceList, agency]);
+    if (store) return paymentConfig[store];
+    return paymentConfig['ECOMMERCE']
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store]);
 
   return (
     <Suspense fallback={<Loader />}>

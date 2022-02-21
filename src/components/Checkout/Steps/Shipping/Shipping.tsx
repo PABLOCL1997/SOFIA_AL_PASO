@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { cities, KeyValue, search } from "../../../../utils/string";
 import { setLatLng } from "../../../../utils/googlemaps";
 import { useQuery, useMutation } from "react-apollo";
-import { DETAILS, GET_USER } from "../../../../graphql/user/queries";
+import { DETAILS } from "../../../../graphql/user/queries";
 import { AddressType } from "../../../../graphql/user/type";
 import { SET_USER } from "../../../../graphql/user/mutations";
 import { handleNext } from "../../../../types/Checkout";
@@ -15,6 +15,9 @@ import arrow from "../../../../assets/images/arrow-back-checkout.svg";
 import { Checkout, IShipping } from "../../../../utils/validations";
 import Input from "../../../Formik/components/Input";
 import { FormikProvider, useFormik } from "formik";
+import useUser from "../../../../hooks/useUser";
+import { OrderData } from "../../../../types/Order";
+import { useUrlQuery } from "../../../../hooks/useUrlQuery";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../../Map"));
@@ -34,14 +37,22 @@ const shippingFields = [
 ]
 
 const Shipping: FC<{
-    updateOrder: (field: string, values: IShipping) => void;
+    orderData: OrderData;
+    updateOrder: (field: string, values: Partial<IShipping>) => void;
     confirmModalVisible: boolean;
     setOrderIsReady: Function;
-  }> = ({ updateOrder, confirmModalVisible, setOrderIsReady }) => {
+  }> = ({
+    updateOrder,
+    confirmModalVisible,
+    setOrderIsReady,
+    orderData,
+  }) => {
   const { t } = useTranslation();
+  const query = useUrlQuery();
   const history = useHistory();
-  const { agency, setAgency, idPriceList, agencies } = useCityPriceList();
-  const { data: localData } = useQuery(GET_USER, {});
+  const { user: localData, store } = useUser();
+
+  const { agency, setAgency, agencies } = useCityPriceList();
   const [showSuccess] = useMutation(SET_USER, {});
   const formik = useFormik({
     initialValues: {
@@ -67,7 +78,7 @@ const Shipping: FC<{
     onCompleted: (d) => {
       if (d.details) {
         const address = d.details.addresses.find((a: AddressType) => a.id === addressId);
-        if (address) {
+        if (address && store !== 'EXPRESS') {
           updateOrder("shipping", {
             ...address,
           });
@@ -84,8 +95,8 @@ const Shipping: FC<{
 
   const newAddress = useMemo(() => !(localData.userInfo.length && localData.userInfo[0].defaultAddressId), [localData]);
   const street = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressLabel, [localData]);
-  const nextStep = useMemo(() => agency ? "payment" : "timeframe", [agency]);
-
+  const _nextStep = useMemo(() => store === "PICKUP" || store === "EXPRESS" ? "payment" : "timeframe", [store]);
+  const nextStep: string = useMemo(() => query?.get("next")?.length ? query?.get("next") || _nextStep : _nextStep, [store, query?.get('next')]);
   const onChange = (key: string, value: string | number | null, preventMap: boolean = false) => {
     formik.setFieldValue(key, value);
     updateOrder("shipping", {
@@ -218,8 +229,8 @@ const Shipping: FC<{
   }, [userDetails, agency]);
 
   useEffect(() => {
-    if (agency && agencies) {
-      const agencyObj = agency ? search("key", agency || "V07", agencies) : null;
+    if (agency && store === "PICKUP") {
+      const agencyObj = agency ? search("key", agency, agencies) : null;
       if (agencyObj) {
         updateOrder("shipping", {
           ...agencyObj,
@@ -227,7 +238,53 @@ const Shipping: FC<{
         })
       }
     }
-  }, [agency, agencies])
+  }, [agency, store, agencies])
+
+  useEffect(() => {
+    if (store === "EXPRESS") {
+      const { firstname, lastname, nit, phone } = orderData.billing;
+      if (firstname && lastname && nit && phone) {
+        formik.setValues({
+          ...formik.values,
+          firstname,
+          lastname,
+          nit,
+          phone,
+        })
+        updateOrder("shipping", {
+          firstname, lastname, nit, phone
+        });
+      }
+    }
+  }, [store]);
+
+  useEffect(() => {
+    if (store === "EXPRESS") {
+      const { firstname, lastname, nit, phone } = orderData.billing;
+      if (localData?.userInfo[0]?.defaultAddressLabel && localData?.userInfo[0]?.cityName) {
+        const address = localData.userInfo[0].defaultAddressLabel;
+        const city = localData.userInfo[0].cityName;
+        formik.setValues({
+          ...formik.values,
+          firstname,
+          lastname,
+          nit,
+          phone: phone || "1111",
+          city,
+          address
+        })
+        updateOrder("shipping", {
+          firstname,
+          lastname,
+          nit,
+          phone: phone || "1111",
+          city,
+          address,
+          street: address
+        });
+      }
+    }
+  }, [localData])
 
   useEffect(() => {
     const checkShipping = async () => {
@@ -238,7 +295,7 @@ const Shipping: FC<{
         setFormIsValid(false);
       }
     }
-
+    // console.log('formik', formik.values)
     checkShipping();
       
   }, [formik]);
@@ -255,15 +312,12 @@ const Shipping: FC<{
         </SC.Title>
 
         <ChooseShipping
-          isAgency={!!agency}
-          isEmployee={!!idPriceList}
-          isDelivery={!(agency || idPriceList)}
           street={street}
           addressId={addressId}
           setShowNewAddress={() => {}}
         />
 
-        {!agency &&
+        {(store === "B2E" || store === "ECOMMERCE") &&
           <FormikProvider value={formik} >
             <SC.Form id="nueva-direccion" hidden={false}>
               {shippingFields.map((key: string) => {
@@ -281,7 +335,7 @@ const Shipping: FC<{
           </FormikProvider>
         }
 
-        {newAddress && !confirmModalVisible && <Map />}
+        {newAddress && (store === "B2E" || store === "ECOMMERCE") && !confirmModalVisible && <Map />}
         <SC.Next.Wrapper>
           <CallToAction
             text={t("general.next")}

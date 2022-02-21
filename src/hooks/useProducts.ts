@@ -8,6 +8,7 @@ import useCategory from "./useCategory";
 import { OrderColums } from "../graphql/products/type";
 import useCityPriceList from "./useCityPriceList";
 import axios from "axios";
+import { useUrlQuery } from "./useUrlQuery";
 
 type Products = {
   loading: boolean;
@@ -25,10 +26,6 @@ type Products = {
   setBrand: Function;
   setCategoryId: Function;
 };
-
-function useUrlQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
   const logsUrl = process.env.REACT_APP_BACKEND + "/logs-product";

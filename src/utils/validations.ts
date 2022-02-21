@@ -2,28 +2,35 @@ import dayjs from 'dayjs';
 import { object, string, number, date, InferType } from 'yup';
 
 export interface IBilling {
-    firstname?: string;
-    lastname?: string;
-    email?: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    nit: string;
     phone?: string;
-    nit?: string;
 }
 
 export interface ITimeframe {
     deliveryDate?: dayjs.Dayjs | null;
     timeFrame?: string | null;
 }
+export type PaymentMethod = "ccsave" | "checkmo" | "todotix" | "cashondelivery"
+export interface IPayment {
+    method: PaymentMethod;
+}
 
 export interface IShipping {
-    addressId?: number;
-    firstname?: string;
-    lastname?: string;
-    nit?: string;
-    phone?: string;
-    phone2?: string;
-    city?: string;
-    address?: string;
-    reference?: string;
+    addressId: number;
+    id: number;
+    firstname: string;
+    lastname: string;
+    nit: string;
+    phone: string;
+    phone2: string;
+    city: string;
+    address: string;
+    street: string;
+    reference: string;
+    id_address_ebs?: number | null
 }
 
 export const weekdays = [
