@@ -1,29 +1,26 @@
 import React, { FC } from "react";
+import { OrderType } from "../../../../types/Order";
 import useCityPriceList from "../../../../hooks/useCityPriceList";
 import useUser from "../../../../hooks/useUser";
 import ShippingOption from "./ShippingOption";
 import { ShippingOptions } from "./types";
 
-interface Props {
-  isEmployee: boolean;
-  isAgency: boolean;
-  isDelivery: boolean;
-  street: string;
-  addressId: number | null;
-  setShowNewAddress: Function;
-}
-
-const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, addressId, setShowNewAddress }) => {
-  const { toggleCityModal, showAddressInfo } = useUser();
+const ChooseShipping: FC<{
+    street: string;
+    addressId: number | null;
+    setShowNewAddress: Function;
+  }> = ({ street, addressId, setShowNewAddress }) => {
+  const { toggleCityModal, showAddressInfo, store } = useUser();
   const { hasB2EAddress } = useCityPriceList();
 
   const deliverySelector = ".delivery";
   const pickupSelector = ".storePickup";
+  const expressSelector = ".storeExpress";
 
   const toggleAndClickSelector = (selector: string) => {
     toggleCityModal();
     // @ts-ignore
-    document.querySelector(selector).click();
+    document?.querySelector(selector)?.click();
   };
 
   return (
@@ -34,7 +31,7 @@ const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, a
           title="Recibe en casa"
           description="Compra con descuento %"
           street={street}
-          isSelected={isEmployee}
+          isSelected={store === "B2E" as OrderType}
           onInfo={() => {
             showAddressInfo({
               variables: {
@@ -56,7 +53,7 @@ const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, a
           title="Recibe en casa"
           description="Compra sin descuento"
           street={street}
-          isSelected={isDelivery}
+          isSelected={store === "ECOMMERCE" as OrderType}
           onInfo={() => {
             showAddressInfo({
               variables: {
@@ -75,17 +72,29 @@ const ChooseShipping: FC<Props> = ({ isEmployee, isAgency, isDelivery, street, a
           onAddAddress={() => {
             // @ts-ignore
             setShowNewAddress(true);
+            toggleAndClickSelector(deliverySelector)
             document.querySelector("#nueva-direccion")?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         />
       )}
 
       <ShippingOption
+        option={ShippingOptions.Express}
+        title="Envío express"
+        description="Recibe en 90 minutos"
+        street={street}
+        isSelected={store === "EXPRESS" as OrderType}
+        onInfo={() => toggleAndClickSelector(expressSelector)}
+        onSelect={() => toggleAndClickSelector(expressSelector)}
+        onAddAddress={() => toggleAndClickSelector(expressSelector)}
+      />
+
+      <ShippingOption
         option={ShippingOptions.Pickup}
         title="Retira al paso"
         description="Compra sin descuento"
         street={street}
-        isSelected={isAgency}
+        isSelected={store === "PICKUP" as OrderType}
         onInfo={() => {
           showAddressInfo({
             variables: {

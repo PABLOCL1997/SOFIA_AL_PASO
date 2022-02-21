@@ -13,6 +13,7 @@ import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
 import useUser from "../hooks/useUser";
 import { Location } from "../context/Location"
 import { Courtain } from "../context/Courtain"
+import { useUrlQuery } from "../hooks/useUrlQuery";
 
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
@@ -95,10 +96,6 @@ Wrapper.displayName = "GeneralWrapper";
 const Content = styled.div<{ pageUrl?: string }>`
   min-height: ${(props) => (!props.pageUrl || props.pageUrl === "/" ? "auto" : "100vh")};
 `;
-
-function useUrlQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 type Props = {
   page?: string;

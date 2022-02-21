@@ -7,10 +7,7 @@ import { GET_B2E_PRODUCT, GET_PRODUCT, GET_PRODUCT_DETAIL, GET_SAP_PRODUCT } fro
 import useCityPriceList from "./useCityPriceList";
 import { trackProduct } from "../utils/dataLayer";
 import axios from "axios";
-
-function useUrlQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+import { useUrlQuery } from "./useUrlQuery";
 
 const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
   const logsUrl = process.env.REACT_APP_BACKEND + "/logs-product";

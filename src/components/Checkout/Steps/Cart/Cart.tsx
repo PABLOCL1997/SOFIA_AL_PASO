@@ -11,12 +11,9 @@ import { useMutation } from "@apollo/react-hooks";
 import { CHECK_COUPON } from "../../../../graphql/cart/mutations";
 import { SET_USER } from "../../../../graphql/user/mutations";
 import { CouponType, ICoupon } from "../../../../types/Checkout";
+import { useUrlQuery } from "../../../../hooks/useUrlQuery";
 
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
-
-function useUrlQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 const Cart: FC<{
     showGoBack: boolean,

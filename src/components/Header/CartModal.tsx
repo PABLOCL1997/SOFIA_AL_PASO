@@ -1,27 +1,19 @@
 import React, { FC, Suspense, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "react-apollo";
-
-
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import { trackGoToCheckoutEvent } from "../../utils/dataLayer";
-
-import { useHistory } from "react-router-dom";
 import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
-
 import useCart from "../../hooks/useCart";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
-
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
-
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../Images/Delete"));
-
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
-
 const RecommendedProducts = React.lazy(() => import(/* webpackChunkName: "RecommendedProducts" */ "../Checkout/RecommendedProducts"));
 
 type Props = {};
@@ -29,9 +21,7 @@ type Props = {};
 const CartModal: FC<Props> = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
   const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart();
-
   const [relatedProducts, setRelatedProducts] = useState<ProductType[]>([]);
   const { data: userData } = useQuery(GET_USER, {});
 
@@ -40,13 +30,14 @@ const CartModal: FC<Props> = () => {
   });
 
   const checkout = () => {
-    trackGoToCheckoutEvent();
-    closeCartModal();
     if (userData.userInfo.length && !userData.userInfo[0].isLoggedIn) {
       (window as any).navigateToCheckout = true;
-      toggleLoginModal();
+      closeCartModal();
+      return toggleLoginModal();
     }
-    history.push("/checkout");
+    trackGoToCheckoutEvent();
+    closeCartModal();
+    return history.push("/checkout");
   };
 
   const getRelatedProducts = () => {
@@ -85,11 +76,8 @@ const CartModal: FC<Props> = () => {
               </svg>
             </SC.CloseWrapper>
           </SC.Header>
-          {cart?.cartItems?.length > 0 ? (
             <SC.Items>
-              {cart &&
-                cart.cartItems &&
-                cart.cartItems.map((product: ProductType, i: number) => (
+              {cart?.cartItems?.map((product: ProductType, i: number) => (
                   <SC.Row key={product.entity_id}>
                     <SC.Image src={product.image.split(",")[0]}></SC.Image>
                     <SC.NameBox>
@@ -114,11 +102,6 @@ const CartModal: FC<Props> = () => {
                   </SC.Row>
                 ))}
             </SC.Items>
-          ) : (
-            <div>
-              <SC.LoaderWrapper></SC.LoaderWrapper>
-            </div>
-          )}
           <SC.Totals>
             <SC.Subtotal>{t("cart.subtotal")}</SC.Subtotal>
             <SC.Total>Bs. {totalAmount}</SC.Total>
@@ -134,7 +117,7 @@ const CartModal: FC<Props> = () => {
                     text={t("cart.pay")}
                     action={() => {
                       const relProducts = getRelatedProducts();
-                      if (relProducts.length == 0) {
+                      if (relProducts.length === 0) {
                         checkout();
                       } else {
                         closeCartModal();

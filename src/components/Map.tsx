@@ -129,3 +129,30 @@ const Map: FC<Props> = () => {
 };
 
 export default Map;
+
+
+export const Wrapper = styled.div`
+  position: relative;
+`;
+
+export const Circle = styled.div<{ radius: number }>`
+  position: relative;
+  border: 1px solid #e30613;
+  width: ${(props) => props.radius / 5 + "px"};
+  height: ${(props) => props.radius / 5 + "px"};
+  border-radius: 50%;
+  top: -13px;
+  left: -13px;
+  background-color: rgba(227, 6, 19, 0.5);
+`;
+
+
+export const MapCircle: FC<{ radius: number }> = ({ radius }) => {
+  return (
+    <Wrapper>
+      {/* <Name maxWidth={maxWidth} title={text}>{name}</Name> */}
+      <Circle radius={radius} />
+    </Wrapper>
+  );
+};
+

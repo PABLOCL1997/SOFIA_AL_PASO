@@ -1,7 +1,7 @@
-import React, { FC, Suspense, useEffect, useState } from "react";
+import React, { FC, Suspense, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { TimeFrame } from "../../../../types/TimeFrame";
+import { HorarioCorte, TimeFrame } from "../../../../types/TimeFrame";
 import { handleNext } from "../../../../types/Checkout";
 import { Checkout, weekdays } from "../../../../utils/validations";
 import arrow from "../../../../assets/images/arrow-back-checkout.svg";
@@ -11,6 +11,11 @@ import dayjs from "dayjs";
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import { useQuery } from "react-apollo";
+import { GET_TIME_FRAMES } from "../../../../graphql/metadata/queries";
+import useCityPriceList from "../../../../hooks/useCityPriceList";
+import { OrderData } from "../../../../types/Order";
+import { useUrlQuery } from "../../../../hooks/useUrlQuery";
 
 const isoWeek = require("dayjs/plugin/isoWeek");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
@@ -28,7 +33,6 @@ const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../.
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
 
-const nextStep = "payment"
 const previousStep = "shipping"
 const dateComparator: dayjs.OpUnitType = "day";
 const settings = {
@@ -59,28 +63,130 @@ const settings = {
 };
 
 const DeliveryDate: FC<{
-    daysAvailable: dayjs.Dayjs[];
-    timeFrames: TimeFrame[];
-    setSelectedTimeFrame: Function;
-    selectedTimeFrame: TimeFrame | null;
-    deliveryDate: dayjs.Dayjs | null;
-    setDeliveryDate: Function;
+    updateOrder: (field: string, value: string) => void;
+    setOrderData: (order: OrderData) => void;
+    orderData: OrderData;
   }> = ({
-    timeFrames,
-    setSelectedTimeFrame,
-    selectedTimeFrame,
-    deliveryDate,
-    setDeliveryDate,
-    daysAvailable
+    updateOrder,
+    setOrderData,
+    orderData
   }) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const query = useUrlQuery();
+  const nextStep = query.get("next") || "payment";
+  const { city } = useCityPriceList()
   const [isValid, setIsValid] = useState(false)
 
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame | null>(null);
+  const [deliveryDate, setDeliveryDate] = useState<dayjs.Dayjs | null>(null);
+  const [timeFrames, setTimeFrames] = useState<Array<TimeFrame>>([]);
+  const [filteredTimeFrames, setFilteredTimeFrames] = useState<Array<TimeFrame>>([]);
+
+  const daysAvailable = useMemo(() => {
+    let counter = 0;
+    const daysRequired = 5;
+    const SundayKey = 7;
+   
+    // generate daysRequired days
+    const daysAvailable = [];
+    while (counter < daysRequired) {
+      const newDay = dayjs().add(counter, "days");
+
+      if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
+        const nextDay = dayjs().add(counter, "days");
+        daysAvailable.push(nextDay);
+      }
+      counter++;
+    }
+    return daysAvailable;
+  }, [])
+  
 
   const handleSelectDay = (day: dayjs.Dayjs) => {
     setDeliveryDate(day);
   };
+
+  useQuery(GET_TIME_FRAMES, {
+    fetchPolicy: "network-only",
+    variables: {
+      city,
+    },
+    onCompleted: (d) => {
+      setTimeFrames(d.timeFrames);
+    },
+  });
+
+    
+  useEffect(() => {
+    if (selectedTimeFrame?.turno?.inicio && selectedTimeFrame?.turno?.fin) {
+      setOrderData({
+        ...orderData,
+        vh_inicio: selectedTimeFrame.turno.inicio,
+        vh_fin: selectedTimeFrame.turno.fin,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTimeFrame]);
+
+  useEffect(() => {
+    if (deliveryDate) {
+      updateOrder("delivery_date", dayjs(deliveryDate).toISOString());
+      // calculate time frames for deliveryDate
+      const dateComparator: dayjs.OpUnitType = "days";
+      const hourComparator: dayjs.OpUnitType = "hours";
+
+      const hoursUnitType: dayjs.UnitType = "hours";
+      const minutesUnitType: dayjs.UnitType = "minutes";
+      const today = dayjs();
+      const tomorrow = dayjs().add(1, "day");
+
+      if (dayjs(deliveryDate).isSame(today, dateComparator)) {
+        // TODO: reducir codigo duplicado
+        setFilteredTimeFrames(
+          timeFrames.filter((timeFrame: TimeFrame) => {
+            const hasSameDay = timeFrame.horario_corte.some(
+              (horario: HorarioCorte) =>
+                horario.mismo_dia &&
+                dayjs().isBefore(
+                  dayjs()
+                    .set(hoursUnitType, parseInt(horario.horario.split(":")[0]))
+                    .set(minutesUnitType, parseInt(horario.horario.split(":")[1])),
+                  hourComparator
+                )
+            );
+            return hasSameDay ? timeFrame : null;
+          })
+        );
+      }
+
+      if (dayjs(deliveryDate).isSame(tomorrow, dateComparator)) {
+        // TODO: reducir codigo duplicado
+        setFilteredTimeFrames(
+          timeFrames.filter((timeFrame: TimeFrame) => {
+            const hasBeforeDay = timeFrame.horario_corte.some(
+              (horario: HorarioCorte) =>
+                horario.dia_anterior &&
+                dayjs().isBefore(
+                  dayjs()
+                    .set(hoursUnitType, parseInt(horario.horario.split(":")[0]))
+                    .set(minutesUnitType, parseInt(horario.horario.split(":")[1])),
+                  hourComparator
+                )
+            );
+            return hasBeforeDay ? timeFrame : null;
+          })
+        );
+      }
+
+      // if it is after tomorrow
+      if (dayjs(deliveryDate).isAfter(tomorrow, dateComparator)) {
+        setFilteredTimeFrames(timeFrames);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deliveryDate]);
 
   useEffect(() => {
     const checkTimeframe = async () => {
@@ -125,25 +231,22 @@ const DeliveryDate: FC<{
           </Slider>
         </SC.DateWrapper>
         <SC.TimeWrapper>
-          {timeFrames?.length ? (
-            timeFrames.map((timeFrame: TimeFrame, index: number) => (
-              <SC.TimeRadio key={`timeFrame#${index}`} selected={JSON.stringify(timeFrame) === JSON.stringify(selectedTimeFrame)}>
-                <SC.Time onClick={() => setSelectedTimeFrame(timeFrame)}>
-                  <SC.Radio
-                    type="radio"
-                    name="horario"
-                    id=""
-                    value={JSON.stringify(timeFrame)}
-                    onChange={() => setSelectedTimeFrame(timeFrame)}
-                    checked={JSON.stringify(timeFrame) === JSON.stringify(selectedTimeFrame)}
-                  />
-                  {`${timeFrame.turno.inicio} - ${timeFrame.turno.fin} hs`}
-                </SC.Time>
-              </SC.TimeRadio>
-            ))
-          ) : (
-            <>{t("checkout.delivery_datetime.no_time_frame")}</>
+          {filteredTimeFrames?.map((timeFrame: TimeFrame, index: number) => 
+            <SC.TimeRadio key={`timeFrame#${index}`} selected={JSON.stringify(timeFrame) === JSON.stringify(selectedTimeFrame)}>
+              <SC.Time onClick={() => setSelectedTimeFrame(timeFrame)}>
+                <SC.Radio
+                  type="radio"
+                  name="horario"
+                  id=""
+                  value={JSON.stringify(timeFrame)}
+                  onChange={() => setSelectedTimeFrame(timeFrame)}
+                  checked={JSON.stringify(timeFrame) === JSON.stringify(selectedTimeFrame)}
+                />
+                {`${timeFrame.turno.inicio} - ${timeFrame.turno.fin} hs`}
+              </SC.Time>
+            </SC.TimeRadio>
           )}
+          {!filteredTimeFrames.length && <>{t("checkout.delivery_datetime.no_time_frame")}</>}
         </SC.TimeWrapper>
         <SC.Next.Wrapper>
           <CallToAction

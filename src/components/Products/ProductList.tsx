@@ -6,6 +6,7 @@ import { ProductType, OrderColums } from "../../graphql/products/type";
 import { toLink, fromLink } from "../../utils/string";
 import { BREAKPOINT, customStyles } from "../../utils/constants";
 import { FiltersWrap, Results, Separador, OrderBy } from "../../styled-components/ProductsListStyles";
+import { useUrlQuery } from "../../hooks/useUrlQuery";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../Cta"));
@@ -257,7 +258,7 @@ type Props = {
 const ProductList: FC<Props> = ({ products, count, offset, limit, orderQuery, parentOrder, brands }) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const query = new URLSearchParams(useLocation().search);
+  const query = useUrlQuery();
   const history = useHistory();
   const [oldUrl, setOldUrl] = useState("");
   const [search, setSearch] = useState(query.get("q"));

@@ -9,16 +9,19 @@ import { useHistory } from "react-router-dom";
 import { Checkout, IBilling } from "../../../../utils/validations";
 import { FormikProvider, useFormik } from "formik";
 import Input from "../../../Formik/components/Input";
+import { useUrlQuery } from "../../../../hooks/useUrlQuery";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
 
-const nextStep = "shipping";
+
 const Billing: FC<{
     updateOrder: (field: string, values: IBilling) => void
   }> = ({ updateOrder }) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const query = useUrlQuery();
+  const nextStep = query.get("next") || "shipping";
   const { agency } = useCityPriceList();
 
   const [isValid, setIsValid] = useState(false);
@@ -41,6 +44,7 @@ const Billing: FC<{
   })
  
   useQuery(DETAILS, {
+    fetchPolicy: "network-only",
     onCompleted: (d) => {
       if (d.details) {
         formik.setValues(d.details);

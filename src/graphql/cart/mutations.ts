@@ -39,6 +39,7 @@ export const SET_TEMP_CART = gql`
 
 export const CREATE_ORDER = gql`
   mutation CreateOrder(
+    $SISTEMA: String!
     $discount_amount: Float
     $discount_type: String
     $coupon_code: String
@@ -57,6 +58,7 @@ export const CREATE_ORDER = gql`
     $delivery_date: String
   ) {
     createOrder(
+      SISTEMA: $SISTEMA
       discount_amount: $discount_amount
       discount_type: $discount_type
       coupon_code: $coupon_code

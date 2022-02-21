@@ -43,6 +43,7 @@ export default async () => {
         defaultAddressLabel: String
         idPriceList: Int
         agency: String
+        store: String
         coupon: String
       }
       type Product {

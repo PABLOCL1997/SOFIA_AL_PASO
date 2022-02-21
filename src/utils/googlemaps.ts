@@ -1,7 +1,16 @@
 declare var google: any;
 declare var window: any;
 
-export const setLatLng = (city: string, lat?: any, lng?: any) => {
+export interface Point {
+  lat: string | number;
+  lng: string | number;
+};
+
+const getDistance = (pA: Point, pB: Point) => {
+  return Math.sqrt(Math.pow(pA.lat as number - (pB.lat as number), 2) + Math.pow(pA.lng as number - (pB.lng as number), 2));
+};
+
+export const setLatLng = (city: string, lat?: string | number, lng?: string | number) => {
   let gll;
   if (city && city !== "") {
     gll = new google.maps.LatLng(window.latLangs[city][0], window.latLangs[city][1]);
@@ -18,6 +27,19 @@ export const setLatLng = (city: string, lat?: any, lng?: any) => {
     lat: lat,
     lng: lng,
   });
+};
+
+export const findNearestPointFromArray = (source: Point, comparePoints: Array<Point>) => {
+  let distances = comparePoints.map((comparePoint: Point) => {
+    return {
+      ...comparePoint,
+      lat: comparePoint.lat,
+      lng: comparePoint.lng,
+      distance: getDistance(source, comparePoint),
+    };
+  });
+  distances.sort((a, b) => (a.distance < b.distance ? -1 : 1));
+  return distances[0];
 };
 
 export const enableGmap = () => {
