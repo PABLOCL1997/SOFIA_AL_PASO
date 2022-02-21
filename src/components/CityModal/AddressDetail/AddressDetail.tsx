@@ -274,7 +274,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
           <SC.Selector withMap={withMap}>
             <ExpressIcon />
             <SC.Title>Envío Express</SC.Title>
-            <SC.Subtitle withMap={withMap}>Recibe en 90 minutos</SC.Subtitle>
+            <SC.Subtitle withMap={withMap}>Recibe en casa</SC.Subtitle>
             <SC.Addresses withMap={withMap}>
                 <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
                   <input
