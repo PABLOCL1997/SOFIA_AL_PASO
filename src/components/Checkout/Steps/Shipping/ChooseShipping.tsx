@@ -81,7 +81,7 @@ const ChooseShipping: FC<{
       <ShippingOption
         option={ShippingOptions.Express}
         title="Envío express"
-        description="Recibe en 90 minutos"
+        description="Recibe en casa"
         street={street}
         isSelected={store === "EXPRESS" as OrderType}
         onInfo={() => toggleAndClickSelector(expressSelector)}
