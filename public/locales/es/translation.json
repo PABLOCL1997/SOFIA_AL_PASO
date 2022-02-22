@@ -94,7 +94,7 @@
     "new_brand": "¡Nuevo!",
     "delivery_description": "Realiza tu pedido hasta las <strong>17:00</strong> y recibe a domicilio el siguiente día (entregas de lunes a sábado)",
     "pickup_description": "Retirá tu pedido en el paso de la tienda.",
-    "express_description": "¡Pide online y recibe en la puerta de tu casa de forma rápida y sencilla!"
+    "express_description": "¡Pide online y recibe en la puerta de tu casa de forma rápida y sencilla! <strong> De 8:00 - 19:00</strong> <bold>Servicio habilitado solo para Santa Cruz</bold> "
   },
   "products": {
     "filter_side_bar": {
