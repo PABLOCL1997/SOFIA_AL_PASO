@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState, useEffect } from "react";
+import React, { FC, Suspense, useState, useEffect, useMemo } from "react";
 import { ShippingMethod, Steps } from "./types";
 import styled from "styled-components";
 import { BREAKPOINT } from "../../utils/constants";
@@ -7,7 +7,20 @@ import PickupIcon from "../../assets/images/ChooseShipping/pickup-icon";
 import DeliveryIcon from "../../assets/images/ChooseShipping/delivery-icon";
 import ExpressIcon from "../../assets/images/ChooseShipping/express-icon";
 import useUser from "../../hooks/useUser";
+import useCityPriceList from "../../hooks/useCityPriceList";
 import { OrderType } from "../../types/Order";
+import dayjs from "dayjs";
+const es = require("dayjs/locale/es");
+const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
+const timezone = require("dayjs/plugin/timezone");
+const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
+const isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
+
+dayjs.locale(es);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 const Wrapper = styled.section`
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -49,9 +62,13 @@ const Subtitle = styled.h4`
     font-size: 16px;
   }
 `;
-const Options = styled.ul`
+const Options = styled.ul<{ showExpress: boolean }>`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  ${({ showExpress }) => showExpress ? `
+    grid-template-columns: 1fr 1fr 1fr;
+  ` : `
+    grid-template-columns: 1fr 1fr;
+  `}
   column-gap: 24px;
 
   margin-top: 56px;
@@ -136,6 +153,12 @@ const Strong = styled.strong`
     font-family: MullerBold;
   }
 
+  b {
+    display: block;
+    font-family: MullerBold;
+    margin-top: 8px;
+  }
+
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 12px;
   }
@@ -152,12 +175,21 @@ const ChooseShipping: FC<{
     setStep(Steps.Detailing);
   }
   const { store } : { store: OrderType } = useUser();
+  const { city } : { city: string } = useCityPriceList();
+  const showExpress = useMemo(() => {
+    const initHour: dayjs.Dayjs = dayjs().tz("America/La_Paz").hour(8).minute(0).second(0);
+    const finishHour: dayjs.Dayjs = dayjs().tz("America/La_Paz").hour(19).minute(0).second(0);
+    const date: dayjs.Dayjs = dayjs().tz("America/La_Paz");
+
+    // @ts-ignore
+    return city === 'SC' && date.isSameOrAfter(initHour, 'second') && date.isSameOrBefore(finishHour, 'second')
+  }, [city]);
 
   return (
     <Wrapper>
       <Title>{t("welcome")}</Title>
       <Subtitle>{t("subtitle")}</Subtitle>
-      <Options>
+      <Options showExpress={showExpress}>
         <Option
           className="storePickup"
           selected={store === "PICKUP"}
@@ -168,19 +200,22 @@ const ChooseShipping: FC<{
           {/* show only if selected */}
           {store === "PICKUP" && <em>{street}</em>}
         </Option>
-        <Option
-          selected={store === "EXPRESS"}
-          className="storeExpress"
-          onClick={() => handleStep(ShippingMethod.Express)}
-        >
-          <ExpressIcon 
-          />
-          <p
-          onClick={() => handleStep(ShippingMethod.Express)}
-          
-          >{t("express_title")}</p>
-          <strong onClick={() => handleStep(ShippingMethod.Store)}>{t("new_brand")}</strong>
-        </Option>
+        {/* show this option only in Santa Cruz */}
+        {showExpress &&
+          <Option
+            selected={store === "EXPRESS"}
+            className="storeExpress"
+            onClick={() => handleStep(ShippingMethod.Express)}
+          >
+            <ExpressIcon 
+            />
+            <p
+            onClick={() => handleStep(ShippingMethod.Express)}
+            
+            >{t("express_title")}</p>
+            <strong onClick={() => handleStep(ShippingMethod.Store)}>{t("new_brand")}</strong>
+          </Option>
+        }
         <Option
           className="delivery"
           selected={store === "B2E" || store === "ECOMMERCE"}
@@ -192,9 +227,12 @@ const ChooseShipping: FC<{
           {(store === "B2E" || store === "ECOMMERCE") && <em>{street}</em>}
         </Option>
         <Strong>{t("pickup_description")}</Strong>
-        <Strong>
-          <Trans i18nKey={t("express_description")} components={{ strong: <strong /> }} />
-        </Strong>        
+        {/* show this description only in Santa Cruz */}
+        {showExpress ?
+          <Strong>
+            <Trans i18nKey={t("express_description")} components={{ strong: <strong />, bold: <b /> }} />
+          </Strong>        
+        : null}
         <Strong>
           <Trans i18nKey={t("delivery_description")} components={{ strong: <strong /> }} />
         </Strong>
