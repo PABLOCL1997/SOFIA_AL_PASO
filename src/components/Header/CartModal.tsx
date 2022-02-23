@@ -1,10 +1,10 @@
-import React, { FC, Suspense, useState } from "react";
+import React, { FC, Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
-import { trackGoToCheckoutEvent } from "../../utils/dataLayer";
+import { trackGoToCheckoutEvent, trackViewCart } from "../../utils/dataLayer";
 import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
@@ -35,7 +35,7 @@ const CartModal: FC<Props> = () => {
       closeCartModal();
       return toggleLoginModal();
     }
-    trackGoToCheckoutEvent();
+    trackGoToCheckoutEvent(cart?.cartItems);
     closeCartModal();
     return history.push("/checkout");
   };
@@ -57,6 +57,12 @@ const CartModal: FC<Props> = () => {
     }
     return relProducts;
   };
+
+  useEffect(() => {
+    if (userData?.userInfo[0]?.openCartModal && cart?.cartItems) {
+      trackViewCart(cart?.cartItems);
+    }
+}, [cart?.cartItems, userData]);
 
   return (
     <Suspense fallback={<Loader />}>

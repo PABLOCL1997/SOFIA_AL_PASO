@@ -332,11 +332,46 @@ export const trackRemoveCartEvent = async () => {
   } catch (e) {}
 };
 
-export const trackGoToCheckoutEvent = async () => {
+export const trackGoToCheckoutEvent = async (products: Array<ProductType>) => {
   try {
     const event = {
       event: "irCheckout",
+      ecommerce: {
+        currencyCode: "BOB",
+        value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + special_price * (stock || 0), 0),
+        items: products.map((p: ProductType) => ({
+          item_id: p.sku,
+          item_name: p.name,
+          price: (p.special_price || 0).toFixed(2),
+          brand: "Sofía",
+          item_category: p.category_name,
+          quantity: p.qty,
+        })),
+      },
     };
     (window as any).dataLayer.push(event);
   } catch (e) {}
+};
+
+export const trackViewCart = async (products: Array<ProductType>) => {
+  try {
+    const event = {
+      event: "view_cart",
+      ecommerce: {
+        currencyCode: "BOB",
+        value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + special_price * (stock || 0), 0),
+        items: products.map((p: ProductType) => ({
+          item_id: p.sku,
+          item_name: p.name,
+          price: (p.special_price || 0).toFixed(2),
+          brand: "Sofía",
+          item_category: p.category_name,
+          quantity: p.qty,
+        })),
+      },
+    };
+    (window as any).dataLayer.push(event);
+  } catch (error) {
+    console.error(error);
+  }
 };

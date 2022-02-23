@@ -12,6 +12,7 @@ import * as SC from "../styled-components/pages/product";
 import useProduct from "../hooks/useProduct";
 import useCart from "../hooks/useCart";
 import useCityPriceList from "../hooks/useCityPriceList";
+import { trackProduct } from "../utils/dataLayer";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
@@ -78,6 +79,12 @@ const Product: FC<Props> = ({ inlineProdname = "", oldUrl, closeModal, openModal
     document.title = `${PRODUCT_TITLE} ${prodname}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (product) {
+      trackProduct(product);
+    }
+  }, [product]);
 
   return (
     <Suspense

@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLazyQuery } from "@apollo/react-hooks";
-import { trackProductList } from "../utils/dataLayer";
 import { GET_B2E_PRODUCTS, GET_PRODUCTS, GET_SAP_PRODUCTS } from "../graphql/products/queries";
 import { GET_BRANDS } from "../graphql/metadata/queries";
-import { useLocation } from "react-router-dom";
 import useCategory from "./useCategory";
 import { OrderColums } from "../graphql/products/type";
 import useCityPriceList from "./useCityPriceList";
@@ -75,9 +73,6 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
       setProducts(d.productsB2E.rows);
       setTotal(d.productsB2E.count);
       setLoading(false);
-      try {
-        trackProductList(d.productsB2E.rows);
-      } catch (e) {}
     },
   });
   const [loadProducts] = useLazyQuery(GET_PRODUCTS, {
@@ -87,9 +82,6 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
       setProducts(d.products.rows);
       setTotal(d.products.count);
       setLoading(false);
-      try {
-        trackProductList(d.products.rows);
-      } catch (e) {}
     },
   });
 
