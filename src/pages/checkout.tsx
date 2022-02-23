@@ -31,6 +31,8 @@ const Review = React.lazy(() => import(/* webpackChunkName: "Review" */ "../comp
 const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../components/Checkout/Steps/Cart"));
 const DeliveryDate = React.lazy(() => import(/* webpackChunkName: "DeliveryDate" */ "../components/Checkout/Steps/DeliveryDate"));
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket"));
+const ConfirmAddress = React.lazy(() => import(/* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"));
+
 
 const Checkout = () => {
   const { t } = useTranslation();
@@ -426,7 +428,11 @@ const Checkout = () => {
   };
 
   const saveOrder = () => {
-    checkAndNewOrder();
+    // show popup with map (get coords) to confirm order
+    if (!(window as any).latitude || !(window as any).longitude) {
+      return setConfirmModalVisible(true); 
+    }
+    return checkAndNewOrder();
   };
 
   const updateOrderData = (key: string, values: any) => {
@@ -457,6 +463,12 @@ const Checkout = () => {
 
   return (
     <Suspense fallback={<Loader />}>
+      <ConfirmAddress
+        address={orderData.shipping.street ? orderData.shipping.street.replace(/\|/g, " ") : ""}
+        visible={confirmModalVisible}
+        confirm={saveOrder}
+        cancel={() => setConfirmModalVisible(false)}
+      />
       <SC.Wrapper>
         <div className="main-container">
           {!showTodotixPayment && !result.length && (
