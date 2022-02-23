@@ -5,7 +5,6 @@ import { CategoryType } from "../graphql/categories/type";
 import { ProductType } from "../graphql/products/type";
 import { GET_B2E_PRODUCT, GET_PRODUCT, GET_PRODUCT_DETAIL, GET_SAP_PRODUCT } from "../graphql/products/queries";
 import useCityPriceList from "./useCityPriceList";
-import { trackProduct } from "../utils/dataLayer";
 import axios from "axios";
 import { useUrlQuery } from "./useUrlQuery";
 
@@ -61,9 +60,6 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
           },
         });
       }
-      try {
-        trackProduct(d.product);
-      } catch (error) {}
     },
   });
 
@@ -89,9 +85,6 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
           },
         });
       }
-      try {
-        trackProduct(d.product);
-      } catch (error) {}
     },
   });
 

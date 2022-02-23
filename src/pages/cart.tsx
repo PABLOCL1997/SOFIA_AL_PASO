@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -8,7 +8,7 @@ import { ProductType } from "../graphql/products/type";
 import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
 import useCart from "../hooks/useCart";
-import { trackGoToCheckoutEvent } from "../utils/dataLayer";
+import { trackGoToCheckoutEvent, trackViewCart } from "../utils/dataLayer";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Cta"));
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../components/Images/Delete"));
@@ -29,7 +29,7 @@ const Cart = () => {
     });
 
     const checkout = () => {
-        trackGoToCheckoutEvent();
+        trackGoToCheckoutEvent(cart?.cartItems);
         closeCartModal();
         if (userData?.userInfo?.length && !userData?.userInfo[0]?.isLoggedIn) {
             (window as any).navigateToCheckout = true;
@@ -37,6 +37,12 @@ const Cart = () => {
         }
         history.push("/checkout");
     };
+
+    useEffect(() => {
+        if (cart?.cartItems) {
+            trackViewCart(cart?.cartItems);
+        }
+    }, [cart?.cartItems]);
 
     const getRelatedProducts = () => {
         let relProducts: ProductType[] = [];

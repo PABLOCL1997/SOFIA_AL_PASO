@@ -1,9 +1,9 @@
 import React, { Suspense, FC, useEffect } from "react";
 import styled from "styled-components";
-
 import { fromLink } from "../utils/string";
 import { BREAKPOINT } from "../utils/constants";
 import { PRODUCTS_TITLE } from "../meta";
+import { trackProductList } from "../utils/dataLayer";
 import DelayedWrapper from "../components/DelayedWrapper";
 import { BreadWrap } from "../styled-components/ProductsStyles";
 import BreadCrumbs from "../components/Breadcrumbs/Breadcrumbs";
@@ -70,6 +70,12 @@ const Products: FC<Props> = () => {
     document.title = category ? `${PRODUCTS_TITLE} - ${fromLink(category)}` : PRODUCTS_TITLE;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category_id, category, subcategory, lastlevel, query, order, search, brand, offset]);
+
+  useEffect(() => {
+    if (products) {
+      trackProductList(products)
+    }
+  }, [products]);
 
   return (
     <Suspense fallback={<Loader />}>
