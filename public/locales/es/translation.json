@@ -94,7 +94,7 @@
     "new_brand": "¡Nuevo!",
     "delivery_description": "Realiza tu pedido hasta las <strong>17:00</strong> y recibe a domicilio el siguiente día (entregas de lunes a sábado)",
     "pickup_description": "¡Retira en Sofia al Paso dentro de la siguiente hora! Guardamos tu pedido hasta 24 horas.",
-    "express_description": "¡Pide online y recibe en la puerta de tu casa de forma rápida y sencilla! <strong> De 8:00 - 19:00</strong> <bold>Servicio habilitado solo para Santa Cruz</bold>"
+    "express_description": "¡Pide online y recibe en la puerta de tu casa de forma rápida y sencilla! <strong>Lun-Sáb y Dom De 8:00 - 19:00</strong> <bold>Servicio habilitado solo para Santa Cruz</bold>"
   },
   "products": {
     "filter_side_bar": {
@@ -399,7 +399,7 @@
     "mulitple_subtitle": "Se generaron dos ordenes porque compraste alimento para mascotas y productos congelados.",
     "multiple_subtitle_numbers": "Tus números de orden son: {{increment_ids}}",
     "mail": "Usted recibirá un Email confirmando el pedido con los detalles de su orden.",
-    "time": "Su pedido será entregado lo antes posible (horario de atención pedidos express de 08:00 a 19:00)",
+    "time": "Su pedido será entregado lo antes posible (horario de atención pedidos express de Lun-Sáb y Dom de 08:00 a 19:00)",
     "phone": "Nuestro servicio de atención al cliente se pondrá en contacto con usted en caso de haber algún inconveniente o variante en su compra.",
     "client": {
       "title": "Estimado cliente:",
