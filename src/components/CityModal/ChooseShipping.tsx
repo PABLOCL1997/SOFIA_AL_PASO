@@ -152,8 +152,15 @@ const Strong = styled.strong`
   strong {
     font-family: MullerBold;
   }
-
-  b {
+  // timeframes
+  em {
+    display: block;
+    font-size: 14px;
+    font-family: MullerMedium;
+    margin: 8px 0 10px;
+  }
+  // cities available
+  small {
     display: block;
     font-family: MullerBold;
     margin-top: 8px;
@@ -230,7 +237,7 @@ const ChooseShipping: FC<{
         {/* show this description only in Santa Cruz */}
         {showExpress ?
           <Strong>
-            <Trans i18nKey={t("express_description")} components={{ strong: <strong />, bold: <b /> }} />
+            <Trans i18nKey={t("express_description")} components={{ strong: <strong />, cities: <small />, timeframes: <em /> }} />
           </Strong>        
         : null}
         <Strong>
