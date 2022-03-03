@@ -107,12 +107,12 @@ const TrackingWarnings: FC = () => {
         });
         const projectedArrival = dayjs(trackOrder.data.getTrackingInfo.projectedArrival).tz("America/La_Paz");
         if (todayLocal.isBefore(projectedArrival)) {
-          trackOrder.data.getTrackingInfo.orderId = fData[i].numeroPedido;
-          trackOrder.data.getTrackingInfo.nit = String(fData[i].nit);
+          trackOrder.data.getTrackingInfo.orderId = fData[i].incrementId;
+          trackOrder.data.getTrackingInfo.nit = String(localUserData.details.nit);
           results.push({
             status: trackOrder.data.getTrackingInfo.status,
-            orderId: fData[i].numeroPedido,
-            nit: String(fData[i].nit),
+            orderId: fData[i].incrementId,
+            nit: String(localUserData.details.nit),
             projectedArrival: projectedArrival.format("HH:mm"),
           });
         }
