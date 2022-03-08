@@ -3,7 +3,7 @@ import React, { Suspense, FC, useEffect, useState } from "react";
 import { useTranslation, UseTranslationOptions } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import Benefits from "../components/Activate/Benefits";
-import ConfirmPhone from "../components/Activate/ConfirmPhone";
+import ValidateOptions from "../components/Activate/ValidateOptions";
 import Congrats from "../components/Activate/Congrats";
 import InsertNit from "../components/Activate/InsertNit/InsertNit";
 import Loading from "../components/Activate/Loading/Loading";
@@ -22,7 +22,7 @@ import useCityPriceList from "../hooks/useCityPriceList";
 enum ActivateState {
   Benefits,
   InsertNit,
-  ConfirmPhone,
+  ValidateOptions,  
   WritePin,
   ModifyAddress,
   Congrats,
@@ -36,6 +36,7 @@ const Activate: FC = () => {
   const ErrorNoAddress: string = t("insert_nit.no_address");
   const ErrorAuthy: string = t("confirm_phone.error");
   const InvalidPin: string = t("write_pin.error");
+  const InvalidClientId: string = t("validate_options.error");
   const NoError: string = "";
 
   const history = useHistory();
@@ -47,6 +48,7 @@ const Activate: FC = () => {
   const [street, setStreet] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+  const [clientId, setClientId] = useState(0);
   const [latitude, setLatitude] = useState<string>("");
   const [longitude, setLongitude] = useState<string>("");
   const [idAddress, setIdAddress] = useState<number>(0);
@@ -114,7 +116,8 @@ const Activate: FC = () => {
       } else {
         setName(user.getB2EUserDetails.nombre);
         setPhone(user.getB2EUserDetails.celular);
-        setState(ActivateState.ConfirmPhone);
+        setClientId(user.getB2EUserDetails['id_Cliente']);
+        setState(ActivateState.ValidateOptions)
       }
     },
   });
@@ -139,8 +142,19 @@ const Activate: FC = () => {
     });
   };
 
+  const handleOptionsNext = async (inputValue: string) => {
+    if (String(clientId) === inputValue) handleVerify(false); 
+    else setError(InvalidClientId);
+  }
+
+  const handleOptionsBack = () => {
+    setError(NoError);
+    setState(ActivateState.InsertNit);
+  }
+
   const handleConfirm = async () => {
     try {
+      setState(ActivateState.Loading);
       const authyId = await start(phone, userDetails.details.email);
       if (!authyId) throw new Error(ErrorAuthy);
       setAuthyId(authyId);
@@ -150,11 +164,13 @@ const Activate: FC = () => {
     }
   };
 
-  const handleVerify = async () => {
+  const handleVerify = async (sms: boolean) => {
     try {
       setState(ActivateState.Loading);
-      const response = await verify(authyId, token);
-      if (!response) throw new Error(InvalidPin);
+      if (sms) {
+        const response = await verify(authyId, token);
+        if (!response) throw new Error(InvalidPin);
+      }
       if (userB2E && userB2E.getB2EUserDetails && userB2E.getB2EUserDetails.direcciones) {
         await updateEmployee({
           // value 1 significa es empleado
@@ -192,8 +208,13 @@ const Activate: FC = () => {
         setState(ActivateState.ModifyAddress);
       }
     } catch (error) {
-      setState(ActivateState.WritePin);
-      setError(InvalidPin);
+      if (sms) {
+        setState(ActivateState.WritePin);
+        setError(InvalidPin);
+      } else {
+        setState(ActivateState.ValidateOptions);
+        setError("Error en la activación de tu cuenta.")
+      }
     }
   };
 
@@ -256,9 +277,9 @@ const Activate: FC = () => {
       {state === ActivateState.Loading ? <Loading /> : null}
       {state === ActivateState.Benefits ? <Benefits onBack={() => setState(ActivateState.Benefits)} onNext={() => handleStart()} isEmployee={idPriceList > 0} error={error} /> : null}
       {state === ActivateState.InsertNit ? <InsertNit onBack={() => setState(ActivateState.Benefits)} onNext={() => handleSetNit()} error={error} setNit={setNit} nit={nit} /> : null}
-      {state === ActivateState.ConfirmPhone ? <ConfirmPhone onBack={() => setState(ActivateState.InsertNit)} onNext={() => handleConfirm()} error={error} name={name} phone={phone} /> : null}
+      {state === ActivateState.ValidateOptions ? <ValidateOptions onBack={handleOptionsBack} onNext={handleOptionsNext} onNextSMS={handleConfirm} error={error} name={name} phone={phone} /> : null}
       {state === ActivateState.WritePin ? (
-        <WritePin onBack={() => setState(ActivateState.ConfirmPhone)} onNext={() => handleVerify()} error={error} phone={phone} token={token} setToken={setToken} />
+        <WritePin onBack={() => setState(ActivateState.ValidateOptions)} onNext={() => handleVerify(true)} error={error} phone={phone} token={token} setToken={setToken} />
       ) : null}
       {state === ActivateState.ModifyAddress ? (
         <ModifyAddress
