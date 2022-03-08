@@ -84,6 +84,8 @@ const Shipping: FC<{
   const _nextStep = useMemo(() => (store === "PICKUP" || store === "EXPRESS" ? "payment" : "timeframe"), [store]);
   const nextStep: string = useMemo(() => (query?.get("next")?.length ? query?.get("next") || _nextStep : _nextStep), [store, query?.get("next")]);
   const onChange = (key: string, value: string | number | null, preventMap: boolean = false) => {
+    const validateNit = Checkout.ValidationsForm.Billing.nit(key, String(value));
+    if(!validateNit) return;
     formik.setFieldValue(key, value);
     updateOrder("shipping", {
       ...formik.values,

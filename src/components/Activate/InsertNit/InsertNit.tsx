@@ -14,7 +14,7 @@ const InsertNit: FC<ActivateProps & Props> = ({ onBack, onNext, error, setNit, n
   const { t } = useTranslation("", { keyPrefix: "activate.steps.insert_nit" } as UseTranslationOptions);
   const handleChange = (evt: { target: { validity: { valid: any }; value: any } }) => {
     const value = evt.target.validity.valid ? evt.target.value : nit;
-    setNit(value);
+    if (value.length <= 30) setNit(value);
   };
 
   return (
@@ -28,7 +28,7 @@ const InsertNit: FC<ActivateProps & Props> = ({ onBack, onNext, error, setNit, n
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper>
         {error.length > 0 && <GSC.Error>* {error}</GSC.Error>}
-        <SC.Input min={0} type="number" pattern="[0-9]*" onChange={handleChange} placeholder={t("placeholder")} />
+        <SC.Input min={0} type="text" pattern="[0-9]*" value={String(nit)} onChange={handleChange} placeholder={t("placeholder")} />
         <SC.CallToAction>
           <GSC.ButtonPrimary disabled={!String(nit).length} onClick={() => onNext()}>
             {t("next")}

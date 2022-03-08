@@ -78,4 +78,15 @@ export const Checkout = {
             return await Checkout.Validators.timeframeSchema.validate(timeframe);
         }
     },
+    ValidationsForm: {
+      Billing: {
+        nit: (key: string, value: string): boolean => {
+          if (key === 'nit') {
+            const regexp = /^[0-9]{0,30}$/ig;
+            return regexp.test(value);
+          }
+          return true;
+        }
+      }
+    }
 }
