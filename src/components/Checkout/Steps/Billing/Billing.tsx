@@ -29,8 +29,7 @@ const Billing: FC<{
     agency ? ["firstname", "lastname", "email", "nit", "phone"]
     : ["firstname", "lastname", "email", "nit"]
   ), [agency]) 
-
-
+  
   const formik = useFormik({
     initialValues: {
       firstname: "",
@@ -40,20 +39,20 @@ const Billing: FC<{
       phone: "",
     },
     validationSchema: Checkout.Validators.billingSchema(!!agency && agency?.length > 0),
-    onSubmit: () => {}
+    onSubmit: () => {},
   })
- 
-  useQuery(DETAILS, {
+
+  const { loading } = useQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       if (d.details) {
-        formik.setValues(d.details);
+        formik.setValues({...d.details, nit: !d.details.nit ? "" : d.details.nit});
         updateOrder("billing", {
           ...d.details,
         });
       }
     }
-  });
+  });  
 
   const onChange = (key: string, value: string) => {
     const validateNit = Checkout.ValidationsForm.Billing.nit(key, value);
@@ -63,7 +62,7 @@ const Billing: FC<{
       ...formik.values,
       [key]: value }
     );
-  };
+  };  
 
   useEffect(() => {
     const checkBilling = async () => {
@@ -83,13 +82,14 @@ const Billing: FC<{
         <SC.Title>{t("checkout.billing.title")}</SC.Title>
           <FormikProvider value={formik} >
             <SC.Form>
-              {fields.map((field) => (                    
+              {!loading && fields.map((field) => (                                  
                 <Input
                   name={field}
                   onChange={(evt) => onChange(field, evt.target.value)}
                   readOnly={false}
                   label={t("checkout.billing." + field)}
                   placeholder={t("checkout.billing." + field)}
+                  value={formik.values[field as keyof typeof formik.values]}
                 />
               ))}
             </SC.Form>
