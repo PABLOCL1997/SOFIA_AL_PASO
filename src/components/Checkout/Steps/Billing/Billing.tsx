@@ -56,6 +56,8 @@ const Billing: FC<{
   });
 
   const onChange = (key: string, value: string) => {
+    const validateNit = Checkout.ValidationsForm.Billing.nit(key, value);
+    if(!validateNit) return;
     formik.setFieldValue(key, value);
     updateOrder("billing", {
       ...formik.values,
