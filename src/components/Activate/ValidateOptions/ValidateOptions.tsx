@@ -33,7 +33,7 @@ const ValidateOptions: FC<ActivateProps & Props> = ({ onBack, onNext, error, nam
         <ProgressBar />
         <GSC.Instructions.Wrapper>
           <GSC.Instructions.Title>
-            <Trans i18nKey={phone ? t("instructions") : t("instructions_alt")} components={{ strong: <strong /> }} />
+            <Trans i18nKey={t("instructions")} components={{ strong: <strong /> }} />
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper> 
         {error.length > 0 ? <GSC.Error>{error}</GSC.Error> : null}
