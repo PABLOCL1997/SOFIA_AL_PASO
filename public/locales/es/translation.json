@@ -518,8 +518,7 @@
       },
       "validate_options": {
         "title": "Selecciona un método de validación",
-        "instructions": "<strong>¡Muy bien!</strong> Ahora debes validar que los datos que se muestran a continuación son correctos. Ingresa tu número de empleado o elige la opción de SMS.",
-        "instructions_alt": "<strong>¡Muy bien!</strong> Ahora debes validar que los datos que se muestran a continuación son correctos. Ingresa tu número de empleado.",
+        "instructions": "¡Muy bien! Para validar tu identidad debes ingresar tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago)",
         "placeholder": "Código de empleado",
         "message": "Recibe un SMS en tu celular",
         "next": "Siguiente",
