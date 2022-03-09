@@ -73,7 +73,7 @@ const Products: FC<Props> = () => {
 
   useEffect(() => {
     if (products) {
-      trackProductList(products)
+      trackProductList(products);
     }
   }, [products]);
 
@@ -81,7 +81,7 @@ const Products: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <div className="main-container">
         <Container>
-          <CategoryBanner isMobile={window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))} />
+          {/* <CategoryBanner isMobile={window.innerWidth < parseInt(BREAKPOINT.replace("px", ""))} /> */}
 
           <BreadWrap>
             <BreadCrumbs
