@@ -80,14 +80,12 @@ const useCart = (): CartReturn => {
   const shippingPrice = useMemo(() => {
     const shippingCost = 15; // Bs. 15
     const noShippingCost = 0; // Bs. 0
-    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && 
-      store !== 'PICKUP' && store !== 'EXPRESS'
-    ) {
-      return shippingCost; 
+    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && store !== "PICKUP" && store !== "EXPRESS") {
+      return shippingCost;
     } else {
       return noShippingCost;
     }
-  }, [minimumPrice, totalAmount, agency]);
+  }, [minimumPrice, totalAmount, store]);
 
   const [addItem] = useMutation(ADD_ITEM, {});
   const [showSuccess] = useMutation(SET_USER, {});
@@ -99,32 +97,32 @@ const useCart = (): CartReturn => {
   const [saveCoupon] = useMutation(SET_USER, {});
 
   const twoDecimals = (value: number): string => {
-    const valueString = value.toString().replace('.', ',');
-    const valueArray = valueString.split(',');
+    const valueString = value.toString().replace(".", ",");
+    const valueArray = valueString.split(",");
     if (valueArray.length > 1) {
       // return two first valus of valueArray[1]
-      const integers = valueArray[0]
+      const integers = valueArray[0];
       const decimal = valueArray[1].substring(0, 2);
       return `${integers}.${decimal}`;
     }
     return String(value);
-  }
+  };
 
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     variables: { name: coupon },
     onCompleted: (data) => {
       const discount_amount: number = data?.coupon?.discount_amount;
-      const discount_type: string = data?.coupon?.type
+      const discount_type: string = data?.coupon?.type;
 
       if (discount_type === "%") {
-        const total: number = parseFloat(totalAmount.replace(",", ".")) - shippingPrice;        
-        const _discount_amount = (parseFloat(total.toFixed(2)) * discount_amount) / 100; 
+        const total: number = parseFloat(totalAmount.replace(",", ".")) - shippingPrice;
+        const _discount_amount = (parseFloat(total.toFixed(2)) * discount_amount) / 100;
 
         setDiscountAmount(parseFloat(twoDecimals(_discount_amount)));
       } else {
         setDiscountAmount(parseFloat(discount_amount.toFixed(2)));
       }
-    }
+    },
   });
   const hasStock = (product: ProductType, qty: number) => {
     return product.stock >= qty;
@@ -262,7 +260,7 @@ const useCart = (): CartReturn => {
     setDiscountAmount(0);
     await saveCoupon({
       variables: { user: { coupon: null } },
-    })
+    });
   };
 
   useEffect(() => {
@@ -270,7 +268,7 @@ const useCart = (): CartReturn => {
   }, []);
 
   useEffect(() => {
-    if (coupon) { 
+    if (coupon) {
       checkCoupon();
     }
   }, [coupon]);
@@ -307,8 +305,8 @@ const useCart = (): CartReturn => {
     }
   }, [cart, shippingPrice]);
 
-  const quantity = useMemo(() => cart?.cartItems?.length ? GET_QTY(cart.cartItems) : 0, [cart])
-  const total = useMemo(() => (parseFloat(totalAmount.replace(',','.')) - discountAmount).toFixed(2).replace(".", ","), [totalAmount, discountAmount])
+  const quantity = useMemo(() => (cart?.cartItems?.length ? GET_QTY(cart.cartItems) : 0), [cart]);
+  const total = useMemo(() => (parseFloat(totalAmount.replace(",", ".")) - discountAmount).toFixed(2).replace(".", ","), [totalAmount, discountAmount]);
 
   return {
     cart,
