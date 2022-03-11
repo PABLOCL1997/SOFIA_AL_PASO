@@ -1,31 +1,19 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation, Trans, UseTranslationOptions } from "react-i18next";
 
 import * as SC from "./style";
 import * as GSC from "../style";
-import { ActivateProps } from "../props";
 
 interface Props {
-  name: string;
+  onNext: Function;
+  onBack: Function;
   phone: string;
-  onNextSMS: Function
 }
 
-const ValidateOptions: FC<ActivateProps & Props> = ({ onBack, onNext, error, name, phone, onNextSMS}) => {
+const ValidateOptions: FC<Props> = ({ onBack, onNext, phone}) => {
   const { t } = useTranslation("", { keyPrefix: "activate.steps.validate_options" } as UseTranslationOptions); 
-  const [clientValue, setClientValue] = useState("");
-
-  const mutePhone = (phone: string) => {
-    return phone.length > 6 ? phone.substr(0, 3) + "****" + phone.substr(phone.length - 3) : phone;
-  };
-
-  const handleChange = (event: { target: { value: string } }) => {
-    const value = event.target.value;
-    if (!isNaN(Number(value)) && value.length <= 10) {
-      setClientValue(value);
-    }
-  }  
-
+  const [selected, setSelected] = useState("");
+   
   return (
     <GSC.Wrapper>
       <GSC.Title>{t("title")}</GSC.Title>
@@ -35,30 +23,19 @@ const ValidateOptions: FC<ActivateProps & Props> = ({ onBack, onNext, error, nam
           <GSC.Instructions.Title>
             <Trans i18nKey={t("instructions")} components={{ strong: <strong /> }} />
           </GSC.Instructions.Title>
-        </GSC.Instructions.Wrapper> 
-        {error.length > 0 ? <GSC.Error>{error}</GSC.Error> : null}
-        <SC.Input type="text" value={clientValue} onChange={handleChange} placeholder={t("placeholder")} />
-        <SC.CallToAction>
-          <GSC.ButtonPrimary disabled={!clientValue} type="button" onClick={() => onNext(clientValue)}>
+        </GSC.Instructions.Wrapper>         
+        <SC.Options.Wrapper>
+          <SC.Options.Button selected={selected === "code"} onClick={() => setSelected("code")}>{"Número de empleado"}</SC.Options.Button>
+          <SC.Options.Button selected={selected === "sms"} onClick={() => setSelected("sms")} disabled={!phone} active={!phone}>{"SMS"}</SC.Options.Button>
+        </SC.Options.Wrapper>
+        <SC.CallToAction>          
+          <GSC.ButtonPrimary disabled={!selected} type="button" onClick={() => onNext(selected)}>
             {t("next")}
           </GSC.ButtonPrimary>
           <GSC.ButtonSecondary type="button" onClick={() => onBack()}>
             {t("back")}
           </GSC.ButtonSecondary>
-        </SC.CallToAction>  
-        {phone ? <SC.Wrapper>
-          <SC.Break.Wrapper>
-            <SC.Break.Line></SC.Break.Line>
-            <SC.Break.Title>{"ó"}</SC.Break.Title>
-            <SC.Break.Line></SC.Break.Line>
-          </SC.Break.Wrapper>
-          <SC.Message>{t("message")}</SC.Message>
-          <SC.User.Name>{name}</SC.User.Name> 
-          <SC.User.Wrapper>
-            <SC.User.Phone>{mutePhone(phone)}</SC.User.Phone>
-            <SC.User.Send onClick={() => onNextSMS()}>{"Enviar SMS"}</SC.User.Send>          
-          </SC.User.Wrapper>
-        </SC.Wrapper> : null}
+        </SC.CallToAction>          
       </GSC.Square>      
     </GSC.Wrapper>
   );
