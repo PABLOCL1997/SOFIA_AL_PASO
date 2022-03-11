@@ -1,5 +1,6 @@
 import React, { Suspense, FC, useEffect, useState } from "react";
 import { useTranslation, Trans, UseTranslationOptions } from "react-i18next";
+import logo from "../../../assets/activate/whatsapp-logo.png";
 
 import * as SC from "./style";
 import * as GSC from "../style";
@@ -27,8 +28,15 @@ const InsertNit: FC<ActivateProps & Props> = ({ onBack, onNext, error, setNit, n
             <Trans i18nKey={t("instructions")} components={{ strong: <strong /> }} />
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper>
-        {error.length > 0 && <GSC.Error>* {error}</GSC.Error>}
         <SC.Input min={0} type="text" pattern="[0-9]*" value={String(nit)} onChange={handleChange} placeholder={t("placeholder")} />
+        {error.length > 0 && 
+        <>
+          <GSC.Error>{error}</GSC.Error>
+          <SC.LogoWhatsApp.Wrapper>
+            <SC.LogoWhatsApp.Img src={logo} alt="logo_whatsapp"/>
+            <SC.LogoWhatsApp.Title>{"Bienestar Organizacional"}</SC.LogoWhatsApp.Title>
+          </SC.LogoWhatsApp.Wrapper>
+        </>}
         <SC.CallToAction>
           <GSC.ButtonPrimary disabled={!String(nit).length} onClick={() => onNext()}>
             {t("next")}
