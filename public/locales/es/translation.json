@@ -527,12 +527,14 @@
       "validate_options": {
         "title": "Selecciona un método de validación",
         "instructions": "¡Muy bien! Puedes verificar tu cuenta ingresando tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago) o recibiendo un <strong>SMS</strong> en tu número de celular registrado en el sistema.",        
+        "instructions_code": "¡Ya casi estamos! Debes ingresar tu <strong>código de empleado</strong> a continuación (este dato está en tu Boleta de Pago):",
+        "instructions_sms": "¡Ya casi estamos! Haz clic en siguiente para recibir un PIN por <strong>SMS</strong> y validar tu cuenta:",
         "next": "Siguiente",
         "back": "Volver"       
       },
       "insert_employee_code": {
         "title": "Activa tu cuenta de colaborador",
-        "instructions": "<strong>¡Ya casi estamos!</strong> Debes ingresar tu código de empleado a continuación:",
+        "instructions": "<strong>¡Muy bien!</strong> Debes ingresar tu código de empleado a continuación:",
         "placeholder": "Código de empleado",
         "error": "El código ingresado no coincide con el número de empleado, por favor intente de nuevo.",
         "next": "Siguiente",
