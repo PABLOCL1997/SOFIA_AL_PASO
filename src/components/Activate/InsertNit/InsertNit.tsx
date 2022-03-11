@@ -32,10 +32,12 @@ const InsertNit: FC<ActivateProps & Props> = ({ onBack, onNext, error, setNit, n
         {error.length > 0 && 
         <>
           <GSC.Error>{error}</GSC.Error>
-          <SC.LogoWhatsApp.Wrapper>
-            <SC.LogoWhatsApp.Img src={logo} alt="logo_whatsapp"/>
-            <SC.LogoWhatsApp.Title>{"Bienestar Organizacional"}</SC.LogoWhatsApp.Title>
-          </SC.LogoWhatsApp.Wrapper>
+          <SC.Link href={t("bienestar_link")} target="_blank">
+            <SC.LogoWhatsApp.Wrapper>
+              <SC.LogoWhatsApp.Img src={logo} alt="logo_whatsapp"/>
+              <SC.LogoWhatsApp.Title>{"Bienestar Organizacional"}</SC.LogoWhatsApp.Title>
+            </SC.LogoWhatsApp.Wrapper>
+          </SC.Link>
         </>}
         <SC.CallToAction>
           <GSC.ButtonPrimary disabled={!String(nit).length} onClick={() => onNext()}>

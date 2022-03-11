@@ -23,6 +23,12 @@ export const CallToAction = styled.div`
   }
 `;
 
+export const Link = styled.a`
+  &:focus {
+    outline: none;
+  }
+`;
+
 export const LogoWhatsApp = {
   Wrapper: styled.div`
     display: flex;
