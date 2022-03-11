@@ -4,6 +4,8 @@ import { useTranslation, UseTranslationOptions } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import Benefits from "../components/Activate/Benefits";
 import ValidateOptions from "../components/Activate/ValidateOptions";
+import InsertEmployeeCode from "../components/Activate/InsertEmployeeCode";
+import ConfirmPhone from "../components/Activate/ConfirmPhone";
 import Congrats from "../components/Activate/Congrats";
 import InsertNit from "../components/Activate/InsertNit/InsertNit";
 import Loading from "../components/Activate/Loading/Loading";
@@ -23,6 +25,8 @@ enum ActivateState {
   Benefits,
   InsertNit,
   ValidateOptions,  
+  ConfirmPhone,
+  InsertEmployeeCode,
   WritePin,
   ModifyAddress,
   Congrats,
@@ -36,7 +40,7 @@ const Activate: FC = () => {
   const ErrorNoAddress: string = t("insert_nit.no_address");
   const ErrorAuthy: string = t("confirm_phone.error");
   const InvalidPin: string = t("write_pin.error");
-  const InvalidClientId: string = t("validate_options.error");
+  const InvalidEmployeeId: string = t("insert_employee_code.error");
   const NoError: string = "";
 
   const history = useHistory();
@@ -48,7 +52,7 @@ const Activate: FC = () => {
   const [street, setStreet] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [clientId, setClientId] = useState(0);
+  const [employeeCode, setEmployeeCode] = useState(0);
   const [latitude, setLatitude] = useState<string>("");
   const [longitude, setLongitude] = useState<string>("");
   const [idAddress, setIdAddress] = useState<number>(0);
@@ -116,7 +120,7 @@ const Activate: FC = () => {
       } else {
         setName(user.getB2EUserDetails.nombre);
         setPhone(user.getB2EUserDetails.celular);
-        setClientId(user.getB2EUserDetails['id_Cliente']);
+        setEmployeeCode(user.getB2EUserDetails['codigo_Empleado']);
         setState(ActivateState.ValidateOptions)
       }
     },
@@ -142,15 +146,19 @@ const Activate: FC = () => {
     });
   };
 
-  const handleOptionsNext = async (inputValue: string) => {
-    if (String(clientId) === inputValue) handleVerify(false); 
-    else setError(InvalidClientId);
+  const handleOptionsNext = (option: string) => {
+    if (option === 'sms') {
+      setState(ActivateState.ConfirmPhone);
+    } else {
+      setState(ActivateState.InsertEmployeeCode);
+    }
+    setError(NoError);
   }
 
-  const handleOptionsBack = () => {
-    setError(NoError);
-    setState(ActivateState.InsertNit);
-  }
+  const handleEmployeeCode = (value: string) => {
+    if(String(employeeCode) === value) handleVerify(false);
+    else setError(InvalidEmployeeId);
+  } 
 
   const handleConfirm = async () => {
     try {
@@ -212,7 +220,7 @@ const Activate: FC = () => {
         setState(ActivateState.WritePin);
         setError(InvalidPin);
       } else {
-        setState(ActivateState.ValidateOptions);
+        setState(ActivateState.InsertEmployeeCode);
         setError("Error en la activación de tu cuenta.")
       }
     }
@@ -277,9 +285,11 @@ const Activate: FC = () => {
       {state === ActivateState.Loading ? <Loading /> : null}
       {state === ActivateState.Benefits ? <Benefits onBack={() => setState(ActivateState.Benefits)} onNext={() => handleStart()} isEmployee={idPriceList > 0} error={error} /> : null}
       {state === ActivateState.InsertNit ? <InsertNit onBack={() => setState(ActivateState.Benefits)} onNext={() => handleSetNit()} error={error} setNit={setNit} nit={nit} /> : null}
-      {state === ActivateState.ValidateOptions ? <ValidateOptions onBack={handleOptionsBack} onNext={handleOptionsNext} onNextSMS={handleConfirm} error={error} name={name} phone={phone} /> : null}
+      {state === ActivateState.ValidateOptions ? <ValidateOptions onBack={() => setState(ActivateState.InsertNit)} onNext={handleOptionsNext} phone={phone} /> : null}
+      {state === ActivateState.InsertEmployeeCode ? <InsertEmployeeCode onBack={() => setState(ActivateState.ValidateOptions)} onNext={handleEmployeeCode} error={error}/> : null}
+      {state === ActivateState.ConfirmPhone ? <ConfirmPhone onBack={() => setState(ActivateState.ValidateOptions)} onNext={() => handleConfirm()} error={error} name={name} phone={phone}/> : null}
       {state === ActivateState.WritePin ? (
-        <WritePin onBack={() => setState(ActivateState.ValidateOptions)} onNext={() => handleVerify(true)} error={error} phone={phone} token={token} setToken={setToken} />
+        <WritePin onBack={() => setState(ActivateState.ConfirmPhone)} onNext={() => handleVerify(true)} error={error} phone={phone} token={token} setToken={setToken} />
       ) : null}
       {state === ActivateState.ModifyAddress ? (
         <ModifyAddress
