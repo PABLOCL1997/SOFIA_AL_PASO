@@ -521,7 +521,7 @@
         "instructions": "Primero, <strong>ingresa tu Carnet de Identidad</strong> (CI) para que busquemos tus datos:",
         "placeholder": "Carnet de Identidad",
         "next": "Siguiente",
-        "error": "No se encontro usuario.",
+        "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún. Favor de contactarse con:",
         "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte."
       },
       "validate_options": {
