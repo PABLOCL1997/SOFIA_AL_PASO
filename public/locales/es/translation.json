@@ -523,7 +523,7 @@
         "next": "Siguiente",
         "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún. Favor de contactarse con:",
         "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte.",
-        "bienestar_link": ""
+        "bienestar_link": "https://wa.me/59169204300"
       },
       "validate_options": {
         "title": "Selecciona un método de validación",
