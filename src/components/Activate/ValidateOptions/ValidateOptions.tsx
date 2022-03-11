@@ -13,6 +13,10 @@ interface Props {
 const ValidateOptions: FC<Props> = ({ onBack, onNext, phone}) => {
   const { t } = useTranslation("", { keyPrefix: "activate.steps.validate_options" } as UseTranslationOptions); 
   const [selected, setSelected] = useState("");
+  const instructionsSelected = {
+    code: t("instructions_code"),
+    sms: t("instructions_sms")
+  } 
    
   return (
     <GSC.Wrapper>
@@ -21,7 +25,7 @@ const ValidateOptions: FC<Props> = ({ onBack, onNext, phone}) => {
         <ProgressBar />
         <GSC.Instructions.Wrapper>
           <GSC.Instructions.Title>
-            <Trans i18nKey={t("instructions")} components={{ strong: <strong /> }} />
+            <Trans i18nKey={!selected ? t("instructions") : instructionsSelected[selected as keyof typeof instructionsSelected]} components={{ strong: <strong /> }} />
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper>         
         <SC.Options.Wrapper>
