@@ -93,8 +93,8 @@
     "express_title": "Envío Express",
     "new_brand": "¡Nuevo!",
     "delivery_description": "Realiza tu pedido hasta las <strong>17:00</strong> y recibe a domicilio el siguiente día (entregas de lunes a sábado)",
-    "pickup_description": "¡Retira en Sofia al Paso dentro de la siguiente hora! Guardamos tu pedido hasta 24 horas.",
-    "express_description": "¡Pide online y recibe en la puerta de tu casa de forma rápida y sencilla! <timeframes>Lun - Sab 8:30am a 19:00pm</timeframes>"
+    "pickup_description": "Retirá tu pedido en el paso de la tienda.",
+    "express_description": "¡Pide online y recibe en menos de <strong>90 minutos</strong>!"
   },
   "products": {
     "filter_side_bar": {
@@ -399,7 +399,7 @@
     "mulitple_subtitle": "Se generaron dos ordenes porque compraste alimento para mascotas y productos congelados.",
     "multiple_subtitle_numbers": "Tus números de orden son: {{increment_ids}}",
     "mail": "Usted recibirá un Email confirmando el pedido con los detalles de su orden.",
-    "time": "Su pedido será entregado lo antes posible (horario de atención pedidos express de Lun - Sab 8:30am a 19:00pm. Domingo de 8:30am a 11:30am.)",
+    "time": "Su pedido será entregado dentro de las próximas 24 hrs, de Lunes a Sábado (para pedidos realizados hasta las 17:00).",
     "phone": "Nuestro servicio de atención al cliente se pondrá en contacto con usted en caso de haber algún inconveniente o variante en su compra.",
     "client": {
       "title": "Estimado cliente:",
@@ -515,16 +515,7 @@
         "activate": "activar",
         "warning": "Recuerda primero iniciar sesión. Si aún no tienes cuenta <sofialink>creala desde aquí.</sofialink>",
         "already_activated": "Cuenta de colaborador activada"
-      },
-      "validate_options": {
-        "title": "Selecciona un método de validación",
-        "instructions": "¡Muy bien! Para validar tu identidad debes ingresar tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago)",
-        "placeholder": "Código de empleado",
-        "message": "Recibe un SMS en tu celular",
-        "next": "Siguiente",
-        "back": "Volver",
-        "error": "El código ingresado no coincide con el número de empleado, por favor intente de nuevo."
-      },
+      },      
       "insert_nit": {
         "title": "Activa tu cuenta de colaborador",
         "instructions": "Primero, <strong>ingresa tu Carnet de Identidad</strong> (CI) para que busquemos tus datos:",
@@ -532,6 +523,20 @@
         "next": "Siguiente",
         "error": "No se encontro usuario.",
         "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte."
+      },
+      "validate_options": {
+        "title": "Selecciona un método de validación",
+        "instructions": "¡Muy bien! Puedes verificar tu cuenta ingresando tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago) o recibiendo un <strong>SMS</strong> en tu número de celular registrado en el sistema.",        
+        "next": "Siguiente",
+        "back": "Volver"       
+      },
+      "insert_employee_code": {
+        "title": "Activa tu cuenta de colaborador",
+        "instructions": "<strong>¡Ya casi estamos!</strong> Debes ingresar tu código de empleado a continuación:",
+        "placeholder": "Código de empleado",
+        "error": "El código ingresado no coincide con el número de empleado, por favor intente de nuevo.",
+        "next": "Siguiente",
+        "back": "Volver"
       },
       "confirm_phone": {
         "title": "Activa tu cuenta de colaborador",
