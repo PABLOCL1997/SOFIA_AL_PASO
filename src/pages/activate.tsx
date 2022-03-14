@@ -113,8 +113,8 @@ const Activate: FC = () => {
       if (!user.getB2EUserDetails.nombre || !user.getB2EUserDetails.nit) {
         setError(ErrorNoUser);
         setState(ActivateState.InsertNit);
-      }
-      if (!user.getB2EUserDetails.celular || !user.getB2EUserDetails?.direcciones || !user.getB2EUserDetails?.direcciones.length) {
+      }      
+      if (!user.getB2EUserDetails?.direcciones || !user.getB2EUserDetails?.direcciones.length) {
         setError(ErrorNoAddress);
         setState(ActivateState.InsertNit);
       } else {
