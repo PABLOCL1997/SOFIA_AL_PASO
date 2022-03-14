@@ -6,10 +6,10 @@ import ShippingOption from "./ShippingOption";
 import { ShippingOptions } from "./types";
 
 const ChooseShipping: FC<{
-    street: string;
-    addressId: number | null;
-    setShowNewAddress: Function;
-  }> = ({ street, addressId, setShowNewAddress }) => {
+  street: string;
+  addressId: number | null;
+  showNewAddress: boolean;
+}> = ({ street, addressId, showNewAddress }) => {
   const { toggleCityModal, showAddressInfo, store } = useUser();
   const { hasB2EAddress } = useCityPriceList();
 
@@ -31,7 +31,7 @@ const ChooseShipping: FC<{
           title="Recibe en casa"
           description="Compra con descuento %"
           street={street}
-          isSelected={store === "B2E" as OrderType}
+          isSelected={store === ("B2E" as OrderType)}
           onInfo={() => {
             showAddressInfo({
               variables: {
@@ -53,7 +53,7 @@ const ChooseShipping: FC<{
           title="Recibe en casa"
           description="Compra sin descuento"
           street={street}
-          isSelected={store === "ECOMMERCE" as OrderType}
+          isSelected={store === ("ECOMMERCE" as OrderType)}
           onInfo={() => {
             showAddressInfo({
               variables: {
@@ -71,9 +71,8 @@ const ChooseShipping: FC<{
           onSelect={() => toggleAndClickSelector(deliverySelector)}
           onAddAddress={() => {
             // @ts-ignore
-            setShowNewAddress(true);
-            toggleAndClickSelector(deliverySelector)
-            document.querySelector("#nueva-direccion")?.scrollIntoView({ behavior: "smooth", block: "center" });
+            toggleAndClickSelector(deliverySelector);
+            if (showNewAddress) document.querySelector("#nueva-direccion")?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         />
       )}
@@ -83,7 +82,7 @@ const ChooseShipping: FC<{
         title="Envío express"
         description="Recibe en casa"
         street={street}
-        isSelected={store === "EXPRESS" as OrderType}
+        isSelected={store === ("EXPRESS" as OrderType)}
         onInfo={() => toggleAndClickSelector(expressSelector)}
         onSelect={() => toggleAndClickSelector(expressSelector)}
         onAddAddress={() => toggleAndClickSelector(expressSelector)}
@@ -94,7 +93,7 @@ const ChooseShipping: FC<{
         title="Retira al paso"
         description="Compra sin descuento"
         street={street}
-        isSelected={store === "PICKUP" as OrderType}
+        isSelected={store === ("PICKUP" as OrderType)}
         onInfo={() => {
           showAddressInfo({
             variables: {
@@ -107,7 +106,6 @@ const ChooseShipping: FC<{
         }}
         onSelect={() => toggleAndClickSelector(pickupSelector)}
         onAddAddress={() => {
-          setShowNewAddress(false);
           toggleAndClickSelector(pickupSelector);
         }}
       />
