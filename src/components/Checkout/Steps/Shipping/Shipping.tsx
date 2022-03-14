@@ -37,7 +37,7 @@ const Shipping: FC<{
   const query = useUrlQuery();
   const history = useHistory();
   const { user: localData, store } = useUser();
-
+  const [showAddressForm, setShowAddressForm] = useState(true);
   const { agency, setAgency, agencies } = useCityPriceList();
   const [showSuccess] = useMutation(SET_USER, {});
   const formik = useFormik({
@@ -72,6 +72,17 @@ const Shipping: FC<{
             ...address,
             address: address?.street || "",
           });
+          setShowAddressForm(false);
+        } else if (d.details.addresses.length > 0) {
+          const addr = d.details.addresses[0];
+          updateOrder("shipping", {
+            ...addr,
+          });
+          formik.setValues({
+            ...addr,
+            address: addr.street || "",
+          });
+          setShowAddressForm(false);
         }
       }
     },
@@ -85,7 +96,7 @@ const Shipping: FC<{
   const nextStep: string = useMemo(() => (query?.get("next")?.length ? query?.get("next") || _nextStep : _nextStep), [store, query?.get("next")]);
   const onChange = (key: string, value: string | number | null, preventMap: boolean = false) => {
     const validateNit = Checkout.ValidationsForm.Billing.nit(key, String(value));
-    if(!validateNit) return;
+    if (!validateNit) return;
     formik.setFieldValue(key, value);
     updateOrder("shipping", {
       ...formik.values,
@@ -298,9 +309,9 @@ const Shipping: FC<{
           <h2>{t("checkout.delivery.title")}</h2>
         </SC.Title>
 
-        <ChooseShipping street={street} addressId={addressId} setShowNewAddress={() => {}} />
+        <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} />
 
-        {(store === "B2E" || store === "ECOMMERCE") && (
+        {showAddressForm && (store === "B2E" || store === "ECOMMERCE") && (
           <FormikProvider value={formik}>
             <SC.Form id="nueva-direccion" hidden={false}>
               {shippingFields.map((key: string) => {
@@ -318,7 +329,7 @@ const Shipping: FC<{
           </FormikProvider>
         )}
 
-        {newAddress && (store === "B2E" || store === "ECOMMERCE") && !confirmModalVisible && <Map />}
+        {showAddressForm && newAddress && (store === "B2E" || store === "ECOMMERCE") && !confirmModalVisible && <Map />}
         <SC.Next.Wrapper>
           <CallToAction text={t("general.next")} action={() => handleNext(history, nextStep)} active={(agency || formIsValid) as boolean} filled />
         </SC.Next.Wrapper>

@@ -33,15 +33,14 @@ const DeliveryDate = React.lazy(() => import(/* webpackChunkName: "DeliveryDate"
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket"));
 const ConfirmAddress = React.lazy(() => import(/* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"));
 
-
 const Checkout = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
   const { idPriceList, agency, city, agencies } = useCityPriceList();
-  const { store } = useUser()
+  const { store } = useUser();
   const minimumPrice = useMinimumPrice();
-  const { cart: data, totalAmount } = useCart()
+  const { cart: data, totalAmount } = useCart();
 
   const [processing, setProcessing] = useState(false);
   const [order, setOrder] = useState<Order>();
@@ -94,7 +93,7 @@ const Checkout = () => {
       ),
     },
     onCompleted: (data: any) => {
-      const cartItems: ProductType[] = JSON.parse(data.checkCart.cart)
+      const cartItems: ProductType[] = JSON.parse(data.checkCart.cart);
       if (cartItems && cartItems.length > 0) {
         setConfirmModalVisible(false);
         const items: Array<string> = validateOrder(cartItems);
@@ -102,24 +101,22 @@ const Checkout = () => {
         if (!items.length) return;
         // show modal only on b2c, not on b2b nor pickup
         if (!(idPriceList > 0 || !!agency)) setConfirmModalVisible(true);
-        
+
         const special_address = idPriceList > 0;
         const agencyObj = agency ? search("key", agency, agencies) : null;
-        const isPickup = store === 'PICKUP';
+        const isPickup = store === "PICKUP";
         if (!items.length) return;
 
-        const delivery_price = store === 'EXPRESS' ? 15 : 0;
-        const firstname = escapeSingleQuote(orderData.shipping.firstname)
-        const lastname = escapeSingleQuote(orderData.shipping.lastname)
+        const delivery_price = store === "EXPRESS" ? 15 : 0;
+        const firstname = escapeSingleQuote(orderData.shipping.firstname || orderData.billing.firstname);
+        const lastname = escapeSingleQuote(orderData.shipping.lastname || orderData.billing.lastname);
         const email = orderData?.billing?.email;
-        const country_id = "BO"
+        const country_id = "BO";
         const street = escapeSingleQuote(
-          special_address ? orderData.shipping.street.split("|")[0] :
-            isPickup ? agencyObj.street : orderData.shipping.id ?
-              orderData.shipping.street : `${orderData.shipping.address || ""}`
-        )
-        const latitude = isPickup ? String(agencyObj.latitude) : String((window as any).latitude)
-        const longitude = isPickup ? String(agencyObj.longitude) : String((window as any).longitude)
+          special_address ? orderData.shipping.street.split("|")[0] : isPickup ? agencyObj.street : orderData.shipping.id ? orderData.shipping.street : `${orderData.shipping.address || ""}`
+        );
+        const latitude = isPickup ? String(agencyObj.latitude) : String((window as any).latitude);
+        const longitude = isPickup ? String(agencyObj.longitude) : String((window as any).longitude);
 
         setOrder({
           SISTEMA: store,
@@ -170,8 +167,8 @@ const Checkout = () => {
       } else {
         showError();
       }
-    }
-  })
+    },
+  });
 
   useEffect(() => {
     document.title = CHECKOUT_TITLE;
@@ -274,7 +271,6 @@ const Checkout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todotixData]);
 
-
   const validateOrder = (cartItems: ProductType[]) => {
     let items: Array<string> = [];
 
@@ -313,7 +309,7 @@ const Checkout = () => {
 
     // if it isn't a pickup order
     // and order price is less than minimum price add the shipping item
-    if (store !== 'PICKUP' && store !== 'EXPRESS' && Number(totalAmount.replace(",", ".")) < minimumPrice) {
+    if (store !== "PICKUP" && store !== "EXPRESS" && Number(totalAmount.replace(",", ".")) < minimumPrice) {
       items.push(
         JSON.stringify({
           entity_id: shippingServiceItem.CODIGO,
@@ -343,10 +339,10 @@ const Checkout = () => {
     });
 
     let missingField = false;
-    const requiredFields = store === 'EXPRESS' || store === 'PICKUP' ? ["firstname", "lastname", "email", "nit", "phone"] : ["firstname", "lastname", "email", "nit"];
+    const requiredFields = store === "EXPRESS" || store === "PICKUP" ? ["firstname", "lastname", "email", "nit", "phone"] : ["firstname", "lastname", "email", "nit"];
     requiredFields.forEach((key: string) => {
       // @ts-ignore
-      if (!(orderData.billing[key]) && !missingField) {
+      if (!orderData.billing[key] && !missingField) {
         missingField = true;
         const input = document.querySelector(`[name="billing-${key}"]`);
         if (input) {
@@ -368,10 +364,10 @@ const Checkout = () => {
       }
     });
 
-    if (!missingField && !orderData.shipping.id && store !== 'PICKUP') {
-      const shippingFields = store === 'EXPRESS' ? ["firstname", "phone", "nit", "city", "address"] : ["firstname", "phone", "phone2", "nit", "city", "address", "reference"]
+    if (!missingField && !orderData.shipping.id && store !== "PICKUP") {
+      const shippingFields = store === "EXPRESS" ? ["firstname", "phone", "nit", "city", "address"] : ["firstname", "phone", "phone2", "nit", "city", "address", "reference"];
       shippingFields.forEach((key: string) => {
-        // @ts-ignore        
+        // @ts-ignore
         if ((!orderData.shipping[key] || !orderData.shipping[key].trim()) && !missingField) {
           missingField = true;
 
@@ -396,7 +392,7 @@ const Checkout = () => {
       });
     }
 
-    if (store !== 'EXPRESS' && store !== 'PICKUP') {
+    if (store !== "EXPRESS" && store !== "PICKUP") {
       ["delivery_date", "vh_inicio", "vh_fin"].forEach((key: string, index: number) => {
         const keys = ["delivery_date", "time_frame"];
         // @ts-ignore
@@ -430,7 +426,7 @@ const Checkout = () => {
   const saveOrder = () => {
     // show popup with map (get coords) to confirm order
     if (!(window as any).latitude || !(window as any).longitude) {
-      return setConfirmModalVisible(true); 
+      return setConfirmModalVisible(true);
     }
     return checkAndNewOrder();
   };
@@ -447,14 +443,15 @@ const Checkout = () => {
           email: values.email,
           items: JSON.stringify({
             firstname: values.firstname || "",
-            items: data?.cartItems?.map((product: ProductType) => {
-              return {
-                name: product.name || "",
-                image: product.image || "",
-                price: product.special_price || 0,
-                qty: product.qty || 0,
-              };
-            }) || [],
+            items:
+              data?.cartItems?.map((product: ProductType) => {
+                return {
+                  name: product.name || "",
+                  image: product.image || "",
+                  price: product.special_price || 0,
+                  qty: product.qty || 0,
+                };
+              }) || [],
           }),
         },
       });
@@ -475,16 +472,23 @@ const Checkout = () => {
             <SC.CheckoutWrapper>
               <SC.ShippingMethodWrapper>
                 <h4>
-                  {step === Steps.Shipping && store === 'PICKUP' ? t("checkout.title_pickup"):
-                    step === Steps.Shipping && store !== 'PICKUP' ? t("checkout.title_delivery"):
-                      step === Steps.Cart ? t("checkout.cart.title")
-                      : t("checkout.title")}
-                                    
+                  {step === Steps.Shipping && store === "PICKUP"
+                    ? t("checkout.title_pickup")
+                    : step === Steps.Shipping && store !== "PICKUP"
+                    ? t("checkout.title_delivery")
+                    : step === Steps.Cart
+                    ? t("checkout.cart.title")
+                    : t("checkout.title")}
                 </h4>
-                {step === Steps.Cart ? 
-                  <a href="#" onClick={() => toggleCartModal()}>{t("checkout.cart.modify_cart")}</a>
-                  : <a href="#" onClick={() => handleNext(history, `cart&next=${Steps[step]}`)}>{t("checkout.cart.check_cart")}</a>
-                }
+                {step === Steps.Cart ? (
+                  <a href="#" onClick={() => toggleCartModal()}>
+                    {t("checkout.cart.modify_cart")}
+                  </a>
+                ) : (
+                  <a href="#" onClick={() => handleNext(history, `cart&next=${Steps[step]}`)}>
+                    {t("checkout.cart.check_cart")}
+                  </a>
+                )}
               </SC.ShippingMethodWrapper>
               <SC.Cols>
                 <SC.Col1>
@@ -496,44 +500,25 @@ const Checkout = () => {
 
                   {step === Steps.Shipping ? (
                     <SC.Steps>
-                      <Shipping
-                        updateOrder={updateOrderData}
-                        confirmModalVisible={confirmModalVisible}
-                        setOrderIsReady={setOrderIsReady}
-                        orderData={orderData}
-                      />
+                      <Shipping updateOrder={updateOrderData} confirmModalVisible={confirmModalVisible} setOrderIsReady={setOrderIsReady} orderData={orderData} />
                     </SC.Steps>
                   ) : null}
 
                   {step === Steps.Timeframe ? (
                     <SC.Steps>
-                      <DeliveryDate
-                        updateOrder={updateOrderData}
-                        setOrderData={setOrderData}
-                        orderData={orderData}
-                      />                      
+                      <DeliveryDate updateOrder={updateOrderData} setOrderData={setOrderData} orderData={orderData} />
                     </SC.Steps>
-                  ): null}
+                  ) : null}
 
                   {step === Steps.Payment ? (
                     <SC.Steps>
-                      <Payment
-                        setOrderIsReady={setOrderIsReady}
-                        totalAmount={totalAmount}
-                        updateOrder={updateOrderData}
-                        userDetails={userDetails}
-                        orderData={orderData}
-                      />
+                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} />
                     </SC.Steps>
                   ) : null}
 
                   {step === Steps.Review ? (
                     <SC.Steps>
-                      <Review
-                        orderData={orderData}
-                        confirmOrder={saveOrder}
-                        updateOrder={updateOrderData}
-                      />
+                      <Review orderData={orderData} confirmOrder={saveOrder} updateOrder={updateOrderData} />
                     </SC.Steps>
                   ) : null}
 
@@ -541,18 +526,10 @@ const Checkout = () => {
                     <SC.Steps>
                       <Cart showGoBack updateOrder={updateOrderData} />
                     </SC.Steps>
-                  ): null}
+                  ) : null}
                 </SC.Col1>
                 <SC.Col2>
-                  <Ticket
-                    ready={orderIsReady}
-                    userDetails={userDetails}
-                    userData={localUserData}
-                    processing={processing}
-                    updateOrder={updateOrderData}
-                    order={saveOrder}
-                    step={step}
-                  />
+                  <Ticket ready={orderIsReady} userDetails={userDetails} userData={localUserData} processing={processing} updateOrder={updateOrderData} order={saveOrder} step={step} />
                 </SC.Col2>
               </SC.Cols>
             </SC.CheckoutWrapper>
