@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import { useTranslation, Trans, UseTranslationOptions } from "react-i18next";
 import { ActivateProps } from "../props";
+import logo from "../../../assets/activate/whatsapp-logo.png"
 
 import * as SC from "./style";
 import * as GSC from "../style";
@@ -26,8 +27,18 @@ const InsertEmployeeCode: FC<ActivateProps> = ({ onBack, onNext, error}) => {
             <Trans i18nKey={t("instructions")} components={{ strong: <strong /> }} />
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper> 
-        {error.length > 0 ? <GSC.Error>{error}</GSC.Error> : null}       
         <SC.Input value={employeeCode} onChange={handleChange} type="text" placeholder={t("placeholder")} />
+        {error.length > 0 ? 
+          <>
+            <GSC.Error>{error}</GSC.Error>
+            <SC.Link href={t("bienestar_link")} target="_blank">
+              <SC.LogoWhatsApp.Wrapper>
+                <SC.LogoWhatsApp.Img src={logo} alt="logo_whatsapp"/>
+                <SC.LogoWhatsApp.Title>{"Bienestar Organizacional"}</SC.LogoWhatsApp.Title>
+              </SC.LogoWhatsApp.Wrapper>
+            </SC.Link>
+          </>        
+        : null}       
         <SC.CallToAction>          
           <GSC.ButtonPrimary disabled={!employeeCode} type="button" onClick={() => onNext(employeeCode)}>
             {t("next")}
