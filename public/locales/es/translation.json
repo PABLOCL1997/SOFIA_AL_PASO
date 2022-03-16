@@ -521,14 +521,13 @@
         "instructions": "Primero, <strong>ingresa tu Carnet de Identidad</strong> (CI) para que busquemos tus datos:",
         "placeholder": "Carnet de Identidad",
         "next": "Siguiente",
-        "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún. Favor de contactarse con:",
-        "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte.",
-        "bienestar_link": "https://wa.me/59169204300"
+        "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún.",        
+        "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte."        
       },
       "validate_options": {
         "title": "Selecciona un método de validación",
         "instructions": "¡Muy bien! Puedes verificar tu cuenta ingresando tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago) o recibiendo un <strong>SMS</strong> en tu número de celular registrado en el sistema.",        
-        "instructions_code": "¡Ya casi estamos! Debes ingresar tu <strong>código de empleado</strong> a continuación (este dato está en tu Boleta de Pago):",
+        "instructions_code": "¡Ya casi estamos! Debes ingresar tu <strong>código de empleado</strong> a continuación (<strong>este dato está en tu Boleta de Pago</strong>):",
         "instructions_sms": "¡Ya casi estamos! Haz clic en siguiente para recibir un PIN por <strong>SMS</strong> y validar tu cuenta:",
         "next": "Siguiente",
         "back": "Volver"       
@@ -537,9 +536,10 @@
         "title": "Activa tu cuenta de colaborador",
         "instructions": "<strong>¡Muy bien!</strong> Debes ingresar tu código de empleado a continuación:",
         "placeholder": "Código de empleado",
-        "error": "El código ingresado no coincide con el número de empleado, por favor intente de nuevo.",
+        "error": "El código ingresado no coincide. Favor de contactarse con:",
         "next": "Siguiente",
-        "back": "Volver"
+        "back": "Volver",
+        "bienestar_link": "https://wa.me/59169204300"
       },
       "confirm_phone": {
         "title": "Activa tu cuenta de colaborador",

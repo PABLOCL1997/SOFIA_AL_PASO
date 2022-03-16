@@ -29,7 +29,7 @@ const ValidateOptions: FC<Props> = ({ onBack, onNext, phone}) => {
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper>         
         <SC.Options.Wrapper>
-          <SC.Options.Button selected={selected === "code"} onClick={() => setSelected("code")}>{"Número de empleado"}</SC.Options.Button>
+          <SC.Options.Button selected={selected === "code"} onClick={() => setSelected("code")}>{"Código de empleado"}</SC.Options.Button>
           <SC.Options.Button selected={selected === "sms"} onClick={() => setSelected("sms")} disabled={!phone} active={!phone}>{"SMS"}</SC.Options.Button>
         </SC.Options.Wrapper>
         <SC.CallToAction>          
