@@ -13,8 +13,8 @@ import dayjs from "dayjs";
 const es = require("dayjs/locale/es");
 const utc = require("dayjs/plugin/utc"); // dependent on utc plugin
 const timezone = require("dayjs/plugin/timezone");
-const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
-const isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
+const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
+const isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
 
 dayjs.locale(es);
 dayjs.extend(utc);
@@ -64,9 +64,12 @@ const Subtitle = styled.h4`
 `;
 const Options = styled.ul<{ showExpress: boolean }>`
   display: grid;
-  ${({ showExpress }) => showExpress ? `
+  ${({ showExpress }) =>
+    showExpress
+      ? `
     grid-template-columns: 1fr 1fr 1fr;
-  ` : `
+  `
+      : `
     grid-template-columns: 1fr 1fr;
   `}
   column-gap: 24px;
@@ -172,24 +175,24 @@ const Strong = styled.strong`
 `;
 
 const ChooseShipping: FC<{
-    setStep: Function;
-    setShippingMethod: Function;
-    street: string;
-  }> = ({ setStep, setShippingMethod, street }) => {
+  setStep: Function;
+  setShippingMethod: Function;
+  street: string;
+}> = ({ setStep, setShippingMethod, street }) => {
   const { t } = useTranslation("", { keyPrefix: "citymodal" } as UseTranslationOptions);
   const handleStep = (step: ShippingMethod) => {
     setShippingMethod(step);
     setStep(Steps.Detailing);
-  }
-  const { store } : { store: OrderType } = useUser();
-  const { city } : { city: string } = useCityPriceList();
+  };
+  const { store }: { store: OrderType } = useUser();
+  const { city }: { city: string } = useCityPriceList();
   const showExpress = useMemo(() => {
     const initHour: dayjs.Dayjs = dayjs().tz("America/La_Paz").hour(8).minute(0).second(0);
     const finishHour: dayjs.Dayjs = dayjs().tz("America/La_Paz").hour(19).minute(0).second(0);
     const date: dayjs.Dayjs = dayjs().tz("America/La_Paz");
 
     // @ts-ignore
-    return city === 'SC' && date.isSameOrAfter(initHour, 'second') && date.isSameOrBefore(finishHour, 'second')
+    return (city === "SC" || city === "CB") && date.isSameOrAfter(initHour, "second") && date.isSameOrBefore(finishHour, "second");
   }, [city]);
 
   return (
@@ -197,37 +200,21 @@ const ChooseShipping: FC<{
       <Title>{t("welcome")}</Title>
       <Subtitle>{t("subtitle")}</Subtitle>
       <Options showExpress={showExpress}>
-        <Option
-          className="storePickup"
-          selected={store === "PICKUP"}
-          onClick={() => handleStep(ShippingMethod.Pickup)}
-        >
+        <Option className="storePickup" selected={store === "PICKUP"} onClick={() => handleStep(ShippingMethod.Pickup)}>
           <PickupIcon />
           <p>{t("pickup_title")}</p>
           {/* show only if selected */}
           {store === "PICKUP" && <em>{street}</em>}
         </Option>
         {/* show this option only in Santa Cruz */}
-        {showExpress &&
-          <Option
-            selected={store === "EXPRESS"}
-            className="storeExpress"
-            onClick={() => handleStep(ShippingMethod.Express)}
-          >
-            <ExpressIcon 
-            />
-            <p
-            onClick={() => handleStep(ShippingMethod.Express)}
-            
-            >{t("express_title")}</p>
+        {showExpress && (
+          <Option selected={store === "EXPRESS"} className="storeExpress" onClick={() => handleStep(ShippingMethod.Express)}>
+            <ExpressIcon />
+            <p onClick={() => handleStep(ShippingMethod.Express)}>{t("express_title")}</p>
             <strong onClick={() => handleStep(ShippingMethod.Store)}>{t("new_brand")}</strong>
           </Option>
-        }
-        <Option
-          className="delivery"
-          selected={store === "B2E" || store === "ECOMMERCE"}
-          onClick={() => handleStep(ShippingMethod.Delivery)}
-        >
+        )}
+        <Option className="delivery" selected={store === "B2E" || store === "ECOMMERCE"} onClick={() => handleStep(ShippingMethod.Delivery)}>
           <DeliveryIcon />
           <p>{t("delivery_title")}</p>
           {/* show only if selected */}
@@ -235,11 +222,11 @@ const ChooseShipping: FC<{
         </Option>
         <Strong>{t("pickup_description")}</Strong>
         {/* show this description only in Santa Cruz */}
-        {showExpress ?
+        {showExpress ? (
           <Strong>
             <Trans i18nKey={t("express_description")} components={{ strong: <strong />, cities: <small />, timeframes: <em /> }} />
-          </Strong>        
-        : null}
+          </Strong>
+        ) : null}
         <Strong>
           <Trans i18nKey={t("delivery_description")} components={{ strong: <strong /> }} />
         </Strong>
