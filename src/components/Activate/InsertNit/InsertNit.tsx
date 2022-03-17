@@ -1,5 +1,6 @@
-import React, { Suspense, FC, useEffect, useState } from "react";
-import { useTranslation, Trans, UseTranslationOptions } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation, Trans } from "react-i18next";
+import WhatsAppLogo from "../WhatsAppButton/WhatsAppButton";
 
 import * as SC from "./style";
 import * as GSC from "../style";
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const InsertNit: FC<ActivateProps & Props> = ({ onBack, onNext, error, setNit, nit }) => {
-  const { t } = useTranslation("", { keyPrefix: "activate.steps.insert_nit" } as UseTranslationOptions);
+  const { t } = useTranslation("", { keyPrefix: "activate.steps.insert_nit" });
   const handleChange = (evt: { target: { validity: { valid: any }; value: any } }) => {
     const value = evt.target.validity.valid ? evt.target.value : nit;
     if (value.length <= 30) setNit(value);
@@ -28,7 +29,11 @@ const InsertNit: FC<ActivateProps & Props> = ({ onBack, onNext, error, setNit, n
           </GSC.Instructions.Title>
         </GSC.Instructions.Wrapper>
         <SC.Input min={0} type="text" pattern="[0-9]*" value={String(nit)} onChange={handleChange} placeholder={t("placeholder")} />
-        {error.length > 0 && <GSC.Error>{error}</GSC.Error>}        
+        {error.length > 0 && 
+          <>
+            <GSC.Error>{error}</GSC.Error>
+            <WhatsAppLogo title={t("whatsapp_title")} link={t("whatsapp_link")}/>
+          </>}        
         <SC.CallToAction>
           <GSC.ButtonPrimary disabled={!String(nit).length} onClick={() => onNext()}>
             {t("next")}
