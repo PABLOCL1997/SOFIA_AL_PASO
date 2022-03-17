@@ -522,7 +522,9 @@
         "placeholder": "Carnet de Identidad",
         "next": "Siguiente",
         "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún.",        
-        "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte."        
+        "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte.",
+        "whatsapp_title": "Escríbenos",
+        "whatsapp_link": "https://wa.me/59177605819"
       },
       "validate_options": {
         "title": "Selecciona un método de validación",
@@ -539,7 +541,8 @@
         "error": "El código ingresado no coincide. Favor de contactarse con:",
         "next": "Siguiente",
         "back": "Volver",
-        "bienestar_link": "https://wa.me/59169204300"
+        "whatsapp_title": "Bienestar Organizacional",
+        "whatsapp_link": "https://wa.me/59169204300"
       },
       "confirm_phone": {
         "title": "Activa tu cuenta de colaborador",
