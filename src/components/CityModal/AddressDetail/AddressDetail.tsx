@@ -60,7 +60,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   const [agencyKey, setagencyKey] = useState<string>("");
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
   const [setUserMinimumPrice] = useMutation(SET_USER, {});
-  const [setStore] = useMutation(SET_USER, { variables: { user: { store: 'ECOMMERCE' } } });
+  const [setStore] = useMutation(SET_USER, { variables: { user: { store: "ECOMMERCE" } } });
   const [isSelectingGeo, setIsSelectingGeo] = useState<boolean>(true);
 
   const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
@@ -93,9 +93,9 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   };
 
   const handleSetCity = async (isAddress: boolean) => {
-    const store: OrderType = selectedAddress?.id_price_list > 0 ? 'B2E' : 'ECOMMERCE'
-    setStore({ variables: { user: { store }} })
-    
+    const store: OrderType = selectedAddress?.id_price_list > 0 ? "B2E" : "ECOMMERCE";
+    setStore({ variables: { user: { store } } });
+
     if (agency) {
       setModalStepType(Changes.PickupToDelivery);
     } else {
@@ -145,8 +145,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   };
 
   const handleSetAgency = async () => {
-    const store: OrderType  = "PICKUP"
-    setStore({ variables: { user: { store }} })
+    const store: OrderType = "PICKUP";
+    setStore({ variables: { user: { store } } });
 
     // TODO determine if store to store or another
     if (agency) {
@@ -178,8 +178,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   };
 
   const handleSetExpress = async () => {
-    const store: OrderType  = "EXPRESS"
-    setStore({ variables: { user: { store }} })
+    const store: OrderType = "EXPRESS";
+    setStore({ variables: { user: { store } } });
 
     const lat = isSelectingGeo ? (window as any).latitude : selectedAddress?.latitude;
     const lng = isSelectingGeo ? (window as any).longitude : selectedAddress?.longitude;
@@ -191,8 +191,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     if (nearestAgency?.key) {
       const defaultAddressId = isSelectingGeo ? 0 : selectedAddress?.id;
       const defaultAddressLabel = isSelectingGeo ? (window as any).infowindow.content : selectedAddress?.street;
-      const cityKey = isSelectingGeo ? "SC" : findKeyByCity(selectedAddress?.city);
-      const cityName = isSelectingGeo ? "Santa Cruz" : selectedAddress?.city;
+      const cityKey = isSelectingGeo ? nearestAgency.abbr : findKeyByCity(selectedAddress?.city);
+      const cityName = isSelectingGeo ? nearestAgency.city : selectedAddress?.city;
 
       setAgency(nearestAgency.key);
       await setUser({
@@ -209,8 +209,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
         },
       });
     }
-
-  }
+  };
 
   const handleAddressGeo = async ({ lat, lng }: Point) => {
     try {
@@ -226,8 +225,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     } catch (error) {
       console.log("no se pudo establecer la ubicacion", error);
     }
-  }
-
+  };
 
   useEffect(() => {
     if (data.userInfo.length && data.userInfo[0].cityKey) {
@@ -276,45 +274,40 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             <SC.Title>Envío Express</SC.Title>
             <SC.Subtitle withMap={withMap}>Recibe en casa</SC.Subtitle>
             <SC.Addresses withMap={withMap}>
-                <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
-                  <input
-                    type="radio"
-                    name="manual_geo"
-                    id=""
-                    checked={isSelectingGeo}
-                  />
-                  <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
-                </SC.RadionGroup>
-                {inputs.addresses &&
-                  React.Children.toArray(
-                    inputs.addresses
-                      .filter((address: AddressType) => (hasB2EAddress ? address.id_price_list : address))
-                      .map((address: AddressType) => (
-                        <SC.RadionGroup
-                          selected={!isSelectingGeo && (selectedAddress?.id === address.id)}
-                          onClick={() => {
-                            setShippingMethod(ShippingMethod.Express);
-                            setIsSelectingGeo(false);
-                            setSelectedAddress({ ...address });
-                            handleAddressGeo({
-                              lat: parseFloat(address?.latitude || "0"),
-                              lng: parseFloat(address?.longitude || "0"),
-                            } as Point);
-                          }}
-                        >
-                          <input readOnly id={`city${address.id}`} name="city" type="radio" checked={!isSelectingGeo && !!(selectedAddress?.id === address.id)} />
-                          <label>
-                            {address?.street?.replace(/ \| /g, " ")}
-                            {address?.id_price_list ? (
-                              <StarWrap>
-                                <img src={StarIcon} alt="" />
-                                <TooltipStar>{t("account.tooltip_star_msg")}</TooltipStar>
-                              </StarWrap>
-                            ) : null}
-                          </label>
-                        </SC.RadionGroup>
-                      ))
-                  )}
+              <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
+                <input type="radio" name="manual_geo" id="" checked={isSelectingGeo} />
+                <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
+              </SC.RadionGroup>
+              {inputs.addresses &&
+                React.Children.toArray(
+                  inputs.addresses
+                    .filter((address: AddressType) => (hasB2EAddress ? address.id_price_list : address))
+                    .map((address: AddressType) => (
+                      <SC.RadionGroup
+                        selected={!isSelectingGeo && selectedAddress?.id === address.id}
+                        onClick={() => {
+                          setShippingMethod(ShippingMethod.Express);
+                          setIsSelectingGeo(false);
+                          setSelectedAddress({ ...address });
+                          handleAddressGeo({
+                            lat: parseFloat(address?.latitude || "0"),
+                            lng: parseFloat(address?.longitude || "0"),
+                          } as Point);
+                        }}
+                      >
+                        <input readOnly id={`city${address.id}`} name="city" type="radio" checked={!isSelectingGeo && !!(selectedAddress?.id === address.id)} />
+                        <label>
+                          {address?.street?.replace(/ \| /g, " ")}
+                          {address?.id_price_list ? (
+                            <StarWrap>
+                              <img src={StarIcon} alt="" />
+                              <TooltipStar>{t("account.tooltip_star_msg")}</TooltipStar>
+                            </StarWrap>
+                          ) : null}
+                        </label>
+                      </SC.RadionGroup>
+                    ))
+                )}
             </SC.Addresses>
             <button onClick={() => handleSetExpress()}>Confirmar</button>
           </SC.Selector>
@@ -326,25 +319,26 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             <SC.Title>Retira al paso</SC.Title>
             <SC.Subtitle withMap={withMap}>Elige tu tienda más cercana</SC.Subtitle>
             <SC.Addresses withMap={withMap}>
-              {agencies?.length && agencies.map((_agency: Agency, index: number) => (
-                <SC.RadionGroup
-                  key={`${_agency.key}#${index}`}
-                  className={agencyKey === _agency.key || _agency.key === selectedAddress?.key ? "selected" : ``}
-                  selected={false}
-                  onClick={() => {
-                    setShippingMethod(ShippingMethod.Pickup);
-                    setSelectedAddress({ ..._agency, isAgency: true });
-                    setagencyKey(_agency.key);
-                    setCenterMap({
-                      lat: parseFloat(_agency.latitude),
-                      lng: parseFloat(_agency.longitude),
-                    } as Point);
-                  }}
-                >
-                  <input readOnly name="agency" checked={agencyKey === _agency.key || _agency.key === selectedAddress?.key} type="radio" />
-                  <label>{_agency.name}</label>
-                </SC.RadionGroup>
-              ))}
+              {agencies?.length &&
+                agencies.map((_agency: Agency, index: number) => (
+                  <SC.RadionGroup
+                    key={`${_agency.key}#${index}`}
+                    className={agencyKey === _agency.key || _agency.key === selectedAddress?.key ? "selected" : ``}
+                    selected={false}
+                    onClick={() => {
+                      setShippingMethod(ShippingMethod.Pickup);
+                      setSelectedAddress({ ..._agency, isAgency: true });
+                      setagencyKey(_agency.key);
+                      setCenterMap({
+                        lat: parseFloat(_agency.latitude),
+                        lng: parseFloat(_agency.longitude),
+                      } as Point);
+                    }}
+                  >
+                    <input readOnly name="agency" checked={agencyKey === _agency.key || _agency.key === selectedAddress?.key} type="radio" />
+                    <label>{_agency.name}</label>
+                  </SC.RadionGroup>
+                ))}
             </SC.Addresses>
             {withMap ? <a onClick={() => setWithMap(false)}>Cerrar el mapa</a> : <a onClick={() => setWithMap(true)}>Ver en mapa</a>}
 
@@ -418,7 +412,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
 
         {shippingMethod === ShippingMethod.Store && (
           <SC.Selector withMap={withMap}>
-            <ExpressIcon />      
+            <ExpressIcon />
             <SC.Title>Envío Express</SC.Title>
             <SC.Subtitle withMap={withMap}>Verifica tu sucursal mas cercana</SC.Subtitle>
             {withMap ? <a onClick={() => setWithMap(false)}>Cerrar el mapa</a> : <a onClick={() => setWithMap(true)}>Ver en mapa</a>}
@@ -427,63 +421,51 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
           </SC.Selector>
         )}
 
-
         {withMap && (
           <Maps>
-            {shippingMethod === ShippingMethod.Express &&
-              <Map />
-            }
-            {(shippingMethod !== ShippingMethod.Express) &&
-            <GoogleMapReact
-              bootstrapURLKeys={{
-                key: "AIzaSyDkzapVsE8dx0rclt3nQzew_JzZs4BOGw4",
-              }}
-              defaultZoom={15}
-              defaultCenter={centerMap}
-              center={centerMap}
-              options={{
-                fullscreenControl: false,
-              }}
-              onGoogleApiLoaded={({ map, maps }) => {
+            {shippingMethod === ShippingMethod.Express && <Map />}
+            {shippingMethod !== ShippingMethod.Express && (
+              <GoogleMapReact
+                bootstrapURLKeys={{
+                  key: "AIzaSyDkzapVsE8dx0rclt3nQzew_JzZs4BOGw4",
+                }}
+                defaultZoom={15}
+                defaultCenter={centerMap}
+                center={centerMap}
+                options={{
+                  fullscreenControl: false,
+                }}
+                onGoogleApiLoaded={({ map, maps }) => {}}
+              >
+                {shippingMethod === ShippingMethod.Pickup &&
+                  agencies?.length &&
+                  React.Children.toArray(
+                    agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
+                      <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />
+                    ))
+                  )}
+                {shippingMethod === ShippingMethod.Delivery &&
+                  inputs.addresses &&
+                  !!inputs.addresses.length &&
+                  React.Children.toArray(
+                    inputs.addresses.map((address: AddressType) => (
+                      <Marker
+                        lat={parseFloat(address.latitude || "0")}
+                        lng={parseFloat(address.longitude || "0")}
+                        text={address.street}
+                        name={" "}
+                        maxWidth={"400px"}
+                        selected={!!(selectedAddress?.id === address.id)}
+                      />
+                    ))
+                  )}
 
-              }}
-            >
-              {shippingMethod === ShippingMethod.Pickup && agencies?.length &&
-                React.Children.toArray(
-                  agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
-                    <Marker
-                      lat={parseFloat(latitude)}
-                      lng={parseFloat(longitude)}
-                      text={street}
-                      name={name}
-                      maxWidth={"400px"}
-                      selected={!!(key === selectedAddress?.key || key === agency)}
-                    />
-                  ))
-                )}
-              {shippingMethod === ShippingMethod.Delivery &&
-                inputs.addresses &&
-                !!inputs.addresses.length &&
-                React.Children.toArray(
-                  inputs.addresses.map((address: AddressType) => (
-                    <Marker
-                      lat={parseFloat(address.latitude || "0")}
-                      lng={parseFloat(address.longitude || "0")}
-                      text={address.street}
-                      name={" "}
-                      maxWidth={"400px"}
-                      selected={!!(selectedAddress?.id === address.id)}
-                    />
-                  ))
-                )}
-
-              {shippingMethod === ShippingMethod.Store &&
-                  express.map(({ name, street, latitude, longitude }: Agency) => 
+                {shippingMethod === ShippingMethod.Store &&
+                  express.map(({ name, street, latitude, longitude }: Agency) => (
                     <PickupIcon lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={true} />
-                  )
-              }
-            </GoogleMapReact>
-            }
+                  ))}
+              </GoogleMapReact>
+            )}
           </Maps>
         )}
       </SC.Wrapper>
