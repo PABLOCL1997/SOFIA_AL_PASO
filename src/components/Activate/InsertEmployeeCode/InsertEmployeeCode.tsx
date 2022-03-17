@@ -1,13 +1,13 @@
 import React, { FC, useState } from "react";
-import { useTranslation, Trans, UseTranslationOptions } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { ActivateProps } from "../props";
-import logo from "../../../assets/activate/whatsapp-logo.png"
+import WhatsAppButton from "../WhatsAppButton";
 
 import * as SC from "./style";
 import * as GSC from "../style";
 
 const InsertEmployeeCode: FC<ActivateProps> = ({ onBack, onNext, error}) => {
-  const { t } = useTranslation("", { keyPrefix: "activate.steps.insert_employee_code" } as UseTranslationOptions); 
+  const { t } = useTranslation("", { keyPrefix: "activate.steps.insert_employee_code" }); 
   const [employeeCode, setEmployeeCode] = useState("");
 
   const handleChange = (event: {target: { value: string } }) => {
@@ -31,12 +31,7 @@ const InsertEmployeeCode: FC<ActivateProps> = ({ onBack, onNext, error}) => {
         {error.length > 0 ? 
           <>
             <GSC.Error>{error}</GSC.Error>
-            <SC.Link href={t("bienestar_link")} target="_blank">
-              <SC.LogoWhatsApp.Wrapper>
-                <SC.LogoWhatsApp.Img src={logo} alt="logo_whatsapp"/>
-                <SC.LogoWhatsApp.Title>{"Bienestar Organizacional"}</SC.LogoWhatsApp.Title>
-              </SC.LogoWhatsApp.Wrapper>
-            </SC.Link>
+            <WhatsAppButton title={t("whatsapp_title")} link={t("whatsapp_link")}/>  
           </>        
         : null}       
         <SC.CallToAction>          
