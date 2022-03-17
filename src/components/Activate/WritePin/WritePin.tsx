@@ -187,9 +187,9 @@ const ProgressBar = () => {
     <GSC.ProgressBar.Wrapper>
       <svg width="361" height="4" viewBox="0 0 361 4" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="1.57579e-07" y1="2" x2="83.9739" y2="2.00001" stroke="#E30613" stroke-width="4" />
-        <line x1="186.128" y1="2" x2="270.102" y2="2.00001" stroke="#E30613" stroke-width="4" />
         <line x1="90.8997" y1="2" x2="174.874" y2="2.00001" stroke="#E30613" stroke-width="4" />
-        <line x1="277.026" y1="2" x2="361" y2="2.00001" stroke="#CBCBCB" stroke-width="4" />
+        <line x1="186.128" y1="2" x2="270.102" y2="2.00001" stroke="#E30613" stroke-width="4" />
+        <line x1="277.026" y1="2" x2="361" y2="2.00001" stroke="#E30613" stroke-width="4" />
       </svg>
     </GSC.ProgressBar.Wrapper>
   );

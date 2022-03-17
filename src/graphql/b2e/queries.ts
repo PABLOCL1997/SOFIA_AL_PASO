@@ -9,6 +9,7 @@ export const GET_USER2E_DETAILS = gql`
       email
       celular
       televendedor
+      codigo_Empleado
       direcciones {
         id_direccion
         direccion

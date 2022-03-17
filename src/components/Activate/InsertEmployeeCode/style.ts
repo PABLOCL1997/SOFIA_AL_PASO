@@ -13,12 +13,12 @@ export const Input = styled.input`
 `;
 
 export const CallToAction = styled.div`
-  display: grid;
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;    
   margin-top: auto;
-  grid-template-columns: 176px 1fr;
-
   @media screen and (max-width: ${BREAKPOINT}) {
-    grid-template-columns: 1fr;
+    margin-top: 50px;
   }
 `;
