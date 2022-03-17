@@ -192,7 +192,7 @@ const ChooseShipping: FC<{
     const date: dayjs.Dayjs = dayjs().tz("America/La_Paz");
 
     // @ts-ignore
-    return (city === "SC" || city === "CB") && date.isSameOrAfter(initHour, "second") && date.isSameOrBefore(finishHour, "second");
+    return (city === "SC" || city === "CB" || city === "LP") && date.isSameOrAfter(initHour, "second") && date.isSameOrBefore(finishHour, "second");
   }, [city]);
 
   return (
