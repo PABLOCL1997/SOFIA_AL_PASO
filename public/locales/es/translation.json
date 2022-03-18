@@ -314,7 +314,7 @@
       "lastname": "Apellido",
       "email": "Email",
       "nit": "NIT/*Carnet identidad",
-      "phone": "*Teléfono",
+      "phone": "*Celular",
       "other_person": "Facturar a otra persona",
       "to_me": "Facturarme a mi"
     },
@@ -429,7 +429,7 @@
     "lastname": "Apellido",
     "email": "Email",
     "nit": "NIT/*Carnet identidad",
-    "phone": "Teléfono",
+    "phone": "Celular",
     "password": "Contraseña",
     "addresses": "Direcciones",
     "newaddress": "+ Agregar dirección",
@@ -466,13 +466,13 @@
         "billingLastname": "Apellido",
         "billingEmail": "Email",
         "billingNit": "NIT/Carnet identidad",
-        "billingPhone": "*Teléfono"
+        "billingPhone": "*Celular"
       },
       "shipping": {
         "title": "Datos de envío",
         "shippingFirstname": "Nombre",
         "shippingLastname": "Apellido",
-        "shippingPhone": "*Teléfono",
+        "shippingPhone": "*Celular",
         "shippingNit": "NIT/*Carnet identidad",
         "shippingStreet": "Calle",
         "shippingCity": "Ciudad",
@@ -497,7 +497,7 @@
       "name": "Nombre",
       "email": "Email",
       "question": "Pregunta",
-      "phone": "Telefono",
+      "phone": "Celular",
       "city": "Ciudad",
       "country": "País",
       "message": "Mensaje"
@@ -570,7 +570,7 @@
         "instructions": "<strong>¡Listo!</strong> Hemos validado exitosamente tus datos, por favor confirma o edita la dirección que tenemos registrada:",
         "labels": {
           "address": "Dirección",
-          "phone": "Teléfono",
+          "phone": "Celular",
           "city": "Ciudad"
         },
         "next": "Confirmar"
