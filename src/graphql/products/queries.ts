@@ -175,6 +175,7 @@ export const GET_EXPRESS_AGENCIES = gql`
       longitude
       reference
       horario_texto
+      abbr
     }
   }
 `;
