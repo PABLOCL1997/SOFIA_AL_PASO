@@ -74,13 +74,23 @@ const Shipping: FC<{
           });
           setShowAddressForm(false);
         } else if (d.details.addresses.length > 0) {
-          const addr = d.details.addresses[0];
+          const { firstname, lastname, nit, phone } = orderData.billing;
+          const addr = (localData.userInfo.length && localData.userInfo[0].defaultAddressLabel) || d.details.addresses[0];
+          address.street = addr || "";
+          address.reference = addr || "";
           updateOrder("shipping", {
-            ...addr,
+            firstname,
+            lastname,
+            nit,
+            phone,
+            ...address,
           });
           formik.setValues({
-            ...addr,
-            address: addr.street || "",
+            ...address,
+            firstname,
+            lastname,
+            nit,
+            phone,
           });
           setShowAddressForm(false);
         }
