@@ -15,7 +15,7 @@ import { StarWrap, TooltipStar } from "../styles";
 import { useTranslation } from "react-i18next";
 
 import { OrderType } from "../../../types/Order";
-import Map, { Circle } from "../../Map";
+import Map from "../../Map";
 import { setLatLng, findNearestPointFromArray } from "../../../utils/googlemaps";
 
 import PickupIcon from "../../../assets/images/ChooseShipping/pickup-icon";
@@ -61,6 +61,9 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
   const [setUserMinimumPrice] = useMutation(SET_USER, {});
   const [setStore] = useMutation(SET_USER, { variables: { user: { store: "ECOMMERCE" } } });
+  const [setReferenceAddress] = useMutation(SET_USER, { variables: { user: { defaultAddressLabel: "" } } });
+  const [addressReference, setAddressReference] = useState("");
+  const [hideAddressReference, setHideAddressReference] = useState(false);
   const [isSelectingGeo, setIsSelectingGeo] = useState<boolean>(true);
 
   const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
@@ -141,6 +144,9 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     }
 
     setChangeModalVisible(true);
+    if (selectedAddress === undefined) {
+      setReferenceAddress({ variables: { user: { defaultAddressLabel: addressReference } } });
+    }
     setStep(Steps.Choosing);
   };
 
@@ -278,6 +284,19 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                 <input type="radio" name="manual_geo" id="" checked={isSelectingGeo} />
                 <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
               </SC.RadionGroup>
+              {!hideAddressReference && (
+                <SC.InputReference>
+                  <input
+                    type="text"
+                    name="address_reference"
+                    id="address_reference"
+                    placeholder="Dirección o referencia"
+                    onChange={(event) => {
+                      setAddressReference(event.target.value);
+                    }}
+                  />
+                </SC.InputReference>
+              )}
               {inputs.addresses &&
                 React.Children.toArray(
                   inputs.addresses
@@ -286,6 +305,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                       <SC.RadionGroup
                         selected={!isSelectingGeo && selectedAddress?.id === address.id}
                         onClick={() => {
+                          setHideAddressReference(true);
                           setShippingMethod(ShippingMethod.Express);
                           setIsSelectingGeo(false);
                           setSelectedAddress({ ...address });

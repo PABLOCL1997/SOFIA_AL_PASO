@@ -17,7 +17,7 @@ const Wrapper = styled.div<{ selected: boolean }>`
   ${({ selected }) => selected && ` background: #FECD00;`}
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    grid-template-columns: minmax(10px,30px) 1fr 80px;
+    grid-template-columns: minmax(10px, 30px) 1fr 80px;
     padding: 21px 24px;
     column-gap: 5px;
   }
@@ -40,8 +40,7 @@ const TitleStreet = styled.div<{ selected: boolean }>`
         p {
             display: none;
         }
-    `
-  }
+    `}
   @media screen and (max-width: ${BREAKPOINT}) {
     h3 {
       font-size: 14px;
@@ -51,7 +50,6 @@ const TitleStreet = styled.div<{ selected: boolean }>`
       font-size: 10px;
     }
   }
-
 `;
 
 const Chip = styled.p`
@@ -105,11 +103,9 @@ const ShippingOption: FC<{
       {/* if it isn't selected shouldn't show street */}
       <TitleStreet selected={isSelected}>
         <h3>{title}</h3>
-        <p>{street}</p>
+        <p>Dirección de envío: {street}</p>
       </TitleStreet>
-      <CallToAction onClick={onSelect}>
-        {selectText}
-      </CallToAction>
+      <CallToAction onClick={onSelect}>{selectText}</CallToAction>
     </Wrapper>
   );
 };
