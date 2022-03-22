@@ -63,7 +63,7 @@ const Shipping: FC<{
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       if (d.details) {
-        const address = d.details.addresses.find((a: AddressType) => a.id === addressId);
+        let address = d.details.addresses.find((a: AddressType) => a.id === addressId);
         if (address && store !== "EXPRESS") {
           updateOrder("shipping", {
             ...address,
@@ -74,6 +74,7 @@ const Shipping: FC<{
           });
           setShowAddressForm(false);
         } else if (d.details.addresses.length > 0) {
+          address = d.details.addresses[0];
           const { firstname, lastname, nit, phone } = orderData.billing;
           const addr = (localData.userInfo.length && localData.userInfo[0].defaultAddressLabel) || d.details.addresses[0];
           address.street = addr || "";
