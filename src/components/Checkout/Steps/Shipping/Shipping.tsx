@@ -76,7 +76,7 @@ const Shipping: FC<{
         } else if (d.details.addresses.length > 0) {
           address = d.details.addresses[0];
           const { firstname, lastname, nit, phone } = orderData.billing;
-          const addr = (localData.userInfo.length && localData.userInfo[0].defaultAddressLabel) || d.details.addresses[0];
+          const addr = (localData.userInfo.length && localData.userInfo[0].defaultAddressLabel) || d.details.addresses[0].street;
           address.street = addr || "";
           address.reference = addr || "";
           updateOrder("shipping", {
