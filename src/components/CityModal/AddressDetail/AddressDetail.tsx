@@ -144,9 +144,6 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     }
 
     setChangeModalVisible(true);
-    if (selectedAddress === undefined) {
-      setReferenceAddress({ variables: { user: { defaultAddressLabel: addressReference } } });
-    }
     setStep(Steps.Choosing);
   };
 
@@ -215,6 +212,10 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
         },
       });
     }
+
+    if (selectedAddress === undefined) {
+      setReferenceAddress({ variables: { user: { defaultAddressLabel: addressReference } } });
+    }
   };
 
   const handleAddressGeo = async ({ lat, lng }: Point) => {
@@ -280,7 +281,14 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             <SC.Title>Envío Express</SC.Title>
             <SC.Subtitle withMap={withMap}>Recibe en casa</SC.Subtitle>
             <SC.Addresses withMap={withMap}>
-              <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
+              <SC.RadionGroup
+                selected={isSelectingGeo}
+                onClick={() => {
+                  setSelectedAddress(undefined);
+                  setHideAddressReference(false);
+                  setIsSelectingGeo(true);
+                }}
+              >
                 <input type="radio" name="manual_geo" id="" checked={isSelectingGeo} />
                 <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
               </SC.RadionGroup>
