@@ -11,7 +11,6 @@ import * as SC from "../../styled-components/HeaderStyles";
 
 import Wallet from "../../assets/images/empresa-seleccionado.svg";
 
-import LocationIcon from "../../assets/images/locate-icon.svg";
 import UserIcon from "../../assets/images/profile-ingresar.svg";
 import UserCheckout from "../../assets/images/profile-checkout.svg";
 import CartImg from "../../assets/images/Carrito.svg";
@@ -22,6 +21,7 @@ import SofiaAlPasoColaboradoresLogo from "../../assets/images/sofiaAlPasoColabor
 import { trackGoToCartEvent } from "../../utils/dataLayer";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
+import ShippingType from "./ShippingType";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
@@ -188,13 +188,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
             </SC.Steps.Container>
           ) : (
             <>
-              <div>
-                <SC.Address onClick={() => toggleCityModal()}>
-                  {/* pin */}
-                  <img height="25" src={LocationIcon} alt="location" />
-                  <SC.AddressText title={addressCity}>{addressCity}</SC.AddressText>
-                </SC.Address>
-              </div>
+              <ShippingType onClick={toggleCityModal}/>
               <SC.InputGroup>
                 <Search />
                 {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
