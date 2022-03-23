@@ -93,34 +93,37 @@ const TrackingWarnings: FC = () => {
       dateTo: dayjs().format("DD/MM/YYYY"),
     },
     onCompleted: async (d) => {
-      let fData = d.orders;
-      let results: Array<Warning> = [];
-
-      for (let i = 0; i < fData.length; i++) {
-        let trackOrder = await client.query({
-          query: GET_TRACKING_INFO,
-          variables: {
-            orderId: fData[i].incrementId,
-            nit: String(localUserData.details.nit),
-            isB2C: true,
-          },
-        });
-        const projectedArrival = dayjs(trackOrder.data.getTrackingInfo.projectedArrival).tz("America/La_Paz");
-        if (todayLocal.isBefore(projectedArrival)) {
-          trackOrder.data.getTrackingInfo.orderId = fData[i].incrementId;
-          trackOrder.data.getTrackingInfo.nit = String(localUserData.details.nit);
-          results.push({
-            status: trackOrder.data.getTrackingInfo.status,
-            orderId: fData[i].incrementId,
-            nit: String(localUserData.details.nit),
-            projectedArrival: projectedArrival.format("HH:mm"),
+      try {
+        let fData = d.orders;
+        let results: Array<Warning> = [];
+        for (let i = 0; i < fData.length; i++) {
+          let trackOrder = await client.query({
+            query: GET_TRACKING_INFO,
+            variables: {
+              orderId: fData[i].incrementId,
+              nit: String(localUserData.details.nit),
+              isB2C: true,
+            },
           });
+          const projectedArrival = dayjs(trackOrder.data.getTrackingInfo.projectedArrival).tz("America/La_Paz");
+          if (todayLocal.isBefore(projectedArrival)) {
+            trackOrder.data.getTrackingInfo.orderId = fData[i].incrementId;
+            trackOrder.data.getTrackingInfo.nit = String(localUserData.details.nit);
+            results.push({
+              status: trackOrder.data.getTrackingInfo.status,
+              orderId: fData[i].incrementId,
+              nit: String(localUserData.details.nit),
+              projectedArrival: projectedArrival.format("HH:mm"),
+            });
+          }
         }
+
+        results = results.filter((el) => el.status === "OK");
+        setWarningsList(results);
+      } catch(e) {
+        console.log("Tracking", e);
       }
-
-      results = results.filter((el) => el.status === "OK");
-
-      setWarningsList(results);
+      
     },
   });
   return warningsList?.length > 0 ? (
