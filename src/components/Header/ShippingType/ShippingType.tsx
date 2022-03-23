@@ -25,6 +25,22 @@ const ShippingType: FC<Props> = ({ onClick }) => {
   useEffect(() => {
     setType(dictionary[store]);
   }, [store]);
+
+  useEffect(() => {
+    const resize = () => {
+      if (window.innerWidth < 768) {
+        setSizeIcon(30);
+      } else {
+        setSizeIcon(20);
+      }
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    }
+  },[]);
   
   return (
     <SC.Wrapper>
