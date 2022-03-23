@@ -185,19 +185,3 @@ export const RadionGroup = styled.div<{ selected: boolean }>`
     margin-left: 10px;
   }
 `;
-
-export const InputReference = styled.div`
-  width: 100%;
-  margin: 20px 0;
-
-  input {
-    font-size: 14px;
-    font-family: MullerRegular;
-    float: left;
-    border-radius: 30px;
-    border: 0px;
-    background-color: #f0f0f0;
-    padding: 20px 30px;
-    width: 190px;
-  }
-`;

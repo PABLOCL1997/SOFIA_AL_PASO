@@ -61,11 +61,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
   const [setUserMinimumPrice] = useMutation(SET_USER, {});
   const [setStore] = useMutation(SET_USER, { variables: { user: { store: "ECOMMERCE" } } });
-  const [setReferenceAddress] = useMutation(SET_USER, { variables: { user: { defaultAddressLabel: "" } } });
-  const [addressReference, setAddressReference] = useState("");
-  const [hideAddressReference, setHideAddressReference] = useState(false);
   const [isSelectingGeo, setIsSelectingGeo] = useState<boolean>(true);
-
   const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
   const [centerMap, setCenterMap] = useState<Point>({
     lat: parseFloat("-17.80904437441624"),
@@ -212,10 +208,6 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
         },
       });
     }
-
-    if (selectedAddress === undefined) {
-      setReferenceAddress({ variables: { user: { defaultAddressLabel: addressReference } } });
-    }
   };
 
   const handleAddressGeo = async ({ lat, lng }: Point) => {
@@ -281,30 +273,10 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             <SC.Title>Envío Express</SC.Title>
             <SC.Subtitle withMap={withMap}>Recibe en casa</SC.Subtitle>
             <SC.Addresses withMap={withMap}>
-              <SC.RadionGroup
-                selected={isSelectingGeo}
-                onClick={() => {
-                  setSelectedAddress(undefined);
-                  setHideAddressReference(false);
-                  setIsSelectingGeo(true);
-                }}
-              >
+              <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
                 <input type="radio" name="manual_geo" id="" checked={isSelectingGeo} />
                 <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
               </SC.RadionGroup>
-              {!hideAddressReference && (
-                <SC.InputReference>
-                  <input
-                    type="text"
-                    name="address_reference"
-                    id="address_reference"
-                    placeholder="Dirección o referencia"
-                    onChange={(event) => {
-                      setAddressReference(event.target.value);
-                    }}
-                  />
-                </SC.InputReference>
-              )}
               {inputs.addresses &&
                 React.Children.toArray(
                   inputs.addresses
@@ -313,7 +285,6 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                       <SC.RadionGroup
                         selected={!isSelectingGeo && selectedAddress?.id === address.id}
                         onClick={() => {
-                          setHideAddressReference(true);
                           setShippingMethod(ShippingMethod.Express);
                           setIsSelectingGeo(false);
                           setSelectedAddress({ ...address });
