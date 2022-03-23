@@ -34,11 +34,12 @@ const Sidebar = React.lazy(() => import(/* webpackChunkName: "Sidebar" */ "./Sid
 type Props = {
   checkout: boolean;
   page?: string;
+  route?: string;
 };
 
-const Header: FC<Props> = ({ checkout, page }) => {
+const Header: FC<Props> = ({ checkout, page, route }) => {  
   const { t } = useTranslation();
-  const { showPromoBar } = useUser();
+  const { showPromoBar, hideBar } = useUser();
   const history = useHistory();
   const [bigCart, setBigCart] = useState(false);
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
@@ -97,6 +98,12 @@ const Header: FC<Props> = ({ checkout, page }) => {
     }
     return "";
   };
+
+  useEffect(() => {
+    if (route !== "/") {
+      hideBar();
+    };
+  },[route]);
 
   useEffect(() => {
     setBigCart(true);

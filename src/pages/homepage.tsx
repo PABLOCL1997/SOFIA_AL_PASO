@@ -20,7 +20,7 @@ const Homepage = () => {
   return (
     <>
       <PromoBar />
-      <Header checkout={false} page={undefined} />
+      <Header checkout={false} page={undefined} route={"/"}/>
       <Categories isMobile={window.innerWidth <= 1100} />
       <Hero />
 
