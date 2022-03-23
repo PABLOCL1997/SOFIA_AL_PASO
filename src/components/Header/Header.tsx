@@ -22,6 +22,7 @@ import { trackGoToCartEvent } from "../../utils/dataLayer";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
 import ShippingType from "./ShippingType";
+import useUser from "../../hooks/useUser";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
@@ -37,6 +38,7 @@ type Props = {
 
 const Header: FC<Props> = ({ checkout, page }) => {
   const { t } = useTranslation();
+  const { showPromoBar } = useUser();
   const history = useHistory();
   const [bigCart, setBigCart] = useState(false);
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
@@ -144,7 +146,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
 
   return (
     <>
-      <SC.Fixed shadow={shadow}>
+      <SC.Fixed shadow={shadow} showPromoBar={showPromoBar}>
         <Suspense fallback={<></>}>
           <AuthModal />
           <CityModal />

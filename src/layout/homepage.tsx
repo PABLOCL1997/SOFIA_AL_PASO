@@ -13,10 +13,10 @@ import { useQuery } from "@apollo/react-hooks";
 import { CHECK_TOKEN } from "../graphql/user/queries";
 import { token } from "../utils/store";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ showPromoBar: boolean }>`
   min-height: 100vh;
   margin: 0;
-  padding: 74px 0 0;
+  padding: ${(props) => props.showPromoBar ? "107px 0 0" : "74px 0 0"};
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 0;
     &.productpage {
@@ -41,7 +41,7 @@ type Props = {
 
 const LayoutHomepage: FC<Props> = ({ children, page }) => {
   const { data } = useQuery(CHECK_TOKEN, { fetchPolicy: "network-only" });
-  const { logout, toggleLoginModal } = useUser();
+  const { logout, toggleLoginModal, showPromoBar } = useUser();
 
   useEffect(() => {
     if (token.get() !== "null" && data && data.checkToken && !data.checkToken.status) {
@@ -62,7 +62,7 @@ const LayoutHomepage: FC<Props> = ({ children, page }) => {
         </Loader>
       }
     >
-      <Wrapper className={page ? page : ""}>{children}</Wrapper>
+      <Wrapper className={page ? page : ""} showPromoBar={showPromoBar}>{children}</Wrapper>
     </Suspense>
   );
 };
