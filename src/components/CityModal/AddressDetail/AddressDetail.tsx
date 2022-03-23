@@ -23,6 +23,7 @@ import DeliveryIcon from "../../../assets/images/ChooseShipping/delivery-icon";
 import ExpressIcon from "../../../assets/images/ChooseShipping/express-icon";
 
 import * as SC from "./style";
+import useUser from "../../../hooks/useUser";
 
 interface Props {
   setStep: Function;
@@ -53,6 +54,7 @@ interface Point {
 
 const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, setChangeModalVisible, setModalStepType, setNewAddressText }) => {
   const { t } = useTranslation();
+  const { hideExpressModal } = useUser();
   const { data } = useQuery(GET_USER, {});
   const { agency, setAgency, agencies, express, city: cityHook, hasB2EAddress } = useCityPriceList();
   const [withMap, setWithMap] = useState<boolean>(true);
@@ -208,6 +210,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
           },
         },
       });
+      setStep(Steps.Choosing);
+      hideExpressModal();  
     }
   };
 

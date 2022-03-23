@@ -7,6 +7,7 @@ import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { Changes, ShippingMethod, Steps } from "../CityModal/types";
+import useUser from "../../hooks/useUser";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 
@@ -127,6 +128,7 @@ type User = {
 
 const CityModal: FC<Props> = () => {
   const { agency } = useCityPriceList();
+  const { showExpressModal, hideExpressModal } =useUser();
   const { data } = useQuery(GET_USER, {});
   const [city, setCity] = useState<User>({});
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
@@ -151,6 +153,13 @@ const CityModal: FC<Props> = () => {
       agency: null,
     });
   };
+
+  useEffect(() => {
+    if (showExpressModal) {
+      setShippingMethod(ShippingMethod.Express);
+      setStep(Steps.Detailing);
+    }
+  },[showExpressModal]);
 
   useEffect(() => {
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
@@ -212,6 +221,7 @@ const CityModal: FC<Props> = () => {
             onClick={async () => {
               setStep(Steps.Choosing);
               await toggleCityModal();
+              await hideExpressModal();
             }}
           >
             {/* close icon */}
