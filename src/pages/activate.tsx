@@ -156,7 +156,7 @@ const Activate: FC = () => {
   }
 
   const handleEmployeeCode = (value: string) => {
-    if (Number(value) <= 0 || String(employeeCode) !== value) {
+    if (Number(value) < 0 || String(employeeCode) !== value) {
       setError(InvalidEmployeeId);
     } else {
       handleVerify(false);
