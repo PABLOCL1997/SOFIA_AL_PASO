@@ -46,7 +46,6 @@ const useCart = (): CartReturn => {
   const { coupon, store } = useUser();
   const [totalAmount, setTotalAmount] = useState("0.0");
   const [discountAmount, setDiscountAmount] = useState(0);
-
   const [action, setAction] = useState<Action | ActionEmpty>({ action: "no-action" });
 
   const [getCart, { data: cart }] = useLazyQuery(GET_CART_ITEMS, {

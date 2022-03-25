@@ -84,7 +84,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
   return (
     <Wrapper>
       <CloseRow>
-        <CartWrapper onClick={showCart} onSidebar>
+        <CartWrapper onClick={showCart}>
           {/* <Cart /> */}
           <img width="27" height="19" src={CartImg} alt="Carrito de compras" />
           <CartText>{GET_QTY(data.cartItems)}</CartText>
