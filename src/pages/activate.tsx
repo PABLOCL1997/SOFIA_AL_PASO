@@ -156,8 +156,11 @@ const Activate: FC = () => {
   }
 
   const handleEmployeeCode = (value: string) => {
-    if(String(employeeCode) === value) handleVerify(false);
-    else setError(InvalidEmployeeId);
+    if (Number(value) <= 0 || String(employeeCode) !== value) {
+      setError(InvalidEmployeeId);
+    } else {
+      handleVerify(false);
+    }
   } 
 
   const handleConfirm = async () => {
