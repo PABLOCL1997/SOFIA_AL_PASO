@@ -19,7 +19,7 @@ interface Props {
 const ShippingType: FC<Props> = ({ onClick }) => {
   const { t } = useTranslation("", { keyPrefix: "header.shipping_type" });
   const { store } : { store: OrderType } = useUser();
-  const type = ServiceType[store] || "express";
+  const type = ServiceType[store] || ServiceType.EXPRESS;
   const [sizeIcon, setSizeIcon] = useState(20);
 
   useEffect(() => {
