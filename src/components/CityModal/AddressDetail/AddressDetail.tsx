@@ -15,7 +15,7 @@ import { StarWrap, TooltipStar } from "../styles";
 import { useTranslation } from "react-i18next";
 
 import { OrderType } from "../../../types/Order";
-import Map, { Circle } from "../../Map";
+import Map from "../../Map";
 import { setLatLng, findNearestPointFromArray } from "../../../utils/googlemaps";
 
 import PickupIcon from "../../../assets/images/ChooseShipping/pickup-icon";
@@ -64,7 +64,6 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   const [setUserMinimumPrice] = useMutation(SET_USER, {});
   const [setStore] = useMutation(SET_USER, { variables: { user: { store: "ECOMMERCE" } } });
   const [isSelectingGeo, setIsSelectingGeo] = useState<boolean>(true);
-
   const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
   const [centerMap, setCenterMap] = useState<Point>({
     lat: parseFloat("-17.80904437441624"),

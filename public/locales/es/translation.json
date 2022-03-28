@@ -333,7 +333,7 @@
       "phone2": "*Celular Alternativo",
       "nit": "*NIT/*Carnet identidad",
       "city": "*Ciudad",
-      "street": "Calle",
+      "street": "Dirección",
       "avenue": "Avenida",
       "address_ph": "*Indicar Zona, Calle y Número",
       "address": "*Dirección",

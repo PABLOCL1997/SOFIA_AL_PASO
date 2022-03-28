@@ -63,7 +63,7 @@ const Shipping: FC<{
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       if (d.details) {
-        const address = d.details.addresses.find((a: AddressType) => a.id === addressId);
+        let address = d.details.addresses.find((a: AddressType) => a.id === addressId);
         if (address && store !== "EXPRESS") {
           updateOrder("shipping", {
             ...address,
