@@ -103,7 +103,12 @@ const Checkout = () => {
         if (!(idPriceList > 0 || !!agency)) setConfirmModalVisible(true);
 
         const special_address = idPriceList > 0;
-        const agencyObj = agency ? search("key", agency, agencies) : null;
+        let agencyObj = null;
+        if (store === "EXPRESS") {
+          agencyObj = agency ? search("key", agency, express) : null;
+        } else {
+          agencyObj = agency ? search("key", agency, agencies) : null;
+        }
         const isPickup = store === "PICKUP";
         if (!items.length) return;
 
