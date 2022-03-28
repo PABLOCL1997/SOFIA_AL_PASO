@@ -11,10 +11,9 @@ import "lazysizes/plugins/blur-up/ls.blur-up.js";
 import "lazysizes/plugins/object-fit/ls.object-fit.js";
 import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
 import useUser from "../hooks/useUser";
-import { Location } from "../context/Location"
-import { Courtain } from "../context/Courtain"
+import { Location } from "../context/Location";
+import { Courtain } from "../context/Courtain";
 import { useUrlQuery } from "../hooks/useUrlQuery";
-
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Error = React.lazy(() => import(/* webpackChunkName: "Error" */ "../components/Error"));
@@ -34,11 +33,12 @@ const Wrapper = styled.div`
   }
 `;
 
-
 export const LoadingCourtain = styled.div<{ isLoading: boolean }>`
   display: none;
 
-  ${({ isLoading }) => isLoading && `
+  ${({ isLoading }) =>
+    isLoading &&
+    `
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,7 +92,6 @@ export const LoadingCourtain = styled.div<{ isLoading: boolean }>`
 `;
 Wrapper.displayName = "GeneralWrapper";
 
-
 const Content = styled.div<{ pageUrl?: string }>`
   min-height: ${(props) => (!props.pageUrl || props.pageUrl === "/" ? "auto" : "100vh")};
 `;
@@ -112,34 +111,10 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
     if (query.get("step")) {
       return query.get("step") || "";
     }
-    return ""
+    return "";
   }, [query]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-
-  useEffect(() => {
-    // when user is on any page with token but expired
-    if (token.get() !== "null" && data && data.checkToken && !data.checkToken.status) {
-      logout();
-      token.delete();
-
-      setTimeout(() => {
-        toggleLoginModal();
-      }, 0);
-    }
-
-    // when user is on mi-cuenta without token
-    if (token.get() == "null" && history.location.pathname.indexOf("mi-cuenta") > 0) {
-      logout();
-      token.delete();
-
-      setTimeout(() => {
-        toggleLoginModal();
-      }, 0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   useEffect(() => {
     let url = history.location.pathname;
@@ -151,6 +126,17 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
       if (pathname !== url && (pathname === "/" || pathname.indexOf("/productos") >= 0)) {
         url = pathname;
         window.scrollTo(0, 0);
+      }
+      // when user is on any page with token but expired
+      if (token.get() !== "null" && data && data.checkToken && !data.checkToken.status) {
+        logout();
+        token.delete();
+      }
+      // when user is on mi-cuenta without token
+      if (token.get() == "null" && history.location.pathname.indexOf("mi-cuenta") > 0) {
+        logout();
+        token.delete();
+        toggleLoginModal();
       }
     });
     return () => {

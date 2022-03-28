@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_CART_ITEMS, GET_QTY } from "../../graphql/cart/queries";
 import { GET_USER } from "../../graphql/user/queries";
 import { SET_USER } from "../../graphql/user/mutations";
-import { Location } from "../../context/Location"
+import { Location } from "../../context/Location";
 import Search from "../Images/Search";
 import * as SC from "../../styled-components/HeaderStyles";
 
@@ -38,13 +38,12 @@ type Props = {
 const Header: FC<Props> = ({ checkout, page }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [bigCart, setBigCart] = useState(false);
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("");
 
-  const currentStep = useContext(Location.Context)
+  const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
   // check with use memo if we are at /checkout
   const isCheckout = useMemo(() => {
@@ -95,14 +94,6 @@ const Header: FC<Props> = ({ checkout, page }) => {
     }
     return "";
   };
-
-  useEffect(() => {
-    setBigCart(true);
-    setTimeout(() => {
-      setBigCart(false);
-    }, 3000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   useEffect(() => {
     if (!userData?.userInfo.length || !userData?.userInfo[0].cityKey || userData?.userInfo[0].openCityModal || userData?.userInfo[0].openCartModal) {
@@ -157,34 +148,26 @@ const Header: FC<Props> = ({ checkout, page }) => {
               {!!userData?.userInfo[0]?.idPriceList && <SC.HeaderClipText>Colaboradores</SC.HeaderClipText>}
             </SC.HeaderClipTextWrapper>
           </SC.HeaderClip>
-          {isCheckout && window.innerWidth < 500 &&
+          {isCheckout && window.innerWidth < 500 && (
             <SC.IngresarWrap onClick={myAccount}>
               <SC.IngresarImg width="32" height="26" src={UserCheckout} alt="login" />
               {!userData.userInfo.length || !userData.userInfo[0].isLoggedIn ? <SC.IngresarText>{t("header.login")}</SC.IngresarText> : <SC.IngresarText>{t("header.account")}</SC.IngresarText>}
             </SC.IngresarWrap>
-          }
+          )}
           <SC.Logo isB2E={!!userData?.userInfo[0]?.idPriceList} isCheckout={isCheckout}>
             <Link to="/">
-            <img src={!userData?.userInfo[0]?.idPriceList ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
+              <img src={!userData?.userInfo[0]?.idPriceList ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>
           {isCheckout ? (
             <SC.Steps.Container>
-              {step === Steps.Billing || step === Steps.Cart ? 
-                <SC.Steps.First />            
-              : null}
+              {step === Steps.Billing || step === Steps.Cart ? <SC.Steps.First /> : null}
 
-              {step === Steps.Shipping || step === Steps.Timeframe ?
-                <SC.Steps.Second />           
-              : null}
+              {step === Steps.Shipping || step === Steps.Timeframe ? <SC.Steps.Second /> : null}
 
-              {step === Steps.Payment ? 
-                <SC.Steps.Third />             
-              : null}
-              
-              {step === Steps.Review ? 
-                <SC.Steps.Fourth />
-              : null}
+              {step === Steps.Payment ? <SC.Steps.Third /> : null}
+
+              {step === Steps.Review ? <SC.Steps.Fourth /> : null}
             </SC.Steps.Container>
           ) : (
             <>
@@ -222,7 +205,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
                 <SC.IngresarText>{t("header.collaborators")}</SC.IngresarText>
               </SC.IngresarWrap>
 
-              <SC.CartWrapper big={bigCart} onClick={showCart}>
+              <SC.CartWrapper onClick={showCart}>
                 <SC.IngresarImg width="32" height="24" src={CartImg} alt="Carrito de compras" />
                 {data && data.cartItems && data.cartItems.length ? <SC.CartText>{GET_QTY(data.cartItems)}</SC.CartText> : <SC.CartText>0</SC.CartText>}
               </SC.CartWrapper>

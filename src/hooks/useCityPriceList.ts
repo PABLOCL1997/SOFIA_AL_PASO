@@ -25,8 +25,6 @@ const useCityPriceList = (): usePriceListType => {
     fetchPolicy: "network-only",
   });
 
-
-
   const [city, setCity] = useState<string>("SC");
   const [idPriceList, setIdPriceList] = useState<number>(-1);
   const [agency, setAgency] = useState<string | null>(null);
@@ -70,7 +68,8 @@ const useCityPriceList = (): usePriceListType => {
     express: express?.express,
     agency: userData?.userInfo[0]?.agency || null,
     setAgency,
-    hasB2EAddress };
+    hasB2EAddress,
+  };
 };
 
 export default useCityPriceList;
