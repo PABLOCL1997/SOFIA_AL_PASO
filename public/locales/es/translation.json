@@ -20,8 +20,8 @@
       "edit": "Mi Cuenta"
     },
     "shipping_type": {
-      "express": "Envió Express",
-      "pickup": "Retira al paso",
+      "express": "Envío Express",
+      "pickup": "Retirá al paso",
       "delivery": "Recibe en casa"      
     }
   },

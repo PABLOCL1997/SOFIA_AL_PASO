@@ -5,11 +5,11 @@ import useUser from "../../../hooks/useUser";
 import { OrderType } from "../../../types/Order";
 import * as SC from "./style";
 
-const dictionary  = {
-  "PICKUP": "pickup",
-  "EXPRESS": "express",
-  "ECOMMERCE": "delivery",
-  "B2E": "delivery"
+enum ServiceType {
+  PICKUP = "pickup",
+  EXPRESS = "express",
+  ECOMMERCE = "delivery",
+  B2E = "delivery"
 }
 
 interface Props {  
@@ -23,7 +23,7 @@ const ShippingType: FC<Props> = ({ onClick }) => {
   const { store } : { store: OrderType } = useUser();
 
   useEffect(() => {
-    setType(dictionary[store]);
+    setType(ServiceType[store]);
   }, [store]);
 
   useEffect(() => {

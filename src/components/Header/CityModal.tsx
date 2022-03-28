@@ -128,7 +128,7 @@ type User = {
 
 const CityModal: FC<Props> = () => {
   const { agency } = useCityPriceList();
-  const { showExpressModal, hideExpressModal } =useUser();
+  const { showExpressModal, hideExpressModal } = useUser();
   const { data } = useQuery(GET_USER, {});
   const [city, setCity] = useState<User>({});
   const [setUser] = useMutation(SET_USER, { variables: { user: city } });
