@@ -14,11 +14,13 @@ const Success = React.lazy(() => import(/* webpackChunkName: "Success" */ "../co
 const MinimumPrice = React.lazy(() => import(/* webpackChunkName: "MinimumPrice" */ "../components/MinimumPrice"));
 const Modal = React.lazy(() => import(/* webpackChunkName: "ModalMessage" */ "../components/ModalMessage"));
 const Footer = React.lazy(() => import(/* webpackChunkName: "Footer" */ "../components/Footer"));
+const PromoBar = React.lazy(() => import(/* webpackChunkName: "PromoBar" */ "../components/Homepage/PromoBar"));
 
 const Homepage = () => {
   return (
     <>
-      <Header checkout={false} page={undefined} />
+      <PromoBar />
+      <Header checkout={false} page={undefined} route={"/"}/>
       <Categories isMobile={window.innerWidth <= 1100} />
       <Hero />
 

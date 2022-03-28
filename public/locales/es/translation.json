@@ -18,6 +18,11 @@
       "title": "Modo Colaborador",
       "description": "",
       "edit": "Mi Cuenta"
+    },
+    "shipping_type": {
+      "express": "Envío Express",
+      "pickup": "Retirá al paso",
+      "delivery": "Recibe en casa"      
     }
   },
   "modal": {

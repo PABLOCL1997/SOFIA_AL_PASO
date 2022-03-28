@@ -49,14 +49,14 @@ export const RightMenu = styled.div`
 
 export const Wrapper = styled.div``;
 
-export const Fixed = styled.div<{ shadow: boolean }>`
+export const Fixed = styled.div<{ shadow: boolean, showPromoBar: boolean }>`
   width: 100%;
   margin: 0 auto;
   padding: 0 20px;
   position: fixed;
   background: white;
   left: 0;
-  top: 0;
+  top: ${(props) => props.showPromoBar ? "32px" : "0"};
   z-index: 11;
   box-shadow: ${(props) => (props.shadow ? "0 0 15px #ccc" : "")};
 
@@ -67,6 +67,7 @@ export const Fixed = styled.div<{ shadow: boolean }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    top: 0;
   }
 `;
 

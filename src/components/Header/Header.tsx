@@ -11,7 +11,6 @@ import * as SC from "../../styled-components/HeaderStyles";
 
 import Wallet from "../../assets/images/empresa-seleccionado.svg";
 
-import LocationIcon from "../../assets/images/locate-icon.svg";
 import UserIcon from "../../assets/images/profile-ingresar.svg";
 import UserCheckout from "../../assets/images/profile-checkout.svg";
 import CartImg from "../../assets/images/Carrito.svg";
@@ -22,6 +21,8 @@ import SofiaAlPasoColaboradoresLogo from "../../assets/images/sofiaAlPasoColabor
 import { trackGoToCartEvent } from "../../utils/dataLayer";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
+import ShippingType from "./ShippingType";
+import useUser from "../../hooks/useUser";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
@@ -33,10 +34,12 @@ const Sidebar = React.lazy(() => import(/* webpackChunkName: "Sidebar" */ "./Sid
 type Props = {
   checkout: boolean;
   page?: string;
+  route?: string;
 };
 
-const Header: FC<Props> = ({ checkout, page }) => {
+const Header: FC<Props> = ({ checkout, page, route }) => {  
   const { t } = useTranslation();
+  const { showPromoBar, hideBar } = useUser();
   const history = useHistory();
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
   const [open, setOpen] = useState(false);
@@ -96,6 +99,12 @@ const Header: FC<Props> = ({ checkout, page }) => {
   };
 
   useEffect(() => {
+    if (route !== "/") {
+      hideBar();
+    };
+  },[route]);
+
+  useEffect(() => {
     if (!userData?.userInfo.length || !userData?.userInfo[0].cityKey || userData?.userInfo[0].openCityModal || userData?.userInfo[0].openCartModal) {
       document.body.style.overflow = "hidden";
       document.body.style.maxHeight = "none";
@@ -135,7 +144,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
 
   return (
     <>
-      <SC.Fixed shadow={shadow}>
+      <SC.Fixed shadow={shadow} showPromoBar={showPromoBar}>
         <Suspense fallback={<></>}>
           <AuthModal />
           <CityModal />
@@ -171,13 +180,7 @@ const Header: FC<Props> = ({ checkout, page }) => {
             </SC.Steps.Container>
           ) : (
             <>
-              <div>
-                <SC.Address onClick={() => toggleCityModal()}>
-                  {/* pin */}
-                  <img height="25" src={LocationIcon} alt="location" />
-                  <SC.AddressText title={addressCity}>{addressCity}</SC.AddressText>
-                </SC.Address>
-              </div>
+              <ShippingType onClick={toggleCityModal}/>
               <SC.InputGroup>
                 <Search />
                 {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
