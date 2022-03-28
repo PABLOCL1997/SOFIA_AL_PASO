@@ -37,7 +37,7 @@ const Checkout = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
-  const { idPriceList, agency, city, agencies } = useCityPriceList();
+  const { idPriceList, agency, city, agencies, express } = useCityPriceList();
   const { store } = useUser();
   const minimumPrice = useMinimumPrice();
   const { cart: data, totalAmount } = useCart();
