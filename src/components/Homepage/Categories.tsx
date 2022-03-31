@@ -1,8 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import useCategory from "../../hooks/useCategory";
+import useWindowDimensions from "../../hooks/useWindowDimesions";
 import { toLink } from "../../utils/string";
 
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
@@ -205,12 +206,13 @@ const Block = styled.div`
 `;
 
 interface Props {
-  isMobile: boolean;
 }
 
-const Categories: FC<Props> = ({ isMobile }) => {
+const Categories: FC<Props> = () => {
   const { categories } = useCategory();
   const [selectedCategory, setSelectedCategory] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const { width: innerWidth } = useWindowDimensions();
   const EmbutidosId = 317;
   const Premium = 356;
   const Mascotas = 354;
@@ -219,13 +221,21 @@ const Categories: FC<Props> = ({ isMobile }) => {
     setSelectedCategory(entity_id);
   };
 
+  useEffect(() => {
+    if (innerWidth < 1100) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  },[innerWidth]);
+
   const settings = {
     dots: false,
     infinite: false,
     arrows: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 1,
+    slidesToScroll: 3,
   };
 
   return (
