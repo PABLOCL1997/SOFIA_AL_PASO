@@ -62,10 +62,10 @@ const Subtitle = styled.h4`
     font-size: 16px;
   }
 `;
-const Options = styled.ul<{ showExpress: boolean }>`
+const Options = styled.ul<{ showExpress: boolean, isB2E: boolean }>`
   display: grid;
-  ${({ showExpress }) =>
-    showExpress
+  ${({ showExpress, isB2E }) =>
+    showExpress && !isB2E
       ? `
     grid-template-columns: 1fr 1fr 1fr;
   `
@@ -184,7 +184,7 @@ const ChooseShipping: FC<{
     setShippingMethod(step);
     setStep(Steps.Detailing);
   };
-  const { store }: { store: OrderType } = useUser();
+  const { store, isB2E } = useUser();
   const { city }: { city: string } = useCityPriceList();
   const showExpress = useMemo(() => {
     const initHour: dayjs.Dayjs = dayjs().tz("America/La_Paz").hour(8).minute(0).second(0);
@@ -199,7 +199,7 @@ const ChooseShipping: FC<{
     <Wrapper>
       <Title>{t("welcome")}</Title>
       <Subtitle>{t("subtitle")}</Subtitle>
-      <Options showExpress={showExpress}>
+      <Options showExpress={showExpress} isB2E={isB2E}>
         <Option className="storePickup" selected={store === "PICKUP"} onClick={() => handleStep(ShippingMethod.Pickup)}>
           <PickupIcon />
           <p>{t("pickup_title")}</p>
@@ -207,13 +207,13 @@ const ChooseShipping: FC<{
           {store === "PICKUP" && <em>{street}</em>}
         </Option>
         {/* show this option only in Santa Cruz */}
-        {showExpress && (
+        {showExpress && !isB2E ? (
           <Option selected={store === "EXPRESS"} className="storeExpress" onClick={() => handleStep(ShippingMethod.Express)}>
             <ExpressIcon />
             <p onClick={() => handleStep(ShippingMethod.Express)}>{t("express_title")}</p>
             <strong onClick={() => handleStep(ShippingMethod.Store)}>{t("new_brand")}</strong>
           </Option>
-        )}
+        ) : null}
         <Option className="delivery" selected={store === "B2E" || store === "ECOMMERCE"} onClick={() => handleStep(ShippingMethod.Delivery)}>
           <DeliveryIcon />
           <p>{t("delivery_title")}</p>
@@ -222,7 +222,7 @@ const ChooseShipping: FC<{
         </Option>
         <Strong>{t("pickup_description")}</Strong>
         {/* show this description only in Santa Cruz */}
-        {showExpress ? (
+        {showExpress && !isB2E ? (
           <Strong>
             <Trans i18nKey={t("express_description")} components={{ strong: <strong />, cities: <small />, timeframes: <em /> }} />
           </Strong>
