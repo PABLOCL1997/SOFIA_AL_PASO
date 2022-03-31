@@ -56,7 +56,7 @@ const AuthModal: FC<Props> = () => {
   const [signUpErrorText, setSignUpErrorText] = useState("");
 
   const [getDetails] = useLazyQuery(DETAILS, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     onCompleted: (d) => {
       // if user is logged in and has addresses
       if (d.details && d.details.addresses && d.details.addresses.length > 0) {
@@ -75,6 +75,7 @@ const AuthModal: FC<Props> = () => {
             cityName: b2eAddress?.city,
             agency: null,
             idPriceList: b2eAddress?.id_price_list || 0,
+            isB2E: true
           };
         } else {
           // set the default address to the first address
