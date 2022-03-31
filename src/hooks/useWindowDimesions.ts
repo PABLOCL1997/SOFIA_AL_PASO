@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 function debounce(func: any) {
-  let timer: any;
+  let timer: ReturnType<typeof setTimeout>;
   return function () {
     if (timer) clearTimeout(timer);
     timer = setTimeout(func, 100);
