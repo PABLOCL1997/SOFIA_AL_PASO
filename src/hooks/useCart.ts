@@ -301,6 +301,8 @@ const useCart = (): CartReturn => {
   useEffect(() => {
     if (cart?.cartItems?.length) {
       setTotalAmount(GET_TOTAL(cart?.cartItems));
+    } else {
+      setTotalAmount("0.0");
     }
   }, [cart?.cartItems?.length]);
 

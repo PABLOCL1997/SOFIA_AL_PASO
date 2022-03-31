@@ -132,7 +132,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
             <span>- Bs. {String(discountAmount).replace(".", ",")}</span>
           </SC.Discount>
         )}
-        <SC.Subtotal>
+        <SC.Subtotal key={`ticketsubtotal${totalAmount}`}>
           <b>{t("checkout.ticket.subtotal")}</b>
           <b>Bs. {totalAmount}</b>
         </SC.Subtotal>
@@ -155,7 +155,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
         ) : null}
 
         <SC.Line />
-        <SC.Total>
+        <SC.Total key={`tickettotal${totalAmount}`}>
           <b>{t("checkout.ticket.total")}</b>
           <b>Bs. {(Number(totalAmount.replace(",", ".")) + shippingPrice).toFixed(2).replace(".", ",")}</b>
         </SC.Total>
