@@ -300,9 +300,9 @@ const useCart = (): CartReturn => {
 
   useEffect(() => {
     if (cart?.cartItems?.length) {
-      setTotalAmount(GET_TOTAL(cart?.cartItems, shippingPrice));
+      setTotalAmount(GET_TOTAL(cart?.cartItems));
     }
-  }, [cart, shippingPrice]);
+  }, [cart]);
 
   const quantity = useMemo(() => (cart?.cartItems?.length ? GET_QTY(cart.cartItems) : 0), [cart]);
   const total = useMemo(() => (parseFloat(totalAmount.replace(",", ".")) - discountAmount).toFixed(2).replace(".", ","), [totalAmount, discountAmount]);

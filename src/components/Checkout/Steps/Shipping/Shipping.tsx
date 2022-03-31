@@ -44,7 +44,7 @@ const Shipping: FC<{
     initialValues: {
       firstname: "",
       lastname: "",
-      nit: "",
+      nit: 0,
       phone: "",
       phone2: "",
       city: "",
@@ -244,13 +244,13 @@ const Shipping: FC<{
           ...formik.values,
           firstname,
           lastname,
-          nit,
+          nit: Number(nit),
           phone,
         });
         updateOrder("shipping", {
           firstname,
           lastname,
-          nit,
+          nit: Number(nit),
           phone,
         });
       }
@@ -267,7 +267,7 @@ const Shipping: FC<{
           ...formik.values,
           firstname,
           lastname,
-          nit,
+          nit: Number(nit),
           phone: phone || "1111",
           city,
           address,
@@ -275,7 +275,7 @@ const Shipping: FC<{
         updateOrder("shipping", {
           firstname,
           lastname,
-          nit,
+          nit: Number(nit),
           phone: phone || "1111",
           city,
           address,
@@ -288,9 +288,17 @@ const Shipping: FC<{
   useEffect(() => {
     const checkShipping = async () => {
       try {
-        await Checkout.Validations.Shipping(formik.values as IShipping);
+        if (store === "B2E") {
+          await Checkout.Validations.ShippingB2E(formik.values as IShipping);
+        } else {
+          await Checkout.Validations.Shipping(formik.values as IShipping);
+        }
+        setShowAddressForm(false);
         setFormIsValid(true);
       } catch (error) {
+        if (store === "B2E") {
+          setShowAddressForm(true);
+        }
         setFormIsValid(false);
       }
     };
