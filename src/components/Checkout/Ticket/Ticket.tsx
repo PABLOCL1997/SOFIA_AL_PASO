@@ -22,7 +22,7 @@ type Props = {
   userData: any;
   userDetails: any;
   ready: boolean;
-  step: Steps
+  step: Steps;
 };
 
 const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetails, ready, step }) => {
@@ -30,7 +30,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
   const minimumPrice = useMinimumPrice();
   const { agency } = useCityPriceList();
   const { user: localUserData, toggleCartModal } = useUser();
-  const { cart, totalAmount, shippingPrice, discountAmount, removeCoupon } = useCart(); 
+  const { cart, totalAmount, shippingPrice, discountAmount, removeCoupon } = useCart();
   const [type, setType] = useState("");
   const [discount, setDiscount] = useState("0");
 
@@ -70,20 +70,19 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
     try {
       const response: any = await checkCoupon();
       const discount_code: string = response?.data?.coupon?.code;
-      const discount_type: CouponType = response?.data?.coupon?.type
+      const discount_type: CouponType = response?.data?.coupon?.type;
       await saveCoupon({
         variables: { user: { coupon: discount_code } },
-      })
+      });
       setType(discount_type);
       setCoupon(discount_code);
     } catch (e) {
       showError();
       await saveCoupon({
         variables: { user: { coupon: null } },
-      })
+      });
     }
   };
-
 
   useEffect(() => {
     updateOrder("coupon", {
@@ -106,30 +105,25 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           <button onClick={() => toggleCartModal()}>{t("checkout.modify_cart")}</button>
         </SC.Title>
         <SC.Rows>
-          {
-            cart?.cartItems?.map((product: ProductType, index: number) => (
-              <SC.Row key={product.entity_id}>
-                <span>
-                  {product.qty} x {product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}
-                </span>
-                <span>
-                  Bs.{" "}
-                  {Number((product?.qty ?? 0) * product.special_price)
-                    .toFixed(2)
-                    .replace(".", ",")}
-                </span>
-              </SC.Row>
-            ))}
+          {cart?.cartItems?.map((product: ProductType, index: number) => (
+            <SC.Row key={product.entity_id}>
+              <span>
+                {product.qty} x {product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}
+              </span>
+              <span>
+                Bs.{" "}
+                {Number((product?.qty ?? 0) * product.special_price)
+                  .toFixed(2)
+                  .replace(".", ",")}
+              </span>
+            </SC.Row>
+          ))}
         </SC.Rows>
         {/* Show shipping price only on b2e, b2c */}
         {!agency && (
           <SC.Shipping>
             <span>{t("checkout.ticket.delivery")}</span>
-            {shippingPrice ? 
-            <b>Bs. {String(shippingPrice.toFixed(2)).replace('.',',')}</b>
-            :
-            <b>GRATIS</b>
-          }
+            {shippingPrice ? <b>Bs. {String(shippingPrice.toFixed(2)).replace(".", ",")}</b> : <b>GRATIS</b>}
           </SC.Shipping>
         )}
         {Number(discountAmount) > 0 && (
@@ -138,7 +132,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
             <span>- Bs. {String(discountAmount).replace(".", ",")}</span>
           </SC.Discount>
         )}
-        <SC.Subtotal>
+        <SC.Subtotal key={`ticketsubtotal${totalAmount}`}>
           <b>{t("checkout.ticket.subtotal")}</b>
           <b>Bs. {totalAmount}</b>
         </SC.Subtotal>
@@ -161,9 +155,9 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
         ) : null}
 
         <SC.Line />
-        <SC.Total>
+        <SC.Total key={`tickettotal${totalAmount}`}>
           <b>{t("checkout.ticket.total")}</b>
-          <b>Bs.{" "}{totalAmount}</b>
+          <b>Bs. {(Number(totalAmount.replace(",", ".")) + shippingPrice).toFixed(2).replace(".", ",")}</b>
         </SC.Total>
         {dataDiscounts &&
           !localUserData?.userInfo[0]?.agency &&
@@ -180,24 +174,15 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
         {step === Steps.Review ? (
           <SC.CtaWrapper>
-            {!processing && (
-              <Cta
-                active={ready && Number(totalAmount.replace(",", ".")) > 0}
-                text={t("checkout.ticket.send")}
-                action={order}
-                filled
-              />
-            )}
+            {!processing && <Cta active={ready && Number(totalAmount.replace(",", ".")) > 0} text={t("checkout.ticket.send")} action={order} filled />}
             {processing && (
               <SC.LoaderWrapper>
                 <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
               </SC.LoaderWrapper>
             )}
           </SC.CtaWrapper>
-        ): null}
-        {shippingPrice > 0 ? 
-          <SC.ErrorText margin={false}>A partir de Bs. {minimumPrice} el envio es gratis.</SC.ErrorText>
-        : null}
+        ) : null}
+        {shippingPrice > 0 ? <SC.ErrorText margin={false}>A partir de Bs. {minimumPrice} el envio es gratis.</SC.ErrorText> : null}
       </SC.Container>
     </Suspense>
   );
