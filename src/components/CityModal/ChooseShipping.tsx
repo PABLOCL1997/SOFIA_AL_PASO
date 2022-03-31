@@ -222,7 +222,7 @@ const ChooseShipping: FC<{
         </Option>
         <Strong>{t("pickup_description")}</Strong>
         {/* show this description only in Santa Cruz */}
-        {showExpress && isB2E ? (
+        {showExpress && !isB2E ? (
           <Strong>
             <Trans i18nKey={t("express_description")} components={{ strong: <strong />, cities: <small />, timeframes: <em /> }} />
           </Strong>
