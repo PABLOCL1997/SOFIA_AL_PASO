@@ -154,7 +154,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
           <SC.HeaderClip isB2E={isB2E}>
             <SC.HeaderClipTextWrapper>
               <SC.HeaderClipText />
-              {!!userData?.userInfo[0]?.idPriceList && <SC.HeaderClipText>Colaboradores</SC.HeaderClipText>}
+              {isB2E && <SC.HeaderClipText>Colaboradores</SC.HeaderClipText>}
             </SC.HeaderClipTextWrapper>
           </SC.HeaderClip>
           {isCheckout && window.innerWidth < 500 && (
@@ -165,7 +165,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
           )}
           <SC.Logo isB2E={isB2E} isCheckout={isCheckout}>
             <Link to="/">
-              <img src={!userData?.userInfo[0]?.idPriceList ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
+              <img src={!isB2E ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>
           {isCheckout ? (
