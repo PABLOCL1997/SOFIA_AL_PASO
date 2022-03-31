@@ -39,7 +39,7 @@ type Props = {
 
 const Header: FC<Props> = ({ checkout, page, route }) => {  
   const { t } = useTranslation();
-  const { showPromoBar, hideBar } = useUser();
+  const { showPromoBar, hideBar, isB2E } = useUser();
   const history = useHistory();
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
   const [open, setOpen] = useState(false);
@@ -151,7 +151,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
           <CartModal />
         </Suspense>
         <SC.Container isCheckout={isCheckout}>
-          <SC.HeaderClip isB2E={!!userData?.userInfo[0]?.idPriceList}>
+          <SC.HeaderClip isB2E={isB2E}>
             <SC.HeaderClipTextWrapper>
               <SC.HeaderClipText />
               {!!userData?.userInfo[0]?.idPriceList && <SC.HeaderClipText>Colaboradores</SC.HeaderClipText>}
@@ -163,7 +163,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
               {!userData.userInfo.length || !userData.userInfo[0].isLoggedIn ? <SC.IngresarText>{t("header.login")}</SC.IngresarText> : <SC.IngresarText>{t("header.account")}</SC.IngresarText>}
             </SC.IngresarWrap>
           )}
-          <SC.Logo isB2E={!!userData?.userInfo[0]?.idPriceList} isCheckout={isCheckout}>
+          <SC.Logo isB2E={isB2E} isCheckout={isCheckout}>
             <Link to="/">
               <img src={!userData?.userInfo[0]?.idPriceList ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
