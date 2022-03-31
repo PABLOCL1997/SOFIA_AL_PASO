@@ -200,3 +200,40 @@ export const PasswordWrapper = styled.div`
     cursor: pointer;
   }
 `;
+
+export const SaveLogin = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  height: 100%;
+
+  input {
+    width: auto;
+    margin: 0;
+    accent-color: var(--red);
+    &:hover {
+      cursor: pointer;
+    }    
+  }
+
+  label {
+    font-size: 14px;
+    text-align: center;
+    font-family: MullerRegular;
+  }
+`
+
+export const WrapperButtons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-bottom: 20px;
+
+  span {
+    margin: 0;
+    text-align: unset;
+    width: max-content;
+  }
+`;
