@@ -4,9 +4,26 @@ import { useLazyQuery, useMutation, useQuery } from "react-apollo";
 import { SET_USER, SIGN_UP, LOGIN, RECOVER, RESET } from "../../../graphql/user/mutations";
 import { DETAILS, GET_USER } from "../../../graphql/user/queries";
 import { googleLogin, facebookLogin } from "../../../utils/social";
-import { token as StoreToken } from "../../../utils/store";
+import { loginInfoForm, token as StoreToken } from "../../../utils/store";
 import { useParams, useHistory } from "react-router-dom";
-import { CloseWrapper, CtaWrapper, Description, Disclaimer, Line, Link, LoaderWrapper, LoginError, Modal, ModalCourtain, PasswordWrapper, SignUpError, SocialButton, Title } from "./style";
+import { 
+  CloseWrapper, 
+  CtaWrapper, 
+  Description, 
+  Disclaimer, 
+  Line, 
+  Link, 
+  LoaderWrapper, 
+  LoginError, 
+  Modal, 
+  ModalCourtain, 
+  PasswordWrapper, 
+  SignUpError, 
+  SocialButton, 
+  Title,
+  SaveLogin,
+  WrapperButtons
+ } from "./style";
 import { findKeyByCity } from "../../../utils/string";
 import useUser from "../../../hooks/useUser";
 import { ApolloError } from "apollo-client";
@@ -54,6 +71,7 @@ const AuthModal: FC<Props> = () => {
   const [passwordVisible, setPasswordVisible] = useState<Boolean>(false);
   const togglePassword = useRef<HTMLInputElement>(null);
   const [signUpErrorText, setSignUpErrorText] = useState("");
+  const [saveLogin, setSaveLogin] = useState(false);
 
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "no-cache",
@@ -172,19 +190,44 @@ const AuthModal: FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  useEffect(() => {
+    const infoLogin = JSON.parse(loginInfoForm.get());
+    const openLogin = data.userInfo[0].openLoginModal;
+    if (openLogin) {
+      if (infoLogin) {
+        setForm(infoLogin);
+        setSaveLogin(true);
+      } else {
+        setForm({ email: "", password: "" });
+      }
+    }    
+  },[data?.userInfo[0]?.openLoginModal]);
+
   const login = async () => {
     try {
       setLoader(true);
       setLoginError(false);
-      const response: any = await doLogin();
+      const response: any = await doLogin();     
+
+      if (saveLogin) {
+        const loginDataJSON = JSON.stringify({
+          email: form.email,
+          password: form.password
+        });
+        loginInfoForm.set(loginDataJSON);
+      } else {
+        loginInfoForm.delete();
+      }
+
+      StoreToken.set(response.data.login.token);
       setUser({
         openLoginModal: false,
         isLoggedIn: true,
         id: response.data.login.id,
         idPriceList: 0,
       });
-      StoreToken.set(response.data.login.token);
       if ((window as any).navigateToCheckout) history.push("/checkout");
+
     } catch (e) {
       setLoginError(true);
     }
@@ -330,6 +373,7 @@ const AuthModal: FC<Props> = () => {
 
             {loginError ? <LoginError>{t("auth_modal.login.error")}</LoginError> : ""}
             <input
+              value={form.email as string}
               type="email"
               name="email"
               onKeyUp={(evt) => {
@@ -340,6 +384,7 @@ const AuthModal: FC<Props> = () => {
             />
             <PasswordWrapper>
               <input
+                value={form.password as string}
                 type="password"
                 name="password"
                 ref={togglePassword}
@@ -363,10 +408,17 @@ const AuthModal: FC<Props> = () => {
                 </svg>
               )}
             </PasswordWrapper>
-            {/* <button onClick={() => handleTogglePasswordVisibility()}>toggle visible</button> */}
-            <Link position="right" onClick={() => setStep(Steps.ForgotPassword)}>
-              {t("auth_modal.login.forget_password")}
-            </Link>
+
+            <WrapperButtons>
+              <SaveLogin>
+                <input type="radio" checked={saveLogin} onClick={() => setSaveLogin((prev) => !prev)} />
+                <label>Recuerda mis datos</label>
+              </SaveLogin>
+              <Link position="right" onClick={() => setStep(Steps.ForgotPassword)}>
+                {t("auth_modal.login.forget_password")}
+              </Link>
+            </WrapperButtons>
+            
             <CtaWrapper>
               <Cta filled={true} action={login} text={t("auth_modal.login.button")} />
             </CtaWrapper>
