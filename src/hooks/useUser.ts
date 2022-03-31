@@ -21,6 +21,7 @@ interface IUseUser {
   coupon: string | null;
   showPromoBar: boolean;
   showExpressModal: boolean;
+  isB2E: boolean;
 }
 
 const useUser = (): IUseUser => {
@@ -94,6 +95,9 @@ const useUser = (): IUseUser => {
     return user?.userInfo[0]?.showExpressModal || false;
   }, [user]);
 
+  const isB2E: boolean = useMemo(() => {
+    return user?.userInfo[0]?.isB2E;
+  }, [user])
 
   return {
     toggleCartModal,
@@ -111,7 +115,8 @@ const useUser = (): IUseUser => {
     store,
     coupon,
     showPromoBar,
-    showExpressModal
+    showExpressModal,
+    isB2E
   };
 };
 
