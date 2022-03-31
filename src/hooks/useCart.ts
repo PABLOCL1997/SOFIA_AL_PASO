@@ -304,7 +304,7 @@ const useCart = (): CartReturn => {
     } else {
       setTotalAmount("0.0");
     }
-  }, [cart?.cartItems?.length]);
+  }, [cart?.cartItems, cart?.cartItems?.length]);
 
   const quantity = useMemo(() => (cart?.cartItems?.length ? GET_QTY(cart.cartItems) : 0), [cart]);
   const total = useMemo(() => (parseFloat(totalAmount.replace(",", ".")) - discountAmount).toFixed(2).replace(".", ","), [totalAmount, discountAmount]);
