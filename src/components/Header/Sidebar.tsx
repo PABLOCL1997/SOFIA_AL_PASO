@@ -17,6 +17,7 @@ import { toLink } from "../../utils/string";
 import { useDeviceDetect } from "../../utils/deviceDetect";
 import useUser from "../../hooks/useUser";
 import CartImg from "../../assets/images/Carrito.svg";
+import MisFacturas from "../../assets/images/mis-facturas.svg";
 
 const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../Images/Cart")); //TODO: DELETE?
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
@@ -45,6 +46,9 @@ const Wrapper = styled.aside`
     cursor: pointer;
   }
 `;
+
+const Image = styled.img``;
+const Ref = styled.a``;
 
 type Props = {
   setOpen: Function;
@@ -112,6 +116,13 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           <Link onClick={() => setOpen(false)} to="/">
             {t("header.home")}
           </Link>
+        </MenuItem>
+        <MenuItem>
+          {/* Mis Facturas */}
+          <Image src={MisFacturas} alt="mis-facturas" />
+          <Ref href="https://misfacturas.sofia.com.bo/dio-public/">
+            {t("header.bills")}
+          </Ref>         
         </MenuItem>
         <MenuItem>
           {/* faq */}
