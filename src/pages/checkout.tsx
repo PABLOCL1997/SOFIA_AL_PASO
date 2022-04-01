@@ -373,7 +373,7 @@ const Checkout = () => {
       const shippingFields = store === "EXPRESS" ? ["firstname", "phone", "nit", "city", "address"] : ["firstname", "phone", "phone2", "nit", "city", "address", "reference"];
       shippingFields.forEach((key: string) => {
         // @ts-ignore
-        if ((!orderData.shipping[key] || !orderData.shipping[key].trim()) && !missingField) {
+        if ((!orderData.shipping[key] || (typeof orderData.shipping[key] === "string" && !orderData.shipping[key].trim())) && !missingField) {
           missingField = true;
 
           const input = document.querySelector(`[name="shipping-${key}"]`);
