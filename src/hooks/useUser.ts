@@ -74,6 +74,7 @@ const useUser = (): IUseUser => {
         defaultAddressId: null,
         isLoggedIn: false,
         id: null,
+        isB2E: false
       },
     },
   });
