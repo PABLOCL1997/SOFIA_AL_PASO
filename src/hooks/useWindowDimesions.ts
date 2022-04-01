@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function debounce(func: any) {
+function debounce(func: () => void) {
   let timer: ReturnType<typeof setTimeout>;
   return function () {
     if (timer) clearTimeout(timer);
