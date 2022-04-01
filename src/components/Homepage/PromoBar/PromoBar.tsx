@@ -11,11 +11,12 @@ const PromoBar: FC = () => {
     toggleCityModal, 
     isLoggedIn, 
     toggleLoginModal,
-    toggleExpressModal
+    toggleExpressModal,
+    isB2E
    } = useUser();  
 
   useEffect(() => {
-    if (store === "EXPRESS") {
+    if (store === "EXPRESS" || isB2E) {
       hideBar();
     } else {
       togglePromoBar();

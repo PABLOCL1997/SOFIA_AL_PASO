@@ -21,7 +21,7 @@ const Homepage = () => {
     <>
       <PromoBar />
       <Header checkout={false} page={undefined} route={"/"}/>
-      <Categories isMobile={window.innerWidth <= 1100} />
+      <Categories />
       <Hero />
 
       <Suspense fallback={<></>}>

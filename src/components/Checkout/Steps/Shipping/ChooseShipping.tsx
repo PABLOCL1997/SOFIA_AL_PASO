@@ -10,7 +10,7 @@ const ChooseShipping: FC<{
   addressId: number | null;
   showNewAddress: boolean;
 }> = ({ street, addressId, showNewAddress }) => {
-  const { toggleCityModal, showAddressInfo, store } = useUser();
+  const { toggleCityModal, showAddressInfo, store, isB2E } = useUser();
   const { hasB2EAddress } = useCityPriceList();
 
   const deliverySelector = ".delivery";
@@ -77,7 +77,7 @@ const ChooseShipping: FC<{
         />
       )}
 
-      <ShippingOption
+      {!isB2E ? <ShippingOption
         option={ShippingOptions.Express}
         title="Envío express"
         description="Recibe en casa"
@@ -86,7 +86,7 @@ const ChooseShipping: FC<{
         onInfo={() => toggleAndClickSelector(expressSelector)}
         onSelect={() => toggleAndClickSelector(expressSelector)}
         onAddAddress={() => toggleAndClickSelector(expressSelector)}
-      />
+      /> : null}
 
       <ShippingOption
         option={ShippingOptions.Pickup}

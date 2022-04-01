@@ -104,6 +104,7 @@ const AuthModal: FC<Props> = () => {
             cityName: defaultAddress?.city,
             agency: null,
             idPriceList: 0,
+            isB2E: false,
           };
         }
 
