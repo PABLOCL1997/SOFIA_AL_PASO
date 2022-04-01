@@ -221,12 +221,8 @@ const Categories: FC<Props> = () => {
     setSelectedCategory(entity_id);
   };
 
-  useEffect(() => {
-    if (innerWidth < 1100) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
+  useEffect(() => {    
+    setIsMobile(innerWidth < 1100);
   },[innerWidth]);
 
   const settings = {
