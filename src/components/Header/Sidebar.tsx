@@ -47,12 +47,10 @@ const Wrapper = styled.aside`
   }
 `;
 
-const Image = styled.img``;
-const Ref = styled.a``;
-
 type Props = {
   setOpen: Function;
 };
+
 const Sidebar: FC<Props> = ({ setOpen }) => {
   const { data: userData } = useQuery(GET_USER, {});
   const { logout, toggleLoginModal, toggleCartModal } = useUser();
@@ -119,10 +117,10 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
         </MenuItem>
         <MenuItem>
           {/* Mis Facturas */}
-          <Image src={MisFacturas} alt="mis-facturas" />
-          <Ref href="https://misfacturas.sofia.com.bo/dio-public/">
+          <img src={MisFacturas} alt="mis-facturas" />
+          <a href="https://misfacturas.sofia.com.bo/dio-public/">
             {t("header.bills")}
-          </Ref>         
+          </a>         
         </MenuItem>
         <MenuItem>
           {/* faq */}
