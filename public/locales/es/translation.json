@@ -397,7 +397,7 @@
       "discount": "Descuento",
       "total": "Total",
       "send": "Confirmar pedido",
-      "minimum_buy_limit": "Para finalizar la compra el monto minimo debe alcanzar los {{sum}} Bs."
+      "minimum_buy_limit": "Para finalizar la compra el monto mínimo debe alcanzar los {{sum}} Bs."
     }
   },
   "thankyou": {
