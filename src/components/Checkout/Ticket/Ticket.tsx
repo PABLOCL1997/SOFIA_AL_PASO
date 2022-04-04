@@ -28,7 +28,7 @@ type Props = {
 const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetails, ready, step }) => {
   const { t } = useTranslation();
   const minimumPrice = useMinimumPrice();
-  const { agency } = useCityPriceList();
+  const { agency, isExpress } = useCityPriceList();
   const { user: localUserData, toggleCartModal } = useUser();
   const { cart, totalAmount, shippingPrice, discountAmount, removeCoupon } = useCart();
   const [type, setType] = useState("");
@@ -36,6 +36,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const [enableBuy, setEnableBuy] = useState(true);
 
   const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
     fetchPolicy: "network-only",
@@ -96,6 +97,11 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
   useEffect(() => {
     getCartItems();
   }, [localUserData]);
+
+  useEffect(() => {
+    if (isExpress) setEnableBuy(Number(totalAmount.replace(",", ".")) > minimumPrice);
+    else setEnableBuy(true);
+  }, [totalAmount, minimumPrice]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -174,7 +180,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
         {step === Steps.Review ? (
           <SC.CtaWrapper>
-            {!processing && <Cta active={ready && Number(totalAmount.replace(",", ".")) > 0} text={t("checkout.ticket.send")} action={order} filled />}
+            {!processing && <Cta active={ready && enableBuy && Number(totalAmount.replace(",", ".")) > 0} text={t("checkout.ticket.send")} action={order} filled />}
             {processing && (
               <SC.LoaderWrapper>
                 <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
@@ -183,6 +189,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           </SC.CtaWrapper>
         ) : null}
         {shippingPrice > 0 ? <SC.ErrorText margin={false}>A partir de Bs. {minimumPrice} el envio es gratis.</SC.ErrorText> : null}
+        {!enableBuy && <SC.ErrorText margin={false}>{t("checkout.ticket.minimum_buy_limit", { sum: minimumPrice })}</SC.ErrorText>}
       </SC.Container>
     </Suspense>
   );

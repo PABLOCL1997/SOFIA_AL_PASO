@@ -12,6 +12,7 @@ type usePriceListType = {
   setAgency: Function;
   agencies: Array<Agency>;
   express: Array<Agency>;
+  isExpress: boolean;
   hasB2EAddress: boolean;
 };
 
@@ -28,6 +29,7 @@ const useCityPriceList = (): usePriceListType => {
   const [city, setCity] = useState<string>("SC");
   const [idPriceList, setIdPriceList] = useState<number>(-1);
   const [agency, setAgency] = useState<string | null>(null);
+  const [isExpress, setIsExpress] = useState(false);
 
   useEffect(() => {
     // update price list
@@ -51,6 +53,11 @@ const useCityPriceList = (): usePriceListType => {
         setAgency(userData.userInfo[0].agency);
       }
     }
+
+    // update express
+    if (userData?.userInfo.length && userData.userInfo[0].store === "EXPRESS") {
+      setIsExpress(true);
+    }
   }, [userData]);
 
   const hasB2EAddress: boolean = useMemo(() => {
@@ -66,6 +73,7 @@ const useCityPriceList = (): usePriceListType => {
     idPriceList,
     agencies: agencies?.agencies,
     express: express?.express,
+    isExpress,
     agency: userData?.userInfo[0]?.agency || null,
     setAgency,
     hasB2EAddress,
