@@ -37,7 +37,7 @@ const Shipping: FC<{
   const query = useUrlQuery();
   const history = useHistory();
   const { user: localData, store } = useUser();
-  const [showAddressForm, setShowAddressForm] = useState(true);
+  const [showAddressForm, setShowAddressForm] = useState(false);
   const { agency, setAgency, agencies } = useCityPriceList();
   const [showSuccess] = useMutation(SET_USER, {});
   const formik = useFormik({
@@ -293,7 +293,6 @@ const Shipping: FC<{
         } else {
           await Checkout.Validations.Shipping(formik.values as IShipping);
         }
-        setShowAddressForm(false);
         setFormIsValid(true);
       } catch (error) {
         if (store === "B2E") {
