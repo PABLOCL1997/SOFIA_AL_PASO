@@ -32,8 +32,12 @@ type Props = {
     details: UserType;
     loading: boolean;
   };
+  formik?: any;
+  billingData?: any;
+  updateOrder?: any;
 };
-const Addresses: FC<Props> = ({ userData, userDetails }) => {
+
+const Addresses: FC<Props> = ({ userData, userDetails, formik, billingData, updateOrder }) => {
   const billing = 0; // an address is never billing info
   const { t } = useTranslation();
   const location = useLocation();
@@ -147,6 +151,15 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (billingData) {
+      setAddressInputs((prev: any) => ({
+        ...prev,
+        ...billingData
+      }));
+    }
+  },[billingData]);
+  
   const addAddress = () => {
     if (!validate()) return;
 
@@ -211,10 +224,45 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
   const callAddressMutation = async () => {
     try {
       setLoading(true);
-      await handleAddress();
+      const { data: r } = await handleAddress();
       setAddressArgs({ on: false });
       setAddressInputs({});
       closeAddressModal();
+      // modal from checkout
+      if (formik) {     
+        formik.setValues({
+          ...formik.values,
+          firstname: addressInputs.firstname,
+          lastname: addressInputs.lastname,
+          phone: addressInputs.phone,
+          phone2: addressInputs.phone2,
+          address: addressInputs.address,
+          reference: addressInputs.reference,
+          nit: addressInputs.nit,
+          street: addressInputs.address,
+        });
+        setUser({
+          variables: {
+            user: {
+              defaultAddressId: r.addAddress.addressId,
+              defaultAddressLabel: addressInputs.address,
+              cityName: addressInputs.city,
+              idPriceList: 0,
+            },
+          },
+        });
+        updateOrder("shipping", {
+          firstname: addressInputs.firstname,
+          lastname: addressInputs.lastname,
+          phone: addressInputs.phone,
+          phone2: addressInputs.phone2,
+          street: addressInputs.address,
+          address: addressInputs.address,
+          reference: addressInputs.reference,
+          city: addressInputs.city,
+          nit: addressInputs.nit,
+        });
+      }
       userDetails.getDetails();
     } catch (e) {
       showError();
@@ -489,7 +537,7 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
                       {key !== "street" && key !== "address" && key !== "reference" && !options[key] && (
                         <input
                           name={`shipping-${key}`}
-                          value={addressInputs[key] || ""}
+                          value={addressInputs[key]}
                           onChange={(evt) => onChangeAddress(key, evt.target.value)}
                           pattern={key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""}
                           type={key.indexOf("phone") >= 0 || key === "nit" ? "number" : "text"}
