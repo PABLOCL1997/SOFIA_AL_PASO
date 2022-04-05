@@ -16,8 +16,9 @@ const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction"
 
 
 const Billing: FC<{
-    updateOrder: (field: string, values: IBilling) => void
-  }> = ({ updateOrder }) => {
+    updateOrder: (field: string, values: IBilling) => void,
+    orderData: any
+  }> = ({ updateOrder, orderData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const query = useUrlQuery();
@@ -46,10 +47,15 @@ const Billing: FC<{
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       if (d.details) {
-        formik.setValues({...d.details, nit: !d.details.nit ? "" : d.details.nit});
-        updateOrder("billing", {
-          ...d.details,
-        });
+        const details = {
+          firstname: orderData.firstname ? orderData.firstname : d.details.firstname,
+          lastname: orderData.lastname ? orderData.lastname : d.details.lastname,
+          email: orderData.email ? orderData.email : d.details.email,
+          nit: orderData.nit ? orderData.nit : d.details.nit,
+          phone: orderData.phone ? orderData.phone : d.details.phone,
+        }
+        formik.setValues(details);
+        updateOrder("billing", details);
       }
     }
   });  
