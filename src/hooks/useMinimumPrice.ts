@@ -4,7 +4,7 @@ import { ORDER_MINIMUM_PRICE } from "../graphql/cart/queries";
 import useCityPriceList from "./useCityPriceList";
 
 const useMinimumPrice = () => {
-  const { city, idPriceList, agency, express, isExpress } = useCityPriceList();
+  const { city, idPriceList, agency, isExpress } = useCityPriceList();
   const [store, setStore] = useState<string>("b2c");
   const [minimumPrice, setMinimumPrice] = useState(200);
 
@@ -20,11 +20,11 @@ const useMinimumPrice = () => {
   useEffect(() => {
     getMinimumPrice({
       variables: {
-        city: agency ? agency : express ? express : city,
+        city: agency ? agency : city,
         store,
       },
     });
-  }, [city, store, agency, express]);
+  }, [city, store, agency]);
 
   useEffect(() => {
     if (isExpress) {
