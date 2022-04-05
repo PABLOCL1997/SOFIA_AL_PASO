@@ -7,6 +7,7 @@ import { OrderColums } from "../graphql/products/type";
 import useCityPriceList from "./useCityPriceList";
 import axios from "axios";
 import { useUrlQuery } from "./useUrlQuery";
+import useUser from "./useUser";
 
 type Products = {
   loading: boolean;
@@ -29,6 +30,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
   const logsUrl = process.env.REACT_APP_BACKEND + "/logs-product";
 
   let query = useUrlQuery();
+  const { store } = useUser();
 
   let cityUrl = query.get("ciudad");
   let agencyUrl = query.get("agencia");
@@ -120,7 +122,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
       },
     });
 
-    if (agency || agencyUrl) {
+    if ((agency || agencyUrl) && (store === "PICKUP" || store === "EXPRESS")) {
       loadSapProducts({
         variables: {
           agency: agency ? agency : agencyUrl,
@@ -132,11 +134,12 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
           search,
           onsale: category === "promociones" || onsale,
           brand: brand,
+          id_price_list: String(idPriceList),
         },
       });
     }
 
-    if (idPriceList > 0) {
+    if (idPriceList > 0 && store === "B2E") {
       loadProductsFromListing({
         variables: {
           category_id: search && search.length > 0 ? 0 : category_id || 0,
@@ -152,7 +155,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
       });
     }
 
-    if (!agency && idPriceList === 0) {
+    if (!agency && idPriceList === 0 && store === "ECOMMERCE") {
       loadProducts({
         variables: {
           category_id: category_id || 0,
@@ -168,7 +171,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
     }
     setPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category_id, category, subcategory, lastlevel, order, search, brand, offset, idPriceList, city, agency]);
+  }, [category_id, category, subcategory, lastlevel, order, search, brand, offset, idPriceList, city, agency, store]);
 
   return { loading, products, total, limit, query, offset, order, search, brand, brands, setLoading, setOrder, setBrand, setCategoryId };
 };

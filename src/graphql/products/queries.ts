@@ -181,8 +181,8 @@ export const GET_EXPRESS_AGENCIES = gql`
 `;
 
 export const GET_SAP_PRODUCTS = gql`
-  query ProductsSap($category_id: Int!, $limit: Int!, $offset: Int!, $agency: String!, $city: String!, $onsale: Boolean, $order: String, $search: String, $brand: String) {
-    productsSap(category_id: $category_id, limit: $limit, offset: $offset, onsale: $onsale, search: $search, agency: $agency, city: $city, order: $order, brand: $brand) {
+  query ProductsSap($category_id: Int!, $limit: Int!, $offset: Int!, $agency: String!, $city: String!, $onsale: Boolean, $order: String, $search: String, $brand: String, $id_price_list: String) {
+    productsSap(category_id: $category_id, limit: $limit, offset: $offset, onsale: $onsale, search: $search, agency: $agency, city: $city, order: $order, brand: $brand, id_price_list: $id_price_list) {
       rows {
         entity_id
         name
@@ -206,8 +206,8 @@ export const GET_SAP_PRODUCTS = gql`
 `;
 
 export const GET_SAP_PRODUCT = gql`
-  query productSap($name: String!, $agency: String!, $city: String!) {
-    productSap(name: $name, agency: $agency, city: $city, categories: false, related: false) {
+  query productSap($name: String!, $agency: String!, $city: String!, $id_price_list: String) {
+    productSap(name: $name, agency: $agency, city: $city, categories: false, related: false, id_price_list: $id_price_list) {
       entity_id
       name
       sku
