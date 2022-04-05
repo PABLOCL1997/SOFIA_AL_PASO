@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { cities, KeyValue, search } from "../../../../utils/string";
 import { setLatLng } from "../../../../utils/googlemaps";
-import { useQuery, useMutation } from "react-apollo";
+import { useQuery, useMutation, useLazyQuery } from "react-apollo";
 import { DETAILS } from "../../../../graphql/user/queries";
 import { AddressType } from "../../../../graphql/user/type";
 import { SET_USER } from "../../../../graphql/user/mutations";
@@ -18,6 +18,7 @@ import { FormikProvider, useFormik } from "formik";
 import useUser from "../../../../hooks/useUser";
 import { OrderData } from "../../../../types/Order";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
+import Addresses from "../../../MyAccount/Details/Addresses";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../../Map"));
@@ -38,6 +39,7 @@ const Shipping: FC<{
   const history = useHistory();
   const { user: localData, store } = useUser();
   const [showAddressForm, setShowAddressForm] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const { agency, setAgency, agencies } = useCityPriceList();
   const [showSuccess] = useMutation(SET_USER, {});
   const formik = useFormik({
@@ -50,6 +52,7 @@ const Shipping: FC<{
       city: "",
       address: "",
       reference: "",
+      street: ""
     },
     validationSchema: Checkout.Validators.shippingSchema,
     onSubmit: () => {},
@@ -59,6 +62,7 @@ const Shipping: FC<{
   const [other, setOther] = useState(false);
   const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
 
+  const [getDetails, { loading: loadingDetails }] = useLazyQuery(DETAILS, { fetchPolicy: "network-only" });
   const { data: userDetails } = useQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
@@ -301,12 +305,19 @@ const Shipping: FC<{
         setFormIsValid(false);
       }
     };
-    // console.log('formik', formik.values)
-    checkShipping();
-  }, [formik]);
+
+    if (formik) {
+      checkShipping()
+      if (!formik.values?.street) {        
+        setShowAddressModal(true);          
+      } else {
+        setShowAddressModal(false); 
+      }
+    }    
+  }, [formik, userDetails]);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Loader />}>     
       <React.Fragment>
         <SC.Back.Wrapper onClick={() => handleNext(history, previousStep)}>
           <img src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
@@ -316,7 +327,15 @@ const Shipping: FC<{
           <h2>{t("checkout.delivery.title")}</h2>
         </SC.Title>
 
-        <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} />
+        {showAddressModal ? 
+          <Addresses 
+            userDetails={{ getDetails, details: userDetails?.details, loading: loadingDetails }} 
+            userData={localData}
+            formik={formik}
+            billingData={orderData.billing}
+            updateOrder={updateOrder}
+          /> : null}
+        {!showAddressModal ? <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} /> : null}
 
         {showAddressForm && (store === "B2E" || store === "ECOMMERCE") && (
           <FormikProvider value={formik}>
