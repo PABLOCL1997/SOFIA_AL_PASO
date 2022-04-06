@@ -308,13 +308,13 @@ const Shipping: FC<{
 
     if (formik) {
       checkShipping()
-      if (!formik.values?.street) {        
+      if (!formik.values?.street && store === "EXPRESS" || store === "ECOMMERCE") {        
         setShowAddressModal(true);          
       } else {
         setShowAddressModal(false); 
       }
     }    
-  }, [formik, userDetails]);
+  }, [formik, userDetails, store]);
 
   return (
     <Suspense fallback={<Loader />}>     
