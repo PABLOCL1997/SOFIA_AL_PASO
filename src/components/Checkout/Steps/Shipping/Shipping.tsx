@@ -321,9 +321,17 @@ const Shipping: FC<{
     }    
   }, [formik, userDetails, store]);
 
+  // update address form when select from map in express
+  useEffect(() => {
+    if (store === "EXPRESS") {
+      formik.values.street = street;
+      formik.values.address = street;
+    }
+  }, [store, street]);
+
   // enable form if user not have an address
   useEffect(() => {
-    if ((!formik.values.street || !formik.values.address) && (store !== "PICKUP")) {         
+    if ((!formik.values.street || !formik.values.address) && (store !== "PICKUP")) { 
       setShowAddressForm(true);          
     }
   }, [formik.values.street, formik.values.address, store, setShowAddressForm]);
