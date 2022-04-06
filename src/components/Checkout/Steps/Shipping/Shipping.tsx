@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { cities, KeyValue, search } from "../../../../utils/string";
 import { setLatLng } from "../../../../utils/googlemaps";
-import { useQuery, useMutation, useLazyQuery } from "react-apollo";
+import { useQuery, useMutation } from "react-apollo";
 import { DETAILS } from "../../../../graphql/user/queries";
 import { AddressType } from "../../../../graphql/user/type";
 import { SET_USER } from "../../../../graphql/user/mutations";
@@ -18,7 +18,6 @@ import { FormikProvider, useFormik } from "formik";
 import useUser from "../../../../hooks/useUser";
 import { OrderData } from "../../../../types/Order";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
-import Addresses from "../../../MyAccount/Details/Addresses";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../../Map"));
@@ -39,7 +38,6 @@ const Shipping: FC<{
   const history = useHistory();
   const { user: localData, store } = useUser();
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [showAddressModal, setShowAddressModal] = useState(false);
   const { agency, setAgency, agencies } = useCityPriceList();
   const [showSuccess] = useMutation(SET_USER, {});
   const formik = useFormik({
@@ -62,7 +60,6 @@ const Shipping: FC<{
   const [other, setOther] = useState(false);
   const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
 
-  const [getDetails, { loading: loadingDetails }] = useLazyQuery(DETAILS, { fetchPolicy: "network-only" });
   const { data: userDetails } = useQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
@@ -71,10 +68,12 @@ const Shipping: FC<{
         if (address && store !== "EXPRESS") {
           updateOrder("shipping", {
             ...address,
+            nit: address.nit ? address.nit : orderData.billing.nit
           });
           formik.setValues({
             ...address,
             address: address?.street || "",
+            nit: address.nit ? address.nit : orderData.billing.nit
           });
           setShowAddressForm(false);
         } else if (d.details.addresses.length > 0) {
@@ -102,10 +101,19 @@ const Shipping: FC<{
     const validateNit = Checkout.ValidationsForm.Billing.nit(key, String(value));
     if (!validateNit) return;
     formik.setFieldValue(key, value);
-    updateOrder("shipping", {
-      ...formik.values,
-      [key]: value,
-    });
+    if (key === "address") {
+      formik.setFieldValue("street", value);
+      updateOrder("shipping", {
+        ...formik.values,
+        [key as string]: value, 
+        street: value as string,     
+      });
+    } else {
+      updateOrder("shipping", {
+        ...formik.values,
+        [key]: value,
+      });
+    }
     if (key === "city" && value && !preventMap) {
       setLatLng(String(value));
       let c: KeyValue | undefined = cities.find((c: KeyValue) => c.value === value);
@@ -275,6 +283,7 @@ const Shipping: FC<{
           phone: phone || "1111",
           city,
           address,
+          street: address
         });
         updateOrder("shipping", {
           firstname,
@@ -287,7 +296,7 @@ const Shipping: FC<{
         });
       }
     }
-  }, [localData]);
+  }, [localData, store]);
 
   useEffect(() => {
     const checkShipping = async () => {
@@ -301,20 +310,33 @@ const Shipping: FC<{
       } catch (error) {
         if (store === "B2E") {
           setShowAddressForm(true);
-        }
+        }        
         setFormIsValid(false);
       }
     };
 
     if (formik) {
-      checkShipping()
-      if (!formik.values?.street && store === "EXPRESS" || store === "ECOMMERCE") {        
-        setShowAddressModal(true);          
-      } else {
-        setShowAddressModal(false); 
+      checkShipping();
+      if ((!formik.values?.street || !formik.values?.address) && (store === "EXPRESS" || store === "ECOMMERCE")) {          
+        setShowAddressForm(true);          
       }
     }    
   }, [formik, userDetails, store]);
+
+  useEffect(() => {
+    if (showAddressForm) {
+      const phone = orderData?.billing?.phone?.split(" | ") || "";
+      formik.setValues({
+        ...formik.values,
+        firstname: orderData.billing.firstname,
+        lastname: orderData.billing.lastname,
+        nit: Number(orderData.billing.nit),
+        phone: phone[0],
+        phone2: phone[1] ? phone[1] : "",
+        city: localData.userInfo[0].cityName,
+      })
+    }
+  }, [showAddressForm, localData]);
 
   return (
     <Suspense fallback={<Loader />}>     
@@ -326,16 +348,8 @@ const Shipping: FC<{
           <img onClick={() => handleNext(history, previousStep)} src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
           <h2>{t("checkout.delivery.title")}</h2>
         </SC.Title>
-
-        {showAddressModal ? 
-          <Addresses 
-            userDetails={{ getDetails, details: userDetails?.details, loading: loadingDetails }} 
-            userData={localData}
-            formik={formik}
-            billingData={orderData.billing}
-            updateOrder={updateOrder}
-          /> : null}
-        {!showAddressModal ? <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} /> : null}
+        
+        <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} />
 
         {showAddressForm && (store === "B2E" || store === "ECOMMERCE") && (
           <FormikProvider value={formik}>
