@@ -17,8 +17,9 @@ const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction"
 
 const Billing: FC<{
     updateOrder: (field: string, values: IBilling) => void,
-    orderData: any
+    orderData: IBilling
   }> = ({ updateOrder, orderData }) => {
+  
   const { t } = useTranslation();
   const history = useHistory();
   const query = useUrlQuery();
