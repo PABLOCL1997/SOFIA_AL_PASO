@@ -49,11 +49,11 @@ const Billing: FC<{
     onCompleted: (d) => {
       if (d.details) {
         const details = {
-          firstname: orderData.firstname ? orderData.firstname : d.details.firstname,
-          lastname: orderData.lastname ? orderData.lastname : d.details.lastname,
-          email: orderData.email ? orderData.email : d.details.email,
-          nit: orderData.nit ? orderData.nit : d.details.nit,
-          phone: orderData.phone ? orderData.phone : d.details.phone,
+          firstname: orderData.firstname || d.details.firstname,
+          lastname: orderData.lastname || d.details.lastname,
+          email: orderData.email || d.details.email,
+          nit: orderData.nit || d.details.nit,
+          phone: orderData.phone || d.details.phone,
         }
         formik.setValues(details);
         updateOrder("billing", details);

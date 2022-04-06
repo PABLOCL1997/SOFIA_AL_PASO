@@ -73,7 +73,7 @@ const Shipping: FC<{
           formik.setValues({
             firstname: address.firstname,
             lastname: address.lastname,
-            nit: address.nit ? address.nit : orderData.billing.nit,
+            nit: address.nit || orderData.billing.nit,
             phone: address.phone.split(" | ")[0],
             phone2: String(address.phone.split(" | ")[1]),
             city: address.city,
