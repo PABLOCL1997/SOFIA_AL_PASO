@@ -71,9 +71,15 @@ const Shipping: FC<{
             nit: address.nit ? address.nit : orderData.billing.nit
           });
           formik.setValues({
-            ...address,
-            address: address?.street || "",
-            nit: address.nit ? address.nit : orderData.billing.nit
+            firstname: address.firstname,
+            lastname: address.lastname,
+            nit: address.nit ? address.nit : orderData.billing.nit,
+            phone: address.phone.split(" | ")[0],
+            phone2: String(address.phone.split(" | ")[1]),
+            city: address.city,
+            address: address?.street as string || "",
+            street: address?.street as string || "",
+            reference: address.reference
           });
           setShowAddressForm(false);
         } else if (d.details.addresses.length > 0) {
@@ -103,11 +109,6 @@ const Shipping: FC<{
     formik.setFieldValue(key, value);
     if (key === "address") {
       formik.setFieldValue("street", value);
-      updateOrder("shipping", {
-        ...formik.values,
-        [key as string]: value, 
-        street: value as string,     
-      });
     } else {
       updateOrder("shipping", {
         ...formik.values,
@@ -317,11 +318,15 @@ const Shipping: FC<{
 
     if (formik) {
       checkShipping();
-      if ((!formik.values?.street || !formik.values?.address) && (store === "EXPRESS" || store === "ECOMMERCE")) {          
-        setShowAddressForm(true);          
-      }
     }    
   }, [formik, userDetails, store]);
+
+  // enable form if user not have an address
+  useEffect(() => {
+    if ((!formik.values.street || !formik.values.address) && (store === "EXPRESS" || store === "ECOMMERCE")) {         
+      setShowAddressForm(true);          
+    }
+  }, [formik.values.street, formik.values.address, store, setShowAddressForm]);
 
   useEffect(() => {
     if (showAddressForm) {
