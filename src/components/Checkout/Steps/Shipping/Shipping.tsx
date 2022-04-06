@@ -309,9 +309,6 @@ const Shipping: FC<{
         }
         setFormIsValid(true);
       } catch (error) {
-        if (store === "B2E") {
-          setShowAddressForm(true);
-        }        
         setFormIsValid(false);
       }
     };
@@ -323,7 +320,7 @@ const Shipping: FC<{
 
   // enable form if user not have an address
   useEffect(() => {
-    if ((!formik.values.street || !formik.values.address) && (store === "EXPRESS" || store === "ECOMMERCE")) {         
+    if ((!formik.values.street || !formik.values.address) && (store !== "PICKUP")) {         
       setShowAddressForm(true);          
     }
   }, [formik.values.street, formik.values.address, store, setShowAddressForm]);
