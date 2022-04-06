@@ -137,7 +137,10 @@ const Shipping: FC<{
   const selectAddress = (address: AddressType | any) => {
     if (address && address.id) {
       onChange("addressId", Number(address.id));
-      updateOrder("shipping", address);
+      updateOrder("shipping", {
+        ...address,
+        nit: formik.values.nit
+      });
       setOther(false);
       let c: KeyValue | undefined = cities.find(({ value }: KeyValue) => value === address.city);
 
