@@ -57,6 +57,8 @@ const useCityPriceList = (): usePriceListType => {
     // update express
     if (userData?.userInfo.length && userData.userInfo[0].store === "EXPRESS") {
       setIsExpress(true);
+    } else {
+      setIsExpress(false);
     }
   }, [userData]);
 
@@ -71,8 +73,8 @@ const useCityPriceList = (): usePriceListType => {
   return {
     city,
     idPriceList,
-    agencies: agencies?.agencies,
-    express: express?.express,
+    agencies: agencies?.agencies || [],
+    express: express?.express || [],
     isExpress,
     agency: userData?.userInfo[0]?.agency || null,
     setAgency,

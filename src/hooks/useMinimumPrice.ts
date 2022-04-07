@@ -6,7 +6,7 @@ import useCityPriceList from "./useCityPriceList";
 const useMinimumPrice = () => {
   const { city, idPriceList, agency, isExpress } = useCityPriceList();
   const [store, setStore] = useState<string>("b2c");
-  const [minimumPrice, setMinimumPrice] = useState(200);
+  const [minimumPrice, setMinimumPrice] = useState(150);
 
   const [getMinimumPrice] = useLazyQuery(ORDER_MINIMUM_PRICE, {
     fetchPolicy: "network-only",
@@ -36,7 +36,7 @@ const useMinimumPrice = () => {
         setStore("b2c");
       }
     }
-  }, [city, idPriceList]);
+  }, [city, idPriceList, isExpress]);
 
   return minimumPrice;
 };

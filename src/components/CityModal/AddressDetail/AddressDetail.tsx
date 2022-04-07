@@ -192,7 +192,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     if (nearestAgency?.key) {
       const defaultAddressId = isSelectingGeo ? 0 : selectedAddress?.id;
       const defaultAddressLabel = isSelectingGeo ? (window as any).infowindow.content : selectedAddress?.street;
-      const cityKey = isSelectingGeo ? nearestAgency.abbr : findKeyByCity(selectedAddress?.city);
+      const cityKey = isSelectingGeo ? findKeyByCity(nearestAgency.city) : findKeyByCity(selectedAddress?.city);
       const cityName = isSelectingGeo ? nearestAgency.city : selectedAddress?.city;
 
       setAgency(nearestAgency.key);
