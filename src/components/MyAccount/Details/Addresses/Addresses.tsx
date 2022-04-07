@@ -145,8 +145,8 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
       });
     }
     setLoading(false);
-  };
-
+  };  
+  
   const addAddress = () => {
     if (!validate()) return;
 
@@ -214,7 +214,7 @@ const Addresses: FC<Props> = ({ userData, userDetails }) => {
       await handleAddress();
       setAddressArgs({ on: false });
       setAddressInputs({});
-      closeAddressModal();
+      closeAddressModal();      
       userDetails.getDetails();
     } catch (e) {
       showError();

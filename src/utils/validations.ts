@@ -39,10 +39,10 @@ export const Checkout = {
   Validators: {
     billingSchema: (isAgency = false) =>
       object({
-        firstname: string().trim().required("Nombre es requerido"),
-        lastname: string().trim().required("Apellido es requerido"),
-        email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido"),
-        nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 digitos"),
+        firstname: string().trim().required("Nombre es requerido").nullable(),
+        lastname: string().trim().required("Apellido es requerido").nullable(),
+        email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido").nullable(),
+        nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 digitos").nullable(),
         phone: isAgency ? string().trim().min(6, "Teléfono debe tener al menos 6 digitos").required("Teléfono es requerido") : string().trim().nullable(),
       }),
     shippingSchema: object({

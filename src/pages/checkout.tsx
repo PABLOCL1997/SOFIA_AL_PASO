@@ -499,7 +499,7 @@ const Checkout = () => {
                 <SC.Col1>
                   {step === Steps.Billing ? (
                     <SC.Steps>
-                      <Billing updateOrder={updateOrderData} />
+                      <Billing updateOrder={updateOrderData} orderData={orderData.billing}/>
                     </SC.Steps>
                   ) : null}
 

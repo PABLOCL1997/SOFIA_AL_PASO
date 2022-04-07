@@ -50,6 +50,7 @@ const Shipping: FC<{
       city: "",
       address: "",
       reference: "",
+      street: ""
     },
     validationSchema: Checkout.Validators.shippingSchema,
     onSubmit: () => {},
@@ -67,10 +68,18 @@ const Shipping: FC<{
         if (address && store !== "EXPRESS") {
           updateOrder("shipping", {
             ...address,
+            nit: address.nit ? address.nit : orderData.billing.nit
           });
           formik.setValues({
-            ...address,
-            address: address?.street || "",
+            firstname: address.firstname,
+            lastname: address.lastname,
+            nit: address.nit || orderData.billing.nit,
+            phone: address.phone.split(" | ")[0],
+            phone2: String(address.phone.split(" | ")[1]),
+            city: address.city,
+            address: address?.street as string || "",
+            street: address?.street as string || "",
+            reference: address.reference
           });
           setShowAddressForm(false);
         } else if (d.details.addresses.length > 0) {
@@ -98,10 +107,14 @@ const Shipping: FC<{
     const validateNit = Checkout.ValidationsForm.Billing.nit(key, String(value));
     if (!validateNit) return;
     formik.setFieldValue(key, value);
-    updateOrder("shipping", {
-      ...formik.values,
-      [key]: value,
-    });
+    if (key === "address") {
+      formik.setFieldValue("street", value);
+    } else {
+      updateOrder("shipping", {
+        ...formik.values,
+        [key]: value,
+      });
+    }
     if (key === "city" && value && !preventMap) {
       setLatLng(String(value));
       let c: KeyValue | undefined = cities.find((c: KeyValue) => c.value === value);
@@ -124,7 +137,10 @@ const Shipping: FC<{
   const selectAddress = (address: AddressType | any) => {
     if (address && address.id) {
       onChange("addressId", Number(address.id));
-      updateOrder("shipping", address);
+      updateOrder("shipping", {
+        ...address,
+        nit: formik.values.nit
+      });
       setOther(false);
       let c: KeyValue | undefined = cities.find(({ value }: KeyValue) => value === address.city);
 
@@ -271,6 +287,7 @@ const Shipping: FC<{
           phone: phone || "1111",
           city,
           address,
+          street: address
         });
         updateOrder("shipping", {
           firstname,
@@ -283,7 +300,7 @@ const Shipping: FC<{
         });
       }
     }
-  }, [localData]);
+  }, [localData, store]);
 
   useEffect(() => {
     const checkShipping = async () => {
@@ -295,18 +312,47 @@ const Shipping: FC<{
         }
         setFormIsValid(true);
       } catch (error) {
-        if (store === "B2E") {
-          setShowAddressForm(true);
-        }
         setFormIsValid(false);
       }
     };
-    // console.log('formik', formik.values)
-    checkShipping();
-  }, [formik]);
+
+    if (formik) {
+      checkShipping();
+    }    
+  }, [formik, userDetails, store]);
+
+  // update address form when select from map in express
+  useEffect(() => {
+    if (store === "EXPRESS") {
+      formik.values.street = street;
+      formik.values.address = street;
+    }
+  }, [store, street]);
+
+  // enable form if user not have an address
+  useEffect(() => {
+    if ((!formik.values.street || !formik.values.address) && (store !== "PICKUP")) { 
+      setShowAddressForm(true);          
+    }
+  }, [formik.values.street, formik.values.address, store, setShowAddressForm]);
+
+  useEffect(() => {
+    if (showAddressForm) {
+      const phone = orderData?.billing?.phone?.split(" | ") || "";
+      formik.setValues({
+        ...formik.values,
+        firstname: orderData.billing.firstname,
+        lastname: orderData.billing.lastname,
+        nit: Number(orderData.billing.nit),
+        phone: phone[0],
+        phone2: phone[1] ? phone[1] : "",
+        city: localData.userInfo[0].cityName,
+      })
+    }
+  }, [showAddressForm, localData]);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Loader />}>     
       <React.Fragment>
         <SC.Back.Wrapper onClick={() => handleNext(history, previousStep)}>
           <img src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
@@ -315,7 +361,7 @@ const Shipping: FC<{
           <img onClick={() => handleNext(history, previousStep)} src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
           <h2>{t("checkout.delivery.title")}</h2>
         </SC.Title>
-
+        
         <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} />
 
         {showAddressForm && (store === "B2E" || store === "ECOMMERCE") && (
