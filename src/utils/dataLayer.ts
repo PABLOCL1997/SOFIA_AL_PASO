@@ -338,7 +338,7 @@ export const trackGoToCheckoutEvent = async (products: Array<ProductType>) => {
       event: "irCheckout",
       ecommerce: {
         currencyCode: "BOB",
-        value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + special_price * (stock || 0), 0),
+        value: products.reduce((acc: number, { special_price, qty }: ProductType) => acc + special_price * (qty || 0), 0),
         items: products.map((p: ProductType) => ({
           item_id: p.sku,
           item_name: p.name,
@@ -359,7 +359,7 @@ export const trackViewCart = async (products: Array<ProductType>) => {
       event: "view_cart",
       ecommerce: {
         currencyCode: "BOB",
-        value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + special_price * (stock || 0), 0),
+        value: products.reduce((acc: number, { special_price, qty }: ProductType) => acc + special_price * (qty || 0), 0),
         items: products.map((p: ProductType) => ({
           item_id: p.sku,
           item_name: p.name,
