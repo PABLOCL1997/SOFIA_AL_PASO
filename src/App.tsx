@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { MapProvider } from "./context/MapProvider";
 
 const LayoutGeneral = React.lazy(() => import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general"));
 const LayoutHomepage = React.lazy(() => import(/* webpackChunkName: "LayoutHomepage" */ "./layout/homepage"));
@@ -44,215 +45,217 @@ const App = () => {
         </Loader>
       }
     >
-      <Router>
-        <Switch>
-          <Route
-            exact
-            path="/404"
-            children={
-              <LayoutGeneral>
-                <Page404 />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            exact
-            path="/"
-            children={
-              <LayoutHomepage>
-                <Homepage />
-              </LayoutHomepage>
-            }
-          />
-          <Route
-            path="/activacion"
-            children={
-              <LayoutGeneral>
-                <Activate />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/carrito"
-            children={
-              <LayoutGeneral>
-                <Cart />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/segui-tu-pedido"
-            children={
-              <LayoutGeneral>
-                <Tracking />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/habilitacion-incentivos"
-            children={
-              <LayoutGeneral>
-                <Incentivos />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/password-reset/:token"
-            children={
-              <LayoutGeneral>
-                <Homepage />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/preguntas-frecuentes"
-            children={
-              <LayoutGeneral>
-                <Faq />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/contacto"
-            children={
-              <LayoutGeneral>
-                <Contact />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/productos/monitor/:city/:category"
-            children={
-                <Monitor />
-            }
-          />
-          <Route
-            path="/productos/monitor/:city/:category/:subcategory"
-            children={
-                <Monitor />
-            }
-          />
-          <Route
-            path="/productos/monitor/:city/:category/:subcategory/:lastlevel"
-            children={
-                <Monitor />
-            }
-          />
-          <Route
-            path="/productos/monitor/:city"
-            children={
-                <Monitor />
-            }
-          />
-          <Route
-            path="/terminos-y-condiciones"
-            children={
-              <LayoutGeneral>
-                <Terms />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/cobertura"
-            children={
-              <LayoutGeneral>
-                <Coverage />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/mi-cuenta"
-            children={
-              <LayoutGeneral>
-                <MyAccount />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/mi-cuenta/ordenes"
-            children={
-              <LayoutGeneral>
-                <MyAccount />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            exact
-            path="/productos"
-            children={
-              <LayoutGeneral>
-                <Products />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/checkout"
-            children={
-              <LayoutGeneral>
-                <Checkout />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/retiro-al-paso"
-            children={
-              <LayoutGeneral>
-                <RetiroAlPaso />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/gracias"
-            children={
-              <LayoutGeneral>
-                <Thanks />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            exact
-            path="/productos/:category"
-            children={
-              <LayoutGeneral>
-                <Products />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            exact
-            path="/productos/:category/:subcategory"
-            children={
-              <LayoutGeneral>
-                <Products />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            exact
-            path="/productos/:category/:subcategory/:lastlevel"
-            children={
-              <LayoutGeneral>
-                <Products />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            path="/:prodname"
-            children={
-              <LayoutGeneral page="productpage">
-                <Product />
-              </LayoutGeneral>
-            }
-          />
-          <Route
-            children={
-              <LayoutGeneral>
-                <Page404 />
-              </LayoutGeneral>
-            }
-          />
-        </Switch>
-      </Router>
+      <MapProvider>      
+        <Router>
+          <Switch>
+            <Route
+              exact
+              path="/404"
+              children={
+                <LayoutGeneral>
+                  <Page404 />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
+              path="/"
+              children={
+                <LayoutHomepage>
+                  <Homepage />
+                </LayoutHomepage>
+              }
+            />
+            <Route
+              path="/activacion"
+              children={
+                <LayoutGeneral>
+                  <Activate />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/carrito"
+              children={
+                <LayoutGeneral>
+                  <Cart />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/segui-tu-pedido"
+              children={
+                <LayoutGeneral>
+                  <Tracking />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/habilitacion-incentivos"
+              children={
+                <LayoutGeneral>
+                  <Incentivos />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/password-reset/:token"
+              children={
+                <LayoutGeneral>
+                  <Homepage />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/preguntas-frecuentes"
+              children={
+                <LayoutGeneral>
+                  <Faq />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/contacto"
+              children={
+                <LayoutGeneral>
+                  <Contact />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/productos/monitor/:city/:category"
+              children={
+                  <Monitor />
+              }
+            />
+            <Route
+              path="/productos/monitor/:city/:category/:subcategory"
+              children={
+                  <Monitor />
+              }
+            />
+            <Route
+              path="/productos/monitor/:city/:category/:subcategory/:lastlevel"
+              children={
+                  <Monitor />
+              }
+            />
+            <Route
+              path="/productos/monitor/:city"
+              children={
+                  <Monitor />
+              }
+            />
+            <Route
+              path="/terminos-y-condiciones"
+              children={
+                <LayoutGeneral>
+                  <Terms />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/cobertura"
+              children={
+                <LayoutGeneral>
+                  <Coverage />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/mi-cuenta"
+              children={
+                <LayoutGeneral>
+                  <MyAccount />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/mi-cuenta/ordenes"
+              children={
+                <LayoutGeneral>
+                  <MyAccount />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
+              path="/productos"
+              children={
+                <LayoutGeneral>
+                  <Products />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/checkout"
+              children={
+                <LayoutGeneral>
+                  <Checkout />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/retiro-al-paso"
+              children={
+                <LayoutGeneral>
+                  <RetiroAlPaso />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/gracias"
+              children={
+                <LayoutGeneral>
+                  <Thanks />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
+              path="/productos/:category"
+              children={
+                <LayoutGeneral>
+                  <Products />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
+              path="/productos/:category/:subcategory"
+              children={
+                <LayoutGeneral>
+                  <Products />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              exact
+              path="/productos/:category/:subcategory/:lastlevel"
+              children={
+                <LayoutGeneral>
+                  <Products />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/:prodname"
+              children={
+                <LayoutGeneral page="productpage">
+                  <Product />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              children={
+                <LayoutGeneral>
+                  <Page404 />
+                </LayoutGeneral>
+              }
+            />
+          </Switch>
+        </Router>
+      </MapProvider>
     </Suspense>
   );
 };
