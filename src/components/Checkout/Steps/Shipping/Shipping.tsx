@@ -18,7 +18,6 @@ import { FormikProvider, useFormik } from "formik";
 import useUser from "../../../../hooks/useUser";
 import { OrderData } from "../../../../types/Order";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
-import { MapProvider } from "../../../../context/MapProvider";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../../Map"));
@@ -383,11 +382,7 @@ const Shipping: FC<{
           </FormikProvider>
         )}
 
-        {showAddressForm && newAddress && (store === "B2E" || store === "ECOMMERCE") && !confirmModalVisible &&  
-          <MapProvider>
-            <Map />
-          </MapProvider>
-        }
+        {showAddressForm && newAddress && (store === "B2E" || store === "ECOMMERCE") && !confirmModalVisible && <Map />}
         <SC.Next.Wrapper>
           <CallToAction text={t("general.next")} action={() => handleNext(history, nextStep)} active={(agency || formIsValid) as boolean} filled />
         </SC.Next.Wrapper>
