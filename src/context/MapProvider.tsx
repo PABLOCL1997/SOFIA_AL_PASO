@@ -15,7 +15,7 @@ export const MapProvider: FC = ({ children }) => {
   const [mapIsReady, setMapIsReady] = useState(false);
 
   const toggleMapReady = () => {
-    setMapIsReady((prev) => !prev);
+    setMapIsReady(true);
   };
 
   const value: Context = {
