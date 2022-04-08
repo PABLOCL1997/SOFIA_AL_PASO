@@ -42,7 +42,7 @@ export const findNearestPointFromArray = (source: Point, comparePoints: Array<Po
   return distances[0];
 };
 
-export const enableGmap = () => {
+export const enableGmap = (toggleMapReady?: () => void) => {
   window.map = null;
   window.marker = null;
   window.latLangs = {
@@ -55,20 +55,20 @@ export const enableGmap = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         function (position) {
-          __initMap(position.coords.latitude, position.coords.longitude);
+          __initMap(toggleMapReady, position.coords.latitude, position.coords.longitude);
         },
         function () {
-          __initMap();
+          __initMap(toggleMapReady);
         },
         {
           timeout: 5000,
         }
       );
     } else {
-      __initMap();
+      __initMap(toggleMapReady);
     }
   }
-  function __initMap(lat?: any, lng?: any) {
+  function __initMap(toggleMapReady?: () => void, lat?: any, lng?: any) {
     var i = setInterval(() => {
       if (document.getElementById("gmap") && google) {
         clearInterval(i);
@@ -106,6 +106,10 @@ export const enableGmap = () => {
           window.showInfoWindow(window.geocoder, window.infowindow, latLng);
           updateLatLng(latLng.lat(), latLng.lng());
           if ((window as any).updateMapUsed) (window as any).updateMapUsed();
+        });
+        google.maps.event.addListenerOnce(window.map, 'idle', function () {
+          // map is ready
+          toggleMapReady && toggleMapReady();
         });
         window.showInfoWindow(window.geocoder, window.infowindow, {
           lat: uluru.lat,
