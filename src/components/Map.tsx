@@ -117,7 +117,7 @@ const Map: FC<Props> = () => {
   return (
     <Suspense fallback={<Loader />}>
       <MapContainer>
-        {mapIsReady && <h2>{t("checkout.delivery.map.title")}</h2>}
+        <h2>{t("checkout.delivery.map.title")}</h2>
         <MapWrapper style={{ display: mapIsReady ? 'block' : 'none' }}>
           <Pin>{t("checkout.delivery.map.pin")}</Pin>
           <Geo onClick={geoLocate}>
@@ -126,7 +126,7 @@ const Map: FC<Props> = () => {
           </Geo>
           <div id="gmap"></div>
         </MapWrapper>
-        {!mapIsReady ? <CircleLoader /> : null}
+        {!mapIsReady ? <CircleLoader showText={true} text={"Cargando mapa..."}/> : null}
       </MapContainer>
     </Suspense>
   );
