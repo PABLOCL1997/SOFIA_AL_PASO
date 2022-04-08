@@ -119,13 +119,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
             </SC.Row>
           ))}
         </SC.Rows>
-        {/* Show shipping price only on b2e, b2c */}
-        {!agency && (
-          <SC.Shipping>
-            <span>{t("checkout.ticket.delivery")}</span>
-            {shippingPrice ? <b>Bs. {String(shippingPrice.toFixed(2)).replace(".", ",")}</b> : <b>GRATIS</b>}
-          </SC.Shipping>
-        )}
+        <SC.Shipping>
+          <span>{t("checkout.ticket.delivery")}</span>
+          {shippingPrice ? <b>Bs. {String(shippingPrice.toFixed(2)).replace(".", ",")}</b> : <b>GRATIS</b>}
+        </SC.Shipping>
         {Number(discountAmount) > 0 && (
           <SC.Discount>
             <span>{t("checkout.ticket.discount")}</span>

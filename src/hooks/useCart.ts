@@ -79,7 +79,7 @@ const useCart = (): CartReturn => {
   const shippingPrice = useMemo(() => {
     const shippingCost = 15; // Bs. 15
     const noShippingCost = 0; // Bs. 0
-    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && store !== "PICKUP" && store !== "EXPRESS") {
+    if (parseFloat(totalAmount.replace(",", ".")) < minimumPrice && store !== "PICKUP") {
       return shippingCost;
     } else {
       return noShippingCost;
