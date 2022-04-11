@@ -300,6 +300,7 @@ const Shipping: FC<{
   useEffect(() => {
     if (formIsValid) {
       updateOrder("shipping", {
+        ...orderData.shipping,
         ...formik.values,
         city: localData?.userInfo[0]?.cityName,
         address: store === "EXPRESS" ? street : formik.values.address,
