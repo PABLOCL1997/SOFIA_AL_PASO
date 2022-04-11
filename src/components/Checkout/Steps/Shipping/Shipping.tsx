@@ -91,7 +91,15 @@ const Shipping: FC<{
   const [setUser] = useMutation(SET_USER);
 
   const newAddress = useMemo(() => !(localData.userInfo.length && localData.userInfo[0].defaultAddressId), [localData]);
-  const street = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressLabel, [localData]);
+  const street = useMemo(() => {    
+    const s = localData.userInfo.length && localData.userInfo[0].defaultAddressLabel;
+    if (s) {
+      const result = cities.find(((c: KeyValue) => c.value === s));
+      if (result) return "";
+      return s;
+    }
+    return "";
+  }, [localData]);
   const _nextStep = useMemo(() => (store === "PICKUP" || store === "EXPRESS" ? "payment" : "timeframe"), [store]);
   const nextStep: string = useMemo(() => (query?.get("next")?.length ? query?.get("next") || _nextStep : _nextStep), [store, query?.get("next")]);
   const onChange = (key: string, value: string | number | null, preventMap: boolean = false) => {
