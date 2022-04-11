@@ -281,7 +281,6 @@ const useCart = (): CartReturn => {
 
   useEffect(() => {
     // when city or idPriceList or agency changes, updateCart
-    console.log("Check cart", idPriceList, agency)
     if ((city || idPriceList || agency) && cart?.cartItems?.length) {
       checkCart({
         variables: {
