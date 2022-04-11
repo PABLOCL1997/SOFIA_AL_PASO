@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { cities, KeyValue, search } from "../../../../utils/string";
 import { setLatLng } from "../../../../utils/googlemaps";
-import { useQuery, useMutation } from "react-apollo";
+import { useQuery, useMutation, useLazyQuery } from "react-apollo";
 import { DETAILS } from "../../../../graphql/user/queries";
 import { AddressType } from "../../../../graphql/user/type";
 import { SET_USER } from "../../../../graphql/user/mutations";
@@ -60,41 +60,32 @@ const Shipping: FC<{
   const [other, setOther] = useState(false);
   const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
 
-  const { data: userDetails } = useQuery(DETAILS, {
+  const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (d) => {
       if (d.details) {
         let address = d.details.addresses.find((a: AddressType) => a.id === addressId);
-        if (address && store !== "EXPRESS") {
-          updateOrder("shipping", {
-            ...address,
-            nit: address.nit ? address.nit : orderData.billing.nit
-          });
-          formik.setValues({
+        if (address) {
+          const values = {
             firstname: address.firstname,
             lastname: address.lastname,
             nit: address.nit || orderData.billing.nit,
-            phone: address.phone.split(" | ")[0],
-            phone2: String(address.phone.split(" | ")[1]),
-            city: address.city,
-            address: address?.street as string || "",
-            street: address?.street as string || "",
-            reference: address.reference
-          });
-          setShowAddressForm(false);
-        } else if (d.details.addresses.length > 0) {
-          const addr = d.details.addresses[0];
+            phone: address.phone?.split(" | ")[0] || orderData.billing.phone,
+            phone2: address.phone?.split(" | ")[1] || "",
+            city: localData?.userInfo[0]?.cityName || address.city,
+            address: address.street,
+            street: address.street,
+            reference: address.reference,            
+          };
+          formik.setValues(values);
           updateOrder("shipping", {
-            ...addr,
-          });
-          formik.setValues({
-            ...addr,
-            address: addr.street || "",
+            ...address,
+            ...values,
           });
           setShowAddressForm(false);
-        }
+        };
       }
-    },
+    },    
   });
 
   const [setUser] = useMutation(SET_USER);
@@ -109,6 +100,11 @@ const Shipping: FC<{
     formik.setFieldValue(key, value);
     if (key === "address") {
       formik.setFieldValue("street", value);
+      updateOrder("shipping", {
+        ...formik.values,
+        address: value as string,
+        street: value as string
+      });
     } else {
       updateOrder("shipping", {
         ...formik.values,
@@ -136,11 +132,11 @@ const Shipping: FC<{
 
   const selectAddress = (address: AddressType | any) => {
     if (address && address.id) {
-      onChange("addressId", Number(address.id));
-      updateOrder("shipping", {
-        ...address,
-        nit: formik.values.nit
-      });
+      // onChange("addressId", Number(address.id));
+      // updateOrder("shipping", {
+      //   ...address,
+      //   nit: formik.values.nit
+      // });
       setOther(false);
       let c: KeyValue | undefined = cities.find(({ value }: KeyValue) => value === address.city);
 
@@ -218,13 +214,6 @@ const Shipping: FC<{
   };
 
   useEffect(() => {
-    if (localData.userInfo.length && other) {
-      onChange("city", localData.userInfo[0].cityName, true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [other]);
-
-  useEffect(() => {
     if (localData?.userInfo?.length && localData?.userInfo[0]?.defaultAddressId && userDetails?.details?.addresses) {
       if (!agency) {
         let _a = userDetails.details.addresses.findIndex((a: AddressType) => Number(a.id) === Number(localData.userInfo[0].defaultAddressId));
@@ -240,68 +229,25 @@ const Shipping: FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails, agency]);
 
+
+  // Update order when pickup is selected
   useEffect(() => {
     if (agencies && agency && store === "PICKUP") {
       const agencyObj = agency ? search("key", agency, agencies) : null;
       if (agencyObj) {
         updateOrder("shipping", {
-          ...agencyObj,
+          firstname: agencyObj.name,
+          phone: agencyObj.telephone,
           address: agencyObj.street,
+          street: agencyObj.street,
+          city: agencyObj.city,
+          reference: agencyObj.reference
         });
       }
     }
-  }, [agency, store, agencies]);
+  }, [agency, store, agencies, formik.values]);  
 
-  useEffect(() => {
-    if (store === "EXPRESS") {
-      const { firstname, lastname, nit, phone } = orderData.billing;
-      if (firstname && lastname && nit && phone) {
-        formik.setValues({
-          ...formik.values,
-          firstname,
-          lastname,
-          nit: Number(nit),
-          phone,
-        });
-        updateOrder("shipping", {
-          firstname,
-          lastname,
-          nit: Number(nit),
-          phone,
-        });
-      }
-    }
-  }, [store]);
-
-  useEffect(() => {
-    if (store === "EXPRESS") {
-      const { firstname, lastname, nit, phone } = orderData.billing;
-      if (localData?.userInfo[0]?.defaultAddressLabel && localData?.userInfo[0]?.cityName) {
-        const address = localData.userInfo[0].defaultAddressLabel;
-        const city = localData.userInfo[0].cityName;
-        formik.setValues({
-          ...formik.values,
-          firstname,
-          lastname,
-          nit: Number(nit),
-          phone: phone || "1111",
-          city,
-          address,
-          street: address
-        });
-        updateOrder("shipping", {
-          firstname,
-          lastname,
-          nit: Number(nit),
-          phone: phone || "1111",
-          city,
-          address,
-          street: address,
-        });
-      }
-    }
-  }, [localData, store]);
-
+  // Validate form
   useEffect(() => {
     const checkShipping = async () => {
       try {
@@ -319,15 +265,7 @@ const Shipping: FC<{
     if (formik) {
       checkShipping();
     }    
-  }, [formik, userDetails, store]);
-
-  // update address form when select from map in express
-  useEffect(() => {
-    if (store === "EXPRESS") {
-      formik.values.street = street;
-      formik.values.address = street;
-    }
-  }, [store, street]);
+  }, [formik, userDetails, store]);  
 
   // enable form if user not have an address
   useEffect(() => {
@@ -336,20 +274,54 @@ const Shipping: FC<{
     }
   }, [formik.values.street, formik.values.address, store, setShowAddressForm]);
 
+  // Complete form only first time open
   useEffect(() => {
     if (showAddressForm) {
-      const phone = orderData?.billing?.phone?.split(" | ") || "";
       formik.setValues({
+        firstname: orderData.shipping.firstname || orderData.billing.firstname,
+        lastname: orderData.shipping.lastname || orderData.billing.lastname,
+        nit: orderData.shipping.nit || Number(orderData.billing.nit),
+        phone: orderData.shipping.phone || orderData.billing.phone,
+        phone2: orderData.shipping.phone2,
+        city: localData?.userInfo[0]?.cityName,
+        address: orderData.shipping.address,
+        street: orderData.shipping.street,
+        reference: orderData.shipping.reference, 
+      })
+    }
+  }, [showAddressForm]); 
+
+  // get details when store change
+  useEffect(() => {
+    getDetails();
+  },[store]);  
+
+  // update order
+  useEffect(() => {
+    if (formIsValid) {
+      updateOrder("shipping", {
         ...formik.values,
+        city: localData?.userInfo[0]?.cityName,
+        address: store === "EXPRESS" ? street : formik.values.address,
+        street: store === "EXPRESS" ? street : formik.values.address,
+      });
+    }
+  },[formIsValid, localData?.userInfo[0]?.cityName, street, store]);
+
+  // update order express
+  useEffect(() => {
+    if (store === "EXPRESS") {
+      updateOrder("shipping", {
         firstname: orderData.billing.firstname,
         lastname: orderData.billing.lastname,
         nit: Number(orderData.billing.nit),
-        phone: phone[0],
-        phone2: phone[1] ? phone[1] : "",
-        city: localData.userInfo[0].cityName,
-      })
+        phone: orderData.billing.phone,
+        city: localData?.userInfo[0]?.cityName,
+        address: street,
+        street: street,
+      });
     }
-  }, [showAddressForm, localData]);
+  }, [store, localData?.userInfo[0]?.cityName, street]);
 
   return (
     <Suspense fallback={<Loader />}>     
