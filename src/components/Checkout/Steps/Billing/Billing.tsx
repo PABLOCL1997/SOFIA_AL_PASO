@@ -26,11 +26,8 @@ const Billing: FC<{
   const nextStep = query.get("next") || "shipping";
   const { agency } = useCityPriceList();
 
-  const [isValid, setIsValid] = useState(false);
-  const fields: string[] = useMemo(() => (
-    agency ? ["firstname", "lastname", "email", "nit", "phone"]
-    : ["firstname", "lastname", "email", "nit"]
-  ), [agency]) 
+  const [isValid, setIsValid] = useState(false);  
+  const fields = ["firstname", "lastname", "email", "nit", "phone"];
   
   const formik = useFormik({
     initialValues: {
@@ -40,7 +37,7 @@ const Billing: FC<{
       nit: "",
       phone: "",
     },
-    validationSchema: Checkout.Validators.billingSchema(!!agency && agency?.length > 0),
+    validationSchema: Checkout.Validators.billingSchema,
     onSubmit: () => {},
   })
 
@@ -74,7 +71,7 @@ const Billing: FC<{
   useEffect(() => {
     const checkBilling = async () => {
       try {
-        await Checkout.Validations.Billing(formik.values as IBilling, !!agency)
+        await Checkout.Validations.Billing(formik.values as IBilling);
         setIsValid(true);
       } catch (error) {
         setIsValid(false);
