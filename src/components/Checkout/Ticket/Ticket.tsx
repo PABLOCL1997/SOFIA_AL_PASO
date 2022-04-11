@@ -36,7 +36,6 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
-  const [enableBuy, setEnableBuy] = useState(true);
 
   const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
     fetchPolicy: "network-only",
@@ -98,11 +97,6 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
     getCartItems();
   }, [localUserData]);
 
-  useEffect(() => {
-    if (isExpress) setEnableBuy(Number(totalAmount.replace(",", ".")) > minimumPrice);
-    else setEnableBuy(true);
-  }, [totalAmount, minimumPrice]);
-
   return (
     <Suspense fallback={<Loader />}>
       <SC.Container>
@@ -125,13 +119,10 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
             </SC.Row>
           ))}
         </SC.Rows>
-        {/* Show shipping price only on b2e, b2c */}
-        {!agency && (
-          <SC.Shipping>
-            <span>{t("checkout.ticket.delivery")}</span>
-            {shippingPrice ? <b>Bs. {String(shippingPrice.toFixed(2)).replace(".", ",")}</b> : <b>GRATIS</b>}
-          </SC.Shipping>
-        )}
+        <SC.Shipping>
+          <span>{t("checkout.ticket.delivery")}</span>
+          {shippingPrice ? <b>Bs. {String(shippingPrice.toFixed(2)).replace(".", ",")}</b> : <b>GRATIS</b>}
+        </SC.Shipping>
         {Number(discountAmount) > 0 && (
           <SC.Discount>
             <span>{t("checkout.ticket.discount")}</span>
@@ -180,7 +171,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
         {step === Steps.Review ? (
           <SC.CtaWrapper>
-            {!processing && <Cta active={ready && enableBuy && Number(totalAmount.replace(",", ".")) > 0} text={t("checkout.ticket.send")} action={order} filled />}
+            {!processing && <Cta active={ready && Number(totalAmount.replace(",", ".")) > 0} text={t("checkout.ticket.send")} action={order} filled />}
             {processing && (
               <SC.LoaderWrapper>
                 <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
@@ -189,7 +180,6 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           </SC.CtaWrapper>
         ) : null}
         {shippingPrice > 0 ? <SC.ErrorText margin={false}>A partir de Bs. {minimumPrice} el envio es gratis.</SC.ErrorText> : null}
-        {!enableBuy && <SC.ErrorText margin={false}>{t("checkout.ticket.minimum_buy_limit", { sum: minimumPrice })}</SC.ErrorText>}
       </SC.Container>
     </Suspense>
   );

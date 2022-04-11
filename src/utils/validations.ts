@@ -57,7 +57,7 @@ export const Checkout = {
     shippingSchemaB2E: object({
       firstname: string().trim().required("Nombre es requerido"),
       nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 digitos"),
-      phone: string().trim().required("Teléfono es requerido").min(6, "Teléfono debe tener al menos 6 digitos"),
+      phone: string().trim(),
       city: string().trim().required("Ciudad es requerida"),
       address: string().trim().required("Dirección es requerida"),
     }),
