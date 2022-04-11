@@ -136,7 +136,7 @@ const Checkout = () => {
           customer_firstname: firstname,
           customer_lastname: lastname,
           facturacion: JSON.stringify({
-            addressId: userData?.addressId || 0,
+            addressId: orderData.billing.facturacion_id,
             firstname: firstname,
             lastname: lastname,
             fax: orderData.billing.nit,

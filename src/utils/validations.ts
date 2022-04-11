@@ -7,6 +7,7 @@ export interface IBilling {
   email: string;
   nit: string;
   phone: string;
+  facturacion_id?: number;
 }
 
 export interface ITimeframe {

@@ -51,6 +51,7 @@ const Billing: FC<{
           email: orderData.email || d.details.email,
           nit: orderData.nit || d.details.nit,
           phone: orderData.phone || d.details.phone,
+          facturacion_id: d.details.addressId || 0,
         }
         formik.setValues(details);
         updateOrder("billing", details);
