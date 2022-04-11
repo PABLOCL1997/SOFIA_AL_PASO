@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
-import { object, string, number, date, InferType } from "yup";
+import { object, string, number, date } from "yup";
 
 export interface IBilling {
   firstname: string;
   lastname: string;
   email: string;
   nit: string;
-  phone?: string;
+  phone: string;
 }
 
 export interface ITimeframe {
@@ -37,14 +37,13 @@ export const weekdays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "
 
 export const Checkout = {
   Validators: {
-    billingSchema: (isAgency = false) =>
-      object({
-        firstname: string().trim().required("Nombre es requerido").nullable(),
-        lastname: string().trim().required("Apellido es requerido").nullable(),
-        email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido").nullable(),
-        nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 digitos").nullable(),
-        phone: isAgency ? string().trim().min(6, "Teléfono debe tener al menos 6 digitos").required("Teléfono es requerido") : string().trim().nullable(),
-      }),
+    billingSchema: object({
+      firstname: string().trim().required("Nombre es requerido").nullable(),
+      lastname: string().trim().required("Apellido es requerido").nullable(),
+      email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido").nullable(),
+      nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 digitos").nullable(),
+      phone: string().matches(/^[0-9]+$|^[0-9]+[ ]{1}\|[ ]{1}[0-9]+$/, "Solo numérico o [número | número]").min(6, "Teléfono debe tener al menos 6 digitos").required("Teléfono es requerido").nullable(),
+    }),
     shippingSchema: object({
       firstname: string().trim().required("Nombre es requerido"),
       lastname: string().trim().required("Apellido es requerido"),
@@ -68,8 +67,8 @@ export const Checkout = {
     }),
   },
   Validations: {
-    Billing: async (billing: IBilling, isAgency = false) => {
-      return await Checkout.Validators.billingSchema(isAgency).validate(billing);
+    Billing: async (billing: IBilling) => {
+      return await Checkout.Validators.billingSchema.validate(billing);
     },
     Shipping: async (Shipping: IShipping) => {
       return await Checkout.Validators.shippingSchema.validate(Shipping);
