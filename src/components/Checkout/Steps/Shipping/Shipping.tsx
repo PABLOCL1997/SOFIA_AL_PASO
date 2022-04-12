@@ -302,7 +302,7 @@ const Shipping: FC<{
   // get details when store change
   useEffect(() => {
     getDetails();
-  },[store]);  
+  },[store, street]);  
 
   // update order
   useEffect(() => {
