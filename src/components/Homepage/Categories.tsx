@@ -14,7 +14,7 @@ const List = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  column-gap: 40px;
+  column-gap: 2%;
   padding: 0 40px;
   background: var(--red);
   box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
