@@ -103,7 +103,7 @@ const ShippingOption: FC<{
       {/* if it isn't selected shouldn't show street */}
       <TitleStreet selected={isSelected}>
         <h3>{title}</h3>
-        <p>Dirección de envío: {street}</p>
+        {street ? <p>Dirección de envío: {street}</p> : null}
       </TitleStreet>
       <CallToAction onClick={onSelect}>{selectText}</CallToAction>
     </Wrapper>

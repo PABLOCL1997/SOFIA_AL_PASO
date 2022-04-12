@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
 import { enableGmap, setLatLng } from "../utils/googlemaps";
+import { useMap } from "../context/MapProvider";
+import CircleLoader from "./CircleLoader";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Crosshair = React.lazy(() => import(/* webpackChunkName: "Crosshair" */ "./Images/Crosshair"));
@@ -85,6 +87,7 @@ type Props = {};
 
 const Map: FC<Props> = () => {
   const { t } = useTranslation();
+  const { mapIsReady, toggleMapReady } = useMap();
 
   const geoLocate = () => {
     if (navigator.geolocation) {
@@ -108,14 +111,14 @@ const Map: FC<Props> = () => {
   };
 
   useEffect(() => {
-    enableGmap();
+    enableGmap(toggleMapReady);
   }, []);
 
   return (
     <Suspense fallback={<Loader />}>
       <MapContainer>
         <h2>{t("checkout.delivery.map.title")}</h2>
-        <MapWrapper>
+        <MapWrapper style={{ display: mapIsReady ? 'block' : 'none' }}>
           <Pin>{t("checkout.delivery.map.pin")}</Pin>
           <Geo onClick={geoLocate}>
             <Crosshair />
@@ -123,6 +126,7 @@ const Map: FC<Props> = () => {
           </Geo>
           <div id="gmap"></div>
         </MapWrapper>
+        {!mapIsReady ? <CircleLoader showText={true} text={"Cargando mapa..."}/> : null}
       </MapContainer>
     </Suspense>
   );

@@ -136,7 +136,7 @@ const Checkout = () => {
           customer_firstname: firstname,
           customer_lastname: lastname,
           facturacion: JSON.stringify({
-            addressId: userData?.addressId || 0,
+            addressId: orderData.billing.facturacion_id,
             firstname: firstname,
             lastname: lastname,
             fax: orderData.billing.nit,
@@ -370,7 +370,7 @@ const Checkout = () => {
     });
 
     if (!missingField && !orderData.shipping.id && store !== "PICKUP") {
-      const shippingFields = store === "EXPRESS" ? ["firstname", "phone", "nit", "city", "address"] : ["firstname", "phone", "phone2", "nit", "city", "address", "reference"];
+      const shippingFields = store === "EXPRESS" ? ["firstname", "phone", "nit", "city", "address"] : ["firstname", "phone", "nit", "city", "address"];
       shippingFields.forEach((key: string) => {
         // @ts-ignore
         if ((!orderData.shipping[key] || (typeof orderData.shipping[key] === "string" && !orderData.shipping[key].trim())) && !missingField) {
