@@ -62,10 +62,10 @@ const Subtitle = styled.h4`
     font-size: 16px;
   }
 `;
-const Options = styled.ul<{ showExpress: boolean, isB2E: boolean }>`
+const Options = styled.ul<{ showExpress: boolean }>`
   display: grid;
-  ${({ showExpress, isB2E }) =>
-    showExpress && !isB2E
+  ${({ showExpress }) =>
+    showExpress
       ? `
     grid-template-columns: 1fr 1fr 1fr;
   `
@@ -184,7 +184,7 @@ const ChooseShipping: FC<{
     setShippingMethod(step);
     setStep(Steps.Detailing);
   };
-  const { store, isB2E } = useUser();
+  const { store } = useUser();
   const { city }: { city: string } = useCityPriceList();
   const showExpress = useMemo(() => {
     const initHour: dayjs.Dayjs = dayjs().tz("America/La_Paz").hour(8).minute(0).second(0);
@@ -199,7 +199,7 @@ const ChooseShipping: FC<{
     <Wrapper>
       <Title>{t("welcome")}</Title>
       <Subtitle>{t("subtitle")}</Subtitle>
-      <Options showExpress={showExpress} isB2E={isB2E}>
+      <Options showExpress={showExpress}>
         <Option className="storePickup" selected={store === "PICKUP"} onClick={() => handleStep(ShippingMethod.Pickup)}>
           <PickupIcon />
           <p>{t("pickup_title")}</p>
@@ -207,7 +207,7 @@ const ChooseShipping: FC<{
           {store === "PICKUP" && <em>{street}</em>}
         </Option>
         {/* show this option only in Santa Cruz */}
-        {showExpress && !isB2E ? (
+        {showExpress ? (
           <Option selected={store === "EXPRESS"} className="storeExpress" onClick={() => handleStep(ShippingMethod.Express)}>
             <ExpressIcon />
             <p onClick={() => handleStep(ShippingMethod.Express)}>{t("express_title")}</p>
@@ -222,7 +222,7 @@ const ChooseShipping: FC<{
         </Option>
         <Strong>{t("pickup_description")}</Strong>
         {/* show this description only in Santa Cruz */}
-        {showExpress && !isB2E ? (
+        {showExpress ? (
           <Strong>
             <Trans i18nKey={t("express_description")} components={{ strong: <strong />, cities: <small />, timeframes: <em /> }} />
           </Strong>

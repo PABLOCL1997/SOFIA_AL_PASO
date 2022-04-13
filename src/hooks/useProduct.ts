@@ -7,12 +7,14 @@ import { GET_B2E_PRODUCT, GET_PRODUCT, GET_PRODUCT_DETAIL, GET_SAP_PRODUCT } fro
 import useCityPriceList from "./useCityPriceList";
 import axios from "axios";
 import { useUrlQuery } from "./useUrlQuery";
+import useUser from "./useUser";
 
 const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
   const logsUrl = process.env.REACT_APP_BACKEND + "/logs-product";
   const history = useHistory();
   let { prodname } = useParams();
   let query = useUrlQuery();
+  const { store } = useUser();
 
   let cityUrl = query.get("ciudad");
   let agencyUrl = query.get("agencia");
@@ -106,17 +108,18 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
   });
 
   useEffect(() => {
-    if (agency) {
+    if (agency && (store === "PICKUP" || store === "EXPRESS")) {
       loadSapProduct({
         variables: {
           name: prodname,
           agency: agency ? agency : agencyUrl,
           city: city ? city : "SC",
+          id_price_list: String(idPriceList),
         },
       });
     }
 
-    if (idPriceList > 0) {
+    if (idPriceList > 0 && store === "B2E") {
       loadProductFromList({
         variables: {
           name: prodname,
@@ -126,7 +129,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
       });
     }
 
-    if (!agency && idPriceList === 0) {
+    if (!agency && idPriceList === 0 && store === "ECOMMERCE") {
       loadProduct({
         variables: {
           name: prodname,
@@ -136,7 +139,7 @@ const useProduct = (inlineProdname = "", withDetail: boolean = false) => {
         },
       });
     }
-  }, [city, idPriceList, agency, prodname]);
+  }, [city, idPriceList, agency, prodname, store]);
 
   return { product, categories, related, detail: dataProdDetail, loadingDetail: loadingProdDetail, loading, error };
 };
