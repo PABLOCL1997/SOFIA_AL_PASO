@@ -90,7 +90,13 @@ const CardAccount: FC<Props> = ({ userData, userDetails }) => {
     setLoading(false);
   };
 
-  useEffect(() => userDetails?.details && setInputs(userDetails.details), [userDetails]);
+  useEffect(() => {
+    console.log("Detalles", userDetails);
+    userDetails?.details && setInputs({
+      ...userDetails.details,
+      phone: userDetails?.details?.phone?.split(" | ")[0]
+    });
+  }, [userDetails]);
 
   useEffect(() => void (addressArgs && addressArgs.on && callAddressMutation()), [addressArgs]); //eslint-disable-line react-hooks/exhaustive-deps
 
