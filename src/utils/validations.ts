@@ -43,7 +43,7 @@ export const Checkout = {
       lastname: string().trim().required("Apellido es requerido").nullable(),
       email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido").nullable(),
       nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 digitos").nullable(),
-      phone: string().matches(/^[0-9]+$|^[0-9]+[ ]{1}\|[ ]{1}[0-9]+$/, "Solo numérico o [número | número]").min(6, "Teléfono debe tener al menos 6 digitos").required("Teléfono es requerido").nullable(),
+      phone: string().matches(/^[0-9]+$/, "Solo numérico").min(6, "Teléfono debe tener al menos 6 digitos").required("Teléfono es requerido").nullable(),
     }),
     shippingSchema: object({
       firstname: string().trim().required("Nombre es requerido"),
