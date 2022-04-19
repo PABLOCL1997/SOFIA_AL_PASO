@@ -50,7 +50,7 @@ const Billing: FC<{
           lastname: orderData.lastname || d.details.lastname,
           email: orderData.email || d.details.email,
           nit: orderData.nit || d.details.nit,
-          phone: orderData.phone || d.details.phone?.split(" | ")[0],
+          phone: orderData.phone || d.details.phone?.split(" | ")?.[0] || "",
           facturacion_id: d.details.addressId || 0,
         }
         formik.setValues(details);
