@@ -91,7 +91,6 @@ const CardAccount: FC<Props> = ({ userData, userDetails }) => {
   };
 
   useEffect(() => {
-    console.log("Detalles", userDetails);
     userDetails?.details && setInputs({
       ...userDetails.details,
       phone: userDetails?.details?.phone?.split(" | ")[0]
