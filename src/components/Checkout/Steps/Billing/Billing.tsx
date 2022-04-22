@@ -56,6 +56,16 @@ const Billing: FC<{
         formik.setValues(details);
         updateOrder("billing", details);
       }
+    },
+    onError: () => {
+      const details = {
+        firstname: orderData.firstname,
+        lastname: orderData.lastname,
+        email: orderData.email,
+        nit: orderData.nit,
+        phone: orderData.phone,
+      }
+      formik.setValues(details);
     }
   });  
 
