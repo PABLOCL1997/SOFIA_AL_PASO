@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../../store";
-import { setRedirectToCheckout } from "./index";
+import { setRedirectToCheckout, setIsGuestOrder } from "./index";
 
 export const useCheckout = () => {
   const dispatch = useAppDispatch();
@@ -8,7 +8,12 @@ export const useCheckout = () => {
     dispatch(setRedirectToCheckout(value));
   };  
 
+  const handleIsGuestOrder = (value: boolean) => {
+    dispatch(setIsGuestOrder(value));
+  };  
+
   return {
     handleRedirectToCheckout,
+    handleIsGuestOrder
   };
 };

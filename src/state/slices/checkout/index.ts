@@ -3,10 +3,12 @@ import { slices } from "../types";
 
 export interface Checkout {
   redirectToCheckout: boolean;
+  isGuestOrder: boolean;
 }
 
 const initialState: Checkout = {
   redirectToCheckout: false,
+  isGuestOrder: false,
 };
 
 export const checkoutSlice = createSlice({
@@ -16,9 +18,12 @@ export const checkoutSlice = createSlice({
     setRedirectToCheckout: (state, action: PayloadAction<boolean>) => {
       state.redirectToCheckout = action.payload;
     },
+    setIsGuestOrder: (state, action: PayloadAction<boolean>) => {
+      state.isGuestOrder = action.payload;
+    }
   },
 });
 
-export const { setRedirectToCheckout } = checkoutSlice.actions;
+export const { setRedirectToCheckout, setIsGuestOrder } = checkoutSlice.actions;
 
 export default checkoutSlice.reducer;
