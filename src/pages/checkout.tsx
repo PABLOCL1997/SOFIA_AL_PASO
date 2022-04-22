@@ -24,6 +24,7 @@ import useMinimumPrice from "../hooks/useMinimumPrice";
 import useCart from "../hooks/useCart";
 import { recoverPassword, signUp } from "../auth";
 import { token as StoreToken } from "../utils/store";
+import { useCheckout } from "../state/slices/checkout/useCheckout";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Steps/Billing"));
@@ -51,15 +52,16 @@ const Checkout = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
-
+  
   const { setLoading } = useContext(Courtain.Context);
   const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
   const [isOrderGuest, setIsOrderGuest] = useState(false);
+  const { handleIsGuestOrder } = useCheckout();
 
   const { data: localUserData } = useQuery(GET_USER, {});
   const { data: userDetails } = useQuery(DETAILS, {});
-  const isLoggedIn = useMemo(() => localUserData.userInfo[0].isLoggedIn, [localUserData?.userInfo?.[0]?.isLoggedIn]);
+  const isLoggedIn = useMemo(() => localUserData.userInfo[0].isLoggedIn, [localUserData?.userInfo?.[0]?.isLoggedIn]);  
 
   const [getDetails, { data: userData }] = useLazyQuery<UserDetails>(DETAILS, {
     fetchPolicy: "network-only",
@@ -215,6 +217,10 @@ const Checkout = () => {
 
     const body = document.querySelector("body");
     if (body && window.innerWidth >= 768) body.style.overflow = "unset";
+
+    return () => {
+      handleIsGuestOrder(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
