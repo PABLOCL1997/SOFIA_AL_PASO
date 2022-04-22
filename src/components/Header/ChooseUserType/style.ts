@@ -17,34 +17,14 @@ export const ModalCourtain = styled.div`
 
 export const Modal = styled.div`
   position: relative;
-  padding: 42px;
+  padding: 52px;
   background: white;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 380px;
-  max-width: 100%;
-
-  @media screen and (max-width: ${BREAKPOINT}) {
-    min-width: 100%;
-    padding: 20px;
-    height: 100vh;
-    border-radius: 0;
-  }
-`;
-
-export const Header = styled.div`
-  display: flex;
-  align-items: center;
-  width: calc(100% + 84px);
-  padding: 30px;
-  margin-top: -42px;
-  box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.1);
-
-  @media screen and (max-width: ${BREAKPOINT}) {
-    padding: 40px 50px 15px;
-  }
+  max-width: 100%;  
 `;
 
 export const Title = styled.h2`
@@ -56,29 +36,67 @@ export const Title = styled.h2`
   text-align: center;
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 18px;
-
   }
 `;
 
-export const CtaWrapper = styled.div`
+export const CloseIcon = styled.img`
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  filter: invert(52%) sepia(6%) saturate(16%) hue-rotate(32deg) brightness(96%) contrast(82%);
+  width: 12px;
+  aspect-ratio: 1 / 1;
+  &:hover {
+    opacity: 0.5;
+  }
+`;
+
+export const Option = {
+  Wrapper: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  `,
+  Icon: styled.img`
+  `,
+  Title: styled.h4`
+    margin-top: 24px;
+    font-family: MullerMedium;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #000000;
+    max-width: 150px;
+    text-align: center;
+  `,
+  Box: styled.div<{ selected: boolean }>`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 170px;
+    background-color: ${({ selected }) => selected ? "rgba(254,205,0,0.6)" : "rgba(240,240,240,0.6)"};
+    border-radius: 16px;
+
+    &:hover {
+      cursor: pointer;
+    }    
+  `,
+  Description: styled.p`
+    max-width: 200px;
+    text-align: center;
+  `,
+};
+
+export const Options = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  padding: 20px 50px;
-  box-sizing: border-box;  
-  button {
-    width: 300px;
-    height: 50px;
-  }
-`;
-
-export const BuyIcon = styled.img`
-  margin-top: 30px;
-  width: 100px;
-`;
-
-export const Icon = styled.img`
-  cursor: pointer;
+  margin-top: 40px;
 `;
