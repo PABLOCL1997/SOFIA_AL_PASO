@@ -27,6 +27,9 @@ import {
 import { findKeyByCity } from "../../../utils/string";
 import useUser from "../../../hooks/useUser";
 import { ApolloError } from "apollo-client";
+import { useAppSelector } from "../../../state/store";
+import { useCheckout } from "../../../state/slices/checkout/useCheckout";
+import { useModals } from "../../../state/slices/modals/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Cta"));
@@ -72,6 +75,10 @@ const AuthModal: FC<Props> = () => {
   const togglePassword = useRef<HTMLInputElement>(null);
   const [signUpErrorText, setSignUpErrorText] = useState("");
   const [saveLogin, setSaveLogin] = useState(false);
+  const { redirectToCheckout } = useAppSelector((state) => state.checkout);
+  const { showRegisterModal } = useAppSelector((state) => state.modals);
+  const { handleRedirectToCheckout } = useCheckout();
+  const { handleRegisterModal } = useModals();
 
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "no-cache",
@@ -148,10 +155,10 @@ const AuthModal: FC<Props> = () => {
     },
   });
   const [doRecover] = useMutation(RECOVER, {
-    variables: { email: form.email, url: process.env.REACT_APP_SITE_URL + "/password-reset" },
+    variables: { email: form.email, url: process.env.REACT_APP_SITE_URL + "/password-reset", bompras: false },
   });
   const [doReset] = useMutation(RESET, {
-    variables: { email: form.email, token, password: form.password },
+    variables: { email: form.email, token, password: form.password, bompras: false },
   });
   const [updateUser] = useMutation(SET_USER, { variables: { user } });
   const [closeLoginModal] = useMutation(SET_USER, {
@@ -167,6 +174,12 @@ const AuthModal: FC<Props> = () => {
     variables: { user: { showSuccess: t("auth_modal.success") } },
   });
   const [updateMainAddress] = useMutation(SET_USER, {});
+
+  useEffect(() => {
+    if (showRegisterModal) {
+      setStep(Steps.SignUp);
+    }
+  },[showRegisterModal]);
 
   useEffect(() => {
     closeLoginModal();
@@ -227,7 +240,10 @@ const AuthModal: FC<Props> = () => {
         id: response.data.login.id,
         idPriceList: 0,
       });
-      if ((window as any).navigateToCheckout) history.push("/checkout");
+      if (redirectToCheckout) {
+        history.push("/checkout");
+        handleRedirectToCheckout(false);
+      }
 
     } catch (e) {
       setLoginError(true);
@@ -297,7 +313,11 @@ const AuthModal: FC<Props> = () => {
       });
       StoreToken.set(response.data.signup.token);
       showSuccess();
-      if ((window as any).navigateToCheckout) history.push("/checkout");
+      if (redirectToCheckout) {
+        history.push("/checkout");
+        handleRedirectToCheckout(false);
+        handleRegisterModal(false);
+      }
     } catch (e) {
       showError();
     }
@@ -333,7 +353,8 @@ const AuthModal: FC<Props> = () => {
     setStep(Steps.Login);
     setLoginError(false);
     closeLoginModal();
-    (window as any).navigateToCheckout = false;
+    handleRedirectToCheckout(false);
+    handleRegisterModal(false);
   };
 
   const handleTogglePasswordVisibility = () => {
