@@ -174,18 +174,10 @@ export const Modal = styled.div`
   flex-direction: column;
   align-items: center;
   min-width: 380px;
-  max-width: 100%;
-
-  @media screen and (max-width: ${BREAKPOINT}) {
-    min-width: 100%;
-    padding: 20px;
-    height: 100vh;
-    border-radius: 0;
-  }
+  max-width: 100%;  
 
   p {
     padding-top: 20px;
-    max-width: 300px;
     text-align: center;
   }
 `;
