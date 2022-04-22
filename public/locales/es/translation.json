@@ -24,6 +24,17 @@
       "express": "Envío Express",
       "pickup": "Retirá al paso",
       "delivery": "Recibe en casa"      
+    },
+    "choose_user_type": {
+      "title": "Como quieres continuar",
+      "option_client": "Soy cliente",
+      "option_not_client": "No soy cliente",
+      "guest": {
+        "title_one": "Quiero comprar como",
+        "btn_one": "Invitado",
+        "title_two": "¿No tienes cuenta?",
+        "btn_two": "Registrarme"
+      }
     }
   },
   "modal": {
@@ -412,6 +423,10 @@
       "title": "Estimado cliente:",
       "text": "Recuerda que algunos de nuestros productos son vendidos por peso. El valor expresado es referencial, ya que el monto final a facturar puede variar de acuerdo al peso final de los artículos seleccionados al momento de preparar tu pedido.",
       "thanks": "¡Gracias por confiar en Sofía!"
+    },
+    "guest": {
+      "title": "Correo enviado",
+      "description": "Compruebe su casilla, se le fue enviado un correo para restablecer la contraseña."
     },
     "go_home": "Volver al inicio"
   },
