@@ -1,5 +1,5 @@
 import React, { FC, Suspense, useState, useEffect, useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { useQuery } from "react-apollo";
 import { DETAILS } from "../../../../graphql/user/queries";
 import useCityPriceList from "../../../../hooks/useCityPriceList";
@@ -10,6 +10,7 @@ import { Checkout, IBilling } from "../../../../utils/validations";
 import { FormikProvider, useFormik } from "formik";
 import Input from "../../../Formik/components/Input";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
+import { useAppSelector } from "../../../../state/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
@@ -25,6 +26,7 @@ const Billing: FC<{
   const query = useUrlQuery();
   const nextStep = query.get("next") || "shipping";
   const { agency } = useCityPriceList();
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
 
   const [isValid, setIsValid] = useState(false);  
   const fields = ["firstname", "lastname", "email", "nit", "phone"];
@@ -94,7 +96,12 @@ const Billing: FC<{
 
   return (
     <Suspense fallback={<Loader />}>
-        <SC.Title>{t("checkout.billing.title")}</SC.Title>
+        <SC.Title>          
+          <Trans 
+            i18nKey={isGuestOrder ? t("checkout.billing.title_guest") : t("checkout.billing.title")}
+            components={{ br: <br /> }}
+          /> 
+          </SC.Title>
           <FormikProvider value={formik} >
             <SC.Form>
               {!loading && fields.map((field) => (                                  
