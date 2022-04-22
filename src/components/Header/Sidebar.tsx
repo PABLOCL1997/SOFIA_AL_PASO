@@ -118,7 +118,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
         <MenuItem>
           {/* Mis Facturas */}
           <img src={MisFacturas} alt="mis-facturas" />
-          <a href="https://misfacturas.sofia.com.bo/dio-public/">
+          <a href="https://misfacturas.sofia.com.bo/dio-public/" target="_blank">
             {t("header.bills")}
           </a>         
         </MenuItem>
