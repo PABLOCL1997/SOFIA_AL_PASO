@@ -137,7 +137,7 @@ const Checkout = () => {
           agencia: agency,
           items,
           delivery_price,
-          DIRECCIONID: special_address ? String(orderData.shipping.id_address_ebs) : null,
+          DIRECCIONID: special_address && store === "B2E" ? String(orderData.shipping.id_address_ebs) : null,
           discount_amount: orderData.coupon.discount,
           discount_type: orderData?.coupon?.type || "",
           coupon_code: orderData?.coupon?.coupon || "",
@@ -327,7 +327,7 @@ const Checkout = () => {
 
     // if it isn't a pickup order
     // and order price is less than minimum price add the shipping item
-    if (store !== "PICKUP" && store !== "EXPRESS" && Number(totalAmount.replace(",", ".")) < minimumPrice) {
+    if (store !== "PICKUP" && Number(totalAmount.replace(",", ".")) < minimumPrice) {
       items.push(
         JSON.stringify({
           entity_id: shippingServiceItem.CODIGO,
