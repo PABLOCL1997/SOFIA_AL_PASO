@@ -26,15 +26,19 @@
       "delivery": "Recibe en casa"      
     },
     "choose_user_type": {
-      "title": "Como quieres continuar",
-      "option_client": "Soy cliente",
-      "option_not_client": "No soy cliente",
+      "title": "¿Cómo deseas finalizar tu pedido?",
       "guest": {
-        "title_one": "Quiero comprar como",
-        "btn_one": "Invitado",
-        "title_two": "¿No tienes cuenta?",
-        "btn_two": "Registrarme"
-      }
+        "title": "Compra como invitado",
+        "description": "Compra rápidamente como invitado"
+      },
+      "login": {
+        "title": "Inicia sesión",
+        "description": "Ingresa con tu email o redes sociales"
+      },
+      "singup": {
+        "title": "Regístrate",
+        "description": "Crea tu cuenta para guardar los datos" 
+      }      
     }
   },
   "modal": {
@@ -327,6 +331,7 @@
     },
     "billing": {
       "title": "1. Datos para facturación",
+      "title_guest": "Últimos pasos para terminar la compra:<br />A continuación le pedimos sus datos para recibir su pedido",
       "firstname": "Nombre",
       "lastname": "Apellido",
       "email": "Email",
@@ -337,6 +342,7 @@
     },
     "delivery": {
       "title": "2. Datos para la entrega",
+      "title_guest": "Metodo de Envío:<br />En este paso deberá cargar la dirección a donde desea recibir el pedido o elegir otro método de envío.",
       "time": "aprox. {{day}} entre las {{from}} y {{to}}",
       "other_address": "Enviar a otra dirección",
       "firstname": "*Nombre",
@@ -425,8 +431,8 @@
       "thanks": "¡Gracias por confiar en Sofía!"
     },
     "guest": {
-      "title": "Correo enviado",
-      "description": "Compruebe su casilla, se le fue enviado un correo para restablecer la contraseña."
+      "title": "Bienvenido a Sofía",
+      "description": "El usuario fue creado con éxito, como último paso le enviamos un correo con instrucciones para crear una contraseña."
     },
     "go_home": "Volver al inicio"
   },
