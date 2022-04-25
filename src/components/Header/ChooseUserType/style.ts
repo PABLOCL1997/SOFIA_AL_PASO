@@ -74,6 +74,7 @@ export const Option = {
     text-align: center;
   `,
   Box: styled.div<{ selected: boolean }>`
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -91,6 +92,16 @@ export const Option = {
     max-width: 200px;
     text-align: center;
   `,
+  New: styled.strong`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    padding: 2px 5px;
+    background-color: var(--red);
+    color: var(--white);
+  `
 };
 
 export const Options = styled.div`

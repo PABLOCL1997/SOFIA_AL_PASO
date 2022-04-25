@@ -19,14 +19,16 @@ interface Option {
   description: string;
   onClick: () => void;
   selected: boolean;
+  showNew: boolean;
 }
 
-const Option = ({ img, title, description, onClick, selected }: Option) => {
+const Option = ({ img, title, description, onClick, selected, showNew }: Option) => {
   return (
     <SC.Option.Wrapper>
       <SC.Option.Box selected={selected} onClick={onClick}>
         <SC.Option.Icon loading={"lazy"} src={img} alt={img} />
         <SC.Option.Title>{title}</SC.Option.Title>
+        {showNew ? <SC.Option.New>Nuevo</SC.Option.New> : null}
       </SC.Option.Box>
       <SC.Option.Description>{description}</SC.Option.Description>
     </SC.Option.Wrapper>
@@ -76,14 +78,16 @@ const ChooseUserType = () => {
       title: t("login.title"),
       description: t("login.description"),
       onClick: handleLogin,
-      selected: false,
+      selected: true,
+      showNew: false,
     },
     {
       img: GuestIcon,
       title: t("guest.title"),
       description: t("guest.description"),
       onClick: handleGuest,
-      selected: true,
+      selected: false,
+      showNew: true,
     },
     {
       img: RegisterIcon,
@@ -91,6 +95,7 @@ const ChooseUserType = () => {
       description: t("singup.description"),
       onClick: handleRegister,
       selected: false,
+      showNew: false,
     },
   ];
 
@@ -101,7 +106,7 @@ const ChooseUserType = () => {
         <SC.CloseIcon src={CloseModalIcon} alt="CloseModalIcon" onClick={closeModal} />
         <SC.Options>
           {options.map((o, i) => (
-            <Option key={`${o.img}_${i}`} img={o.img} title={o.title} description={o.description} onClick={o.onClick} selected={o.selected} />
+            <Option key={`${o.img}_${i}`} img={o.img} title={o.title} description={o.description} onClick={o.onClick} selected={o.selected} showNew={o.showNew}/>
           ))}
         </SC.Options>
       </SC.Modal>      
