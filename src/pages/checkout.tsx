@@ -566,7 +566,7 @@ const Checkout = () => {
 
                   {step === Steps.Payment ? (
                     <SC.Steps>
-                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} />
+                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} order={saveOrder}/>
                     </SC.Steps>
                   ) : null}
 
