@@ -11,6 +11,7 @@ import * as SC from "./style";
 import useUser from "../../../hooks/useUser";
 import { CouponType, Steps } from "../../../types/Checkout";
 import useCart from "../../../hooks/useCart";
+import { useAppSelector } from "../../../state/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../../Cta"));
@@ -36,6 +37,8 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const showConfirmButton = (isGuestOrder && step === Steps.Payment) || step === Steps.Review;
 
   const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
     fetchPolicy: "network-only",
@@ -87,7 +90,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
   useEffect(() => {
     updateOrder("coupon", {
       coupon,
-      discount,
+      discount: Number(discount),
       type,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,8 +171,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
               por ser colaborador!
             </SC.EmployeeMsg>
           )}
-
-        {step === Steps.Review ? (
+        {showConfirmButton ? (
           <SC.CtaWrapper>
             {!processing && <Cta active={ready && Number(totalAmount.replace(",", ".")) > 0} text={t("checkout.ticket.send")} action={order} filled />}
             {processing && (

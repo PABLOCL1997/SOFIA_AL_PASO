@@ -9,6 +9,7 @@ import CircleLoader from "../../../CircleLoader";
 import arrow from "../../../../assets/images/arrow-back-checkout.svg";
 import * as SC from "./style";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
+import { useAppSelector } from "../../../../state/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../../Switch"));
@@ -34,6 +35,7 @@ const Payment: FC<{
   const history = useHistory();
   const query = useUrlQuery();
   const nextStep = query.get("next") || "review";
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
 
   const CREDIT = {
     title: "credito",
@@ -120,13 +122,13 @@ const Payment: FC<{
             )}
           </React.Fragment>
         )}
-        <SC.Next.Wrapper>
+        {!isGuestOrder ? <SC.Next.Wrapper>
           <CallToAction
             filled={true}
             text={t("general.next")}
             action={() => handleNext(history, nextStep)}
           />
-        </SC.Next.Wrapper>
+        </SC.Next.Wrapper> : null}
       </SC.Container>
     </Suspense>
   );
