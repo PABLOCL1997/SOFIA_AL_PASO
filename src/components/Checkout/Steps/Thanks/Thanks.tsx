@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useEffect, useState } from "react";
+import React, { FC, Suspense, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import * as SC from "./style";
@@ -21,7 +21,6 @@ type Props = {
 const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [showGuestModal, setShowGuestModal] = useState(Boolean(guestOrder));
 
   let subtitle =
     orders.length === 1
@@ -39,20 +38,12 @@ const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <SC.Container>
-        {showGuestModal ? <SC.ModalCourtain>
-          <SC.Modal>
-            <SC.Header>
-              <h4>{t("thankyou.guest.title")}</h4>
-              <SC.Icon src={CloseModalIcon} alt="CloseModalIcon" onClick={() => setShowGuestModal(false)}/>
-            </SC.Header>
-            <p>{t("thankyou.guest.description")}</p>
-          </SC.Modal>
-        </SC.ModalCourtain> : null}
+      <SC.Container>        
         <SC.Title>
           <ThankCheck />
           <h2>{t("thankyou.title")}</h2>
           <p dangerouslySetInnerHTML={{ __html: subtitle }}></p>
+          {Boolean(guestOrder) ? <SC.GuestDescription>{t("thankyou.guest")}</SC.GuestDescription> : null}
         </SC.Title>
         <SC.Grid>
           <SC.Box>

@@ -430,10 +430,7 @@
       "text": "Recuerda que algunos de nuestros productos son vendidos por peso. El valor expresado es referencial, ya que el monto final a facturar puede variar de acuerdo al peso final de los artículos seleccionados al momento de preparar tu pedido.",
       "thanks": "¡Gracias por confiar en Sofía!"
     },
-    "guest": {
-      "title": "Bienvenido a Sofía",
-      "description": "El usuario fue creado con éxito, como último paso le enviamos un correo con instrucciones para crear una contraseña."
-    },
+    "guest": "Para su próxima compra hemos enviado a su correo electrónico instrucciones para configurar su cuenta.",    
     "go_home": "Volver al inicio"
   },
   "account": {
