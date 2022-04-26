@@ -12,6 +12,7 @@ import "lazysizes/plugins/parent-fit/ls.parent-fit.js";
 import { useQuery } from "@apollo/react-hooks";
 import { CHECK_TOKEN } from "../graphql/user/queries";
 import { token } from "../utils/store";
+import { useLocation } from "react-router-dom";
 
 const Wrapper = styled.div<{ showPromoBar: boolean }>`
   min-height: 100vh;
@@ -42,6 +43,16 @@ type Props = {
 const LayoutHomepage: FC<Props> = ({ children, page }) => {
   const { data } = useQuery(CHECK_TOKEN, { fetchPolicy: "network-only" });
   const { logout, toggleLoginModal, showPromoBar } = useUser();
+  const location = useLocation();
+  const openLoginModal = location.search.split("openLoginModal=")[1] === "true";
+
+  useEffect(() => {
+    if (openLoginModal) {
+      setTimeout(() => {
+        toggleLoginModal();
+      }, 500);      
+    }
+  },[openLoginModal]);
 
   useEffect(() => {
     if (token.get() !== "null" && data && data.checkToken && !data.checkToken.status) {
