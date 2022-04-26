@@ -271,6 +271,7 @@ const AuthModal: FC<Props> = () => {
 
   const loginWithFacebook = async () => {
     try {
+      checkUserAgent();
       facebookLogin(networkCallback);
     } catch (e) {}
   };
