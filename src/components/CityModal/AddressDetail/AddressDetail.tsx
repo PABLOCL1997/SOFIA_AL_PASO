@@ -65,13 +65,14 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
   const [setStore] = useMutation(SET_USER, { variables: { user: { store: "ECOMMERCE" } } });
   const [isSelectingGeo, setIsSelectingGeo] = useState<boolean>(true);
   const [selectedAddress, setSelectedAddress] = useState<AddressType | Agency | any>();
+  const [setExpressAddress] = useMutation(SET_USER, { variables: { user: { expressAltAddress: "" } } });
+  const [altExpressAddress, setAltExpressAddress] = useState("");
   const [centerMap, setCenterMap] = useState<Point>({
     lat: parseFloat("-17.80904437441624"),
     lng: parseFloat("-63.20539010110378"),
   } as Point);
   const [inputs, setInputs] = useState<UserType>({ addresses: [] });
   const [userId, setUserId] = useState(0);
-  const [circleRadius, setCircleRadius] = useState(0);
 
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -210,7 +211,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
         },
       });
       setStep(Steps.Choosing);
-      hideExpressModal();  
+      hideExpressModal();
+      setExpressAddress({ variables: { user: { expressAltAddress: altExpressAddress } } });
     }
   };
 
@@ -279,38 +281,53 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             <SC.Addresses withMap={withMap}>
               <SC.RadionGroup selected={isSelectingGeo} onClick={() => setIsSelectingGeo(true)}>
                 <input type="radio" name="manual_geo" id="" checked={isSelectingGeo} />
-                <label htmlFor="manual_geo">Colocar mi ubicación en el mapa</label>
+                <label htmlFor="manual_geo">Ingresa tu dirección</label>
               </SC.RadionGroup>
-              {inputs.addresses &&
-                React.Children.toArray(
-                  inputs.addresses
-                    .filter((address: AddressType) => (hasB2EAddress ? address.id_price_list : address))
-                    .map((address: AddressType) => (
-                      <SC.RadionGroup
-                        selected={!isSelectingGeo && selectedAddress?.id === address.id}
-                        onClick={() => {
-                          setShippingMethod(ShippingMethod.Express);
-                          setIsSelectingGeo(false);
-                          setSelectedAddress({ ...address });
-                          handleAddressGeo({
-                            lat: parseFloat(address?.latitude || "0"),
-                            lng: parseFloat(address?.longitude || "0"),
-                          } as Point);
-                        }}
-                      >
-                        <input readOnly id={`city${address.id}`} name="city" type="radio" checked={!isSelectingGeo && !!(selectedAddress?.id === address.id)} />
-                        <label>
-                          {address?.street?.replace(/ \| /g, " ")}
-                          {address?.id_price_list ? (
-                            <StarWrap>
-                              <img src={StarIcon} alt="" />
-                              <TooltipStar>{t("account.tooltip_star_msg")}</TooltipStar>
-                            </StarWrap>
-                          ) : null}
-                        </label>
-                      </SC.RadionGroup>
-                    ))
-                )}
+              <SC.InputReference>
+                <input
+                  type="text"
+                  name="address_reference"
+                  id="address_reference"
+                  placeholder="Ej. Avenida al paso calle El faro Numero 123"
+                  value={altExpressAddress}
+                  onChange={(event) => {
+                    setAltExpressAddress(event.target.value);
+                  }}
+                />
+              </SC.InputReference>
+              {inputs.addresses && inputs.addresses.length > 0 && (
+                <>
+                  {React.Children.toArray(
+                    inputs.addresses
+                      .filter((address: AddressType) => (hasB2EAddress ? address.id_price_list : address))
+                      .map((address: AddressType) => (
+                        <SC.RadionGroup
+                          selected={!isSelectingGeo && selectedAddress?.id === address.id}
+                          onClick={() => {
+                            setShippingMethod(ShippingMethod.Express);
+                            setIsSelectingGeo(false);
+                            setSelectedAddress({ ...address });
+                            handleAddressGeo({
+                              lat: parseFloat(address?.latitude || "0"),
+                              lng: parseFloat(address?.longitude || "0"),
+                            } as Point);
+                          }}
+                        >
+                          <input readOnly id={`city${address.id}`} name="city" type="radio" checked={!isSelectingGeo && !!(selectedAddress?.id === address.id)} />
+                          <label>
+                            {address?.street?.replace(/ \| /g, " ")}
+                            {address?.id_price_list ? (
+                              <StarWrap>
+                                <img src={StarIcon} alt="" />
+                                <TooltipStar>{t("account.tooltip_star_msg")}</TooltipStar>
+                              </StarWrap>
+                            ) : null}
+                          </label>
+                        </SC.RadionGroup>
+                      ))
+                  )}
+                </>
+              )}
             </SC.Addresses>
             <button onClick={() => handleSetExpress()}>Confirmar</button>
           </SC.Selector>
@@ -353,7 +370,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
           <SC.Selector withMap={withMap}>
             <DeliveryIcon />
             <SC.Title>Envío a domicilio</SC.Title>
-            <SC.Subtitle withMap={withMap}>Selecciona una de tus direcciones guardadas o agrega una nueva:</SC.Subtitle>
+            <SC.Subtitle withMap={withMap}>Selecciona la ciudad en la que te encuentras:</SC.Subtitle>
             <SC.Addresses withMap={withMap}>
               {/* when no addresses */}
               {inputs.addresses && !inputs.addresses.length ? (

@@ -156,7 +156,7 @@ const Checkout = () => {
             fax: orderData.shipping.nit,
             email,
             telephone: isPickup && agencyObj ? orderData.billing.phone : orderData.shipping.phone,
-            street,
+            street: localUserData?.userInfo[0]?.expressAltAddress ? localUserData.userInfo[0].expressAltAddress : street,
             city: escapeSingleQuote(orderData.shipping.city || localUserData.userInfo[0].cityName || "SC"),
             region: escapeSingleQuote(orderData.shipping.reference),
             country_id,
@@ -499,7 +499,7 @@ const Checkout = () => {
                 <SC.Col1>
                   {step === Steps.Billing ? (
                     <SC.Steps>
-                      <Billing updateOrder={updateOrderData} orderData={orderData.billing}/>
+                      <Billing updateOrder={updateOrderData} orderData={orderData.billing} />
                     </SC.Steps>
                   ) : null}
 
