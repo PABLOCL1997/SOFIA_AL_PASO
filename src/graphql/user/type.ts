@@ -40,6 +40,7 @@ export type AddressType = {
   longitude?: string;
   id_price_list?: number;
   id_address_ebs?: number;
+  employee?: number;
 };
 
 export type UserType = {
@@ -52,7 +53,7 @@ export type UserType = {
   addressId?: number;
   addresses?: Array<AddressType>;
   employee_old?: string;
-  employee?: string;
+  employee?: string | number;
 };
 
 export type UserDetails = {
