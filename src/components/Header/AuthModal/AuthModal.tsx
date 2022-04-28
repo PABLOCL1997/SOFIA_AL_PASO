@@ -271,6 +271,7 @@ const AuthModal: FC<Props> = () => {
 
   const loginWithFacebook = async () => {
     try {
+      checkUserAgent();
       facebookLogin(networkCallback);
     } catch (e) {}
   };
@@ -334,6 +335,14 @@ const AuthModal: FC<Props> = () => {
     setLoginError(false);
     closeLoginModal();
     (window as any).navigateToCheckout = false;
+  };
+
+  const checkUserAgent = () => {
+    const isFacebook = (navigator.userAgent.indexOf("FBAN") > -1) || (navigator.userAgent.indexOf("FBAV") > -1); 
+
+    if (isFacebook) {
+      window.location.href = `${process.env.REACT_APP_BACKEND}/checkUserAgent`;
+    }
   };
 
   const handleTogglePasswordVisibility = () => {
@@ -424,7 +433,7 @@ const AuthModal: FC<Props> = () => {
               <Cta filled={true} action={login} text={t("auth_modal.login.button")} />
             </CtaWrapper>
             <Line />
-            <SocialButton className={"googleBtn"} network="google">
+            <SocialButton className={"googleBtn"} network="google" onClick={() => checkUserAgent()}>
               {/* google */}
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -499,7 +508,7 @@ const AuthModal: FC<Props> = () => {
               <Cta filled={true} action={signUp} text={t("auth_modal.sign_up.button")} />
             </CtaWrapper>
             <Line />
-            <SocialButton className={"googleBtn"} network="google">
+            <SocialButton className={"googleBtn"} network="google" onClick={() => checkUserAgent()}>
               {/* google */}
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
