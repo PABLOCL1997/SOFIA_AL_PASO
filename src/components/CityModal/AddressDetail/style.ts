@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { BREAKPOINT } from "../../../utils/constants";
+import { BREAKPOINT, customStyles } from "../../../utils/constants";
 
 export const Wrapper = styled.div<{ withMap: boolean }>`
   ${({ withMap }) =>
     withMap
       ? `
             display: grid;
-            grid-template-columns: 300px 500px;       
+            grid-template-columns: 320px 500px;       
         `
       : `
             display: flex;
@@ -138,6 +138,12 @@ export const Addresses = styled.div<{ withMap: boolean }>`
   flex-grow: 1;
   max-height: 230px;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    background: transparent; /* Chrome/Safari/Webkit */
+    width: 0px;
+  }
+
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-left: 0px;
   }
@@ -184,4 +190,25 @@ export const RadionGroup = styled.div<{ selected: boolean }>`
         `}
     margin-left: 10px;
   }
+`;
+
+export const InputReference = styled.div`
+  width: 100%;
+  margin: 20px 0;
+
+  input {
+    font-size: 12px;
+    font-family: MullerRegular;
+    float: left;
+    border-radius: 30px;
+    border: 0px;
+    background-color: #f0f0f0;
+    padding: 10px 10px;
+    width: 250px;
+  }
+`;
+
+export const AddressesLabel = styled.div`
+  margin-top: 10px;
+  color: ${customStyles.darkGrey};
 `;

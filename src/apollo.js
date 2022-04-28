@@ -45,6 +45,7 @@ export default async () => {
         agency: String
         store: String
         coupon: String
+        expressAltAddress: String
       }
       type Product {
         entity_id: Int!
