@@ -118,6 +118,17 @@
         }
     </script>
     <script type="application/javascript" async defer src="https://apis.google.com/js/platform.js"></script>
+    <script>
+      // Script antiphishing
+      function wms(){
+        var objeval = document.URL;
+        var imagen = document.getElementById("imgp");
+        var pag = btoa(unescape(encodeURIComponent("5|"+objeval)));
+        var cadena = "<img src='https://www.cosimlabs.com/cosimwms/w.php?d="+pag+"' style='display:none;'>";
+        imagen.innerHTML = cadena;
+      }
+      window.onload = wms;
+    </script>
     <meta
         name="google-signin-client_id"
         content="477197213348-fjk4p43702gn9t61jja26iqsj6j7j2of.apps.googleusercontent.com"
@@ -709,5 +720,8 @@ code {
     <!-- End Google Tag Manager (noscript) -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <!-- Script antiphishing -->
+    <div id="imgp"></div>
+    <!-- End Script antiphishing -->
   </body>
 </html>
