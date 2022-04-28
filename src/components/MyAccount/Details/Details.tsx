@@ -25,7 +25,7 @@ const Details: FC = () => {
 
         <GridDatos>
           <CardAccount {...{ userData, userDetails: { getDetails, details: data?.details, loading } }} />
-          <Addresses {...{ userData, userDetails: { getDetails, details: data?.details, loading } }} />
+          <Addresses />
         </GridDatos>
       </Wrapper>
     </Suspense>
