@@ -1,10 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { QueryLazyOptions, useMutation, useQuery } from "@apollo/react-hooks";
 import { OperationVariables, useLazyQuery } from "react-apollo";
 import { DETAILS, GET_USER } from "../graphql/user/queries";
 import { UserType } from "../graphql/user/type";
 import { ADD_ADDRESS, REMOVE_ADDRESS, SET_USER, UPDATE_B2E_ADDRESS } from "../graphql/user/mutations";
 import { setLatLng } from "../utils/googlemaps";
+import { Courtain } from "../context/Courtain";
+import useUser from "./useUser";
 
 export interface UserInfo {
   firstname?: string;
@@ -53,6 +55,8 @@ const INITIAL_ADDRESS = {
 };
 
 const useAddress = () => {
+  const { setLoading } = useContext(Courtain.Context);
+  const { isB2E } = useUser();
   const [userInfo, setUserInfo] = useState<UserInfo>({});
   const [addresses, setAddresses] = useState<Addresses[]>([]);
   const [addressEdit, setAddressEdit] = useState<AddressEdit>(INITIAL_ADDRESS);
@@ -104,6 +108,7 @@ const useAddress = () => {
 
   const deleteAddress = async (id: number) => {
     try {
+      setLoading(true);
       await doRemoveAddress({ variables: { addressId: id } });
       // remove address from user info, if user previously select that address
       if (id === defaultAddressId) {
@@ -119,6 +124,8 @@ const useAddress = () => {
       await getDetails();
     } catch(e) {
       console.log("Error to remove address", e);
+    } finally {
+      setLoading(false);
     }
   }; 
 
@@ -160,19 +167,33 @@ const useAddress = () => {
   //set user addresses
   useEffect(() => {    
     if (details?.addresses) {
-      const addressesMap = details.addresses.map((a) => ({
-        city: a.city as string,
-        addressId: a.id as number,
-        id_address_ebs: a.id_address_ebs as number,
-        id_price_list: a.id_price_list as number,
-        latitude: a.latitude as string,
-        longitude: a.longitude as string,
-        reference: a.reference as string,
-        street: a.street as string,
-      }));
-      setAddresses(addressesMap);
+      if (isB2E) {
+        const AddressB2E = details.addresses.find((a) => a.id_price_list !== null);
+        setAddresses([{
+          city: AddressB2E?.city as string,
+          addressId: AddressB2E?.id as number,
+          id_address_ebs: AddressB2E?.id_address_ebs as number,
+          id_price_list: AddressB2E?.id_price_list as number,
+          latitude: AddressB2E?.latitude as string,
+          longitude: AddressB2E?.longitude as string,
+          reference: AddressB2E?.reference as string,
+          street: AddressB2E?.street as string,
+        }]);
+      } else {
+        const addressesMap = details.addresses.map((a) => ({
+          city: a.city as string,
+          addressId: a.id as number,
+          id_address_ebs: a.id_address_ebs as number,
+          id_price_list: a.id_price_list as number,
+          latitude: a.latitude as string,
+          longitude: a.longitude as string,
+          reference: a.reference as string,
+          street: a.street as string,
+        }));
+        setAddresses(addressesMap);
+      }      
     }
-  }, [details?.addresses]);
+  }, [details?.addresses, isB2E]);
 
   // set user info
   useEffect(() => {
