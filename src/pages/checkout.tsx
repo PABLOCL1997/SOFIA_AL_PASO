@@ -22,9 +22,8 @@ import useUser from "../hooks/useUser";
 import useCityPriceList from "../hooks/useCityPriceList";
 import useMinimumPrice from "../hooks/useMinimumPrice";
 import useCart from "../hooks/useCart";
-import { recoverPassword, signUp } from "../auth";
-import { token as StoreToken } from "../utils/store";
 import { useCheckout } from "../state/slices/checkout/useCheckout";
+import { useAppSelector } from "../state/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Steps/Billing"));
@@ -52,16 +51,15 @@ const Checkout = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
-  
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const { handleIsGuestOrder } = useCheckout();
+
   const { setLoading } = useContext(Courtain.Context);
   const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
-  const [isOrderGuest, setIsOrderGuest] = useState(false);
-  const { handleIsGuestOrder } = useCheckout();
 
   const { data: localUserData } = useQuery(GET_USER, {});
   const { data: userDetails } = useQuery(DETAILS, {});
-  const isLoggedIn = useMemo(() => localUserData.userInfo[0].isLoggedIn, [localUserData?.userInfo?.[0]?.isLoggedIn]);  
 
   const [getDetails, { data: userData }] = useLazyQuery<UserDetails>(DETAILS, {
     fetchPolicy: "network-only",
@@ -204,7 +202,7 @@ const Checkout = () => {
           );
           initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email || "Guest", data.cartItems);
           window.history.pushState("checkout", "Tienda Sofia - Checkout", "/checkout");
-          history.push(`/gracias?orderGuest=${isOrderGuest || ""}&ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
+          history.push(`/gracias?orderGuest=${isGuestOrder || ""}&ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
         } catch (e) {
           setLoading(false);
           showError();
@@ -262,7 +260,7 @@ const Checkout = () => {
             setLoading(false);
             const pickup = store === "PICKUP" ? agency : "";
             initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email, data.cartItems);
-            history.push(`/gracias?orderGuest=${isOrderGuest || ""}&ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
+            history.push(`/gracias?orderGuest=${isGuestOrder || ""}&ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
           }
         } catch (e) {
           showError();
@@ -440,49 +438,9 @@ const Checkout = () => {
     if (missingField) return [];
     return items;
   };
-
-  const guestOrder = () => {
-    setLoading(true);
-    const values = {
-      email: orderData.billing.email,
-      firstname: orderData.billing.firstname,
-      lastname: orderData.billing.lastname,
-      password: String(Math.floor(100000 + Math.random() * 900000)),
-    }
-    signUp(values)
-      .then((res) => {
-        const messageError = res.errors?.[0]?.message?.includes("User already exists");
-        if (messageError) {
-          showError({
-            variables: { user: { showError: "Email ya en uso" } },
-          })
-          setLoading(false);
-        } else {
-          setIsOrderGuest(true);
-          const token = res.data?.signup?.token;
-          toggleLogin();
-          StoreToken.set(token);
-          checkAndNewOrder();
-          recoverPassword(values.email)
-            .then(() => console.log("Email recover password sended"))
-            .catch((e) => console.log("Error send recover password", e));
-        }        
-      })
-      .catch(() => {
-        showError({
-          variables: { user: { showError: "Error register guest user" } },
-        });
-        setLoading(false);
-      });
-  };
-
-
+  
   const saveOrder = () => {   
-    if (isLoggedIn) {
-      checkAndNewOrder();
-    } else {
-      guestOrder();
-    }
+    checkAndNewOrder();    
   };
 
   const updateOrderData = (key: string, values: any) => {
