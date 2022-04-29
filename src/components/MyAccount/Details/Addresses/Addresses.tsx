@@ -1,7 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useMutation } from "react-apollo";
-import { SET_USER } from "../../../../graphql/user/mutations";
 import { setLatLng } from "../../../../utils/googlemaps";
 import { cities } from "../../../../utils/string";
 import Cta from "../../../Cta";
@@ -10,15 +8,13 @@ import * as SC from "./style";
 
 import ArrowLeft from "../../../../assets/images/arrow.svg";
 import StarIcon from "../../../../assets/images/star.svg";
-import useAddress, { AddressEdit, Addresses as listAddresses, GetDetails, UserInfo } from "../../../../hooks/useAddress";
+import useAddress, { AddressEdit, Addresses as listAddresses } from "../../../../hooks/useAddress";
 import useUser from "../../../../hooks/useUser";
+import { rangeArray } from "../../../../utils/dataTransform";
 
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../../../Images/Delete"));
 const Close = React.lazy(() => import(/* webpackChunkName: "Close" */ "../../../Images/Close"));
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../../../Images/Chevron"));
-
-type Props = {  
-};
 
 interface PropsTable {
   setType: React.Dispatch<React.SetStateAction<typeModal>>;
@@ -35,12 +31,10 @@ interface PropsModal {
   type: typeModal;  
   setType: React.Dispatch<React.SetStateAction<typeModal>>;
   addressEdit: AddressEdit;
-  setAddressEdit: React.Dispatch<React.SetStateAction<AddressEdit>>;
-  userInfo: UserInfo;
-  getDetails: GetDetails;
-  defaultAddressId: number;
+  setAddressEdit: React.Dispatch<React.SetStateAction<AddressEdit>>;  
   resetEditAddress: () => void;
   updateAddress: () => Promise<void>;
+  handleAddressModal: (value: boolean) => void;
 };
 
 enum typeModal {
@@ -60,7 +54,7 @@ const AddressesTable: FC<PropsTable> = ({ setType, listAddresses, handleAddressM
   const startIndex = page * limitPerPage;
   const endIndex = startIndex + limitPerPage;
   const maxPage = Math.ceil(listAddresses.length / limitPerPage);
-  const pages = Array(maxPage);  
+  const pages = rangeArray(0, maxPage); 
 
   const handlePage = (type: string) => {
     if (type === "next") {
@@ -113,13 +107,13 @@ const AddressesTable: FC<PropsTable> = ({ setType, listAddresses, handleAddressM
       {!isB2E ? <SC.AddAddress onClick={() => handleOpenModal()}>{t("account.newaddress")}</SC.AddAddress> : null}
       {listAddresses.length ? <SC.Pages>
         <SC.Arrow rotate={true} disable={page === 0} src={ArrowLeft} onClick={() => handlePage("back")} alt="arrow-left" />
-        {pages.length ? [...pages].map((_, i) => 
+        {pages.length ? pages.map((p) => 
           <SC.Page 
-            key={`page_${i}`}
-            isSelected={page === i}
-            onClick={() => setPage(i)}
+            key={`page_${p}`}
+            isSelected={page === p}
+            onClick={() => setPage(p)}
           >
-            {i + 1}          
+            {p + 1}          
           </SC.Page>
           ): null}
         <SC.Arrow src={ArrowLeft} disable={page === maxPage - 1} onClick={() => handlePage("next")} alt="ArrowRight" />
@@ -128,14 +122,11 @@ const AddressesTable: FC<PropsTable> = ({ setType, listAddresses, handleAddressM
   )
 };
 
-const AddressModal: FC<PropsModal> = ({ type, setType, addressEdit, setAddressEdit, userInfo, getDetails, defaultAddressId, resetEditAddress, updateAddress }) => {
+const AddressModal: FC<PropsModal> = ({ type, setType, addressEdit, setAddressEdit, resetEditAddress, updateAddress, handleAddressModal }) => {
   const { t } = useTranslation();
   const [mapError, setMapError] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [closeModal] = useMutation(SET_USER, {
-    variables: { user: { openAddressModal: false } }
-  });
+  const [loading, setLoading] = useState(false);  
 
   const checkIsFormValid = () => {
     if (!addressEdit.latitude || !addressEdit.longitude || !addressEdit.street || !addressEdit.city ) {
@@ -171,7 +162,7 @@ const AddressModal: FC<PropsModal> = ({ type, setType, addressEdit, setAddressEd
 
   const handleClose = () => {
     setType(typeModal.add);
-    closeModal();
+    handleAddressModal(false);
     resetEditAddress();
   };  
 
@@ -277,15 +268,14 @@ const MessageModal: FC<MessageProps> = ({ setShowMessageModal }) => {
   )
 };
 
-const Addresses: FC<Props> = () => { 
+const Addresses: FC = () => { 
   const { t } = useTranslation();
   const [type, setType] = useState(typeModal.add);
   const { 
     getDetails,
     addresses: listAddresses,
     addressEdit,
-    setAddressEdit,
-    userInfo, 
+    setAddressEdit,     
     defaultAddressId,
     openAddressModal,
     updateAddress,
@@ -320,12 +310,10 @@ const Addresses: FC<Props> = () => {
           type={type} 
           setType={setType}  
           addressEdit={addressEdit}  
-          setAddressEdit={setAddressEdit}       
-          userInfo={userInfo}
-          getDetails={getDetails}
-          defaultAddressId={defaultAddressId} 
+          setAddressEdit={setAddressEdit}
           resetEditAddress={resetEditAddress} 
-          updateAddress={updateAddress}        
+          updateAddress={updateAddress} 
+          handleAddressModal={handleAddressModal}       
         /> : null} 
       {showMessageModal ? <MessageModal setShowMessageModal={setShowMessageModal}/> : null}
     </SC.AddressesContainer>
