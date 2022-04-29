@@ -97,4 +97,26 @@ export const Next = {
       }
     }
   `,
-}
+};
+
+export const Emoji = styled.img`
+  margin-left: 5px;
+  width: 20px;
+  vertical-align: bottom;
+`;
+
+export const Subtitle = styled.span`
+  color: var(--font);
+  font-weight: bold;
+  margin-bottom: 30px;
+`;
+
+export const GuestTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  h2 {
+    margin-bottom: 0;
+    font-family: MullerBold;
+  }
+`;
