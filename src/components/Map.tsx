@@ -118,7 +118,7 @@ const Map: FC<Props> = () => {
     <Suspense fallback={<Loader />}>
       <MapContainer className="gmapContainer">
         <h2 className="gmapTitle">{t("checkout.delivery.map.title")}</h2>
-        <MapWrapper style={{ display: mapIsReady ? 'block' : 'none' }}>
+        <MapWrapper className="gmapWrapper" style={{ display: mapIsReady ? 'block' : 'none' }}>
           <Pin className="gmapPin">{t("checkout.delivery.map.pin")}</Pin>
           <Geo className="gmapGeo" onClick={geoLocate}>
             <Crosshair />
