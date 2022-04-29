@@ -81,7 +81,7 @@ export const ModalCourtain = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: rgba(0, 0, 0, 0.3);
   z-index: 500;
   display: flex;
@@ -100,6 +100,8 @@ export const Modal = styled.div<{ fullSize?: boolean, padding?: string }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
   ${({ fullSize }) => fullSize &&`
     @media screen and (max-width: ${BREAKPOINT}) {
       min-width: 100%;
@@ -107,7 +109,11 @@ export const Modal = styled.div<{ fullSize?: boolean, padding?: string }>`
       border-radius: 0;
       justify-content: flex-start;
     }
- `};  
+ `};
+  @media screen and (max-height: 700px) {
+    height: 100vh;
+    justify-content: flex-start;
+  }
 `;
 
 export const Header = styled.div`
@@ -158,16 +164,7 @@ export const Form = {
     align-items: flex-start;
     padding: 10px;
     box-sizing: border-box;
-    width: 100%;
-    svg {
-      pointer-events: none;
-      position: absolute;
-      top: 64px;
-      right: 20px;
-      path {
-        stroke: var(--red);
-      }
-    }    
+    width: 100%;    
   `,
   Input: styled.input` 
     background: var(--whiter);
@@ -196,9 +193,11 @@ export const Form = {
     padding-left: 20px;
     margin-top: 20px;
   `,
-  Select: styled.select`
+  Select: styled.select<{ isB2E: boolean }>`
+    position: relative;
     -webkit-appearance: none;
     width: 100%;
+    min-height: 40.5px;
     background: var(--whiter);
     border-radius: 44px;
     font-family: MullerMedium;
@@ -208,12 +207,38 @@ export const Form = {
     align-items: center;
     letter-spacing: 0.01em;
     color: var(--font);
-    padding: 10px 20px;
+    padding: 12px 20px 10px 20px;
+    box-sizing: border-box;
     border: 0;
     margin-top: 10px;
     cursor: pointer; 
+    background-image: ${({ isB2E }) => !isB2E ? 'url("/images/chevron.svg")' : "none"};
+    background-repeat: no-repeat;
+    background-size: 12px;
+    background-position: 95% 50%;
     &.error {
       border: 1px solid var(--red);
+    }    
+    @media screen and (max-width: ${BREAKPOINT}) {
+      background-position: 97% 50%;
+    }
+    @media screen and (max-height: 700px) {
+      background-position: 97% 50%;
+    }
+  `,
+  Group: styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    & > div {
+      width: 100%;
+      min-width: 250px;
+    }
+    @media screen and (max-width: ${BREAKPOINT}) {
+      flex-direction: column;
+      width: 100%;
     }    
   `,
   CtaWrapper: styled.div`
@@ -226,16 +251,20 @@ export const Form = {
   Map: styled.div<{ mapError: boolean }>`
     width: 100%;
     div.gmapContainer {
+      margin-top: 20px;
       width: 100%; 
     }
 
     div#gmap {
       border: ${({mapError}) => mapError ? "1px solid var(--red)" : ""};
+      @media screen and (max-height: 700px) {
+        height: 250px;
+      }
     }
 
     div.gmapGeo {
       top: 93%;
-      left: 110px;
+      left: 190px;
       @media screen and (max-width: ${BREAKPOINT}) {
         height: max-content;
         left: 50%;
@@ -247,13 +276,17 @@ export const Form = {
     }
 
     div.gmapPin {
-      right: 60px;
-      width: max-content;
+      display: none;
     }
 
     h2.gmapTitle {
-      margin-bottom: 40px;
+      margin-bottom: 10px;
     }   
+    div.gmapWrapper {
+      @media screen and (max-width: ${BREAKPOINT}) {
+        margin-top: 0px;
+      }
+    }
   `,
 };
 

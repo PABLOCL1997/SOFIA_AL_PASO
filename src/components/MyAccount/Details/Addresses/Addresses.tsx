@@ -8,13 +8,13 @@ import * as SC from "./style";
 
 import ArrowLeft from "../../../../assets/images/arrow.svg";
 import StarIcon from "../../../../assets/images/star.svg";
+import EditIcon from "../../../../assets/images/edit-icon.svg";
 import useAddress, { AddressEdit, Addresses as listAddresses } from "../../../../hooks/useAddress";
 import useUser from "../../../../hooks/useUser";
 import { rangeArray } from "../../../../utils/dataTransform";
 
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../../../Images/Delete"));
 const Close = React.lazy(() => import(/* webpackChunkName: "Close" */ "../../../Images/Close"));
-const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../../../Images/Chevron"));
 
 interface PropsTable {
   setType: React.Dispatch<React.SetStateAction<typeModal>>;
@@ -100,7 +100,11 @@ const AddressesTable: FC<PropsTable> = ({ setType, listAddresses, handleAddressM
             </SC.StarWrap> : null}
             {!a.id_price_list ? <SC.DeleteWrapper onClick={() => deleteAddress(a.addressId)}>
               <Delete />
-            </SC.DeleteWrapper> : null}
+            </SC.DeleteWrapper> : 
+            <SC.DeleteWrapper>
+              <img onClick={() => handleEdit(a.addressId)} loading="lazy" src={EditIcon} alt="edit-icon" />
+            </SC.DeleteWrapper>
+            }
           </SC.Address>
         ): null}
       </SC.ListAddress>
@@ -202,30 +206,36 @@ const AddressModal: FC<PropsModal> = ({ type, setType, addressEdit, setAddressEd
           </SC.CloseWrapper>          
         </SC.Header>
         <SC.Form.Wrapper onSubmit={handleSubmit}>
-          <SC.Form.Label>{t("checkout.delivery.city")}</SC.Form.Label>
-          <SC.Form.Select 
-            value={addressEdit.city} 
-            onChange={handleChange} 
-            name={"city"}
-            className={!addressEdit.city ? "error" : ""}
-            disabled={Boolean(addressEdit.id_price_list)}
-          >
-            <option value="" selected disabled hidden>
-              {t("checkout.delivery.city")}</option>
-            {cities.map((c) => 
-              <option key={c.key}>{c.value}</option>
-            )}
-          </SC.Form.Select>
-          {!Boolean(addressEdit.id_price_list) ? <Chevron /> : null}
-          <SC.Form.Label>{t("checkout.delivery.address")}</SC.Form.Label>
-          <SC.Form.Input
-            name={"street"}
-            value={addressEdit.street}
-            onChange={handleChange}
-            type="text"
-            placeholder={t("checkout.delivery.address_ph")}
-            className={!addressEdit.street ? "error" : ""}
-          />
+          <SC.Form.Group>
+            <div>
+              <SC.Form.Label>{t("checkout.delivery.city")}</SC.Form.Label>
+              <SC.Form.Select 
+                value={addressEdit.city} 
+                onChange={handleChange} 
+                name={"city"}
+                className={!addressEdit.city ? "error" : ""}
+                disabled={Boolean(addressEdit.id_price_list)}
+                isB2E={Boolean(addressEdit.id_price_list)}
+              >
+                <option value="" selected disabled hidden>
+                  {t("checkout.delivery.city")}</option>
+                {cities.map((c) => 
+                  <option key={c.key}>{c.value}</option>
+                )}
+              </SC.Form.Select>
+            </div>
+            <div>           
+              <SC.Form.Label>{t("checkout.delivery.address")}</SC.Form.Label>
+              <SC.Form.Input
+                name={"street"}
+                value={addressEdit.street}
+                onChange={handleChange}
+                type="text"
+                placeholder={t("checkout.delivery.address_ph")}
+                className={!addressEdit.street ? "error" : ""}
+              />
+            </div>
+          </SC.Form.Group>
           <SC.Form.Label>{t("checkout.delivery.reference")}</SC.Form.Label>
           <SC.Form.Input
             name={"reference"}
