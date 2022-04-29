@@ -56,6 +56,7 @@ const useAddress = () => {
   const [userInfo, setUserInfo] = useState<UserInfo>({});
   const [addresses, setAddresses] = useState<Addresses[]>([]);
   const [addressEdit, setAddressEdit] = useState<AddressEdit>(INITIAL_ADDRESS);
+  const [openAddressModal, setOpenAddressModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [userInfoIsValid, setUserInfoIsValid] = useState(false);
 
@@ -70,18 +71,12 @@ const useAddress = () => {
   const [updateB2EAddress] = useMutation(UPDATE_B2E_ADDRESS); 
   
   const handleAddressModal = (value: boolean) => {
-    setUser({
-      variables: { user: { openAddressModal: value } }
-    });
+    setOpenAddressModal(value);
   };  
 
   const defaultAddressId = useMemo(() => {
     return userData?.userInfo[0]?.defaultAddressId;
-  }, [userData?.userInfo[0]?.defaultAddressId]);
-
-  const openAddressModal = useMemo(() => {
-    return userData?.userInfo[0]?.openAddressModal;
-  }, [userData?.userInfo[0]?.openAddressModal]);
+  }, [userData?.userInfo[0]?.defaultAddressId]);  
 
   const updateAddress = async () => {
     await addAddress();        
@@ -213,7 +208,6 @@ const useAddress = () => {
     addresses,
     addressEdit,
     setAddressEdit,
-    userInfo, 
     defaultAddressId,
     openAddressModal,
     updateAddress,
