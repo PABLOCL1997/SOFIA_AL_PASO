@@ -249,6 +249,7 @@ export const Next = {
 export const Back = {
   Wrapper: styled.div`
     margin-bottom: 32px;
+    cursor: pointer;
     @media screen and (max-width: ${BREAKPOINT}) {
       display: none;
     }
@@ -257,4 +258,8 @@ export const Back = {
 
 export const ArrowImg = styled.img`
   margin-left: 10px;
+`;
+
+export const TitleGuest = styled.h2`
+  font-family: MullerBold !important;
 `;
