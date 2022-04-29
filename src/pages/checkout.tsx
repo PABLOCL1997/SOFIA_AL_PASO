@@ -216,6 +216,12 @@ const Checkout = () => {
     const body = document.querySelector("body");
     if (body && window.innerWidth >= 768) body.style.overflow = "unset";
 
+    const isLoggedIn = localUserData?.userInfo[0]?.isLoggedIn;
+
+    if (!isLoggedIn) {
+      handleIsGuestOrder(true);
+    }
+
     return () => {
       handleIsGuestOrder(false);
     }
