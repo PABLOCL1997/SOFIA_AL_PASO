@@ -331,7 +331,8 @@
     },
     "billing": {
       "title": "1. Datos para facturación",
-      "title_guest": "Últimos pasos para terminar la compra:<br />A continuación le pedimos sus datos para recibir su pedido",
+      "title_guest": "BIENVENIDO A SOFIA AL PASO",
+      "subtitle_guest": "Necesitamos tus datos para realizar el pedido",
       "firstname": "Nombre",
       "lastname": "Apellido",
       "email": "Email",
@@ -342,7 +343,7 @@
     },
     "delivery": {
       "title": "2. Datos para la entrega",
-      "title_guest": "Metodo de Envío:<br />En este paso deberá cargar la dirección a donde desea recibir el pedido o elegir otro método de envío.",
+      "title_guest": "COMO QUIERES RECIBIR TU PEDIDO?",
       "time": "aprox. {{day}} entre las {{from}} y {{to}}",
       "other_address": "Enviar a otra dirección",
       "firstname": "*Nombre",
