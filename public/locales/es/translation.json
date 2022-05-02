@@ -333,6 +333,7 @@
       "title": "1. Datos para facturación",
       "title_guest": "BIENVENIDO A SOFIA AL PASO",
       "subtitle_guest": "Necesitamos tus datos para realizar el pedido",
+      "error_guest": "Este correo ya está vinculado a una cuenta existente.",
       "firstname": "Nombre",
       "lastname": "Apellido",
       "email": "Email",
