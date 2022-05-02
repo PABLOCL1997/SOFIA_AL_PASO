@@ -12,10 +12,10 @@ import Input from "../../../Formik/components/Input";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
 import { useAppSelector } from "../../../../state/store";
 import EmojiHappy from "../../../../assets/images/happy-emoji.svg";
-import { recoverPassword, signUp } from "../../../../auth";
 import { SET_USER } from "../../../../graphql/user/mutations";
 import { token as StoreToken } from "../../../../utils/store";
 import { Courtain } from "../../../../context/Courtain";
+import useAuth from "../../../../auth";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
@@ -35,9 +35,11 @@ const Billing: FC<{
 
   const [isValid, setIsValid] = useState(false);  
   const fields = ["firstname", "lastname", "email", "nit", "phone"];
+  const [errorRegister, setErrorRegister] = useState("");
+  const { signUp, recoverPassword } = useAuth();
   
   const { data: localUserData } = useQuery(GET_USER, {});
-  const [setUser] = useMutation(SET_USER);
+  // const [setUser] = useMutation(SET_USER);
   const [toggleLogin] = useMutation(SET_USER, {
     variables: { user: { isLoggedIn: true } },
   });
@@ -95,35 +97,34 @@ const Billing: FC<{
 
   const handleGuestUser = () => {
     setLoading(true);
+    setErrorRegister("");
     const values = {
       email: formik.values.email,
       firstname: formik.values.firstname,
       lastname: formik.values.lastname,
       password: String(Math.floor(100000 + Math.random() * 900000)),
+      network: false,
     }
-    signUp(values)
+    signUp({ variables: values })
       .then((res) => {
-        const messageError = res.errors?.[0]?.message?.includes("User already exists");
-        if (messageError) {
-          setUser({
-            variables: { user: { showError: "Email ya en uso" } },
-          })
-          setLoading(false);
-        } else {
-          const token = res.data?.signup?.token;
-          toggleLogin();
-          StoreToken.set(token);
-          recoverPassword(values.email)
-            .then(() => console.log("Email recover password sended"))
-            .catch((e) => console.log("Error send recover password", e));
-          setLoading(false);
-          handleNext(history, nextStep);
-        }        
-      })
-      .catch((e) => {
-        console.log("Error register guest user", e);
+        const token = res.data?.signup?.token;
+        toggleLogin();
+        StoreToken.set(token);
+        recoverPassword({ 
+          variables: { 
+            email: values.email, 
+            bompras: false,
+            url: process.env.REACT_APP_SITE_URL + "/password-reset",
+          }})
+          .then(() => console.log("Email recover password sended"))
+          .catch((e) => console.log("Error send recover password", e));
         setLoading(false);
-      });
+        handleNext(history, nextStep);
+      })
+      .catch(() => {
+        setErrorRegister(t("checkout.billing.error_guest"));
+        setLoading(false);
+      });    
   };
   
   const handleNextStep = () => {
@@ -162,6 +163,8 @@ const Billing: FC<{
         <SC.Form>
           {fields.map((field) => (                    
             <Input
+              errorText={field === "email" && errorRegister ? errorRegister : ""}
+              variant={field === "email" && errorRegister ? "error" : "default"}
               name={field}
               onChange={(evt) => onChange(field, evt.target.value)}
               readOnly={false}
