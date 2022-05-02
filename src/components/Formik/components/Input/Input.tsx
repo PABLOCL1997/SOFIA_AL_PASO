@@ -94,10 +94,11 @@ type Props = ComponentPropsWithoutRef<'input'> & {
   trailingAdornment?: JSX.Element;
   leadingAdornment?: JSX.Element;
   variant?: StyledWrapperInputProps['variant'];
+  errorText?: string;
 };
 
 function Input(
-  { label, className, trailingAdornment, leadingAdornment, variant = 'default', ...props }: Props,
+  { label, className, trailingAdornment, leadingAdornment, errorText, variant = 'default', ...props }: Props,
   ref: Ref<HTMLInputElement>
 ) {
   const [field, meta] = useField(props?.name || "field");
@@ -113,6 +114,7 @@ function Input(
         {trailingAdornment}
       </StyledWrapperInput>
       {meta.touched && meta.error && <StyledErrorText>{meta.error}</StyledErrorText>}
+      {errorText && <StyledErrorText>{errorText}</StyledErrorText>}
     </StyledWrapper>
   );
 }
