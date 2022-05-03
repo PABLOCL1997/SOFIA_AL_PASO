@@ -78,9 +78,7 @@ const useAddress = () => {
     setOpenAddressModal(value);
   };  
 
-  const defaultAddressId = useMemo(() => {
-    return userData?.userInfo[0]?.defaultAddressId;
-  }, [userData?.userInfo[0]?.defaultAddressId]);  
+  const defaultAddressId = userData?.userInfo[0]?.defaultAddressId;
 
   const updateAddress = async () => {
     await addAddress();        
