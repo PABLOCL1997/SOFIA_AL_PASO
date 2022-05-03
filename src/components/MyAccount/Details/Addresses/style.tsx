@@ -1,150 +1,315 @@
 import styled from "styled-components";
-import { transition, LG, customStyles, XL, XXL, BREAKPOINT } from "../../../../utils/constants";
+import { BREAKPOINT } from "../../../../utils/constants";
 
-export const Wrapper = styled.div`
-  padding: 20px 30px 0;
-
-  @media (max-width: ${LG}) {
-    padding: 30px 15px;
-  }
-  h4 {
-    font-size: 20px;
-    line-height: 28px;
-    color: ${customStyles.red};
-    font-family: "MullerMedium";
-    border-bottom: 1px solid #cbcbcb;
-    padding-bottom: 15px;
-
-    @media (max-width: ${LG}) {
-      border-bottom: 0;
-    }
-  }
-`;
-
-export const FirstList = styled.div``;
-
-export const Paginator = styled.div`
-  margin: 20px auto 0;
-  text-align: center;
-
-  ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-
-    div {
-      width: 27px;
-      height: 27px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    img {
-      cursor: pointer;
-    }
-  }
-`;
-
-export const Li = styled.li<{ index?: number; current?: number }>`
-  display: inline-block;
-  margin: 0;
-
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--black);
-  font-style: normal;
-  font-weight: 500;
-  background-color: ${(props) => (props.index === props.current ? "transparent" : "transparent")};
-  color: ${(props) => (props.index === props.current ? customStyles.red : customStyles.black)};
-
-  width: 27px;
-  height: 27px;
+export const ContainerTable = styled.div`  
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 20px;
 `;
 
-export const ArrowPrev = styled.img<{ disable: boolean }>`
-  opacity: ${(props) => (props.disable ? "0.5" : "1")};
-  transform: rotate(-180deg);
+export const ListAddress = styled.ul`
 `;
 
-export const ArrowNext = styled.img<{ disable: boolean }>`
-  opacity: ${(props) => (props.disable ? "0.5" : "1")};
-`;
-
-export const Anchor = styled.div`
-  position: relative;
-
-  top: -20px;
-  right: 0;
-  left: 0;
-`;
-
-export const AddressRow = styled.div`
+export const Address = styled.li`
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--m-gray);
-  padding: 15px 0;
-  &:last-child {
-    border-bottom: 0;
-  }
+  padding: 15px 0px;
 `;
 
-export const Street = styled.div`
-  flex: 1;
-  cursor: pointer;
-
+export const AddressTitle = styled.h4<{ isBold: boolean }>`  
+font-weight: ${({isBold}) => isBold ? "bold" : ""};
   &:hover {
+    cursor: pointer;
     color: var(--red);
   }
 `;
 
-export const StreetSpan = styled.div`
+export const DeleteWrapper = styled.div`
+  cursor: pointer;
+  margin-left: auto;
+`;
+
+export const Pages = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+export const Page = styled.span<{ isSelected: boolean }>`
+  font-size: 14px;
+  color: ${({isSelected}) => isSelected ? "var(--red)" : "var(--black)"};
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const Arrow = styled.img<{ rotate?: boolean, disable: boolean }>`
+  transform: ${({rotate}) => rotate ? "rotate(180deg)" : ""}; 
+  &:hover {
+    cursor: pointer;
+  };
+  opacity: ${({disable}) => disable ? "0.5" : ""};
+  width: 7px;
+`;
+
+export const Title = styled.h4`
+  font-size: 20px;
+  line-height: 28px;
+  color: rgb(227, 6, 19);
+  font-family: "MullerMedium";
+  border-bottom: 1px solid rgb(203, 203, 203);
+  padding-bottom: 15px;
+`;
+
+export const AddressesContainer = styled.div`
+  padding: 20px 30px 0px;
+`;
+
+export const AddAddress = styled.button`
+  font-family: MullerMedium;
+  font-size: 14px;
+  line-height: 14px;
+  text-decoration: underline;
+  color: var(--red);
+  background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
+  border: 0px none;
+  margin-left: auto;
+`;
+
+export const ModalCourtain = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 25px;   
+`;
+
+export const Modal = styled.div<{ fullSize?: boolean, padding?: string }>`
+  position: relative;
+  padding: ${({ padding }) => padding ? padding : "0"};
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  ${({ fullSize }) => fullSize &&`
+    @media screen and (max-width: ${BREAKPOINT}) {
+      min-width: 100%;
+      height: 100vh;
+      border-radius: 0;
+      justify-content: flex-start;
+    }
+ `};  
+`;
+
+export const Header = styled.div`
   display: flex;
   align-items: center;
-  span {
-    width: auto;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 500px;
-    display: inline-block;
+  width: 100%;
+  padding: 20px 30px;
+  box-sizing: border-box;
+  box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.1);
+  @media screen and (max-width: ${BREAKPOINT}) {
+    padding: 15px 30px;
   }
+  @media screen and (max-height: 600px) {
+    padding: 10px 30px;  
+  }
+`;
 
-  img {
+export const HeaderTitle = styled.h2`
+  font-family: MullerMedium;
+  font-size: 20px;
+  line-height: 20px;
+  color: var(--black);
+  @media screen and (max-width: ${BREAKPOINT}) {
+    font-size: 14px;
+    line-height: 14px;
+  }
+`;
+
+export const CloseWrapper = styled.div`
+  cursor: pointer;
+  margin-left: auto;
+  svg {
+    margin-top: 4px;
+    margin-left: 30px;
+    path {
+      stroke: var(--red);
+    }
+  }
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+export const Form = {
+  Wrapper: styled.form`
     position: relative;
-    top: -2px;
-    margin-left: 5px;
-  }
-
-  @media (max-width: ${XXL}) {
-    span {
-      max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10px 30px 20px 30px;
+    box-sizing: border-box;
+    width: 100%;    
+  `,
+  Input: styled.input` 
+    background: var(--whiter);
+    border-radius: 44px;
+    font-family: MullerMedium;
+    font-size: 14px;
+    line-height: 14px;    
+    letter-spacing: 0.01em;
+    color: var(--font);
+    box-sizing: border-box;
+    padding: 12px 20px;
+    border: 0;
+    margin-top: 10px;
+    width: 100%;
+    &.error {
+      border: 1px solid var(--red);
     }
-  }
-
-  @media (max-width: ${XL}) {
-    span {
-      max-width: unset;
-      white-space: unset;
+  `,
+  Label: styled.label`
+    font-family: MullerMedium;
+    font-size: 10px;
+    line-height: 10px;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--font);
+    padding-left: 20px;
+    margin-top: 20px;
+  `,
+  Select: styled.select<{ isB2E: boolean }>`
+    position: relative;
+    -webkit-appearance: none;
+    width: 100%;
+    min-height: 40.5px;
+    background: var(--whiter);
+    border-radius: 44px;
+    font-family: MullerMedium;
+    font-size: 14px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.01em;
+    color: var(--font);
+    padding: 12px 20px 10px 20px;
+    box-sizing: border-box;
+    border: 0;
+    margin-top: 10px;
+    cursor: pointer; 
+    background-image: ${({ isB2E }) => !isB2E ? 'url("/images/chevron.svg")' : "none"};
+    background-repeat: no-repeat;
+    background-size: 12px;
+    background-position: 95% 50%;
+    &.error {
+      border: 1px solid var(--red);
+    }    
+    @media screen and (max-width: ${BREAKPOINT}) {
+      background-position: 97% 50%;
     }
-  }
+    @media screen and (max-height: 700px) {
+      background-position: 97% 50%;
+    }
+  `,
+  Group: styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    & > div {
+      width: 100%;
+      min-width: 250px;
+    }
+    @media screen and (max-width: ${BREAKPOINT}) {
+      flex-direction: column;
+      width: 100%;
+    }    
+  `,
+  CtaWrapper: styled.div`
+    width: 100%;
+    button {
+      padding: 10px 50px;
+      margin: 30px auto 0 auto;
+    }
+  `,
+  Map: styled.div<{ mapError: boolean }>`
+    width: 100%;
+    div.gmapContainer {
+      margin-top: 20px;
+      width: 100%; 
+    }
+
+    div#gmap {
+      border: ${({mapError}) => mapError ? "1px solid var(--red)" : ""};
+      height: 200px !important;
+      @media screen and (max-height: 700px) {
+        height: 250px;
+      }
+    }
+
+    div.gmapGeo {
+      position: absolute;
+      top: 90%;
+      left: calc(50% - 90px);
+      @media screen and (max-width: ${BREAKPOINT}) {
+        height: max-content;
+        left: 50%;
+      }
+    }
+
+    div.gmapGeo > svg {
+      position: initial !important;
+    }
+
+    div.gmapPin {
+      display: none;
+    }
+
+    h2.gmapTitle {
+      margin-bottom: 10px;
+    }   
+    div.gmapWrapper {
+      @media screen and (max-width: ${BREAKPOINT}) {
+        margin-top: 0px;
+      }
+    }
+  `,
+};
+
+export const Loader = styled.img`
+  display: flex;
+  margin: 30px auto 0 auto;
+  width: 30px;
 `;
 
 export const StarWrap = styled.div`
   position: relative;
 
   &:hover {
+    cursor: pointer;
     > div {
       opacity: 1;
       visibility: visible;
     }
+  }
+  
+  img {
+    vertical-align: initial;
+    margin-left: 5px;
   }
 `;
 
@@ -190,212 +355,10 @@ export const TooltipStar = styled.div`
   }
 `;
 
-export const DeleteWrapper = styled.div`
-  cursor: pointer;
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-export const NewAddress = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-  padding-top: 10px;
-  button {
-    font-family: MullerMedium;
-    font-size: 14px;
-    line-height: 14px;
-    text-decoration: underline;
-    color: var(--red);
-    background: none;
-    border: 0;
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-
-  @media (max-width: ${BREAKPOINT}) {
-    margin-top: 30px;
-  }
-`;
-
-export const ModalCourtain = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 10;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 25px;
-  &.visible {
-    display: flex;
-  }
+export const Message = styled.p`
+  padding: 20px;
+  text-align: center;
   @media screen and (max-width: ${BREAKPOINT}) {
-    padding-bottom: 0;
-  }
-`;
-
-export const Modal = styled.div`
-  position: relative;
-  padding: 42px;
-  background: white;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 750px;
-  max-width: 100%;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    min-width: 100%;
-    height: 100vh;
-    border-radius: 0;
-  }
-`;
-
-export const Header = styled.div`
-  display: flex;
-  align-items: center;
-  width: calc(100% + 84px);
-  padding: 30px;
-  margin-top: -42px;
-  box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.1);
-  @media screen and (max-width: ${BREAKPOINT}) {
-    padding: 15px 30px;
-  }
-`;
-
-export const HeaderTitle = styled.h2`
-  font-family: MullerMedium;
-  font-size: 24px;
-  line-height: 24px;
-  color: var(--black);
-  flex: 1;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    font-size: 14px;
-    line-height: 14px;
-  }
-`;
-
-export const CloseWrapper = styled.div`
-  cursor: pointer;
-  svg {
-    margin-top: 4px;
-    margin-left: 30px;
-    path {
-      stroke: var(--red);
-    }
-  }
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-export const ModalContainer = styled.div`
-  padding: 30px 0;
-  width: 100%;
-  max-height: calc(100vh - 300px);
-  overflow: auto;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    max-height: calc(100vh - 100px);
-  }
-`;
-
-export const CtaWrapper = styled.div`
-  button {
-    padding: 10px 50px;
-    margin-top: 30px;
-  }
-  img {
-    margin: 30px auto 0;
-    display: block;
-  }
-`;
-
-export const LoaderWrapper = styled.div`
-  img {
-    width: 20px;
-  }
-`;
-
-export const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
-  display: flex;
-  flex-direction: column;
-  label {
-    font-family: MullerMedium;
-    font-size: 10px;
-    line-height: 10px;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    color: var(--font);
-    padding-left: 20px;
-    opacity: ${(props) => (props.withLabel ? "1" : "0")};
-  }
-  input {
-    background: var(--whiter);
-    border-radius: 44px;
-    font-family: MullerMedium;
-    font-size: 14px;
-    line-height: 14px;
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.01em;
-    color: var(--font);
-    padding: 12px 20px;
-    border: 0;
-    margin-top: 10px;
-    &.error {
-      border: 1px solid var(--red);
-    }
-  }
-`;
-
-export const SelectWrapper = styled.div`
-  position: relative;
-  cursor: pointer;
-
-  select {
-    -webkit-appearance: none;
-    width: 100%;
-    background: var(--whiter);
-    border-radius: 44px;
-    font-family: MullerMedium;
-    font-size: 14px;
-    line-height: 14px;
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.01em;
-    color: var(--font);
-    padding: 10px 20px;
-    border: 0;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-
-  svg {
-    pointer-events: none;
-    position: absolute;
-    top: 24px;
-    right: 20px;
-    path {
-      stroke: var(--red);
-    }
-  }
-`;
-
-export const Form = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 24px;
-  row-gap: 30px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    grid-template-columns: 1fr;
-    column-gap: 0;
+    padding: 0 10px 10px 10px;
   }
 `;

@@ -345,7 +345,7 @@
       "zone": "*Zona",
       "neighborhood": "*Barrio / Urbanización",
       "reference": "Referencia",
-      "reference_ph": "*Indicar Edificio/Casa y otras Referencias",
+      "reference_ph": "Indicar Edificio/Casa y otras Referencias",
       "delivery_date": "*Fecha de entrega",
       "time_frame": "*Hora estimada de entrega",
       "map": {
@@ -447,7 +447,8 @@
       "city": "Seleccionar ciudad",
       "reference": "Referencia",
       "add": "Agregar",
-      "edit": "Editar"
+      "edit": "Editar",
+      "message": "Por favor complete sus datos antes de agregar/editar una dirección."
     },
     "orders": {
       "title": "Historial de órdenes",

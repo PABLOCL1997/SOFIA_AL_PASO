@@ -1,521 +1,333 @@
-import React, { Suspense, FC, useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { FC, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { OperationVariables, useMutation } from "react-apollo";
-import { QueryLazyOptions } from "@apollo/react-hooks";
-import { AddressType, UserType } from "../../../../graphql/user/type";
-import { ADD_ADDRESS, REMOVE_ADDRESS, SET_USER, UPDATE_B2E_ADDRESS } from "../../../../graphql/user/mutations";
 import { setLatLng } from "../../../../utils/googlemaps";
-import { cities, KeyValue } from "../../../../utils/string";
-import { DesktopAndTablet, MobileAndTablet } from "../../../ResponsiveContainers";
+import { cities } from "../../../../utils/string";
 import Cta from "../../../Cta";
 import Map from "../../../Map";
-import { AddressArgs } from "../CardAccount/CardAccount";
 import * as SC from "./style";
 
 import ArrowLeft from "../../../../assets/images/arrow.svg";
 import StarIcon from "../../../../assets/images/star.svg";
+import EditIcon from "../../../../assets/images/edit-icon.svg";
+import useAddress, { AddressEdit, Addresses as listAddresses } from "../../../../hooks/useAddress";
+import useUser from "../../../../hooks/useUser";
+import { rangeArray } from "../../../../utils/dataTransform";
 
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../../../Images/Delete"));
 const Close = React.lazy(() => import(/* webpackChunkName: "Close" */ "../../../Images/Close"));
-const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../../../Images/Chevron"));
-const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../../Switch"));
 
-const emptyCSS = {} as React.CSSProperties;
-const gridSpan2CSS = { gridColumn: "1 / span 2" } as React.CSSProperties;
-const bold = { fontWeight: "bold" } as React.CSSProperties;
-
-type Props = {
-  userData?: any;
-  userDetails: {
-    getDetails: (options?: QueryLazyOptions<OperationVariables> | undefined) => void;
-    details: UserType;
-    loading: boolean;
-  };
+interface PropsTable {
+  setType: React.Dispatch<React.SetStateAction<typeModal>>;
+  listAddresses: listAddresses[];
+  handleAddressModal: (value: boolean) => void;
+  editAddress: (id: number) => void;
+  deleteAddress: (id: number) => Promise<void>;
+  defaultAddressId: number;  
+  setShowMessageModal: React.Dispatch<React.SetStateAction<boolean>>;
+  userInfoIsValid: boolean;
 };
-const Addresses: FC<Props> = ({ userData, userDetails }) => {
-  const billing = 0; // an address is never billing info
+
+interface PropsModal {
+  type: typeModal;  
+  setType: React.Dispatch<React.SetStateAction<typeModal>>;
+  addressEdit: AddressEdit;
+  setAddressEdit: React.Dispatch<React.SetStateAction<AddressEdit>>;  
+  resetEditAddress: () => void;
+  updateAddress: () => Promise<void>;
+  handleAddressModal: (value: boolean) => void;
+};
+
+enum typeModal {
+  edit,
+  add
+};
+
+interface MessageProps {
+  setShowMessageModal: React.Dispatch<React.SetStateAction<boolean>>
+};
+
+const AddressesTable: FC<PropsTable> = ({ setType, listAddresses, handleAddressModal, editAddress, defaultAddressId, deleteAddress, setShowMessageModal, userInfoIsValid }) => {     
   const { t } = useTranslation();
-  const location = useLocation();
-  const myRef = useRef(null);
-  const [loading, setLoading] = useState(false);
-  const [mapUsed, setMapUsed] = useState(false);
-  const [activeScroll, setActiveScroll] = useState(-1);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [savedIndex, setSavedIndex] = useState(1);
-  const [inputs, setInputs] = useState<UserType>({ addresses: [] });
-  const [addressArgs, setAddressArgs] = useState<AddressArgs>({ on: false });
-  const [addressInputs, setAddressInputs] = useState<any>({ addressType: t("checkout.delivery.street") });
-  const [addressId, setAddressId] = useState(0);
-  const [dataEditable, setDataEditable] = useState<any>([]);
-
-  const [deleteAddress] = useMutation(REMOVE_ADDRESS, { variables: { addressId } });
-  const [toggleAddressModal] = useMutation(SET_USER, { variables: { user: { openAddressModal: true } } });
-  const [showError] = useMutation(SET_USER, { variables: { user: { showError: t("account.error") } } });
-  const [closeAddressModal] = useMutation(SET_USER, { variables: { user: { openAddressModal: false } } });
-  const [setUser] = useMutation(SET_USER, {});
-  const [updateB2EAddress] = useMutation(UPDATE_B2E_ADDRESS);
-  const [handleAddress] = useMutation(ADD_ADDRESS, { variables: addressArgs });
-
-  const options: { [key: string]: Array<string> } = { city: cities.map((c: KeyValue) => c.value), home_type: ["Casa", "Departamento"] };
-  const addressTypes = [
-    { title: t("checkout.delivery.street"), value: t("checkout.delivery.street") },
-    { title: t("checkout.delivery.avenue"), value: t("checkout.delivery.avenue") },
-  ];
+  const { isB2E } = useUser();
+  const [page, setPage] = useState(0);
   const limitPerPage = 4;
-  let pages: any = 0;
+  const startIndex = page * limitPerPage;
+  const endIndex = startIndex + limitPerPage;
+  const maxPage = Math.ceil(listAddresses.length / limitPerPage);
+  const pages = rangeArray(0, maxPage); 
 
-  if (dataEditable.length > 0) pages = Math.ceil(dataEditable.length / limitPerPage);
-
-  const scrollToRef = (ref: any) => window.scrollTo({ top: ref.current.offsetTop, behavior: "smooth" });
-
-  const validate = () => {
-    let missingField = false;
-
-    if (!mapUsed && !addressInputs.id) {
-      window.scrollTo({ top: (document as any).getElementById("gmap").getBoundingClientRect().top + (window as any).scrollY - 170, behavior: "smooth" });
-      showError({ variables: { user: { showError: t("checkout.move_map") } } });
-      return false;
-    }
-
-    let fields = addressInputs?.id_address_ebs ? ["phone", "address", "city"] : ["firstname", "lastname", "phone", "city", "address", "reference"];
-
-    fields.forEach((key: string) => {
-      if ((!addressInputs[key] || !addressInputs[key].trim()) && !missingField) {
-        if (key === "building_name" && addressInputs.home_type === "Casa") return;
-        missingField = true;
-        const input = document.querySelector(`[name="shipping-${key}"]`);
-        if (input) {
-          input.classList.add("error");
-          (document as any).getElementById("new-address-modal").scrollTo({ top: (input as any).offsetTop - 170, behavior: "smooth" });
+  const handlePage = (type: string) => {
+    if (type === "next") {
+      setPage((prev) => {
+        if (prev + 1 <= maxPage - 1) {
+          return prev + 1;
         }
-        showError({ variables: { user: { showError: t("checkout.missing_field", { field: t("checkout.delivery." + key) }) } } });
-      }
-    });
-
-    return !missingField;
-  };
-
-  const removeAddress = (address: AddressType) => setAddressId(address.id || 0);
-
-  const onChangeAddress = (key: string, value: string) => {
-    setAddressInputs({ ...addressInputs, [key]: value });
-    if (key === "city" && value) setLatLng(String(value));
-  };
-
-  const editAddress = async () => {
-    setLoading(true);
-    if (!validate()) return;
-    if (userData.userInfo.length && userData.userInfo[0] && addressInputs.id === userData.userInfo[0].defaultAddressId) {
-      setUser({
-        variables: {
-          user: { defaultAddressLabel: `${addressInputs.street}` },
-        },
-      });
-    }
-    setAddressArgs({
-      addressId: addressInputs.id,
-      firstname: addressInputs.firstname,
-      lastname: addressInputs.lastname,
-      email: inputs.email,
-      nit: addressInputs.nit,
-      telephone: `${addressInputs.phone} | ${addressInputs.phone2}`,
-      password: "",
-      street: addressInputs.address,
-      reference: addressInputs.reference,
-      city: addressInputs.city,
-      latitude: String((window as any).latitude),
-      longitude: String((window as any).longitude),
-      billing,
-      id_price_list: addressInputs.id_price_list,
-      id_address_ebs: addressInputs.id_address_ebs,
-      on: true,
-    });
-    if (addressInputs?.id_address_ebs) {
-      await updateB2EAddress({
-        variables: {
-          Id_Cliente: userDetails?.details.employee,
-          Id_Direccion: addressInputs?.id_address_ebs,
-          Direccion: addressInputs.address,
-          Ciudad: addressInputs.city,
-          Telefono: addressInputs.phone,
-          Latitud: String((window as any).latitude),
-          Longitud: String((window as any).longitude),
-        },
-      });
-    }
-    setLoading(false);
-  };  
-  
-  const addAddress = () => {
-    if (!validate()) return;
-
-    setAddressArgs({
-      addressId: 0,
-      firstname: addressInputs.firstname,
-      lastname: addressInputs.lastname,
-      email: inputs.email,
-      nit: addressInputs.nit,
-      telephone: `${addressInputs.phone} | ${addressInputs.phone2}`,
-      password: "",
-      street: addressInputs.address,
-      reference: addressInputs.reference,
-      city: addressInputs.city,
-      latitude: String((window as any).latitude),
-      longitude: String((window as any).longitude),
-      billing,
-      on: true,
-    });
-  };
-
-  const openEditModal = (address: AddressType) => {
-    let street: Array<string> = [];
-    let phone: Array<string> = [];
-    if (address.street) street = address.street.split(" | ");
-    if (address.phone) phone = address.phone.split(" | ");
-    toggleAddressModal();
-    setAddressInputs({
-      ...addressInputs,
-      ...address,
-      address: street[0] || "",
-      number: street[1] || "",
-      home_type: street[2] || "",
-      apt_number: street[3] || "",
-      building_name: street[4] || "",
-      zone: street[5] || "",
-      neighborhood: street[6] || "",
-      phone: phone[0] || "",
-      phone2: phone[1] || "",
-    });
-    let i = setInterval(() => {
-      if ((window as any).map) {
-        clearInterval(i);
-        if (address.latitude && address.latitude !== "") setLatLng("", address.latitude, address.longitude);
-        else setLatLng(address.city || "");
-      }
-    }, 10);
-  };
-
-  const callDeleteMutation = async () => {
-    try {
-      await deleteAddress();
-      setAddressId(0);
-      userDetails.getDetails();
-    } catch (e) {
-      showError();
-    }
-  };
-
-  useEffect(() => ((window as any).updateMapUsed = () => setMapUsed(true)), []);
-
-  const callAddressMutation = async () => {
-    try {
-      setLoading(true);
-      await handleAddress();
-      setAddressArgs({ on: false });
-      setAddressInputs({});
-      closeAddressModal();      
-      userDetails.getDetails();
-    } catch (e) {
-      showError();
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => void (addressArgs && addressArgs.on && callAddressMutation()), [addressArgs]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    setCurrentPage(0);
-    if (!userDetails.details) return;
-    setInputs(userDetails.details);
-    setDataEditable(
-      userDetails.details.addresses?.map((address: any) => {
-        const { alias, id_direccion, latitud, longitud, ciudad, provincia, vendedor, direccion, categoriaCliente, vhPrimerTurno, vhSegundoTurno } = address;
-        return {
-          id_direccion,
-          nombreDireccion: alias || "",
-          ciudad,
-          provincia,
-          vendedor,
-          direccionDeNegocio: direccion,
-          categoriaDeCliente: categoriaCliente,
-          ventanaHorariaTemprana: vhPrimerTurno,
-          ventanaHorariaTarde: vhSegundoTurno,
-          googleMaps: { lat: parseFloat(latitud), lng: parseFloat(longitud) },
-        };
+        return prev;
       })
-    );
-  }, [userDetails]);
+    } else if (type === "back") {
+      setPage((prev) => {
+        if (prev - 1 >= 0) {
+          return prev - 1;
+        }
+        return prev;
+      })
+    }
+  };
+
+  const handleOpenModal = () => {
+    if (!userInfoIsValid) {
+      setShowMessageModal(true);
+    } else {
+      handleAddressModal(true);
+    }
+  };
+
+  const handleEdit = (id: number) => {
+    editAddress(id);
+    setType(typeModal.edit);
+  };
+  
+  return (
+    <SC.ContainerTable>
+      <SC.ListAddress>
+        {listAddresses.length ? listAddresses.slice(startIndex, endIndex).map((a) => 
+          <SC.Address key={a.addressId}>
+            <SC.AddressTitle onClick={() => handleEdit(a.addressId)} isBold={defaultAddressId === a.addressId}>{a.street}</SC.AddressTitle>
+            {a.id_price_list ? 
+            <SC.StarWrap>
+              <img src={StarIcon} alt="" />
+              <SC.TooltipStar>{t("account.tooltip_star_msg")}</SC.TooltipStar>
+            </SC.StarWrap> : null}
+            {!a.id_price_list ? <SC.DeleteWrapper onClick={() => deleteAddress(a.addressId)}>
+              <Delete />
+            </SC.DeleteWrapper> : 
+            <SC.DeleteWrapper>
+              <img onClick={() => handleEdit(a.addressId)} loading="lazy" src={EditIcon} alt="edit-icon" />
+            </SC.DeleteWrapper>
+            }
+          </SC.Address>
+        ): null}
+      </SC.ListAddress>
+      {!isB2E ? <SC.AddAddress onClick={() => handleOpenModal()}>{t("account.newaddress")}</SC.AddAddress> : null}
+      {listAddresses.length ? <SC.Pages>
+        <SC.Arrow rotate={true} disable={page === 0} src={ArrowLeft} onClick={() => handlePage("back")} alt="arrow-left" />
+        {pages.length ? pages.map((p) => 
+          <SC.Page 
+            key={`page_${p}`}
+            isSelected={page === p}
+            onClick={() => setPage(p)}
+          >
+            {p + 1}          
+          </SC.Page>
+          ): null}
+        <SC.Arrow src={ArrowLeft} disable={page === maxPage - 1} onClick={() => handlePage("next")} alt="ArrowRight" />
+      </SC.Pages> : null}
+    </SC.ContainerTable>
+  )
+};
+
+const AddressModal: FC<PropsModal> = ({ type, setType, addressEdit, setAddressEdit, resetEditAddress, updateAddress, handleAddressModal }) => {
+  const { t } = useTranslation();
+  const [mapError, setMapError] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
+  const [loading, setLoading] = useState(false);  
+
+  const checkIsFormValid = () => {
+    if (!addressEdit.latitude || !addressEdit.longitude || !addressEdit.street || !addressEdit.city ) {
+      setFormIsValid(false);
+    } else {
+      setFormIsValid(true);
+    }
+  };
 
   useEffect(() => {
-    if (activeScroll !== -1) {
-      scrollToRef(myRef);
-      setTimeout(() => {
-        setActiveScroll(-1);
-      }, 300);
-    }
-  }, [activeScroll]);
+    checkIsFormValid();
+  },[addressEdit]);
 
+  // capture cords map
   useEffect(() => {
-    if (location.search === "?na") {
-      window.history.pushState("", document.title, "/mi-cuenta");
-      setTimeout(() => toggleAddressModal(), 1000);
+    (window as any).updateMapUsed = () => {
+      setAddressEdit((prev) => ({
+        ...prev,
+        latitude: String((window as any).latitude),
+        longitude: String((window as any).longitude),
+      }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, []);
 
-  useEffect(() => void (addressId > 0 && callDeleteMutation()), [addressId]); // eslint-disable-line react-hooks/exhaustive-deps
+  // set error map if user not selected cords
+  useEffect(() => {
+    if (!addressEdit.latitude || !addressEdit.longitude) {
+      setMapError(true);
+    } else {
+      setMapError(false);
+    }
+  }, [addressEdit.latitude, addressEdit.longitude]);
+
+  const handleClose = () => {
+    setType(typeModal.add);
+    handleAddressModal(false);
+    resetEditAddress();
+  };  
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+    e.persist();    
+    setAddressEdit((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+    if (e.target.name === "city") {
+      setLatLng(e.target.value);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (formIsValid) {
+      try {
+        setLoading(true);
+        await updateAddress();        
+      } catch (e) {
+        console.log("Error addAddress", e);
+      } finally {
+        setLoading(false);
+        handleClose();
+      }
+    }
+  };
 
   return (
-    <Suspense fallback={<div></div>}>
-      <SC.Wrapper>
-        <h4>{t("account.addresses")}</h4>
-        <SC.Anchor ref={myRef}></SC.Anchor>
-        <DesktopAndTablet>
-          <SC.FirstList>
-            {inputs.addresses &&
-              inputs.addresses.slice(currentPage, currentPage + limitPerPage).map((address: AddressType) => (
-                <SC.AddressRow key={address.id}>
-                  <SC.Street onClick={() => openEditModal(address)}>
-                    <SC.StreetSpan>
-                      <span title={address.street?.replace(/ \| /g, " ")} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS}>
-                        {" "}
-                        {address.street?.replace(/ \| /g, " ")}
-                      </span>
-                      {address?.id_price_list ? (
-                        <SC.StarWrap>
-                          <img src={StarIcon} alt="" />
-                          <SC.TooltipStar>{t("account.tooltip_star_msg")}</SC.TooltipStar>
-                        </SC.StarWrap>
-                      ) : (
-                        ""
-                      )}
-                    </SC.StreetSpan>
-                  </SC.Street>
-                  {address?.id_price_list ? (
-                    ""
-                  ) : (
-                    <SC.DeleteWrapper onClick={() => removeAddress(address)}>
-                      <Delete />
-                    </SC.DeleteWrapper>
-                  )}
-                </SC.AddressRow>
-              ))}
-            {!userDetails.loading && (
-              <SC.NewAddress>
-                <button onClick={() => toggleAddressModal()}>{t("account.newaddress")}</button>
-              </SC.NewAddress>
-            )}
-          </SC.FirstList>
-          {pages > 1 && (
-            <SC.Paginator>
-              <ul>
-                {currentPage <= 1 ? (
-                  <div>
-                    <SC.ArrowPrev disable={currentPage <= 1} src={ArrowLeft} alt="prev" />
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setSavedIndex(savedIndex - 1);
-                      setCurrentPage(currentPage - limitPerPage);
-                    }}
-                  >
-                    <SC.ArrowPrev disable={currentPage <= 1} src={ArrowLeft} alt="prev" />
-                  </div>
+    <SC.ModalCourtain>
+      <SC.Modal fullSize={true}>
+        <SC.Header>
+          <SC.HeaderTitle>{type === typeModal.add ? t("account.modal.title") : t("account.modal.edit_title")}</SC.HeaderTitle>
+          <SC.CloseWrapper onClick={() => handleClose()}>
+            <Close />
+          </SC.CloseWrapper>          
+        </SC.Header>
+        <SC.Form.Wrapper onSubmit={handleSubmit}>
+          <SC.Form.Group>
+            <div>
+              <SC.Form.Label>{t("checkout.delivery.city")}</SC.Form.Label>
+              <SC.Form.Select 
+                value={addressEdit.city} 
+                onChange={handleChange} 
+                name={"city"}
+                className={!addressEdit.city ? "error" : ""}
+                disabled={Boolean(addressEdit.id_price_list)}
+                isB2E={Boolean(addressEdit.id_price_list)}
+              >
+                <option value="" disabled hidden>
+                  {t("checkout.delivery.city")}</option>
+                {cities.map((c) => 
+                  <option key={c.key}>{c.value}</option>
                 )}
+              </SC.Form.Select>
+            </div>
+            <div>           
+              <SC.Form.Label>{t("checkout.delivery.address")}</SC.Form.Label>
+              <SC.Form.Input
+                name={"street"}
+                value={addressEdit.street}
+                onChange={handleChange}
+                type="text"
+                placeholder={t("checkout.delivery.address_ph")}
+                className={!addressEdit.street ? "error" : ""}
+              />
+            </div>
+          </SC.Form.Group>
+          <SC.Form.Label>{t("checkout.delivery.reference")}</SC.Form.Label>
+          <SC.Form.Input
+            name={"reference"}
+            value={addressEdit.reference}
+            onChange={handleChange}
+            type="text"
+            placeholder={t("checkout.delivery.reference_ph")}
+          />
+          <SC.Form.Map mapError={mapError}>
+            <Map />
+          </SC.Form.Map>
+          <SC.Form.CtaWrapper>
+            {!loading ? 
+            <Cta 
+              active={formIsValid}
+              filled={true}
+              action={handleSubmit}
+              text={ type === typeModal.edit ? t("account.modal.edit_title") : t("account.modal.add")}
+            /> :
+            <SC.Loader src="/images/loader.svg" alt="loader" />}
+          </SC.Form.CtaWrapper>
+        </SC.Form.Wrapper>
+      </SC.Modal>
+    </SC.ModalCourtain>
+  )
+};
 
-                <>
-                  {[...Array(pages)].map((_, i) => {
-                    return (
-                      <SC.Li
-                        onClick={() => {
-                          setCurrentPage(i * limitPerPage);
-                          setSavedIndex(i + 1);
-                        }}
-                        key={i + 1}
-                        index={i * limitPerPage}
-                        current={currentPage}
-                      >
-                        {i + 1}
-                      </SC.Li>
-                    );
-                  })}
-                </>
+const MessageModal: FC<MessageProps> = ({ setShowMessageModal }) => {
+  const { t } = useTranslation();
 
-                {savedIndex === pages ? (
-                  <div>
-                    <SC.ArrowNext disable={savedIndex === pages} src={ArrowLeft} alt="next" />
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setSavedIndex(savedIndex + 1);
-                      setCurrentPage(currentPage + limitPerPage);
-                    }}
-                  >
-                    <SC.ArrowNext disable={savedIndex === pages} src={ArrowLeft} alt="next" />
-                  </div>
-                )}
-              </ul>
-            </SC.Paginator>
-          )}
-        </DesktopAndTablet>
-        <MobileAndTablet>
-          <SC.FirstList>
-            {inputs.addresses &&
-              inputs.addresses.slice(currentPage, currentPage + limitPerPage).map((address: AddressType) => (
-                <SC.AddressRow key={address.id}>
-                  <SC.Street onClick={() => openEditModal(address)}>
-                    <SC.StreetSpan>
-                      <span title={address.street?.replace(/ \| /g, " ")} style={userData.userInfo[0].defaultAddressId === address.id ? bold : emptyCSS}>
-                        {" "}
-                        {address.street?.replace(/ \| /g, " ")}
-                      </span>
-                      {address?.id_price_list ? (
-                        <SC.StarWrap>
-                          <img src={StarIcon} alt="" />
-                          <SC.TooltipStar>{t("account.tooltip_star_msg")}</SC.TooltipStar>
-                        </SC.StarWrap>
-                      ) : (
-                        ""
-                      )}
-                    </SC.StreetSpan>
-                  </SC.Street>
-                  {address?.id_price_list ? (
-                    ""
-                  ) : (
-                    <SC.DeleteWrapper onClick={() => removeAddress(address)}>
-                      <Delete />
-                    </SC.DeleteWrapper>
-                  )}
-                </SC.AddressRow>
-              ))}
-            {!userDetails.loading && (
-              <SC.NewAddress>
-                <button onClick={() => toggleAddressModal()}>{t("account.newaddress")}</button>
-              </SC.NewAddress>
-            )}
-          </SC.FirstList>
-          {pages > 1 && (
-            <SC.Paginator>
-              <ul>
-                {currentPage <= 1 ? (
-                  <div>
-                    <SC.ArrowPrev disable={currentPage <= 1} src={ArrowLeft} alt="prev" />
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setSavedIndex(savedIndex - 1);
-                      setCurrentPage(currentPage - limitPerPage);
-                    }}
-                  >
-                    <SC.ArrowPrev disable={currentPage <= 1} src={ArrowLeft} alt="prev" />
-                  </div>
-                )}
+  return (
+    <SC.ModalCourtain>
+      <SC.Modal padding="10px">
+        <SC.CloseWrapper onClick={() => setShowMessageModal(false)}>
+          <Close />
+        </SC.CloseWrapper>  
+        <SC.Message>{t("account.modal.message")}</SC.Message>
+      </SC.Modal>
+    </SC.ModalCourtain>
+  )
+};
 
-                <>
-                  {[...Array(pages)].map((_, i) => {
-                    return (
-                      <SC.Li
-                        onClick={() => {
-                          setCurrentPage(i * limitPerPage);
-                          setSavedIndex(i + 1);
-                        }}
-                        key={i + 1}
-                        index={i * limitPerPage}
-                        current={currentPage}
-                      >
-                        {i + 1}
-                      </SC.Li>
-                    );
-                  })}
-                </>
+const Addresses: FC = () => { 
+  const { t } = useTranslation();
+  const [type, setType] = useState(typeModal.add);
+  const { 
+    getDetails,
+    addresses: listAddresses,
+    addressEdit,
+    setAddressEdit,     
+    defaultAddressId,
+    openAddressModal,
+    updateAddress,
+    deleteAddress,
+    editAddress,
+    resetEditAddress,
+    handleAddressModal,
+    showMessageModal,
+    setShowMessageModal,
+    userInfoIsValid
+  } = useAddress();
 
-                {savedIndex === pages ? (
-                  <div>
-                    <SC.ArrowNext disable={savedIndex === pages} src={ArrowLeft} alt="next" />
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setSavedIndex(savedIndex + 1);
-                      setCurrentPage(currentPage + limitPerPage);
-                    }}
-                  >
-                    <SC.ArrowNext disable={savedIndex === pages} src={ArrowLeft} alt="next" />
-                  </div>
-                )}
-              </ul>
-            </SC.Paginator>
-          )}
-        </MobileAndTablet>
-        <SC.ModalCourtain className={userData.userInfo.length && userData.userInfo[0].openAddressModal && "visible"}>
-          <SC.Modal>
-            <SC.Header>
-              <SC.HeaderTitle>{addressInputs.id ? t("account.modal.edit_title") : t("account.modal.title")}</SC.HeaderTitle>
-              <SC.CloseWrapper onClick={() => closeAddressModal()}>
-                <Close />
-              </SC.CloseWrapper>
-            </SC.Header>
-            <SC.ModalContainer id="new-address-modal">
-              <SC.Form>
-                {(addressInputs && addressInputs?.id_address_ebs ? ["phone", "address", "city"] : ["firstname", "lastname", "phone", "phone2", "city", "address", "reference"]).map((key: string) => {
-                  return (
-                    <SC.InputGroup withLabel={key !== "street"} key={key} style={key === "reference" ? gridSpan2CSS : emptyCSS}>
-                      <label>{t("checkout.delivery." + key)}</label>
-                      {options[key] && (
-                        <SC.SelectWrapper>
-                          <select name={`shipping-${key}`} onChange={(evt) => onChangeAddress(key, evt.target.value)} value={addressInputs[key] || ""} disabled={addressInputs?.id_address_ebs}>
-                            <option value="">{t("checkout.delivery." + key)}</option>
-                            {options[key].map((opt: string) => (
-                              <option key={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          {!addressInputs?.id_address_ebs && <Chevron />}
-                        </SC.SelectWrapper>
-                      )}
-                      {(key === "address" || key === "reference") && (
-                        <input
-                          name={`shipping-${key}`}
-                          value={addressInputs[key] || ""}
-                          onChange={(evt) => onChangeAddress(key, evt.target.value)}
-                          type="text"
-                          placeholder={t("checkout.delivery." + key + "_ph")}
-                        />
-                      )}
-                      {key === "street" && <Switch changeOption={(value: string) => onChangeAddress("addressType", value)} option={addressInputs.addressType} values={addressTypes} />}
-                      {key !== "street" && key !== "address" && key !== "reference" && !options[key] && (
-                        <input
-                          name={`shipping-${key}`}
-                          value={addressInputs[key] || ""}
-                          onChange={(evt) => onChangeAddress(key, evt.target.value)}
-                          pattern={key.indexOf("phone") >= 0 || key === "nit" ? "[0-9]*" : ""}
-                          type={key.indexOf("phone") >= 0 || key === "nit" ? "number" : "text"}
-                          placeholder={t("checkout.delivery." + key)}
-                        />
-                      )}
-                    </SC.InputGroup>
-                  );
-                })}
-              </SC.Form>
-              {userData.userInfo.length && userData.userInfo[0].openAddressModal && <Map />}
-              <SC.CtaWrapper>
-                {!loading && addressInputs.id && <Cta filled={true} text={t("account.modal.edit_title")} action={editAddress} />}
-                {!loading && !addressInputs.id && <Cta filled={true} text={t("account.modal.add")} action={addAddress} />}
-                {loading && (
-                  <SC.LoaderWrapper>
-                    <img src="/images/loader.svg" width="50px" height="50px" alt="loader" />
-                  </SC.LoaderWrapper>
-                )}
-              </SC.CtaWrapper>
-            </SC.ModalContainer>
-          </SC.Modal>
-        </SC.ModalCourtain>
-      </SC.Wrapper>
-    </Suspense>
-  );
+  useEffect(() => {
+    getDetails();
+  }, []);   
+
+  return (
+    <SC.AddressesContainer>
+      <SC.Title>{t("account.addresses")}</SC.Title>
+      <AddressesTable 
+        setType={setType}
+        listAddresses={listAddresses} 
+        handleAddressModal={handleAddressModal}
+        editAddress={editAddress}
+        defaultAddressId={defaultAddressId}
+        deleteAddress={deleteAddress}  
+        userInfoIsValid={userInfoIsValid}
+        setShowMessageModal={setShowMessageModal}      
+      />
+      {openAddressModal ? 
+        <AddressModal 
+          type={type} 
+          setType={setType}  
+          addressEdit={addressEdit}  
+          setAddressEdit={setAddressEdit}
+          resetEditAddress={resetEditAddress} 
+          updateAddress={updateAddress} 
+          handleAddressModal={handleAddressModal}       
+        /> : null} 
+      {showMessageModal ? <MessageModal setShowMessageModal={setShowMessageModal}/> : null}
+    </SC.AddressesContainer>
+  )
 };
 
 export default Addresses;
