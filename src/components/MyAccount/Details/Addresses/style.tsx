@@ -93,7 +93,7 @@ export const ModalCourtain = styled.div`
 
 export const Modal = styled.div<{ fullSize?: boolean, padding?: string }>`
   position: relative;
-  padding: ${({ padding }) => padding ? padding : "42px"};
+  padding: ${({ padding }) => padding ? padding : "0"};
   background: white;
   border-radius: 20px;
   display: flex;
@@ -109,31 +109,29 @@ export const Modal = styled.div<{ fullSize?: boolean, padding?: string }>`
       border-radius: 0;
       justify-content: flex-start;
     }
- `};
-  @media screen and (max-height: 700px) {
-    height: 100vh;
-    justify-content: flex-start;
-  }
+ `};  
 `;
 
 export const Header = styled.div`
   display: flex;
   align-items: center;
-  width: calc(100% + 84px);
-  padding: 30px;
-  margin-top: -42px;
+  width: 100%;
+  padding: 20px 30px;
+  box-sizing: border-box;
   box-shadow: 0px 6px 74px rgba(0, 0, 0, 0.1);
   @media screen and (max-width: ${BREAKPOINT}) {
     padding: 15px 30px;
+  }
+  @media screen and (max-height: 600px) {
+    padding: 10px 30px;  
   }
 `;
 
 export const HeaderTitle = styled.h2`
   font-family: MullerMedium;
-  font-size: 24px;
-  line-height: 24px;
+  font-size: 20px;
+  line-height: 20px;
   color: var(--black);
-  flex: 1;
   @media screen and (max-width: ${BREAKPOINT}) {
     font-size: 14px;
     line-height: 14px;
@@ -162,7 +160,7 @@ export const Form = {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 10px;
+    padding: 10px 30px 20px 30px;
     box-sizing: border-box;
     width: 100%;    
   `,
@@ -257,14 +255,16 @@ export const Form = {
 
     div#gmap {
       border: ${({mapError}) => mapError ? "1px solid var(--red)" : ""};
+      height: 200px !important;
       @media screen and (max-height: 700px) {
         height: 250px;
       }
     }
 
     div.gmapGeo {
-      top: 93%;
-      left: 190px;
+      position: absolute;
+      top: 90%;
+      left: calc(50% - 90px);
       @media screen and (max-width: ${BREAKPOINT}) {
         height: max-content;
         left: 50%;

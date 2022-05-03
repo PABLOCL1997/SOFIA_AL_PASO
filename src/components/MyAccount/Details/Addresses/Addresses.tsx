@@ -217,7 +217,7 @@ const AddressModal: FC<PropsModal> = ({ type, setType, addressEdit, setAddressEd
                 disabled={Boolean(addressEdit.id_price_list)}
                 isB2E={Boolean(addressEdit.id_price_list)}
               >
-                <option value="" selected disabled hidden>
+                <option value="" disabled hidden>
                   {t("checkout.delivery.city")}</option>
                 {cities.map((c) => 
                   <option key={c.key}>{c.value}</option>
