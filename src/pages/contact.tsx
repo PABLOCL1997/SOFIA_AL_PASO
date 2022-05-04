@@ -252,10 +252,10 @@ const Faq: FC<Props> = () => {
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://www.google.com/recaptcha/api.js?render=6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr";
+    script.src = "https://www.google.com/recaptcha/api.js?render=6LdJmMQfAAAAAARYZYvpujmHVI7Bs87EtSur241o";
     script.addEventListener("load", () => {
       window.grecaptcha.ready(function () {
-        window.grecaptcha.execute("6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr", { action: "submit" }).then((token: any) => {
+        window.grecaptcha.execute("6LdJmMQfAAAAAARYZYvpujmHVI7Bs87EtSur241o", { action: "submit" }).then((token: any) => {
           var el = document.getElementsByClassName("grecaptcha-badge")[1] as HTMLElement;
           el.style.display = "none";
           if (token) {
