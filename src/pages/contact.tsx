@@ -307,7 +307,7 @@ const Faq: FC<Props> = () => {
               );
             })}
             <div className="extend center">
-              <div className="g-recaptcha" data-sitekey="6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr" data-size="invisible" data-badge="inline"></div>
+              <div className="g-recaptcha" data-sitekey="6LdJmMQfAAAAAARYZYvpujmHVI7Bs87EtSur241o" data-size="invisible" data-badge="inline"></div>
             </div>
             <div className="extend center">
               <Cta active={sending} filled={true} text={t("contact.send")} action={sendMail} />
@@ -321,7 +321,7 @@ const Faq: FC<Props> = () => {
 };
 
 // prod
-// 6Ldc2c4bAAAAAF8fCcVibk_O3-IJT_UCM1ommMNr
+// 6LdJmMQfAAAAAARYZYvpujmHVI7Bs87EtSur241o
 
 // test
 // 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
