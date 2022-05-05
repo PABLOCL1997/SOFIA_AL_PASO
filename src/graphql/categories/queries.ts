@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const GET_CATEGORIES = gql`
-  query Categories($city: String!) {
-    categories(city: $city) {
+  query Categories($city: String!, $agency: String) {
+    categories(city: $city, agency: $agency) {
       entity_id
       name
       quantity

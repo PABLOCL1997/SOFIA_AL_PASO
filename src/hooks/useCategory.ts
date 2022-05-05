@@ -10,7 +10,7 @@ import useCityPriceList from "./useCityPriceList";
 const useCategory = (offset = 0) => {
   const allCategoriesId = 313;
   const history = useHistory();
-  const { city } = useCityPriceList();
+  const { city, agency } = useCityPriceList();
   const { category, subcategory, lastlevel } = useParams();
   const categoryName = useLocation().pathname;
   const _category = categoryName ? (categoryName.split("/").length >= 3 ? categoryName.split("/")[2 + offset] : "") : "";
@@ -21,6 +21,7 @@ const useCategory = (offset = 0) => {
     fetchPolicy: "network-only",
     variables: {
       city,
+      agency
     },
     onCompleted: (d) => {
       setCategories(d.categories);

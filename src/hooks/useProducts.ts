@@ -119,6 +119,9 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
       variables: {
         categoryId: category_id || 0,
         city: city ? city : "SC",
+        store: store,
+        agency: agency,
+        idPriceList: idPriceList,
       },
     });
 
