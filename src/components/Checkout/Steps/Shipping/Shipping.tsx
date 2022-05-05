@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { cities, KeyValue, search } from "../../../../utils/string";
 import { setLatLng } from "../../../../utils/googlemaps";
-import { useQuery, useMutation, useLazyQuery } from "react-apollo";
+import { useMutation, useLazyQuery } from "react-apollo";
 import { DETAILS } from "../../../../graphql/user/queries";
 import { AddressType } from "../../../../graphql/user/type";
 import { SET_USER } from "../../../../graphql/user/mutations";
@@ -18,6 +18,7 @@ import { FormikProvider, useFormik } from "formik";
 import useUser from "../../../../hooks/useUser";
 import { OrderData } from "../../../../types/Order";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
+import { useAppSelector } from "../../../../state/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../../Map"));
@@ -59,6 +60,7 @@ const Shipping: FC<{
 
   const [other, setOther] = useState(false);
   const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
 
   const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -340,7 +342,7 @@ const Shipping: FC<{
         </SC.Back.Wrapper>
         <SC.Title>
           <img onClick={() => handleNext(history, previousStep)} src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
-          <h2>{t("checkout.delivery.title")}</h2>
+          {isGuestOrder ? <SC.TitleGuest>{t("checkout.delivery.title_guest")}</SC.TitleGuest> :<h2>{t("checkout.delivery.title")}</h2>}
         </SC.Title>
         
         <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} />

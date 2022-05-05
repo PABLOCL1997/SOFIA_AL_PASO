@@ -23,6 +23,8 @@ import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
 import ShippingType from "./ShippingType";
 import useUser from "../../hooks/useUser";
+import ChooseUserType from "./ChooseUserType";
+import { useAppSelector } from "../../state/store";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
@@ -45,6 +47,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("");
+  const { showChooseUserType } = useAppSelector((state) => state.modals);
 
   const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
@@ -149,6 +152,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
           <AuthModal />
           <CityModal />
           <CartModal />
+          {showChooseUserType ? <ChooseUserType /> : null}
         </Suspense>
         <SC.Container isCheckout={isCheckout}>
           <SC.HeaderClip isB2E={isB2E}>

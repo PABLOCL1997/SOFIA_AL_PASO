@@ -92,3 +92,49 @@ export const Next = {
       }
     `,
   }
+
+  export const Footer = {
+    Wrapper: styled.footer`
+      display: none;
+      margin-top: 50px;
+      width: 100%;
+  
+      background: linear-gradient(0deg, #ffffff 0%, rgba(255, 255, 255, 0.94) 48.91%, rgba(255, 255, 255, 0) 82.18%);
+      @media screen and (max-width: ${BREAKPOINT}) {
+        display: block;
+      }
+    `,
+    Total: styled.section`
+      display: flex;
+      padding: 0 24px;
+      justify-content: space-between;
+      bottom: 78px;
+      width: 100%;
+  
+      font-size: 14px;
+      line-height: 20px;
+      font-style: normal;
+      em {
+        font-family: MullerMedium;
+        font-weight: normal;
+      }
+      strong {
+        font-family: MullerBold;
+        font-weight: bold;
+      }
+    `,
+    Cta: styled.section`
+      padding: 0 24px;
+      bottom: 28px;
+      width: 100%;
+  
+      a,
+      button {
+        width: 100%;
+        font-size: 12px;
+        line-height: 16px;
+        text-transform: uppercase;
+        height: 40px;
+      }
+    `,
+  };

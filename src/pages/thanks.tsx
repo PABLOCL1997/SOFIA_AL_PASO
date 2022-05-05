@@ -21,6 +21,7 @@ const ThanksPage = () => {
 
   const [result, setResult] = useState<Array<{ increment_id: string }>>();
   const [isPickup, setIsPickup] = useState<boolean>(false);
+  const guestOrder = Boolean(params.get("orderGuest"));
 
   useEffect(() => {
     if (params.get("ids")) {
@@ -39,7 +40,7 @@ const ThanksPage = () => {
 
   return (
     <Wrapper>
-      <ThanktWrapper>{result && result ? <Thanks orders={result} isPickup={isPickup} /> : null}</ThanktWrapper>
+      <ThanktWrapper>{result && result ? <Thanks orders={result} isPickup={isPickup} guestOrder={guestOrder}/> : null}</ThanktWrapper>
     </Wrapper>
   );
 };

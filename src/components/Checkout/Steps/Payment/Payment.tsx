@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useMemo } from "react";
+import React, { FC, Suspense, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLazyQuery } from "react-apollo";
 import { useHistory } from "react-router-dom";
@@ -9,6 +9,8 @@ import CircleLoader from "../../../CircleLoader";
 import arrow from "../../../../assets/images/arrow-back-checkout.svg";
 import * as SC from "./style";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
+import { useAppSelector } from "../../../../state/store";
+import Cta from "../../../Cta";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../../Switch"));
@@ -21,19 +23,23 @@ const Payment: FC<{
   userDetails: any;
   totalAmount: any;
   setOrderIsReady: Function;
-  orderData: any
+  orderData: any,
+  order: () => void;
 }> = ({
   updateOrder,
   userDetails,
   totalAmount,
   setOrderIsReady,
-  orderData
+  orderData,
+  order
 }) => {
   const { t } = useTranslation();
   const { store } = useUser();
   const history = useHistory();
   const query = useUrlQuery();
   const nextStep = query.get("next") || "review";
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const CREDIT = {
     title: "credito",
@@ -85,6 +91,11 @@ const Payment: FC<{
     updateOrder("payment", { method: val });
   };
 
+  const handleGuestConfirm = () => {
+    setIsProcessing(true);
+    order();
+  }
+
   const option = useMemo(() => {
     return orderData?.payment?.method;
   }, [orderData]);
@@ -120,13 +131,30 @@ const Payment: FC<{
             )}
           </React.Fragment>
         )}
-        <SC.Next.Wrapper>
-          <CallToAction
-            filled={true}
-            text={t("general.next")}
-            action={() => handleNext(history, nextStep)}
-          />
-        </SC.Next.Wrapper>
+        {!isGuestOrder ? 
+          <SC.Next.Wrapper>
+            <CallToAction
+              filled={true}
+              text={t("general.next")}
+              action={() => handleNext(history, nextStep)}
+            />
+          </SC.Next.Wrapper> : 
+          <SC.Footer.Wrapper>
+            <SC.Footer.Total>
+              <em>{t("checkout.ticket.total")}</em>
+              <strong>Bs. {totalAmount}</strong>
+            </SC.Footer.Total>
+            <SC.Footer.Cta>
+              {!isProcessing ? 
+                <Cta
+                  filled
+                  text={t("checkout.review.call_to_action")}
+                  action={handleGuestConfirm}
+                /> : null                
+              }
+            </SC.Footer.Cta>
+          </SC.Footer.Wrapper>
+        }
       </SC.Container>
     </Suspense>
   );

@@ -24,11 +24,26 @@
       "express": "Envío Express",
       "pickup": "Retirá al paso",
       "delivery": "Recibe en casa"      
+    },
+    "choose_user_type": {
+      "title": "¿Cómo deseas finalizar tu pedido?",
+      "guest": {
+        "title": "Compra como invitado",
+        "description": "Compra rápidamente como invitado"
+      },
+      "login": {
+        "title": "Inicia sesión",
+        "description": "Ingresa con tu email o redes sociales"
+      },
+      "singup": {
+        "title": "Regístrate",
+        "description": "Crea tu cuenta para guardar los datos" 
+      }      
     }
   },
   "modal": {
-    "close": "Continuar",
-    "cart": "Ir al carrito"
+    "close": "Seguir comprando",
+    "cart": "Ir a pagar"
   },
   "footer": {
     "text": "Siempre hemos estado cerca y hoy lo estamos aún más, comprometidos con tu familia y la seguridad alimentaria del país",
@@ -316,6 +331,9 @@
     },
     "billing": {
       "title": "1. Datos para facturación",
+      "title_guest": "BIENVENIDO A SOFIA AL PASO",
+      "subtitle_guest": "Necesitamos tus datos para realizar el pedido",
+      "error_guest": "Este correo ya está vinculado a una cuenta existente.",
       "firstname": "Nombre",
       "lastname": "Apellido",
       "email": "Email",
@@ -326,6 +344,7 @@
     },
     "delivery": {
       "title": "2. Datos para la entrega",
+      "title_guest": "COMO QUIERES RECIBIR TU PEDIDO?",
       "time": "aprox. {{day}} entre las {{from}} y {{to}}",
       "other_address": "Enviar a otra dirección",
       "firstname": "*Nombre",
@@ -413,6 +432,7 @@
       "text": "Recuerda que algunos de nuestros productos son vendidos por peso. El valor expresado es referencial, ya que el monto final a facturar puede variar de acuerdo al peso final de los artículos seleccionados al momento de preparar tu pedido.",
       "thanks": "¡Gracias por confiar en Sofía!"
     },
+    "guest": "Para su próxima compra hemos enviado a su correo electrónico instrucciones para configurar su cuenta.",    
     "go_home": "Volver al inicio"
   },
   "account": {

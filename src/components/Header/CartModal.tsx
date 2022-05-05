@@ -9,6 +9,7 @@ import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
 import useCart from "../../hooks/useCart";
+import { useModals } from "../../state/slices/modals/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
@@ -24,6 +25,7 @@ const CartModal: FC<Props> = () => {
   const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart();
   const [relatedProducts, setRelatedProducts] = useState<ProductType[]>([]);
   const { data: userData } = useQuery(GET_USER, {});
+  const { handleChooseUserType } = useModals();
 
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } },
@@ -33,7 +35,8 @@ const CartModal: FC<Props> = () => {
     if (userData.userInfo.length && !userData.userInfo[0].isLoggedIn) {
       (window as any).navigateToCheckout = true;
       closeCartModal();
-      return toggleLoginModal();
+      handleChooseUserType(true);
+      return;
     }
     trackGoToCheckoutEvent(cart?.cartItems);
     closeCartModal();

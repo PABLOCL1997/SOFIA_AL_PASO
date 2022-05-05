@@ -149,4 +149,10 @@ export const Footer = {
       }
   
     `
-  }
+};
+
+export const GuestDescription = styled.p`
+  max-width: 600px;
+  font-size: 16px !important;
+  line-height: 18px !important;
+`;

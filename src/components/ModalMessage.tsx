@@ -5,6 +5,8 @@ import { useQuery, useMutation } from "react-apollo";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { trackGoToCartEvent } from "../utils/dataLayer";
+import { useHistory } from "react-router-dom";
+import { useModals } from "../state/slices/modals/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
@@ -69,18 +71,27 @@ type Props = {};
 
 const ModalMessage: FC<Props> = () => {
   const { t } = useTranslation();
+  const history = useHistory();
+  const { handleChooseUserType } = useModals();
   const { data } = useQuery(GET_USER, {});
   const [hideModal] = useMutation(SET_USER, {
     variables: { user: { showModal: "" } },
-  });
-  const [toggleCartModal] = useMutation(SET_USER, {
-    variables: { user: { openCartModal: true } },
-  });
+  }); 
 
   useEffect(() => {
     hideModal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleBuy = () => {
+    trackGoToCartEvent();  
+    hideModal();
+    if (!data?.userInfo?.[0]?.isLoggedIn) {
+      handleChooseUserType(true);
+      return;
+    }
+    history.push("/checkout");
+  };
 
   return (
     <Suspense fallback={<Loader />}>
@@ -98,11 +109,7 @@ const ModalMessage: FC<Props> = () => {
                 <Cta
                   filled={false}
                   text={t("modal.cart")}
-                  action={() => {
-                    trackGoToCartEvent();
-                    hideModal();
-                    toggleCartModal();
-                  }}
+                  action={handleBuy}
                 />
               </CtaWrapper>
             )}

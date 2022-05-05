@@ -24,16 +24,16 @@ export const SUBSCRIBE = gql`
 `;
 
 export const RECOVER = gql`
-  mutation Recover($email: String!, $url: String!) {
-    recover(email: $email, url: $url) {
+  mutation Recover($email: String!, $url: String!, $bompras: Boolean!) {
+    recover(email: $email, url: $url, bompras: $bompras) {
       id
     }
   }
 `;
 
 export const RESET = gql`
-  mutation Reset($email: String!, $token: String!, $password: String!) {
-    reset(email: $email, token: $token, password: $password) {
+  mutation Reset($email: String!, $token: String!, $password: String!, $bompras: Boolean!) {
+    reset(email: $email, token: $token, password: $password, bompras: $bompras) {
       id
     }
   }

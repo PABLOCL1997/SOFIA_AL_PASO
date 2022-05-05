@@ -1,6 +1,7 @@
 import React, { ComponentPropsWithoutRef, forwardRef, Ref } from 'react';
 import { useField } from 'formik';
 import styled, { css } from 'styled-components';
+import { useTranslation } from 'react-i18next';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -81,11 +82,20 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledErrorText = styled.span`
+const StyledErrorText = styled.span<{ underLine?: boolean }>`
   color: var(--red);
   font-size: 12px;
   line-height: 12px;
   font-weight: normal;
+  ${({underLine}) => underLine && css`
+    text-decoration: underline;
+    cursor: pointer;
+  `}
+`;
+
+const ErrorWrapper = styled.div`
+  display: flex;
+  gap: 5px;
 `;
 
 type Props = ComponentPropsWithoutRef<'input'> & {
@@ -94,13 +104,16 @@ type Props = ComponentPropsWithoutRef<'input'> & {
   trailingAdornment?: JSX.Element;
   leadingAdornment?: JSX.Element;
   variant?: StyledWrapperInputProps['variant'];
+  errorText?: string;
+  errorCallback?: null | (() => void);
 };
 
 function Input(
-  { label, className, trailingAdornment, leadingAdornment, variant = 'default', ...props }: Props,
+  { label, className, trailingAdornment, leadingAdornment, errorText, errorCallback, variant = 'default', ...props }: Props,
   ref: Ref<HTMLInputElement>
 ) {
   const [field, meta] = useField(props?.name || "field");
+  const { t } = useTranslation()
 
   const showError = meta.touched && meta.error;
 
@@ -113,6 +126,12 @@ function Input(
         {trailingAdornment}
       </StyledWrapperInput>
       {meta.touched && meta.error && <StyledErrorText>{meta.error}</StyledErrorText>}
+      {errorText && 
+        <ErrorWrapper>
+          <StyledErrorText>{errorText}</StyledErrorText>
+          <StyledErrorText underLine={true} onClick={() => { errorCallback && errorCallback()}}>{t("header.choose_user_type.login.title")}</StyledErrorText>
+        </ErrorWrapper>
+      }
     </StyledWrapper>
   );
 }

@@ -22,6 +22,8 @@ import useUser from "../hooks/useUser";
 import useCityPriceList from "../hooks/useCityPriceList";
 import useMinimumPrice from "../hooks/useMinimumPrice";
 import useCart from "../hooks/useCart";
+import { useCheckout } from "../state/slices/checkout/useCheckout";
+import { useAppSelector } from "../state/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Steps/Billing"));
@@ -49,6 +51,8 @@ const Checkout = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
+  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const { handleIsGuestOrder } = useCheckout();
 
   const { setLoading } = useContext(Courtain.Context);
   const currentStep = useContext(Location.Context);
@@ -61,6 +65,9 @@ const Checkout = () => {
     fetchPolicy: "network-only",
   });
   const [getTodotixLink, { data: todotixData }] = useLazyQuery(TODOTIX);
+  const [toggleLogin] = useMutation(SET_USER, {
+    variables: { user: { isLoggedIn: true } },
+  });
   const [removeCoupon] = useMutation(SET_USER, {
     variables: { user: { coupon: null } },
   });
@@ -195,7 +202,7 @@ const Checkout = () => {
           );
           initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email || "Guest", data.cartItems);
           window.history.pushState("checkout", "Tienda Sofia - Checkout", "/checkout");
-          history.push(`/gracias?ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
+          history.push(`/gracias?orderGuest=${isGuestOrder || ""}&ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
         } catch (e) {
           setLoading(false);
           showError();
@@ -208,6 +215,16 @@ const Checkout = () => {
 
     const body = document.querySelector("body");
     if (body && window.innerWidth >= 768) body.style.overflow = "unset";
+
+    const isLoggedIn = localUserData?.userInfo?.[0]?.isLoggedIn;
+
+    if (!isLoggedIn) {
+      handleIsGuestOrder(true);
+    }
+
+    return () => {
+      handleIsGuestOrder(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -249,7 +266,7 @@ const Checkout = () => {
             setLoading(false);
             const pickup = store === "PICKUP" ? agency : "";
             initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email, data.cartItems);
-            history.push(`/gracias?ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
+            history.push(`/gracias?orderGuest=${isGuestOrder || ""}&ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
           }
         } catch (e) {
           showError();
@@ -427,13 +444,9 @@ const Checkout = () => {
     if (missingField) return [];
     return items;
   };
-
-  const saveOrder = () => {
-    // show popup with map (get coords) to confirm order
-    if (!(window as any).latitude || !(window as any).longitude) {
-      return setConfirmModalVisible(true);
-    }
-    return checkAndNewOrder();
+  
+  const saveOrder = () => {   
+    checkAndNewOrder();    
   };
 
   const updateOrderData = (key: string, values: any) => {
@@ -517,7 +530,7 @@ const Checkout = () => {
 
                   {step === Steps.Payment ? (
                     <SC.Steps>
-                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} />
+                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} order={saveOrder}/>
                     </SC.Steps>
                   ) : null}
 

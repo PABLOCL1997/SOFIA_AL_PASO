@@ -2,6 +2,7 @@ import React, { FC, Suspense, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import * as SC from "./style";
+import CloseModalIcon from "../../../../assets/images/close-modal.svg";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const ThankCheck = React.lazy(() => import(/* webpackChunkName: "ThankCheck" */ "../../../Images/ThankCheck"));
@@ -14,9 +15,10 @@ const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction"
 type Props = {
   orders: Array<{ increment_id: string }>;
   isPickup: boolean;
+  guestOrder?: boolean;
 };
 
-const Thanks: FC<Props> = ({ orders, isPickup }) => {
+const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -36,11 +38,12 @@ const Thanks: FC<Props> = ({ orders, isPickup }) => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <SC.Container>
+      <SC.Container>        
         <SC.Title>
           <ThankCheck />
           <h2>{t("thankyou.title")}</h2>
           <p dangerouslySetInnerHTML={{ __html: subtitle }}></p>
+          {Boolean(guestOrder) ? <SC.GuestDescription>{t("thankyou.guest")}</SC.GuestDescription> : null}
         </SC.Title>
         <SC.Grid>
           <SC.Box>
