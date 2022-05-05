@@ -77,7 +77,7 @@ const AuthModal: FC<Props> = () => {
   const [saveLogin, setSaveLogin] = useState(false);
   const { redirectToCheckout } = useAppSelector((state) => state.checkout);
   const { showRegisterModal } = useAppSelector((state) => state.modals);
-  const { handleRedirectToCheckout } = useCheckout();
+  const { handleRedirectToCheckout, handleIsGuestOrder } = useCheckout();
   const { handleRegisterModal } = useModals();
 
   const [getDetails] = useLazyQuery(DETAILS, {
@@ -221,8 +221,8 @@ const AuthModal: FC<Props> = () => {
     try {
       setLoader(true);
       setLoginError(false);
-      const response: any = await doLogin();     
-
+      const response: any = await doLogin();
+      handleIsGuestOrder(false);
       if (saveLogin) {
         const loginDataJSON = JSON.stringify({
           email: form.email,
