@@ -121,7 +121,7 @@ const useProducts = (limit: number = 9, onsale: boolean = false): Products => {
         city: city ? city : "SC",
         store: store,
         agency: agency,
-        idPriceList: idPriceList,
+        id_price_list: idPriceList,
       },
     });
 
