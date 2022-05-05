@@ -103,7 +103,7 @@ const ChooseUserType = () => {
     <SC.ModalCourtain>
       <SC.Modal>
         <SC.Title>{t("title")}</SC.Title>
-        <SC.CloseIcon src={CloseModalIcon} alt="CloseModalIcon" onClick={closeModal} />
+        <SC.CloseIcon src={CloseModalIcon} alt="Cerrar modal" onClick={closeModal} />
         <SC.Options>
           {options.map((o, i) => (
             <Option key={`${o.img}_${i}`} img={o.img} title={o.title} description={o.description} onClick={o.onClick} selected={o.selected} showNew={o.showNew}/>
