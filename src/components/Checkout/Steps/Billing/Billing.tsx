@@ -39,7 +39,7 @@ const Billing: FC<{
   const { signUp, recoverPassword } = useAuth();
   
   const { data: localUserData } = useQuery(GET_USER, {});
-  // const [setUser] = useMutation(SET_USER);
+  const [setUser] = useMutation(SET_USER);
   const [toggleLogin] = useMutation(SET_USER, {
     variables: { user: { isLoggedIn: true } },
   });
@@ -135,6 +135,10 @@ const Billing: FC<{
     handleNext(history, nextStep);
   };
 
+  const handleLoginModal = () => {
+    setUser({ variables: { user: { openLoginModal: true } } });
+  };
+
   useEffect(() => {
     const checkBilling = async () => {
       try {
@@ -147,6 +151,12 @@ const Billing: FC<{
 
     checkBilling();      
   }, [formik, agency]);  
+
+  useEffect(() => {
+    if (!isGuestOrder) {
+      setErrorRegister("");
+    }
+  }, [isGuestOrder]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -164,6 +174,7 @@ const Billing: FC<{
           {fields.map((field) => (                    
             <Input
               errorText={field === "email" && errorRegister ? errorRegister : ""}
+              errorCallback={field === "email" && errorRegister ? handleLoginModal : null}
               variant={field === "email" && errorRegister ? "error" : "default"}
               name={field}
               onChange={(evt) => onChange(field, evt.target.value)}
