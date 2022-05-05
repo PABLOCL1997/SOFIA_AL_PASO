@@ -13,8 +13,8 @@ export const GET_METADATA = gql`
 `;
 
 export const GET_BRANDS = gql`
-  query Get_Brands($categoryId: Int!, $city: String!) {
-    brands(category_id: $categoryId, city: $city) {
+  query Get_Brands($categoryId: Int!, $city: String!, $id_price_list: Int, $store: String, $agency: String) {
+    brands(category_id: $categoryId, city: $city, id_price_list: $id_price_list, store: $store, agency: $agency) {
       name
       quantity
     }
