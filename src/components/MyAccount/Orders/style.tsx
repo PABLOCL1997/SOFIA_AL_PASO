@@ -130,7 +130,7 @@ export const VerDetalleBtn = styled.button`
   border: 1px solid ${customStyles.red};
   background-color: #ffffff;
   border-radius: 4px;
-  width: 106px;
+  width: 110px;
 
   span {
     font-family: 'Montserrat', sans-serif;
@@ -161,7 +161,7 @@ export const RepetirCompraBtn = styled.button`
   border: 1px solid ${customStyles.red};
   background-color: ${customStyles.red};
   border-radius: 4px;
-  width: 140px;
+  width: 145px;
 
   margin: 0 0 0 auto;
 
