@@ -100,7 +100,7 @@ export const EstadoCircle = styled.div<{ color: string }>`
 
 export const Canal = styled.div`
   span {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 20px;
     color: ${customStyles.black};
     padding-left: 7px;
