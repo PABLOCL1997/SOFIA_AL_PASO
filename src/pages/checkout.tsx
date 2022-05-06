@@ -42,7 +42,7 @@ const Checkout = () => {
   const { idPriceList, agency, city, agencies, express } = useCityPriceList();
   const { store } = useUser();
   const minimumPrice = useMinimumPrice();
-  const { cart: data, totalAmount } = useCart();
+  const { cart: data, totalAmount, discountAmountOriginal } = useCart();
 
   const [processing, setProcessing] = useState(false);
   const [order, setOrder] = useState<Order>();
@@ -136,7 +136,7 @@ const Checkout = () => {
           items,
           delivery_price,
           DIRECCIONID: special_address && store === "B2E" ? String(orderData.shipping.id_address_ebs) : null,
-          discount_amount: orderData.coupon.discount,
+          discount_amount: discountAmountOriginal,
           discount_type: orderData?.coupon?.type || "",
           coupon_code: orderData?.coupon?.coupon || "",
           customer_email: email,
@@ -224,7 +224,7 @@ const Checkout = () => {
 
     return () => {
       handleIsGuestOrder(false);
-    }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -444,9 +444,9 @@ const Checkout = () => {
     if (missingField) return [];
     return items;
   };
-  
-  const saveOrder = () => {   
-    checkAndNewOrder();    
+
+  const saveOrder = () => {
+    checkAndNewOrder();
   };
 
   const updateOrderData = (key: string, values: any) => {
@@ -530,7 +530,7 @@ const Checkout = () => {
 
                   {step === Steps.Payment ? (
                     <SC.Steps>
-                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} order={saveOrder}/>
+                      <Payment setOrderIsReady={setOrderIsReady} totalAmount={totalAmount} updateOrder={updateOrderData} userDetails={userDetails} orderData={orderData} order={saveOrder} />
                     </SC.Steps>
                   ) : null}
 
