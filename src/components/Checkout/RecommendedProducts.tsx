@@ -95,7 +95,8 @@ const Qty = styled.div`
 `;
 
 const Add = styled.button`
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   border: 0;
   background: var(--yellow);
   color: var(--black);

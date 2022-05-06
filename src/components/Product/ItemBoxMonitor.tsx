@@ -44,7 +44,8 @@ const NewLabel = styled.span`
   background-color: ${customStyles.yellow};
 
   color: ${customStyles.red};
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   padding: 7px 0 5px;
 `;
 
@@ -58,7 +59,8 @@ const Image = styled.img`
 Image.displayName = "ItemBoxImage";
 
 const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 16px;
   line-height: 20px;
   text-align: center;
@@ -84,7 +86,8 @@ const PriceBox = styled.div`
 `;
 
 const Price = styled.span`
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   font-size: 16px;
   line-height: 16px;
   color: var(--red);
@@ -101,7 +104,8 @@ const DiscountPrice = styled.span`
 
 
 const EstimatedPrice = styled.div<{ visible?: boolean }>`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 12px;
   line-height: 12px;
   text-align: center;
@@ -111,7 +115,8 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
 `;
 
 const Label = styled.div<{ visible?: boolean }>`
-  font-family: MullerRegular;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
   font-size: 12px;
   line-height: 12px;
   text-align: center;
@@ -122,7 +127,8 @@ const Label = styled.div<{ visible?: boolean }>`
 
 const MaxUnits = styled.div`
   font-size: 12px;
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   line-height: 12px;
   text-align: center;
   letter-spacing: 0.05em;

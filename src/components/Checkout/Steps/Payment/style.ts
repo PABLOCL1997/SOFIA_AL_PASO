@@ -12,7 +12,8 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 16px;
   line-height: 16px;
   color: var(--red);
@@ -23,7 +24,8 @@ export const Title = styled.h2`
     cursor: pointer;
   }
   h2 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -44,7 +46,8 @@ export const Title = styled.h2`
 `;
 
 export const Disclaimer = styled.div`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 12px;
   line-height: 12px;
   letter-spacing: 0.01em;
@@ -68,7 +71,7 @@ export const Next = {
       button {
         padding: 14px 48px;
         font-size: 12px;
-        font-family: MullerMedium;
+        font-family: 'Montserrat', sans-serif;
         font-weight: bold;
         text-transform: uppercase;
         line-height: 20px;
@@ -115,11 +118,11 @@ export const Next = {
       line-height: 20px;
       font-style: normal;
       em {
-        font-family: MullerMedium;
-        font-weight: normal;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
       }
       strong {
-        font-family: MullerBold;
+        font-family: 'Montserrat', sans-serif;
         font-weight: bold;
       }
     `,

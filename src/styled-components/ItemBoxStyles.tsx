@@ -32,6 +32,7 @@ export const BottomCardHome = styled.div`
   align-items: flex-end;
   justify-content: center;
 
-  font-family: MullerRegular;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
   font-size: 14px;
 `;

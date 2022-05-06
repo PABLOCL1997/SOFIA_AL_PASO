@@ -60,7 +60,8 @@ const Container = styled.div`
       display: none;
     }
     span {
-      font-family: MullerBold;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
       font-size: 14px;
       line-height: 14px;
     }
@@ -93,7 +94,8 @@ const ContainerBrands = styled.div`
       display: none;
     }
     span {
-      font-family: MullerBold;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
       font-size: 14px;
       line-height: 14px;
     }
@@ -160,12 +162,12 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
       ${(props) => (props.selected ? "var(--yellow)" : "transparent")};
   } */
   span {
-    /*   font-family: MullerBold; */
   }
   a {
     color: inherit; /* blue colors for links too */
     text-decoration: inherit; /* no underline */
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 20px;
     color: ${customStyles.black};
@@ -183,7 +185,8 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
   }
 
   em {
-    font-family: MullerBold;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
     color: ${customStyles.black};
     font-size: 12px;
     line-height: 16px;
@@ -210,7 +213,8 @@ const SubCategory = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   padding: 0 0 10px;
 
   span {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
   }
 
   a {
@@ -235,7 +239,8 @@ const SubCategory4 = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   }
 
   span {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
   }
 `;
 
@@ -260,7 +265,8 @@ const Title = styled.div`
 `;
 
 const Text = styled.div`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 18px;
   color: var(--black);

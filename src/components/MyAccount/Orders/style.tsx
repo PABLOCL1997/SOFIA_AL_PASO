@@ -33,7 +33,8 @@ export const Headline = styled.div`
 export const Title = styled.h3`
   font-size: 24px;
   line-height: 32px;
-  font-family: "MullerMedium";
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 `;
 
 export const TablaWrap = styled.div``;
@@ -49,7 +50,8 @@ export const TablaHead = styled.div`
     line-height: 18px;
     color: ${customStyles.darkGrey};
 
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
   }
 `;
 
@@ -108,7 +110,8 @@ export const Canal = styled.div`
 `;
 
 export const Price = styled.h6`
-  font-family: "MullerMedium";
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   color: ${customStyles.black};
@@ -119,7 +122,8 @@ export const VerDetalleBtn = styled.button`
   display: flex;
   align-items: center;
 
-  font-family: "MullerMedium";
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   color: ${customStyles.red};
@@ -129,7 +133,8 @@ export const VerDetalleBtn = styled.button`
   width: 106px;
 
   span {
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     margin-left: 5px;
   }
 
@@ -148,7 +153,8 @@ export const RepetirCompraBtn = styled.button`
   display: flex;
   align-items: center;
 
-  font-family: "MullerMedium";
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   color: ${"#ffffff"};
@@ -160,7 +166,8 @@ export const RepetirCompraBtn = styled.button`
   margin: 0 0 0 auto;
 
   span {
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     margin-left: 5px;
   }
 
@@ -257,7 +264,8 @@ export const OrderMobile = styled.div`
 
   > div {
     padding-left: 13px;
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 16px;
     padding-right: 5px;
   }
@@ -289,7 +297,8 @@ export const CtaWrapper = styled.div`
       bottom: -90px;
       margin-bottom: 70px;
       span {
-        font-family: MullerBold;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: bold;
       }
     }
   }

@@ -67,7 +67,7 @@ const Loader = styled.div`
 
 const CategoryTitle = styled.h6`
   margin-top: 14px;
-  font-size: 12px;
+  font-size: 11px;
   word-wrap: normal;
 
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -107,7 +107,8 @@ const CategoryWrapper = styled.div`
 
 const Title = styled.h3`
   font-size: 32px;
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   margin: 64px 0;
   text-align: center;
 

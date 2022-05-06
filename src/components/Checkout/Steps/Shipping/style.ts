@@ -12,14 +12,16 @@ export const Title = styled.div`
     cursor: pointer;
   }
   h2 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
     flex: 1;
   }
   span {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 12px;
     line-height: 12px;
     color: var(--black);
@@ -53,7 +55,8 @@ export const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
   display: flex;
   flex-direction: column;
   label {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 10px;
     line-height: 10px;
     letter-spacing: 0.01em;
@@ -65,7 +68,8 @@ export const InputGroup = styled.div<{ key: string; withLabel: boolean }>`
   input {
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     display: flex;
@@ -87,7 +91,8 @@ export const OtherAddressWrapper = styled.div`
 `;
 
 export const Other = styled.button<{ margin: boolean }>`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 14px;
   text-decoration-line: underline;
@@ -121,7 +126,8 @@ export const CheckboxGroup = styled.div<{ red: boolean }>`
     }
   }
   label {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     color: var(--font);
@@ -139,7 +145,8 @@ export const SelectWrapper = styled.div`
     width: 100%;
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     display: flex;
@@ -229,7 +236,7 @@ export const Next = {
     button {
       padding: 14px 48px;
       font-size: 12px;
-      font-family: MullerMedium;
+      font-family: 'Montserrat', sans-serif;
       font-weight: bold;
       text-transform: uppercase;
       line-height: 20px;
@@ -261,5 +268,6 @@ export const ArrowImg = styled.img`
 `;
 
 export const TitleGuest = styled.h2`
-  font-family: MullerBold !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold !important;
 `;

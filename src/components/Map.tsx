@@ -12,7 +12,8 @@ const Crosshair = React.lazy(() => import(/* webpackChunkName: "Crosshair" */ ".
 const MapContainer = styled.div`
   margin-top: 40px;
   h2 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -36,7 +37,8 @@ const MapWrapper = styled.div`
 
 const Pin = styled.div`
   position: absolute;
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 12px;
   line-height: 12px;
   color: var(--black);
@@ -69,7 +71,8 @@ const Geo = styled.div`
   z-index: 2;
   span {
     flex: 1;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 12px;
     line-height: 12px;
     color: var(--black);

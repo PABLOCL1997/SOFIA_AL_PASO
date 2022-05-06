@@ -15,7 +15,8 @@ const Header = styled.div`
   box-shadow: 0px -1px 52px rgba(0, 0, 0, 0.08);
 
   h2 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 40px;
     line-height: 1.5em;
     color: var(--black);
@@ -45,7 +46,8 @@ const QuestionWrapper = styled.main`
     margin: 50px auto;
 
     h2 {
-      font-family: MullerMedium;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
       font-size: 18px;
       line-height: 1.5em;
       letter-spacing: 0.01em;

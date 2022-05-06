@@ -15,7 +15,8 @@ export const Wrapper = styled.div`
     font-size: 24px;
     line-height: 32px;
     color: ${customStyles.black};
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     padding: 20px 0 15px;
   }
 `;
@@ -44,7 +45,8 @@ export const InputGroup = styled.div`
 
     padding: 15px 30px;
     margin-bottom: 20px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -67,7 +69,8 @@ export const InputGroup = styled.div`
   }
 
   label {
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     letter-spacing: 0.5px;
     text-transform: uppercase;
     color: ${customStyles.black};

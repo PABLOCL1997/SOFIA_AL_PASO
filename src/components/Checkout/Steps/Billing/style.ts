@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 16px;
   line-height: 16px;
   color: var(--red);
@@ -29,7 +30,8 @@ export const InputGroup = styled.div<{ key: string }>`
   display: flex;
   flex-direction: column;
   label {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 10px;
     line-height: 10px;
     letter-spacing: 0.01em;
@@ -40,7 +42,8 @@ export const InputGroup = styled.div<{ key: string }>`
   input {
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     display: flex;
@@ -61,7 +64,8 @@ export const InputGroup = styled.div<{ key: string }>`
 `;
 
 export const Other = styled.button`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 14px;
   text-decoration-line: underline;
@@ -82,7 +86,7 @@ export const Next = {
     button {
       padding: 14px 48px;
       font-size: 12px;
-      font-family: MullerMedium;
+      font-family: 'Montserrat', sans-serif;
       font-weight: bold;
       text-transform: uppercase;
       line-height: 20px;
@@ -117,6 +121,7 @@ export const GuestTitle = styled.div`
   gap: 5px;
   h2 {
     margin-bottom: 0;
-    font-family: MullerBold;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
   }
 `;

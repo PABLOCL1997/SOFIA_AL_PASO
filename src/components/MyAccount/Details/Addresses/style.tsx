@@ -56,7 +56,8 @@ export const Title = styled.h4`
   font-size: 20px;
   line-height: 28px;
   color: rgb(227, 6, 19);
-  font-family: "MullerMedium";
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   border-bottom: 1px solid rgb(203, 203, 203);
   padding-bottom: 15px;
 `;
@@ -66,7 +67,8 @@ export const AddressesContainer = styled.div`
 `;
 
 export const AddAddress = styled.button`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 14px;
   line-height: 14px;
   text-decoration: underline;
@@ -128,7 +130,8 @@ export const Header = styled.div`
 `;
 
 export const HeaderTitle = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 20px;
   line-height: 20px;
   color: var(--black);
@@ -167,7 +170,8 @@ export const Form = {
   Input: styled.input` 
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;    
     letter-spacing: 0.01em;
@@ -182,7 +186,8 @@ export const Form = {
     }
   `,
   Label: styled.label`
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 10px;
     line-height: 10px;
     letter-spacing: 0.01em;
@@ -198,7 +203,8 @@ export const Form = {
     min-height: 40.5px;
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     display: flex;

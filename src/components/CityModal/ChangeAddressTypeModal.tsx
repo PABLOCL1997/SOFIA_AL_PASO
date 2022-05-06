@@ -26,7 +26,8 @@ const CtaWrapper = styled.div`
 
 const Title = styled.h3`
   font-size: 24px;
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   line-height: 32px;
 
   color: var(--black);
@@ -58,7 +59,8 @@ const Address = styled.section<{ color: string }>`
     h4 {
       color: ${color};
       font-size: 20px;
-      font-family: MullerMedium;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
       line-height: 20px; 
       text-align: left;
       max-width: 294px;

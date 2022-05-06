@@ -44,7 +44,8 @@ export const Inputs = {
       padding: 13px 34px 13px 44px;
       width: calc(100% - 48px);
       font-size: 14px;
-      font-family: MullerRegular;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
 
       @media screen and (max-width: ${BREAKPOINT}) {
         width: calc(100% - 48px);
@@ -82,7 +83,8 @@ export const Inputs = {
       border: none;
       padding: 13px 24px;
       font-size: 14px;
-      font-family: MullerRegular;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
 
       @media screen and (max-width: ${BREAKPOINT}) {
         width: calc(100% - 48px);

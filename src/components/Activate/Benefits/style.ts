@@ -32,7 +32,8 @@ export const BenefitList = {
       }
     `,
     Title: styled.strong`
-      font-family: MullerMedium;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
       font-size: 16px;
       line-height: 20px;
       @media screen and (max-width: ${BREAKPOINT}) {

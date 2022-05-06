@@ -29,7 +29,8 @@ const Discount = styled.div`
   background: var(--red);
   box-shadow: 0px 8px 29px rgba(254, 205, 0, 0.4);
   border-radius: 3px;
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   font-size: 14px;
   line-height: 14px;
   display: flex;
@@ -82,7 +83,8 @@ const NewLabel = styled.span`
   background-color: ${customStyles.yellow};
 
   color: ${customStyles.red};
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   padding: 7px 0 5px;
 `;
 
@@ -104,7 +106,8 @@ const Image = styled.img`
 Image.displayName = "ItemBoxImage";
 
 const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 16px;
   line-height: 20px;
   text-align: left;
@@ -131,7 +134,8 @@ const PriceBox = styled.div`
 `;
 
 const Price = styled.span`
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   font-size: 16px;
   line-height: 16px;
   color: var(--red);
@@ -176,7 +180,8 @@ const Qty = styled.div`
 `;
 
 const Add = styled.button`
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   border: 0;
   background: var(--yellow);
   color: var(--black);
@@ -196,7 +201,8 @@ const Add = styled.button`
 `;
 
 const EstimatedPrice = styled.div<{ visible?: boolean }>`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 12px;
   line-height: 12px;
   text-align: left;
@@ -206,7 +212,8 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
 `;
 
 const Label = styled.div<{ visible?: boolean }>`
-  font-family: MullerRegular;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
   font-size: 12px;
   line-height: 12px;
   text-align: center;
@@ -217,7 +224,8 @@ const Label = styled.div<{ visible?: boolean }>`
 
 const MaxUnits = styled.div`
   font-size: 12px;
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   line-height: 12px;
   text-align: center;
   letter-spacing: 0.05em;
@@ -226,7 +234,8 @@ const MaxUnits = styled.div`
 `;
 
 const OutOfStock = styled.span`
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   border: 0;
   color: var(--black);
   padding: 11px 20px;

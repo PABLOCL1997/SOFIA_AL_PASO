@@ -22,7 +22,8 @@ const Header = styled.div`
   box-shadow: 0px -1px 52px rgba(0, 0, 0, 0.08);
 
   h1 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 40px;
     line-height: 1.5em;
     color: var(--black);
@@ -52,7 +53,8 @@ const Container = styled.div`
   padding: 0 20px;
 
   h2 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 20px;
     line-height: 2em;
     color: var(--black);
@@ -69,7 +71,8 @@ const InputGroup = styled.div<{ key: string }>`
   display: flex;
   flex-direction: column;
   label {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 10px;
     line-height: 10px;
     letter-spacing: 0.01em;
@@ -81,7 +84,8 @@ const InputGroup = styled.div<{ key: string }>`
   textarea {
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     display: flex;
@@ -113,7 +117,8 @@ const SelectWrapper = styled.div`
     width: 100%;
     background: var(--whiter);
     border-radius: 44px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     display: flex;

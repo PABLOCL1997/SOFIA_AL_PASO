@@ -25,12 +25,14 @@ const Wrapper = styled.div<{ selected: boolean }>`
 
 const TitleStreet = styled.div<{ selected: boolean }>`
   h3 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 16px;
     margin-bottom: 4px;
   }
   p {
-    font-family: MullerRegular;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
     font-size: 12px;
     color: #767474;
   }
@@ -66,7 +68,8 @@ const ChipWrapper = styled.div`
 
 const CallToAction = styled.a`
   font-size: 14px;
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 
   color: var(--red);
 

@@ -26,7 +26,7 @@ export const BackButton = styled.button`
   }
 
   span {
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 12px;
     line-height: 18px;
@@ -39,7 +39,7 @@ export const BackButton = styled.button`
 `;
 
 export const OrderTitle = styled.h3`
-  font-family: "MullerMedium";
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 24px;
   line-height: 32px;
@@ -74,7 +74,8 @@ export const CardHead = styled.div`
     text-transform: uppercase;
     color: ${customStyles.black};
 
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     margin-bottom: 2px;
   }
 `;
@@ -88,7 +89,8 @@ export const EnvioYFacturacion = styled.div`
     letter-spacing: 0.5px;
     text-transform: uppercase;
     color: ${customStyles.black};
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     margin-bottom: 2px;
   }
 
@@ -122,7 +124,8 @@ export const CtaWrap = styled.div`
     width: 100%;
 
     span {
-      font-family: "MullerBold";
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
       font-size: 14px;
       line-height: 20px;
       padding: 7px 0;
@@ -142,7 +145,8 @@ export const TablaHead = styled.div`
   span {
     font-size: 12px;
     line-height: 18px;
-    font-family: "MullerMedium";
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     color: ${customStyles.darkGrey};
 
     &:last-child {
@@ -185,21 +189,24 @@ export const SubtotalWrap = styled.div`
     }
 
     h6 {
-      font-family: "MullerBold";
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
       margin-bottom: 10px;
     }
 
     h5 {
       font-size: 20px;
       line-height: 28px;
-      font-family: "MullerMedium";
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
     }
   }
 
   @media (max-width: ${LG}) {
     > div {
       h6 {
-        font-family: "MullerMedium";
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
       }
       h5 {
         font-size: 16px;

@@ -21,10 +21,11 @@ export const IngresarImg = styled.img`
 `;
 
 export const IngresarText = styled.span`
-  font-size: 14px;
+  font-size: 13px;
   line-height: 20px;
   color: ${customStyles.red};
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 
   @media screen and (max-width: ${XL}) {
     display: none;
@@ -238,7 +239,7 @@ export const Address = styled.div`
 `;
 
 export const AddressText = styled.span`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 14px;
   margin: 0 8px;
@@ -256,7 +257,7 @@ export const AddressText = styled.span`
 `;
 
 export const Total = styled.div`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 14px;
@@ -279,7 +280,8 @@ export const CartWrapper = styled.div`
 `;
 
 export const CartText = styled.span`
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   font-size: 8px;
   color: ${customStyles.red};
   position: absolute;
@@ -389,7 +391,8 @@ export const MenuItem = styled.div`
   a,
   span {
     text-decoration: none;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 16px;
     line-height: 16px;
     color: var(--black);
@@ -408,7 +411,8 @@ export const MenuBottom = styled.div`
   }
   span {
     margin-left: 20px;
-    font-family: MullerBold;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.015em;
@@ -463,7 +467,8 @@ export const InputGroup = styled.div`
       }
     }
     span {
-      font-family: MullerBold;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
       font-size: 14px;
       line-height: 20px;
       text-transform: uppercase;
@@ -508,7 +513,8 @@ export const InputGroupSearchInput = styled.input`
   background: none;
   border: 0;
   padding: 15px 0px 15px 25px;
-  font-family: MullerBold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   font-size: 14px;
   line-height: 14px;
   display: flex;
@@ -521,7 +527,8 @@ export const InputGroupSearchInput = styled.input`
     color: ${customStyles.darkGrey};
     font-size: 14px;
     line-height: 20px;
-    font-family: MullerRegular;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
   }
 
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -538,7 +545,8 @@ export const Category = styled.div<{ showSubCategories: boolean; isVisible: bool
   }
   span {
     text-decoration: none;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 16px;
     line-height: 16px;
     color: var(--black);

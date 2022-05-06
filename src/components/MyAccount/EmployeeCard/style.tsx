@@ -22,13 +22,15 @@ export const TextWrap = styled.div`
   cursor: pointer;
 
   p {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     color: var(--black);
     font-size: 16px;
     line-height: 24px;
 
     span {
-      font-family: MullerMedium;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
       color: var(--red);
       text-decoration: underline;
     }
@@ -41,7 +43,8 @@ export const ActivaTitle = styled.div`
   h4 {
     font-size: 16px;
     line-height: 24px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     color: var(--red);
   }
 

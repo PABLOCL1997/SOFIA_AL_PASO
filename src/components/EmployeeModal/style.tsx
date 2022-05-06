@@ -39,7 +39,8 @@ export const Modal = styled.div<{ padding?: string }>`
 
     padding: 15px 30px;
     margin-bottom: 20px;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -73,7 +74,8 @@ export const CloseWrapper = styled.div`
 `;
 
 export const Title = styled.h2<{ marginBottom?: string; color?: string }>`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 24px;
   line-height: 24px;
   color: ${(props) => (props.color ? props.color : "#2F2F2F")};
@@ -86,7 +88,8 @@ export const Title = styled.h2<{ marginBottom?: string; color?: string }>`
 `;
 
 export const Description = styled.p`
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   font-size: 12px;
   line-height: 137%;
   letter-spacing: 0.01em;
@@ -112,10 +115,7 @@ export const Link = styled.span<{ position?: string }>`
   }
 `;
 
-export const CtaWrapper = styled.div<{
-  marginBottom?: string;
-  marginTop?: string;
-}>`
+export const CtaWrapper = styled.div<{ marginBottom?: string, marginTop?: string }>`
   width: 100%;
   button {
     width: 100%;
@@ -152,7 +152,8 @@ export const SocialButton = styled.button<{ network: string }>`
     color: var(--${(props) => props.network});
   }
   b {
-    font-family: MullerBold;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
     margin-left: 5px;
   }
   &:hover {
@@ -182,7 +183,8 @@ export const Disclaimer = styled.div<{ margin?: string }>`
     margin-bottom: 0;
     margin-right: 5px;
     font-weight: 500;
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
   }
 `;
 
@@ -212,7 +214,8 @@ export const SmallTextBtn = styled.button<{ margin?: string }>`
   line-height: 20px;
   background: transparent;
   border: 0;
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   text-decoration-line: underline;
   margin: ${(props) => (props.margin ? props.margin : "auto")};
 `;
@@ -221,12 +224,12 @@ export const Anchor = styled.a`
   color: var(--red);
   outline: 0 !important;
   font-style: normal;
-  font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   background: transparent;
   border: 0;
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   text-decoration-line: underline;
 `;
 
@@ -266,7 +269,7 @@ export const Lista = styled.ul`
   }
 
   h4 {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 12px;
     line-height: 18px;
@@ -338,7 +341,8 @@ export const Counter = styled.div`
 
 export const InputLabel = styled.label<{ show?: boolean }>`
   margin: ${(props) => (props.show ? "0 auto 10px 29px" : "0 auto 2px 29px")};
-  font-family: MullerMedium;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 
   /* transition: all ease-out 0.4s; */
   transition: ${(props) => (props.show ? "all ease-out 0.4s" : "none")};
@@ -405,7 +409,7 @@ export const ErrorInputMsg = styled.div<{ margin?: string }>`
   margin: ${(props) => (props.margin ? props.margin : "auto")};
 
   span {
-    font-family: MullerMedium;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 12px;
     line-height: 18px;
