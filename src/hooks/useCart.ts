@@ -26,6 +26,7 @@ type CartReturn = {
   closeCartModal: Function;
   checkCart: Function;
   discountAmount: number;
+  discountAmountOriginal: number;
   removeCoupon: Function;
 };
 
@@ -45,6 +46,7 @@ const useCart = (): CartReturn => {
   const minimumPrice = useMinimumPrice();
   const { coupon, store } = useUser();
   const [totalAmount, setTotalAmount] = useState("0.0");
+  const [discountAmountOriginal, setDiscountAmountOriginal] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [action, setAction] = useState<Action | ActionEmpty>({ action: "no-action" });
 
@@ -113,8 +115,10 @@ const useCart = (): CartReturn => {
       const discount_amount: number = data?.coupon?.discount_amount;
       const discount_type: string = data?.coupon?.type;
 
+      setDiscountAmountOriginal(discount_amount);
+
       if (discount_type === "%") {
-        const total: number = parseFloat(totalAmount.replace(",", ".")) - shippingPrice;
+        const total: number = parseFloat(totalAmount.replace(",", ".")) + shippingPrice;
         const _discount_amount = (parseFloat(total.toFixed(2)) * discount_amount) / 100;
 
         setDiscountAmount(parseFloat(twoDecimals(_discount_amount)));
@@ -315,6 +319,7 @@ const useCart = (): CartReturn => {
     quantity,
     shippingPrice,
     discountAmount,
+    discountAmountOriginal,
     hasStock,
     isOverLimit,
     addAndGo,
