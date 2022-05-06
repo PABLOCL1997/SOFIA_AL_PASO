@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   @media (max-width: ${LG}) {
     padding-top: 0;
     padding-bottom: 40px;
+    top: -150px;
   }
 `;
 
