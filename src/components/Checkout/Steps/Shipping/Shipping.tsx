@@ -18,7 +18,7 @@ import { FormikProvider, useFormik } from "formik";
 import useUser from "../../../../hooks/useUser";
 import { OrderData } from "../../../../types/Order";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
-import { useAppSelector } from "../../../../state/store";
+import useCheckout from "../../../../hooks/useCheckout";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Map = React.lazy(() => import(/* webpackChunkName: "Map" */ "../../../Map"));
@@ -60,7 +60,7 @@ const Shipping: FC<{
 
   const [other, setOther] = useState(false);
   const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
-  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const { checkout: { isGuestOrder } } = useCheckout();
 
   const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",

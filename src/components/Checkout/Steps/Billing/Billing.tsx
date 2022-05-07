@@ -10,12 +10,12 @@ import { Checkout, IBilling } from "../../../../utils/validations";
 import { FormikProvider, useFormik } from "formik";
 import Input from "../../../Formik/components/Input";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
-import { useAppSelector } from "../../../../state/store";
 import EmojiHappy from "../../../../assets/images/happy-emoji.svg";
 import { SET_USER } from "../../../../graphql/user/mutations";
 import { token as StoreToken } from "../../../../utils/store";
 import { Courtain } from "../../../../context/Courtain";
 import useAuth from "../../../../auth";
+import useCheckout from "../../../../hooks/useCheckout";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
@@ -31,8 +31,7 @@ const Billing: FC<{
   const query = useUrlQuery();
   const nextStep = query.get("next") || "shipping";
   const { agency } = useCityPriceList();
-  const { isGuestOrder } = useAppSelector((state) => state.checkout);
-
+  const { checkout: { isGuestOrder } } = useCheckout();
   const [isValid, setIsValid] = useState(false);  
   const fields = ["firstname", "lastname", "email", "nit", "phone"];
   const [errorRegister, setErrorRegister] = useState("");

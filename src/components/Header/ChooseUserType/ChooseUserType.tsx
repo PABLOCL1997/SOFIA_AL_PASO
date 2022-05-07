@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { SET_USER } from "../../../graphql/user/mutations";
 import * as SC from "./style";
 
-import { useModals } from "../../../state/slices/modals/useModals";
-import { useCheckout } from "../../../state/slices/checkout/useCheckout";
+import useModals from "../../../hooks/useModals";
+import useCheckout from "../../../hooks/useCheckout";
 
 import CloseModalIcon from "../../../assets/images/close-modal.svg";
 import GuestIcon from "../../../assets/images/Compra-guest.svg";

@@ -11,7 +11,7 @@ import * as SC from "./style";
 import useUser from "../../../hooks/useUser";
 import { CouponType, Steps } from "../../../types/Checkout";
 import useCart from "../../../hooks/useCart";
-import { useAppSelector } from "../../../state/store";
+import useCheckout from "../../../hooks/useCheckout";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../../Cta"));
@@ -37,7 +37,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
-  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const { checkout: { isGuestOrder } } = useCheckout();
   const showConfirmButton = (isGuestOrder && step === Steps.Payment) || step === Steps.Review;
 
   const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
