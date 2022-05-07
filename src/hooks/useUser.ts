@@ -74,7 +74,6 @@ const useUser = (): IUseUser => {
         defaultAddressId: null,
         isLoggedIn: false,
         id: null,
-        isB2E: false,
         store: null
       },
     },
@@ -98,7 +97,7 @@ const useUser = (): IUseUser => {
   }, [user]);
 
   const isB2E: boolean = useMemo(() => {
-    return user?.userInfo[0]?.isB2E;
+    return user?.userInfo[0]?.idPriceList;
   }, [user])
 
   return {
