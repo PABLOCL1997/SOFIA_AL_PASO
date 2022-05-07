@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-apollo";
+import { useMutation, useQuery, useApolloClient } from "react-apollo";
 import { SET_MODALS } from "../graphql/modals/mutations";
 import { GET_MODALS } from "../graphql/modals/queries";
 
@@ -14,8 +14,9 @@ export const INITIAL_MODALS = {
 };
 
 const useModals = () => {
+  const aClient = useApolloClient();
   const { data } = useQuery(GET_MODALS);
-  const modals: Modals = data.modals;
+  const modals: Modals = data?.modals || INITIAL_MODALS;
   const [addToModals] = useMutation(SET_MODALS);
 
   const handleChooseUserType = (value: boolean) => {
@@ -31,6 +32,14 @@ const useModals = () => {
   };
 
   const handleResetModals = () => {
+    // if state are not in cache, initialize it
+    if (!data) {
+      aClient.writeQuery({
+        query: GET_MODALS,
+        data: { modals: INITIAL_MODALS },
+      });
+      return;
+    }
     addToModals({
       variables: {
         modals: {
