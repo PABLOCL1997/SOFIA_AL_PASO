@@ -1,4 +1,5 @@
-import { useMutation, useQuery } from "react-apollo";
+import { useEffect } from "react";
+import { useMutation, useQuery, useApolloClient } from "react-apollo";
 import { GET_CHECKOUT } from "../graphql/checkout/queries";
 import { SET_CHECKOUT } from "../graphql/checkout/mutations";
 
@@ -14,8 +15,9 @@ export const INITIAL_CHECKOUT = {
 };
 
 const useCheckout = () => {
+  const aClient = useApolloClient();
   const { data } = useQuery(GET_CHECKOUT);
-  const checkout: Checkout = data.checkout;
+  const checkout: Checkout = data?.checkout || INITIAL_CHECKOUT;
   const [addToCheckout] = useMutation(SET_CHECKOUT);
 
   const handleRedirectToCheckout = (value: boolean) => {
@@ -29,6 +31,16 @@ const useCheckout = () => {
       variables: { checkout: { isGuestOrder: value } },
     }).then(() => {});
   };
+
+  useEffect(() => {
+    // if state are not in cache, initialize it
+    if (!data) {
+      aClient.writeQuery({
+        query: GET_CHECKOUT,
+        data: { checkout: INITIAL_CHECKOUT },
+      });
+    }
+  }, [data]);
 
   return {
     checkout,
