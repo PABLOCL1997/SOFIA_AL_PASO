@@ -28,12 +28,24 @@ const useModals = () => {
     addToModals({
       variables: { modals: { showRegisterModal: value } },
     }).then(() => {});
-  };  
+  };
+
+  const handleResetModals = () => {
+    addToModals({
+      variables: {
+        modals: {
+          showRegisterModal: false,
+          showChooseUserType: false,
+        },
+      },
+    }).then(() => {});
+  };
 
   return {
     modals,
     handleChooseUserType,
     handleRegisterModal,
+    handleResetModals,
   };
 };
 
