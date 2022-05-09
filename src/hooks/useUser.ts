@@ -97,7 +97,7 @@ const useUser = (): IUseUser => {
   }, [user]);
 
   const isB2E: boolean = useMemo(() => {
-    return user?.userInfo[0]?.idPriceList;
+    return user?.userInfo[0]?.idPriceList > 0;
   }, [user])
 
   return {
