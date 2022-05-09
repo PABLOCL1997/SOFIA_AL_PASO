@@ -20,8 +20,7 @@ export const Options = {
     height: 76px;
     background: #fff;
     border-radius: 8px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'MontserratRegular';
   `,
   Wrapper: styled.div`
     display: flex;

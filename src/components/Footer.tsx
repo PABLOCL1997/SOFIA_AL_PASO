@@ -25,9 +25,7 @@ const Container = styled.div<{ page?: string }>`
 `;
 
 const Text = styled.p`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 19px;
+  font-family: 'MontserratBold';  font-size: 19px;
   padding: 0 20% 10px 0px;
   line-height: 31px;
   letter-spacing: 0.015em;
@@ -49,9 +47,7 @@ const Disclaimer = styled.p`
 `;
 
 const Slogan = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 20px;
+  font-family: 'MontserratBold';  font-size: 20px;
   line-height: 20px;
   letter-spacing: 0.015em;
   color: white;

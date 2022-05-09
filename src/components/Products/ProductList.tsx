@@ -50,8 +50,7 @@ const InputGroup = styled.div`
     background: none;
     border: 0;
     padding: 15px 50px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     font-size: 14px;
     line-height: 14px;
     display: flex;
@@ -66,8 +65,7 @@ const InputGroup = styled.div`
   button {
     padding: 14px 50px;
     span {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       font-size: 12px;
       line-height: 12px;
       text-transform: uppercase;
@@ -100,8 +98,7 @@ const Select = styled.div`
     color: ${customStyles.black};
   }
   b {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -122,9 +119,7 @@ const List = styled.ul`
 const Item = styled.li<{ key: any }>`
   padding: 15px 30px;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 12px;
+  font-family: 'MontserratBold';  font-size: 12px;
   line-height: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -158,8 +153,7 @@ const PageArrow = styled.a<{ allowed: boolean }>`
 PageArrow.displayName = "PageArrow";
 
 const Page = styled.a<{ selected: boolean }>`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: ${(props) => (props.selected ? "400" : "400")};
+  font-family: ${(props) => (props.selected ? "MontserratRegular" : "MontserratRegular")};
   font-size: 16px;
   line-height: 20px;
   letter-spacing: 0.1em;
@@ -204,8 +198,7 @@ const NoResults = styled.div`
   justify-content: center;
   color: var(--font);
   min-height: 400px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 1.5em;
   letter-spacing: 0.1em;

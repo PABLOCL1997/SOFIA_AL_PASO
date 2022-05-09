@@ -48,8 +48,7 @@ export const Selector = styled.div<{ withMap: boolean }>`
   }
 
   a {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
 
     width: 100%;
     ${({ withMap }) =>
@@ -73,8 +72,7 @@ export const Selector = styled.div<{ withMap: boolean }>`
 
   button {
     align-self: flex-end;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     text-transform: uppercase;
     color: white;
     ${({ withMap }) => (withMap ? `width: 100%;` : `width: 300px;`)}
@@ -102,9 +100,7 @@ export const Selector = styled.div<{ withMap: boolean }>`
 
 export const Title = styled.h3`
   margin-top: 17px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 32px;
 
@@ -116,9 +112,7 @@ export const Title = styled.h3`
 `;
 export const Subtitle = styled.h4<{ withMap: boolean }>`
   margin-top: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 20px;
   max-width: 300px;
@@ -181,8 +175,7 @@ export const RadionGroup = styled.div<{ selected: boolean }>`
   }
   label {
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     ${({ selected }) =>
@@ -203,8 +196,7 @@ export const InputReference = styled.div`
 
   input {
     font-size: 12px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'MontserratRegular';
     float: left;
     border-radius: 30px;
     border: 0px;

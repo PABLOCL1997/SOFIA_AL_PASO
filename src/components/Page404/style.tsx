@@ -33,8 +33,7 @@ export const TextWrap = styled.div`
     font-size: 150px;
     line-height: 152px;
     color: var(--black);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
   }
 
   @media (max-width: ${LG}) {
@@ -57,8 +56,7 @@ export const Headline = styled.div`
   span {
     font-size: 32px;
     line-height: 32px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     color: var(--black);
   }
 
@@ -80,9 +78,7 @@ export const Headline = styled.div`
 export const Subtitle = styled.p`
   font-size: 16px;
   line-height: 24px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  color: var(--black);
+  font-family: 'MontserratMedium';  color: var(--black);
 `;
 
 export const BigImg = styled.img`
@@ -107,8 +103,7 @@ export const ButtonWrap = styled.div`
       line-height: 14px;
 
       text-transform: uppercase;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
     }
     button {
       padding: 15px 50px;

@@ -47,15 +47,13 @@ export const Title = styled.div`
   }
   h2 {
     flex: 1;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 32px;
     line-height: 32px;
     color: var(--black);
   }
   button {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 14px;
     text-align: right;
@@ -112,8 +110,7 @@ export const ShippingMethodWrapper = styled.div`
     padding: 0;
 
     font-size: 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
   }
 
   a {
@@ -126,9 +123,7 @@ export const ShippingMethodWrapper = styled.div`
 
     a {
       display: block;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      font-style: normal;
+      font-family: 'MontserratMedium';      font-style: normal;
       font-size: 12px;
       line-height: 20px;
       /* identical to box height */
@@ -153,8 +148,7 @@ export const Next = {
     button {
       padding: 14px 48px;
       font-size: 12px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       text-transform: uppercase;
       line-height: 20px;
     }

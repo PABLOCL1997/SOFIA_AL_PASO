@@ -22,8 +22,7 @@ export const Headline = styled.div`
     font-size: 20px;
     line-height: 28px;
     color: ${customStyles.red};
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
   }
 `;
 
@@ -40,8 +39,7 @@ export const EditButton = styled.div`
     font-size: 12px;
     line-height: 18px;
     color: ${customStyles.red};
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
   }
 `;
 
@@ -64,8 +62,7 @@ export const InputGroup = styled.div`
 
     padding: 15px 30px;
     margin-bottom: 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -88,8 +85,7 @@ export const InputGroup = styled.div`
   }
 
   label {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     letter-spacing: 0.5px;
     text-transform: uppercase;
     color: ${customStyles.black};
@@ -115,8 +111,7 @@ export const ErrorInputMsg = styled.div<{ margin?: string }>`
   margin: ${(props) => (props.margin ? props.margin : "auto")};
 
   span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 12px;
     line-height: 18px;
     color: var(--red);

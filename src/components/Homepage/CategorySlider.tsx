@@ -107,9 +107,7 @@ const CategoryWrapper = styled.div`
 
 const Title = styled.h3`
   font-size: 32px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  margin: 64px 0;
+  font-family: 'MontserratMedium';  margin: 64px 0;
   text-align: center;
 
   @media screen and (max-width: ${BREAKPOINT}) {

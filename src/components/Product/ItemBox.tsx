@@ -29,9 +29,7 @@ const Discount = styled.div`
   background: var(--red);
   box-shadow: 0px 8px 29px rgba(254, 205, 0, 0.4);
   border-radius: 3px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 14px;
+  font-family: 'MontserratBold';  font-size: 14px;
   line-height: 14px;
   display: flex;
   align-items: flex-end;
@@ -83,9 +81,7 @@ const NewLabel = styled.span`
   background-color: ${customStyles.yellow};
 
   color: ${customStyles.red};
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  padding: 7px 0 5px;
+  font-family: 'MontserratBold';  padding: 7px 0 5px;
 `;
 
 const Category = styled.h3`
@@ -106,9 +102,7 @@ const Image = styled.img`
 Image.displayName = "ItemBoxImage";
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
+  font-family: 'MontserratMedium';  font-size: 16px;
   line-height: 20px;
   text-align: left;
   color: var(--black);
@@ -134,9 +128,7 @@ const PriceBox = styled.div`
 `;
 
 const Price = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 16px;
+  font-family: 'MontserratBold';  font-size: 16px;
   line-height: 16px;
   color: var(--red);
 `;
@@ -180,9 +172,7 @@ const Qty = styled.div`
 `;
 
 const Add = styled.button`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  border: 0;
+  font-family: 'MontserratBold';  border: 0;
   background: var(--yellow);
   color: var(--black);
   padding: 11px 20px;
@@ -201,9 +191,7 @@ const Add = styled.button`
 `;
 
 const EstimatedPrice = styled.div<{ visible?: boolean }>`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
+  font-family: 'MontserratMedium';  font-size: 12px;
   line-height: 12px;
   text-align: left;
   color: ${customStyles.black};
@@ -212,8 +200,7 @@ const EstimatedPrice = styled.div<{ visible?: boolean }>`
 `;
 
 const Label = styled.div<{ visible?: boolean }>`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
+  font-family: 'MontserratRegular';
   font-size: 12px;
   line-height: 12px;
   text-align: center;
@@ -224,9 +211,7 @@ const Label = styled.div<{ visible?: boolean }>`
 
 const MaxUnits = styled.div`
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  line-height: 12px;
+  font-family: 'MontserratBold';  line-height: 12px;
   text-align: center;
   letter-spacing: 0.05em;
   color: var(--red);
@@ -234,9 +219,7 @@ const MaxUnits = styled.div`
 `;
 
 const OutOfStock = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  border: 0;
+  font-family: 'MontserratBold';  border: 0;
   color: var(--black);
   padding: 11px 20px;
   border-top-right-radius: 15px;

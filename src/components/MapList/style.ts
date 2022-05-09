@@ -29,9 +29,7 @@ export const CardHeader = styled.div`
 `;
 
 export const CardTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 20px;
+  font-family: 'MontserratMedium';  font-size: 20px;
   line-height: 2em;
   color: var(--black);
 `;

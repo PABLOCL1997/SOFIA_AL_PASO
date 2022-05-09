@@ -2,9 +2,7 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
+  font-family: 'MontserratMedium';  font-size: 16px;
   line-height: 16px;
   color: var(--red);
   margin-bottom: 30px;
@@ -15,8 +13,7 @@ export const Title = styled.h2`
     cursor: pointer;
   }
   h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -84,9 +81,7 @@ export const Date = styled.p`
   margin-bottom: 4px;
 `;
 export const Day = styled.strong`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
+  font-family: 'MontserratMedium';  font-size: 16px;
 `;
 
 export const TimeWrapper = styled.section`
@@ -146,8 +141,7 @@ export const Next = {
     button {
       padding: 14px 48px;
       font-size: 12px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       text-transform: uppercase;
       line-height: 20px;
     }

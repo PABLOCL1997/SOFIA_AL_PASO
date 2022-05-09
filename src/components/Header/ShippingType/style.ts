@@ -25,9 +25,7 @@ export const Button = styled.button`
 `
 
 export const Title = styled.h4`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 14px;
+  font-family: 'MontserratBold';  font-size: 14px;
   color: #fff;
   margin-top: 2px;
   @media screen and (max-width: ${XL}) {

@@ -10,9 +10,7 @@ import { isValidEmail } from "../../utils/string";
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 32px;
+  font-family: 'MontserratMedium';  font-size: 32px;
   text-align: center;
   letter-spacing: 0.015em;
   color: var(--dark);
@@ -37,8 +35,7 @@ const InputGroup = styled.div`
   background: #ffffff;
   border-radius: 30px;
   input {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
 
@@ -66,8 +63,7 @@ const CtaWrapper = styled.div`
     padding: 15px 40px;
     text-transform: uppercase;
     span {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       font-size: 12px;
       line-height: 12px;
     }

@@ -16,8 +16,7 @@ export const Title = styled.div`
   text-align: center;
 
   h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 48px;
     line-height: 48px;
     color: var(--black);
@@ -106,8 +105,7 @@ export const Disclaimer = styled.div`
     margin: 15px 0;
   }
   b {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
   }
 `;
 

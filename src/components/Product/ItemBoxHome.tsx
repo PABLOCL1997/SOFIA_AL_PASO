@@ -110,9 +110,7 @@ const NewLabel = styled.span`
   background-color: ${customStyles.yellow};
 
   color: ${customStyles.red};
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  padding: 7px 0 5px;
+  font-family: 'MontserratBold';  padding: 7px 0 5px;
 `;
 
 const Image = styled.img`
@@ -124,9 +122,7 @@ const Image = styled.img`
 Image.displayName = "ItemBoxImage";
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
+  font-family: 'MontserratMedium';  font-size: 16px;
   line-height: 20px;
   max-height: 40px;
   color: var(--black);
@@ -153,16 +149,12 @@ const PriceBox = styled.div`
 `;
 
 const Price = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 14px;
+  font-family: 'MontserratBold';  font-size: 14px;
   color: var(--red);
 `;
 
 const Weight = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  color: var(--black);
+  font-family: 'MontserratBold';  color: var(--black);
 `;
 
 const DiscountPrice = styled.span`
@@ -215,9 +207,7 @@ const Qty = styled.div`
 `;
 
 const Add = styled.button`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  border: 0;
+  font-family: 'MontserratBold';  border: 0;
   background: var(--yellow);
   color: var(--black);
   padding: 11px 20px;
@@ -249,9 +239,7 @@ const Label = styled.div<{ visible?: boolean }>`
 
 const MaxUnits = styled.div`
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  line-height: 12px;
+  font-family: 'MontserratBold';  line-height: 12px;
   text-align: center;
   letter-spacing: 0.05em;
   color: var(--red);
@@ -259,9 +247,7 @@ const MaxUnits = styled.div`
 `;
 
 const OutOfStock = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  border: 0;
+  font-family: 'MontserratBold';  border: 0;
   color: var(--black);
   padding: 11px 20px;
   border-top-right-radius: 15px;

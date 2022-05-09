@@ -21,15 +21,13 @@ export const Title = styled.h2`
 
   h2 {
     flex: 1;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 24px;
     line-height: 24px;
     color: var(--red);
   }
   button {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 14px;
     text-align: right;
@@ -69,8 +67,7 @@ export const Subtotal = styled.div`
   display: flex;
   margin-bottom: 20px;
   b {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     font-size: 14px;
     line-height: 14px;
     color: var(--black);
@@ -105,8 +102,7 @@ export const Coupon = styled.div`
     clear: both;
   }
   > button {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     text-align: right;
@@ -124,8 +120,7 @@ export const Coupon = styled.div`
 export const InputBox = styled.div`
   position: relative;
   input {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'MontserratRegular';
     background: var(--whiter);
     border-radius: 44px;
     border: 0;
@@ -140,8 +135,7 @@ export const InputBox = styled.div`
     background: var(--whiter);
     border: 1px solid var(--m-gray);
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     font-size: 12px;
     line-height: 12px;
     text-transform: uppercase;
@@ -188,8 +182,7 @@ export const Total = styled.div`
   display: flex;
   margin-bottom: 30px;
   b {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 20px;
     line-height: 20px;
     color: var(--black);
@@ -226,9 +219,7 @@ export const EmployeeMsg = styled.span`
 `;
 
 export const ErrorText = styled.div<{ margin: boolean }>`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
+  font-family: 'MontserratMedium';  font-size: 14px;
   line-height: 14px;
   text-decoration-line: none;
   color: var(--red);

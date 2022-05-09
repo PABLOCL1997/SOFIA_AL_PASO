@@ -105,8 +105,7 @@ export const RadionGroup = styled.div<any>`
   }
   label {
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     color: var(--red);

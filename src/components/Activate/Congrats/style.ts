@@ -77,9 +77,7 @@ export const Actions = {
       display: flex;
       text-align: center;
       align-items: flex-start;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      font-size: 16px;
+      font-family: 'MontserratMedium';      font-size: 16px;
     `,
   },
   Button: {

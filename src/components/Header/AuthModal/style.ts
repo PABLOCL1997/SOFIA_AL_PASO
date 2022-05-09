@@ -35,8 +35,7 @@ export const Modal = styled.div`
     border: 0;
     padding: 15px 30px;
     margin-bottom: 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -59,18 +58,14 @@ export const CloseWrapper = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 24px;
+  font-family: 'MontserratMedium';  font-size: 24px;
   line-height: 24px;
   color: var(--black);
   margin-bottom: 20px;
 `;
 
 export const Description = styled.p`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
+  font-family: 'MontserratMedium';  font-size: 12px;
   line-height: 137%;
   letter-spacing: 0.01em;
   color: var(--font);
@@ -131,8 +126,7 @@ export const SocialButton = styled.button<{ network: string }>`
     color: var(--${(props) => props.network});
   }
   b {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     margin-left: 5px;
   }
   &:hover {
@@ -224,8 +218,7 @@ export const SaveLogin = styled.div`
   label {
     font-size: 14px;
     text-align: center;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'MontserratRegular';
   }
 `
 

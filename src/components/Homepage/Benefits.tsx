@@ -20,9 +20,7 @@ const Container = styled.section`
 `;
 
 const Title = styled.div`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 40px;
+  font-family: 'MontserratMedium';  font-size: 40px;
   line-height: 40px;
   color: var(--black);
   text-align: center;
@@ -92,9 +90,7 @@ const Box = styled.div`
 `;
 
 const GridTitle = styled.div`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
+  font-family: 'MontserratMedium';  font-size: 16px;
   line-height: 110%;
   margin: 24px 0 16px;
   color: var(--black);

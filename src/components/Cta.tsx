@@ -26,8 +26,7 @@ const Button = styled.button<{ filled: boolean; hover: boolean; active: boolean 
   align-items: center;
   margin: 0 auto;
   span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     flex: 1;
@@ -56,8 +55,7 @@ const Link = styled.a<{ filled: boolean; hover: boolean }>`
   align-items: center;
   margin: 0 auto;
   span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     flex: 1;

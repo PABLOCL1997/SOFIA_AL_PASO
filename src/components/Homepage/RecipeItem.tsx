@@ -50,8 +50,7 @@ const IconBox = styled.div`
 const Icon = styled.div`
   position: relative;
   span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 12px;
     line-height: 110%;
     margin-left: 10px;
@@ -80,9 +79,7 @@ const Icon = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 20px;
+  font-family: 'MontserratMedium';  font-size: 20px;
   line-height: 110%;
   text-align: center;
   color: var(--black);

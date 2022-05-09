@@ -2,9 +2,7 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Heading = styled.h1`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 16px;
+  font-family: 'MontserratBold';  font-size: 16px;
   line-height: 16px;
   color: var(--red);
 
@@ -15,8 +13,7 @@ export const Heading = styled.h1`
     cursor: pointer;
   }
   h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -42,8 +39,7 @@ export const Title = {
     justify-content: space-between;
   `,
   Label: styled.h2`
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -52,8 +48,7 @@ export const Title = {
   Link: styled.a`
     cursor: pointer;
     color: var(--red);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     font-style: normal;
     font-size: 14px;
     line-height: 14px;
@@ -80,9 +75,7 @@ export const Content = {
     flex-direction: column;
     padding-left: 20px;
     label {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      font-size: 10px;
+      font-family: 'MontserratMedium';      font-size: 10px;
       line-height: 10px;
       letter-spacing: 0.01em;
       color: var(--font);
@@ -90,9 +83,7 @@ export const Content = {
     input,
     em {
       background: none;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      font-size: 14px;
+      font-family: 'MontserratMedium';      font-size: 14px;
       line-height: 14px;
       display: flex;
       align-items: center;
@@ -145,9 +136,7 @@ export const Content = {
       grid-template-columns: 1fr;
     `,
     Info: styled.em`
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      font-size: 14px;
+      font-family: 'MontserratMedium';      font-size: 14px;
       line-height: 14px;
       color: var(--black);
 
@@ -206,12 +195,9 @@ export const Footer = {
     line-height: 20px;
     font-style: normal;
     em {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-    }
+      font-family: 'MontserratMedium';    }
     strong {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
     }
   `,
   Cta: styled.section`

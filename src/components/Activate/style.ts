@@ -36,9 +36,7 @@ export const Square = styled.section`
 export const ButtonPrimary = styled.button`
   width: 100%;
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  text-transform: uppercase;
+  font-family: 'MontserratBold';  text-transform: uppercase;
   /* Rojo Sofía */
   background: var(--red);
   color: white;
@@ -54,9 +52,7 @@ export const ButtonPrimary = styled.button`
 export const ButtonSecondary = styled.button`
   width: 100%;
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   background: #ffffff;
   border: 2px solid var(--red);
@@ -73,9 +69,7 @@ export const ButtonSecondary = styled.button`
 export const ButtonSecondaryLarge = styled.button`
   width: 100%;
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   background: #ffffff;
   border: 2px solid var(--red);
@@ -91,9 +85,7 @@ export const ButtonSecondaryLarge = styled.button`
 
 export const Title = styled.h2`
   font-size: 32px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  line-height: 40px;
+  font-family: 'MontserratMedium';  line-height: 40px;
   margin: 26px;
 
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -157,9 +149,7 @@ export const ProgressBar = {
 export const Error = styled.div`
   justify-self: start;
   color: var(--red);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  margin-bottom: 5px;
+  font-family: 'MontserratMedium';  margin-bottom: 5px;
   padding-left: 15px;
   font-size: 12px;
   text-align: left;

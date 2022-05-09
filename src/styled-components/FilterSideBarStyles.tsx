@@ -11,8 +11,7 @@ export const TitleWrap = styled.div`
     font-size: 24px;
     line-height: 32px;
     font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     margin-left: 10px;
     color: ${customStyles.black};
   }
@@ -80,8 +79,7 @@ export const MarcasWrap = styled.div<{ hide?: boolean }>`
   position: relative;
   z-index: 10;
   h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     color: ${customStyles.black};
     font-size: 12px;
     line-height: 16px;
@@ -119,8 +117,7 @@ export const BrandItem = styled.div<{ selected?: number }>`
     font-size: 14px;
     line-height: 20px;
     color: ${customStyles.black};
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     margin-left: 5px;
   }
 
@@ -150,8 +147,7 @@ export const TopFilters = styled.div`
       align-items: center;
       letter-spacing: 0.2px;
       color: ${customStyles.black};
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       text-transform: uppercase;
     }
 
@@ -159,9 +155,7 @@ export const TopFilters = styled.div`
       font-size: 12px;
       line-height: 16px;
       color: ${customStyles.darkGrey};
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      text-decoration: underline;
+      font-family: 'MontserratMedium';      text-decoration: underline;
       cursor: pointer;
     }
   }
@@ -235,9 +229,7 @@ export const OrderAndFilterBtn = styled.button`
   border: 1px solid ${customStyles.yellow};
   border-radius: 40px;
   width: fit-content !important;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-`;
+  font-family: 'MontserratBold';`;
 
 export const MobileModal = styled.div`
   @media (min-width: ${BREAKPOINT}) {
@@ -333,8 +325,7 @@ export const TabClick = styled.div<{ active: boolean }>`
     display: inline-block;
     font-size: 14px;
     line-height: 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     color: ${(props) => (props.active ? customStyles.red : customStyles.darkGrey)};
   }
 `;
@@ -356,8 +347,7 @@ export const RadioLi = styled.li`
     font-size: 14px;
     line-height: 20px;
     color: ${customStyles.black};
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
   }
 `;
 

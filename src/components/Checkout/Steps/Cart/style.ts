@@ -43,16 +43,14 @@ export const Content = {
             margin-top: 30px;
         `,
         Tag: styled.strong`
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
+            font-family: 'MontserratBold';
             color: var(--black);
             font-size: 14px;
             line-height: 14px;
         `,
         Price: styled.strong`
             text-align: right;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
+            font-family: 'MontserratBold';
             color: var(--black);
             font-size: 14px;
             line-height: 14px;

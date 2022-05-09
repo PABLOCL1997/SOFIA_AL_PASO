@@ -84,8 +84,7 @@ const Cart = styled.div`
 `;
 
 const ProductosText = styled.h6`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
+  font-family: 'MontserratRegular';
   font-size: 26px;
   position: absolute;
   z-index: 2;
@@ -98,9 +97,7 @@ const ProductosText = styled.h6`
   }
 `;
 const DestacadosText = styled.h5`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 32px;
+  font-family: 'MontserratBold';  font-size: 32px;
   position: absolute;
   z-index: 2;
   left: 30px;

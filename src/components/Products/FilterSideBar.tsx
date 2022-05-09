@@ -60,8 +60,7 @@ const Container = styled.div`
       display: none;
     }
     span {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       font-size: 14px;
       line-height: 14px;
     }
@@ -94,8 +93,7 @@ const ContainerBrands = styled.div`
       display: none;
     }
     span {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       font-size: 14px;
       line-height: 14px;
     }
@@ -166,8 +164,7 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
   a {
     color: inherit; /* blue colors for links too */
     text-decoration: inherit; /* no underline */
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 20px;
     color: ${customStyles.black};
@@ -185,8 +182,7 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
   }
 
   em {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
     color: ${customStyles.black};
     font-size: 12px;
     line-height: 16px;
@@ -213,8 +209,7 @@ const SubCategory = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   padding: 0 0 10px;
 
   span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
   }
 
   a {
@@ -239,8 +234,7 @@ const SubCategory4 = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   }
 
   span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
   }
 `;
 
@@ -265,9 +259,7 @@ const Title = styled.div`
 `;
 
 const Text = styled.div`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
+  font-family: 'MontserratMedium';  font-size: 14px;
   line-height: 18px;
   color: var(--black);
   margin: 20px 0;

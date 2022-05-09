@@ -68,9 +68,7 @@ export const Inputs = {
       padding: 0;
       text-align: center;
 
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      font-size: 50px;
+      font-family: 'MontserratMedium';      font-size: 50px;
       line-height: 40px;
       border: none;
       width: 54px;

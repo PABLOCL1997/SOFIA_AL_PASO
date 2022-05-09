@@ -25,14 +25,12 @@ const Wrapper = styled.div<{ selected: boolean }>`
 
 const TitleStreet = styled.div<{ selected: boolean }>`
   h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     margin-bottom: 4px;
   }
   p {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'MontserratRegular';
     font-size: 12px;
     color: #767474;
   }
@@ -68,9 +66,7 @@ const ChipWrapper = styled.div`
 
 const CallToAction = styled.a`
   font-size: 14px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-
+  font-family: 'MontserratMedium';
   color: var(--red);
 
   text-decoration: underline;

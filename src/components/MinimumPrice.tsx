@@ -37,8 +37,7 @@ const Container = styled.span`
   }
 
   b {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-family: 'MontserratBold';
   }
 `;
 

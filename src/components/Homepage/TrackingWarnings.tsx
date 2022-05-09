@@ -21,9 +21,7 @@ const TrackingButton = styled.div`
   padding: 10px;
   border-radius: 30px;
   color: white;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  text-align: center;
+  font-family: 'MontserratMedium';  text-align: center;
   cursor: pointer;
 `;
 
@@ -45,9 +43,7 @@ const WarningElem = styled.div`
   padding: 20px;
   color: white;
   border-radius: 30px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 24px;
+  font-family: 'MontserratMedium';  font-size: 24px;
   display: grid;
   grid-template-columns: 3fr 1fr;
   align-items: center;
@@ -68,9 +64,7 @@ const WarningElem = styled.div`
 `;
 
 const WarningElemBold = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-`;
+  font-family: 'MontserratBold';`;
 
 type Warning = {
   status: string;

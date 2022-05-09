@@ -9,9 +9,7 @@ const SwitchContainer = styled.div`
   width: 100%;
   font-size: 14px;
   line-height: 14px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
+  font-family: 'MontserratMedium';  text-transform: uppercase;
   z-index: 0;
 `;
 

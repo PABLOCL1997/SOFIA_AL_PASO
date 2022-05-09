@@ -26,9 +26,7 @@ const CtaWrapper = styled.div`
 
 const Title = styled.h3`
   font-size: 24px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  line-height: 32px;
+  font-family: 'MontserratMedium';  line-height: 32px;
 
   color: var(--black);
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -59,9 +57,7 @@ const Address = styled.section<{ color: string }>`
     h4 {
       color: ${color};
       font-size: 20px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      line-height: 20px; 
+      font-family: 'MontserratMedium';      line-height: 20px; 
       text-align: left;
       max-width: 294px;
 
