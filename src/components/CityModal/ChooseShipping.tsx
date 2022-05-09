@@ -164,6 +164,9 @@ const Strong = styled.strong`
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     margin: 8px 0 10px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+      font-size: 10px;
+    }
   }
   // cities available
   small {
@@ -174,7 +177,7 @@ const Strong = styled.strong`
   }
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    font-size: 12px;
+    font-size: 10px;
   }
 `;
 
