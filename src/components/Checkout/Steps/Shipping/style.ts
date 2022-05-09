@@ -87,7 +87,8 @@ export const OtherAddressWrapper = styled.div`
 `;
 
 export const Other = styled.button<{ margin: boolean }>`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 14px;
   text-decoration-line: underline;
   color: var(--red);

@@ -97,7 +97,8 @@ const ProductosText = styled.h6`
   }
 `;
 const DestacadosText = styled.h5`
-  font-family: 'MontserratBold';  font-size: 32px;
+  font-family: 'MontserratBold';
+  font-size: 32px;
   position: absolute;
   z-index: 2;
   left: 30px;

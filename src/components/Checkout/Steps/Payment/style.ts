@@ -12,7 +12,8 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 16px;
+  font-family: 'MontserratMedium';
+  font-size: 16px;
   line-height: 16px;
   color: var(--red);
   margin-bottom: 30px;
@@ -43,7 +44,8 @@ export const Title = styled.h2`
 `;
 
 export const Disclaimer = styled.div`
-  font-family: 'MontserratMedium';  font-size: 12px;
+  font-family: 'MontserratMedium'; 
+  font-size: 12px;
   line-height: 12px;
   letter-spacing: 0.01em;
   color: var(--black);

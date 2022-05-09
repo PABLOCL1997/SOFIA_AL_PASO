@@ -10,7 +10,8 @@ import { isValidEmail } from "../../utils/string";
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
 const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 32px;
+  font-family: 'MontserratMedium';
+  font-size: 32px;
   text-align: center;
   letter-spacing: 0.015em;
   color: var(--dark);

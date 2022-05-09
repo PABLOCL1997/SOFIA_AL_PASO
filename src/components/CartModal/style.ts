@@ -83,7 +83,8 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   color: var(--black);
   flex: 1;
@@ -94,7 +95,8 @@ export const Title = styled.h2`
 `;
 
 export const Count = styled.span`
-  font-family: 'MontserratMedium';  font-size: 16px;
+  font-family: 'MontserratMedium';
+  font-size: 16px;
   line-height: 16px;
   span {
     font-family: 'MontserratMedium';
@@ -111,7 +113,8 @@ export const UnderBudget = styled.div`
   padding: 20px;
   color: white;
   text-align: center;
-  font-family: 'MontserratBold';  text-transform: uppercase;
+  font-family: 'MontserratBold';
+  text-transform: uppercase;
   font-size: 12px;
   @media screen and (max-width: ${BREAKPOINT}) {
     width: calc(100% + 40px);
@@ -137,12 +140,14 @@ export const Totals = styled.div`
 
 export const Subtotal = styled.span`
   flex: 1;
-  font-family: 'MontserratMedium';  font-size: 16px;
+  font-family: 'MontserratMedium'; 
+  font-size: 16px;
   line-height: 16px;
 `;
 
 export const Total = styled.span`
-  font-family: 'MontserratMedium';  font-size: 18px;
+  font-family: 'MontserratMedium';
+  font-size: 18px;
   line-height: 18px;
   color: var(--red);
 `;
@@ -175,7 +180,8 @@ export const Toolbox = styled.div`
 `;
 
 export const Empty = styled.button`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 20px;
   color: var(--black);
   background: none;
@@ -230,7 +236,8 @@ export const NameBox = styled.div`
 `;
 
 export const Name = styled.h3`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 14px;
   color: var(--black);
   margin-bottom: 5px;
@@ -239,7 +246,8 @@ export const Name = styled.h3`
   }
 `;
 export const Units = styled.span`
-  font-family: 'MontserratMedium';  font-size: 12px;
+  font-family: 'MontserratMedium';
+  font-size: 12px;
   line-height: 12px;
   color: var(--font);
   margin-right: 20px;
@@ -278,7 +286,8 @@ export const Qty = styled.div`
   }
 `;
 export const UnitPrice = styled.span`
-  font-family: 'MontserratMedium';  font-size: 12px;
+  font-family: 'MontserratMedium';
+  font-size: 12px;
   line-height: 12px;
   color: var(--font);
   margin-right: 5px;
@@ -286,7 +295,8 @@ export const UnitPrice = styled.span`
 
 export const Price = styled.span`
   margin-right: 20px;
-  font-family: 'MontserratMedium';  font-size: 16px;
+  font-family: 'MontserratMedium';
+  font-size: 16px;
   line-height: 16px;
 `;
 

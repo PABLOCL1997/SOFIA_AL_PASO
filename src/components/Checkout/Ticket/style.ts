@@ -219,7 +219,8 @@ export const EmployeeMsg = styled.span`
 `;
 
 export const ErrorText = styled.div<{ margin: boolean }>`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium'; 
+  font-size: 14px;
   line-height: 14px;
   text-decoration-line: none;
   color: var(--red);

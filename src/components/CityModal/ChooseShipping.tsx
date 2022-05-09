@@ -30,7 +30,8 @@ const Wrapper = styled.section`
 `;
 
 const Title = styled.h3`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 32px;
   /* identical to box height, or 133% */
 
@@ -45,7 +46,8 @@ const Title = styled.h3`
 `;
 const Subtitle = styled.h4`
   margin-top: 16px;
-  font-family: 'MontserratMedium';  font-style: normal;
+  font-family: 'MontserratMedium';
+  font-style: normal;
   font-size: 20px;
   line-height: 28px;
   /* identical to box height, or 140% */

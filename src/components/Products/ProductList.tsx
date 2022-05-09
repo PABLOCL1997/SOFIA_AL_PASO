@@ -119,7 +119,8 @@ const List = styled.ul`
 const Item = styled.li<{ key: any }>`
   padding: 15px 30px;
   cursor: pointer;
-  font-family: 'MontserratBold';  font-size: 12px;
+  font-family: 'MontserratBold';
+  font-size: 12px;
   line-height: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;

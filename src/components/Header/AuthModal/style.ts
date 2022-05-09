@@ -58,14 +58,16 @@ export const CloseWrapper = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   color: var(--black);
   margin-bottom: 20px;
 `;
 
 export const Description = styled.p`
-  font-family: 'MontserratMedium';  font-size: 12px;
+  font-family: 'MontserratMedium';
+  font-size: 12px;
   line-height: 137%;
   letter-spacing: 0.01em;
   color: var(--font);

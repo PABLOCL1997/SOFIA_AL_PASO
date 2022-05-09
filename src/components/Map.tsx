@@ -36,7 +36,8 @@ const MapWrapper = styled.div`
 
 const Pin = styled.div`
   position: absolute;
-  font-family: 'MontserratMedium';  font-size: 12px;
+  font-family: 'MontserratMedium';
+  font-size: 12px;
   line-height: 12px;
   color: var(--black);
   background: white;

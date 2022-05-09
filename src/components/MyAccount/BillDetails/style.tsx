@@ -38,7 +38,8 @@ export const BackButton = styled.button`
 `;
 
 export const OrderTitle = styled.h3`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 32px;
   color: ${customStyles.red};
 

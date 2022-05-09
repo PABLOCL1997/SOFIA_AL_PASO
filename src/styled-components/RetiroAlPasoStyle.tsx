@@ -186,7 +186,8 @@ export const BottomText = styled.h3`
   font-size: 24px;
   line-height: 32px;
   color: #000000;
-  font-family: 'MontserratMedium';  text-align: center;
+  font-family: 'MontserratMedium';
+  text-align: center;
   margin-top: -50px;
 
   @media (max-width: ${BREAKPOINT}) {

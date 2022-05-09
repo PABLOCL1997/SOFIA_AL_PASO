@@ -237,7 +237,8 @@ export const Address = styled.div`
 `;
 
 export const AddressText = styled.span`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   margin: 0 8px;
   line-height: 15px;
   max-height: 45px;
@@ -253,7 +254,8 @@ export const AddressText = styled.span`
 `;
 
 export const Total = styled.div`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 14px;
   margin: 0 32px;
 `;
@@ -274,7 +276,8 @@ export const CartWrapper = styled.div`
 `;
 
 export const CartText = styled.span`
-  font-family: 'MontserratBold';  font-size: 8px;
+  font-family: 'MontserratBold';
+  font-size: 8px;
   color: ${customStyles.red};
   position: absolute;
   display: flex;
@@ -502,7 +505,8 @@ export const InputGroupSearchInput = styled.input`
   background: none;
   border: 0;
   padding: 15px 0px 15px 25px;
-  font-family: 'MontserratBold';  font-size: 14px;
+  font-family: 'MontserratBold';
+  font-size: 14px;
   line-height: 14px;
   display: flex;
   align-items: center;

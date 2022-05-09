@@ -33,7 +33,8 @@ export const Headline = styled.div`
 export const Title = styled.h3`
   font-size: 24px;
   line-height: 32px;
-  font-family: 'MontserratMedium';`;
+  font-family: 'MontserratMedium';
+`;
 
 export const TablaWrap = styled.div``;
 
@@ -107,7 +108,8 @@ export const Canal = styled.div`
 `;
 
 export const Price = styled.h6`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 20px;
   color: ${customStyles.black};
 `;
@@ -117,7 +119,8 @@ export const VerDetalleBtn = styled.button`
   display: flex;
   align-items: center;
 
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 20px;
   color: ${customStyles.red};
   border: 1px solid ${customStyles.red};
@@ -145,7 +148,8 @@ export const RepetirCompraBtn = styled.button`
   display: flex;
   align-items: center;
 
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 20px;
   color: ${"#ffffff"};
   border: 1px solid ${customStyles.red};

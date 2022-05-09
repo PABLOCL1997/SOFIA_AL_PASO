@@ -39,7 +39,8 @@ export const Headline = styled.div`
 export const Title = styled.h3`
   font-size: 24px;
   line-height: 32px;
-  font-family: 'MontserratMedium';`;
+  font-family: 'MontserratMedium';
+`;
 
 export const TablaWrap = styled.div``;
 
@@ -104,7 +105,8 @@ export const Order = styled.div`
 `;
 
 export const Price = styled.span`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 20px;
   color: ${customStyles.black};
 `;
@@ -114,7 +116,8 @@ export const VerDetalleBtn = styled.button`
   display: flex;
   align-items: center;
 
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 20px;
   color: ${customStyles.red};
   border: 1px solid ${customStyles.red};

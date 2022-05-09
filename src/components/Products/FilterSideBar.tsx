@@ -259,7 +259,8 @@ const Title = styled.div`
 `;
 
 const Text = styled.div`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 18px;
   color: var(--black);
   margin: 20px 0;

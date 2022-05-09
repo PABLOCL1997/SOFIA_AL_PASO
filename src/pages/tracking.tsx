@@ -85,7 +85,8 @@ const Content = styled.div`
     }
 
     h2 {
-      font-family: 'MontserratMedium';      font-size: 20px;
+      font-family: 'MontserratMedium';
+      font-size: 20px;
       color: var(--black);
       text-align: left;
       margin: 20px 0px;
@@ -283,7 +284,8 @@ const Modal = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   color: var(--black);
   margin: 20px 0;

@@ -77,7 +77,8 @@ export const Actions = {
       display: flex;
       text-align: center;
       align-items: flex-start;
-      font-family: 'MontserratMedium';      font-size: 16px;
+      font-family: 'MontserratMedium';
+      font-size: 16px;
     `,
   },
   Button: {

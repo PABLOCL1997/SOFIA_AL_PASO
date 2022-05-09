@@ -28,7 +28,8 @@ const List = styled.div`
     span {
       background: var(--red);
       display: inline-block;
-      font-family: 'MontserratMedium';      line-height: 16px;
+      font-family: 'MontserratMedium';
+      line-height: 16px;
       height: 100%;
 
       span {
@@ -178,7 +179,8 @@ const MobileWrapper = styled.div`
 const Category = styled.div<{ active: boolean }>`
   color: var(--white);
   text-align: center;
-  font-family: 'MontserratBold';  font-size: 12px;
+  font-family: 'MontserratBold';
+  font-size: 12px;
   padding: 16px 0 0 0;
   text-transform: uppercase;
 

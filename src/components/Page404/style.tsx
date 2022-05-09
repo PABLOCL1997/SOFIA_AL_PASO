@@ -78,7 +78,8 @@ export const Headline = styled.div`
 export const Subtitle = styled.p`
   font-size: 16px;
   line-height: 24px;
-  font-family: 'MontserratMedium';  color: var(--black);
+  font-family: 'MontserratMedium';
+  color: var(--black);
 `;
 
 export const BigImg = styled.img`

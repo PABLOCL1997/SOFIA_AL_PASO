@@ -45,7 +45,8 @@ const QuestionWrapper = styled.main`
     margin: 50px auto;
 
     h2 {
-      font-family: 'MontserratMedium';      font-size: 18px;
+      font-family: 'MontserratMedium';
+      font-size: 18px;
       line-height: 1.5em;
       letter-spacing: 0.01em;
       color: var(--black);

@@ -28,7 +28,8 @@ export const TextWrap = styled.div`
     line-height: 24px;
 
     span {
-      font-family: 'MontserratMedium';      color: var(--red);
+      font-family: 'MontserratMedium';
+      color: var(--red);
       text-decoration: underline;
     }
   }

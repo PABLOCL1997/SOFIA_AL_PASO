@@ -21,7 +21,8 @@ export const Wrapper = styled.div<{ showPromoBar: boolean }>`
 export const Title = styled.h4`
   font-size: 15px;
   color: #fff;
-  font-family: 'MontserratBold';  margin-left: auto;
+  font-family: 'MontserratBold';
+  margin-left: auto;
   @media screen and (max-width: ${BREAKPOINT}) {
     display: none;
   }

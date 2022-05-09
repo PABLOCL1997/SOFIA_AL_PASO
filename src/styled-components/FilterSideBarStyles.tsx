@@ -155,7 +155,8 @@ export const TopFilters = styled.div`
       font-size: 12px;
       line-height: 16px;
       color: ${customStyles.darkGrey};
-      font-family: 'MontserratMedium';      text-decoration: underline;
+      font-family: 'MontserratMedium';
+      text-decoration: underline;
       cursor: pointer;
     }
   }
@@ -229,7 +230,8 @@ export const OrderAndFilterBtn = styled.button`
   border: 1px solid ${customStyles.yellow};
   border-radius: 40px;
   width: fit-content !important;
-  font-family: 'MontserratBold';`;
+  font-family: 'MontserratBold';
+`;
 
 export const MobileModal = styled.div`
   @media (min-width: ${BREAKPOINT}) {

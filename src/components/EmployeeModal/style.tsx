@@ -73,7 +73,8 @@ export const CloseWrapper = styled.div`
 `;
 
 export const Title = styled.h2<{ marginBottom?: string; color?: string }>`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   color: ${(props) => (props.color ? props.color : "#2F2F2F")};
 
@@ -85,7 +86,8 @@ export const Title = styled.h2<{ marginBottom?: string; color?: string }>`
 `;
 
 export const Description = styled.p`
-  font-family: 'MontserratMedium';  font-size: 12px;
+  font-family: 'MontserratMedium';
+  font-size: 12px;
   line-height: 137%;
   letter-spacing: 0.01em;
   color: var(--font);
@@ -207,7 +209,8 @@ export const SmallTextBtn = styled.button<{ margin?: string }>`
   line-height: 20px;
   background: transparent;
   border: 0;
-  font-family: 'MontserratMedium';  text-decoration-line: underline;
+  font-family: 'MontserratMedium';
+  text-decoration-line: underline;
   margin: ${(props) => (props.margin ? props.margin : "auto")};
 `;
 
@@ -219,7 +222,8 @@ export const Anchor = styled.a`
   line-height: 20px;
   background: transparent;
   border: 0;
-  font-family: 'MontserratMedium';  text-decoration-line: underline;
+  font-family: 'MontserratMedium';
+  text-decoration-line: underline;
 `;
 
 export const SmallText = styled.p<{ marginBottom?: string }>`

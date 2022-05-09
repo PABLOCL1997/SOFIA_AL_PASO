@@ -79,7 +79,8 @@ const Icon = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 20px;
+  font-family: 'MontserratMedium';
+  font-size: 20px;
   line-height: 110%;
   text-align: center;
   color: var(--black);

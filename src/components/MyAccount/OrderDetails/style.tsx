@@ -38,7 +38,8 @@ export const BackButton = styled.button`
 `;
 
 export const OrderTitle = styled.h3`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 32px;
   color: ${customStyles.red};
 
@@ -216,7 +217,8 @@ export const SubtotalWrap = styled.div`
     h5 {
       font-size: 20px;
       line-height: 28px;
-      font-family: 'MontserratMedium';    }
+      font-family: 'MontserratMedium';
+    }
   }
 
   @media (max-width: ${LG}) {

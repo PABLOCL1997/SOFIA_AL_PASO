@@ -98,7 +98,8 @@ export const Image = styled.div<{ src: string; srcSet?: string }>`
 `;
 
 export const ProductTitle = styled.h2`
-  font-family: 'MontserratBold';  font-size: 30px;
+  font-family: 'MontserratBold';
+  font-size: 30px;
   line-height: 30px;
   color: var(--black);
   margin-bottom: 16px;
@@ -235,7 +236,8 @@ export const Title = styled.div`
 `;
 
 export const Disclaimer = styled.div`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 18px;
   color: var(--black);
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -260,7 +262,8 @@ export const Price = styled.div`
   line-height: 24px;
   color: var(--red);
   margin-bottom: 58px;
-  font-family: 'MontserratBold';  margin: 0px 0px 15px;
+  font-family: 'MontserratBold';
+  margin: 0px 0px 15px;
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-bottom: 30px;
     font-size: 20px;
@@ -269,7 +272,8 @@ export const Price = styled.div`
 `;
 
 export const EstimatedPrice = styled.div<{ visible?: boolean }>`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 14px;
   text-align: left;
   color: var(--font);
@@ -281,7 +285,8 @@ export const EstimatedPrice = styled.div<{ visible?: boolean }>`
 `;
 
 export const Label = styled.div<{ visible?: boolean }>`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   text-align: left;
   color: var(--font);
@@ -323,7 +328,8 @@ export const OutOfStock = styled.span`
   align-items: center;
   text-align: center;
   margin: 0 auto;
-  font-family: 'MontserratMedium';  font-size: 16px;
+  font-family: 'MontserratMedium';
+  font-size: 16px;
   line-height: 16px;
 `;
 

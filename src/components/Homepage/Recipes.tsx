@@ -34,7 +34,8 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   color: var(--black);
   text-align: center;

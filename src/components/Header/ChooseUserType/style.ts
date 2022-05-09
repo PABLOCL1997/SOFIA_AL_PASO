@@ -28,7 +28,8 @@ export const Modal = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 24px;
+  font-family: 'MontserratMedium';
+  font-size: 24px;
   line-height: 24px;
   color: var(--black);
   flex: 1;

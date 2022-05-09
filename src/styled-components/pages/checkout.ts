@@ -123,7 +123,8 @@ export const ShippingMethodWrapper = styled.div`
 
     a {
       display: block;
-      font-family: 'MontserratMedium';      font-style: normal;
+      font-family: 'MontserratMedium';
+      font-style: normal;
       font-size: 12px;
       line-height: 20px;
       /* identical to box height */

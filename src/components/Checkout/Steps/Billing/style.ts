@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.h2`
-  font-family: 'MontserratMedium';  font-size: 16px;
+  font-family: 'MontserratMedium';
+  font-size: 16px;
   line-height: 16px;
   color: var(--red);
   margin-bottom: 30px;
@@ -60,7 +61,8 @@ export const InputGroup = styled.div<{ key: string }>`
 `;
 
 export const Other = styled.button`
-  font-family: 'MontserratMedium';  font-size: 14px;
+  font-family: 'MontserratMedium';
+  font-size: 14px;
   line-height: 14px;
   text-decoration-line: underline;
   color: var(--red);
