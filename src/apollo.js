@@ -8,6 +8,10 @@ import { token } from "./utils/store";
 import "./i18n";
 import { GET_CART_ITEMS } from "./graphql/cart/queries";
 import { GET_USER } from "./graphql/user/queries";
+import { GET_CHECKOUT } from "./graphql/checkout/queries";
+import { GET_MODALS } from "./graphql/modals/queries";
+import { INITIAL_CHECKOUT } from "./hooks/useCheckout";
+import { INITIAL_MODALS } from "./hooks/useModals";
 
 export default async () => {
   const httpLink = createHttpLink({ uri: process.env.REACT_APP_GRAPHQL });
@@ -59,19 +63,61 @@ export default async () => {
         qty: Int!
         stock: Int!
       }
+      type Checkout {
+        redirectToCheckout: Boolean!
+        isGuestOrder: Boolean!
+      }
+      type Modals {
+        showChooseUserType: Boolean!
+        showRegisterModal: Boolean!
+      }
       extend type Query {
         cartItems: [Product!]!
         userInfo: [User!]!
+        checkout: Checkout!
+        modals: Modals!
       }
       extend type Mutation {
         addToCart(product: Product!): [Product!]!
         deleteFromCart(product: Product!): [Product!]!
         emptyCart: [Product!]!
         addInfoToUser(user: User!): [User!]!
+        addToCheckout(checkout: Checkout!): Checkout!
+        addToModals(modals: Modals!): Modals!
       }
     `,
     resolvers: {
       Mutation: {
+        addToCheckout: (_, { checkout }, { cache }) => {
+          const queryResult = cache.readQuery({ query: GET_CHECKOUT });
+          if (queryResult) {
+            const newCheckout = {
+              ...queryResult.checkout,
+              ...checkout,
+            }
+            cache.writeQuery({ 
+              query: GET_CHECKOUT,
+              data: { checkout: newCheckout } 
+            });
+            return newCheckout;
+          }
+          return INITIAL_CHECKOUT;
+        },  
+        addToModals: (_, { modals }, { cache }) => {
+          const queryResult = cache.readQuery({ query: GET_MODALS });
+          if (queryResult) {
+            const newModals = {
+              ...queryResult.modals,
+              ...modals,
+            }
+            cache.writeQuery({ 
+              query: GET_MODALS,
+              data: { modals: newModals } 
+            });
+            return newModals;
+          }
+          return INITIAL_MODALS;
+        },   
         addInfoToUser: (_, { user }, { cache }) => {
           const queryResult = cache.readQuery({ query: GET_USER });
           if (queryResult) {
@@ -137,7 +183,12 @@ export default async () => {
     },
   });
 
-  const initData = { cartItems: [], userInfo: [] };
+  const initData = { 
+    cartItems: [], 
+    userInfo: [],
+    checkout: INITIAL_CHECKOUT,
+    modals: INITIAL_MODALS,
+  };
 
   cache.writeData({ data: initData });
 

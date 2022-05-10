@@ -131,7 +131,7 @@ const DeliveryDate: FC<{
 
   useEffect(() => {
     if (deliveryDate) {
-      updateOrder("delivery_date", dayjs(deliveryDate).format('YYYY-MM-DD hh:mm:ss'));
+      updateOrder("delivery_date", dayjs(deliveryDate).toISOString());
       // calculate time frames for deliveryDate
       const dateComparator: dayjs.OpUnitType = "days";
       const hourComparator: dayjs.OpUnitType = "hours";

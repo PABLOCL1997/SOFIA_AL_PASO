@@ -14,6 +14,7 @@ import useUser from "../hooks/useUser";
 import { Location } from "../context/Location";
 import { Courtain } from "../context/Courtain";
 import { useUrlQuery } from "../hooks/useUrlQuery";
+import useModals from "../hooks/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Error = React.lazy(() => import(/* webpackChunkName: "Error" */ "../components/Error"));
@@ -115,6 +116,7 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
   }, [query]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { handleResetModals } = useModals();
 
   useEffect(() => {
     let url = history.location.pathname;
@@ -139,6 +141,9 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
         toggleLoginModal();
       }
     });
+
+    // reset modals state when app is loaded
+    handleResetModals();
     return () => {
       unlisten();
     };

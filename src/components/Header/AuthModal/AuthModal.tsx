@@ -27,9 +27,8 @@ import {
 import { findKeyByCity } from "../../../utils/string";
 import useUser from "../../../hooks/useUser";
 import { ApolloError } from "apollo-client";
-import { useAppSelector } from "../../../state/store";
-import { useCheckout } from "../../../state/slices/checkout/useCheckout";
-import { useModals } from "../../../state/slices/modals/useModals";
+import useCheckout from "../../../hooks/useCheckout";
+import useModals from "../../../hooks/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Cta"));
@@ -75,10 +74,8 @@ const AuthModal: FC<Props> = () => {
   const togglePassword = useRef<HTMLInputElement>(null);
   const [signUpErrorText, setSignUpErrorText] = useState("");
   const [saveLogin, setSaveLogin] = useState(false);
-  const { redirectToCheckout } = useAppSelector((state) => state.checkout);
-  const { showRegisterModal } = useAppSelector((state) => state.modals);
-  const { handleRedirectToCheckout, handleIsGuestOrder } = useCheckout();
-  const { handleRegisterModal } = useModals();
+  const { checkout: { redirectToCheckout }, handleIsGuestOrder, handleRedirectToCheckout } = useCheckout();
+  const { modals: { showRegisterModal }, handleRegisterModal } = useModals();
 
   const [getDetails] = useLazyQuery(DETAILS, {
     fetchPolicy: "no-cache",
@@ -100,7 +97,6 @@ const AuthModal: FC<Props> = () => {
             cityName: b2eAddress?.city,
             agency: null,
             idPriceList: b2eAddress?.id_price_list || 0,
-            isB2E: true
           };
         } else {
           // set the default address to the first address

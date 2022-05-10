@@ -9,8 +9,8 @@ import CircleLoader from "../../../CircleLoader";
 import arrow from "../../../../assets/images/arrow-back-checkout.svg";
 import * as SC from "./style";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
-import { useAppSelector } from "../../../../state/store";
 import Cta from "../../../Cta";
+import useCheckout from "../../../../hooks/useCheckout";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../../Loader"));
 const Switch = React.lazy(() => import(/* webpackChunkName: "Switch" */ "../../../Switch"));
@@ -38,7 +38,7 @@ const Payment: FC<{
   const history = useHistory();
   const query = useUrlQuery();
   const nextStep = query.get("next") || "review";
-  const { isGuestOrder } = useAppSelector((state) => state.checkout);
+  const { checkout: { isGuestOrder } } = useCheckout();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const CREDIT = {

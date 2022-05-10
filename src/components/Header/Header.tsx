@@ -24,7 +24,7 @@ import { getStep, Steps } from "../../types/Checkout";
 import ShippingType from "./ShippingType";
 import useUser from "../../hooks/useUser";
 import ChooseUserType from "./ChooseUserType";
-import { useAppSelector } from "../../state/store";
+import useModals from "../../hooks/useModals";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));
 
@@ -47,7 +47,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("");
-  const { showChooseUserType } = useAppSelector((state) => state.modals);
+  const { modals: { showChooseUserType }} = useModals();
 
   const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);

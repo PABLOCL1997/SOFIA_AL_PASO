@@ -9,7 +9,7 @@ import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
 import useCart from "../../hooks/useCart";
-import { useModals } from "../../state/slices/modals/useModals";
+import useModals from "../../hooks/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Cta"));

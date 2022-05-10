@@ -13,6 +13,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { CHECK_TOKEN } from "../graphql/user/queries";
 import { token } from "../utils/store";
 import { useLocation } from "react-router-dom";
+import useModals from "../hooks/useModals";
 
 const Wrapper = styled.div<{ showPromoBar: boolean }>`
   min-height: 100vh;
@@ -45,6 +46,13 @@ const LayoutHomepage: FC<Props> = ({ children, page }) => {
   const { logout, toggleLoginModal, showPromoBar } = useUser();
   const location = useLocation();
   const openLoginModal = location.search.split("openLoginModal=")[1] === "true";
+
+  const { handleResetModals } = useModals();
+
+  // reset modals state when app is loaded
+  useEffect(() => {
+    handleResetModals();
+  }, []);
 
   useEffect(() => {
     if (openLoginModal) {

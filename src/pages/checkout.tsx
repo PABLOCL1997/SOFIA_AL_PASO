@@ -22,8 +22,7 @@ import useUser from "../hooks/useUser";
 import useCityPriceList from "../hooks/useCityPriceList";
 import useMinimumPrice from "../hooks/useMinimumPrice";
 import useCart from "../hooks/useCart";
-import { useCheckout } from "../state/slices/checkout/useCheckout";
-import { useAppSelector } from "../state/store";
+import useCheckout from "../hooks/useCheckout";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Loader"));
 const Billing = React.lazy(() => import(/* webpackChunkName: "Billing" */ "../components/Checkout/Steps/Billing"));
@@ -51,8 +50,7 @@ const Checkout = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
-  const { isGuestOrder } = useAppSelector((state) => state.checkout);
-  const { handleIsGuestOrder } = useCheckout();
+  const { checkout: { isGuestOrder }, handleIsGuestOrder } = useCheckout();
 
   const { setLoading } = useContext(Courtain.Context);
   const currentStep = useContext(Location.Context);
@@ -215,12 +213,6 @@ const Checkout = () => {
 
     const body = document.querySelector("body");
     if (body && window.innerWidth >= 768) body.style.overflow = "unset";
-
-    const isLoggedIn = localUserData?.userInfo?.[0]?.isLoggedIn;
-
-    if (!isLoggedIn) {
-      handleIsGuestOrder(true);
-    }
 
     return () => {
       handleIsGuestOrder(false);

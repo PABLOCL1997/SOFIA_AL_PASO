@@ -6,7 +6,7 @@ import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { trackGoToCartEvent } from "../utils/dataLayer";
 import { useHistory } from "react-router-dom";
-import { useModals } from "../state/slices/modals/useModals";
+import useModals from "../hooks/useModals";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
