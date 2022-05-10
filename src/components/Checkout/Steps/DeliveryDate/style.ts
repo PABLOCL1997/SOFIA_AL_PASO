@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 16px;
   color: var(--red);
@@ -14,7 +14,7 @@ export const Title = styled.h2`
     cursor: pointer;
   }
   h2 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -82,7 +82,7 @@ export const Date = styled.p`
   margin-bottom: 4px;
 `;
 export const Day = styled.strong`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
 `;
 
@@ -143,8 +143,7 @@ export const Next = {
     button {
       padding: 14px 48px;
       font-size: 12px;
-      font-family: MullerMedium;
-      font-weight: bold;
+      font-family: 'MontserratBold';
       text-transform: uppercase;
       line-height: 20px;
     }

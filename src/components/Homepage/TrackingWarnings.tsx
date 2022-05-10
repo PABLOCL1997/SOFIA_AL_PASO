@@ -21,7 +21,7 @@ const TrackingButton = styled.div`
   padding: 10px;
   border-radius: 30px;
   color: white;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   text-align: center;
   cursor: pointer;
 `;
@@ -44,7 +44,7 @@ const WarningElem = styled.div`
   padding: 20px;
   color: white;
   border-radius: 30px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   display: grid;
   grid-template-columns: 3fr 1fr;
@@ -66,7 +66,7 @@ const WarningElem = styled.div`
 `;
 
 const WarningElemBold = styled.span`
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
 `;
 
 type Warning = {

@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { BREAKPOINT } from "../../../../utils/constants";
 
 export const Heading = styled.h1`
-  font-family: MullerRegular;
-  font-weight: bold;
+  font-family: 'MontserratBold';
   font-size: 16px;
   line-height: 16px;
   color: var(--red);
@@ -15,7 +14,7 @@ export const Heading = styled.h1`
     cursor: pointer;
   }
   h2 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -41,7 +40,7 @@ export const Title = {
     justify-content: space-between;
   `,
   Label: styled.h2`
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     color: var(--red);
@@ -50,9 +49,8 @@ export const Title = {
   Link: styled.a`
     cursor: pointer;
     color: var(--red);
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
     font-style: normal;
-    font-weight: normal;
     font-size: 14px;
     line-height: 14px;
     /* identical to box height */
@@ -78,7 +76,7 @@ export const Content = {
     flex-direction: column;
     padding-left: 20px;
     label {
-      font-family: MullerMedium;
+      font-family: 'MontserratMedium';
       font-size: 10px;
       line-height: 10px;
       letter-spacing: 0.01em;
@@ -87,7 +85,7 @@ export const Content = {
     input,
     em {
       background: none;
-      font-family: MullerMedium;
+      font-family: 'MontserratMedium';
       font-size: 14px;
       line-height: 14px;
       display: flex;
@@ -141,7 +139,7 @@ export const Content = {
       grid-template-columns: 1fr;
     `,
     Info: styled.em`
-      font-family: MullerMedium;
+      font-family: 'MontserratMedium';
       font-size: 14px;
       line-height: 14px;
       color: var(--black);
@@ -201,12 +199,10 @@ export const Footer = {
     line-height: 20px;
     font-style: normal;
     em {
-      font-family: MullerMedium;
-      font-weight: normal;
+      font-family: 'MontserratMedium';
     }
     strong {
-      font-family: MullerBold;
-      font-weight: bold;
+      font-family: 'MontserratBold';
     }
   `,
   Cta: styled.section`

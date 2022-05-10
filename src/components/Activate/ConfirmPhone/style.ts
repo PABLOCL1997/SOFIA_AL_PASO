@@ -3,7 +3,7 @@ import { BREAKPOINT } from "../../../utils/constants";
 
 export const Username = styled.div`
   color: var(--red);
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   font-size: 20px;
   text-align: left;
@@ -18,7 +18,7 @@ export const Username = styled.div`
 export const UserPhone = styled.div`
   margin-left: 39px;
   text-align: left;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 20px;
   align-self: flex-start;
   margin-top: 13px;

@@ -98,7 +98,7 @@ export const Image = styled.div<{ src: string; srcSet?: string }>`
 `;
 
 export const ProductTitle = styled.h2`
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   font-size: 30px;
   line-height: 30px;
   color: var(--black);
@@ -137,14 +137,14 @@ export const Categories = styled.div`
     margin: 32px 0;
   }
   span {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 10px;
     line-height: 10px;
     color: var(--black);
     margin-right: 5px;
   }
   a {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 10px;
     line-height: 10px;
     text-decoration-line: underline;
@@ -178,7 +178,7 @@ export const Toolbox = styled.div`
       padding: 15px 70px;
       margin: 0 15px;
       span {
-        font-family: MullerExtraBold;
+        font-family: 'MontserratBold';
       }
     }
   }
@@ -200,7 +200,7 @@ export const Qty = styled.div`
     padding-left: 10px;
     font-size: 12px;
     line-height: 12px;
-    font-family: MullerRegular;
+    font-family: 'MontserratRegular';
     @media screen and (max-width: ${BREAKPOINT}) {
       color: var(--black);
     }
@@ -228,7 +228,7 @@ export const Text = styled.div`
 export const Title = styled.div`
   margin-left: 10px;
   span {
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
     font-size: 12px;
     line-height: 12px;
     color: var(--black);
@@ -236,7 +236,7 @@ export const Title = styled.div`
 `;
 
 export const Disclaimer = styled.div`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 14px;
   line-height: 18px;
   color: var(--black);
@@ -255,7 +255,6 @@ export const PriceBox = styled.div`
     margin: 0;
     padding: 0;
   }
-}
 `;
 
 export const Price = styled.div`
@@ -263,7 +262,7 @@ export const Price = styled.div`
   line-height: 24px;
   color: var(--red);
   margin-bottom: 58px;
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   margin: 0px 0px 15px;
   @media screen and (max-width: ${BREAKPOINT}) {
     margin-bottom: 30px;
@@ -273,7 +272,7 @@ export const Price = styled.div`
 `;
 
 export const EstimatedPrice = styled.div<{ visible?: boolean }>`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 14px;
   line-height: 14px;
   text-align: left;
@@ -286,7 +285,7 @@ export const EstimatedPrice = styled.div<{ visible?: boolean }>`
 `;
 
 export const Label = styled.div<{ visible?: boolean }>`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   text-align: left;
@@ -321,16 +320,15 @@ export const CloseWrapper = styled.div`
   }
 `;
 
-export const OutOfStock = styled.span`
-  font-family: MullerBold;
+export const OutOfStock = styled.span`  
   color: var(--red);
   border: 1px solid var(--red);
   padding: 10px 100px;
   border-radius: 30px;
   align-items: center;
-  text-aling: center;
+  text-align: center;
   margin: 0 auto;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 16px;
 `;

@@ -32,14 +32,14 @@ const Header = styled.div`
   text-align: center;
 
   h1 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 40px;
     line-height: 1.5em;
     color: var(--black);
   }
 
   h2 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 20px;
     color: var(--black);
     text-align: center;
@@ -85,7 +85,7 @@ const Content = styled.div`
     }
 
     h2 {
-      font-family: MullerMedium;
+      font-family: 'MontserratMedium';
       font-size: 20px;
       color: var(--black);
       text-align: left;
@@ -100,7 +100,7 @@ const Content = styled.div`
     width: calc(100% - 60px);
     border: 1px solid transparent;
     padding: 15px 30px;
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -284,7 +284,7 @@ const Modal = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   color: var(--black);

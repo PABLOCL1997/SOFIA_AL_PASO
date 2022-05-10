@@ -15,7 +15,7 @@ export const Header = styled.div`
     font-size: 32px;
     line-height: 40px;
     color: var(--black);
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     margin-left: 20px;
     padding-top: 5px;
   }
@@ -129,8 +129,7 @@ export const Text = styled.p<{ align?: string; maxWidth?: string }>`
   font-size: 20px;
   line-height: 28px;
   color: #000000;
-  font-family: MullerMedium;
-
+  font-family: 'MontserratMedium';
   max-width: ${(props) => (props.maxWidth ? props.maxWidth : "unset")};
 
   @media (max-width: ${BREAKPOINT}) {
@@ -145,8 +144,7 @@ export const Text = styled.p<{ align?: string; maxWidth?: string }>`
 export const SubText = styled.div<{ marginTop?: string }>`
   font-size: 15px;
   line-height: normal;
-  font-family: "MullerRegular";
-  margin-top: ${(props) => (props.marginTop ? props.marginTop : "40px")};
+  font-family: 'MontserratMedium';  margin-top: ${(props) => (props.marginTop ? props.marginTop : "40px")};
 
   @media (max-width: ${BREAKPOINT}) {
     text-align: center;
@@ -188,7 +186,7 @@ export const BottomText = styled.h3`
   font-size: 24px;
   line-height: 32px;
   color: #000000;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   text-align: center;
   margin-top: -50px;
 

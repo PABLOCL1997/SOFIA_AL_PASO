@@ -28,7 +28,7 @@ export const Modal = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   color: var(--black);
@@ -64,9 +64,8 @@ export const Option = {
   `,
   Title: styled.h4`
     margin-top: 24px;
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-style: normal;
-    font-weight: normal;
     font-size: 16px;
     line-height: 20px;
     color: #000000;

@@ -46,7 +46,7 @@ const Modal = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   color: var(--black);

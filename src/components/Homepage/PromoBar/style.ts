@@ -21,7 +21,7 @@ export const Wrapper = styled.div<{ showPromoBar: boolean }>`
 export const Title = styled.h4`
   font-size: 15px;
   color: #fff;
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   margin-left: auto;
   @media screen and (max-width: ${BREAKPOINT}) {
     display: none;
@@ -46,14 +46,14 @@ export const Buy = {
   `,
   TitleDesktop: styled.h4`
     font-size: 15px;
-    font-family: MullerRegular;
+    font-family: 'MontserratRegular';
     @media screen and (max-width: ${BREAKPOINT}) {
       display: none;
     }
   `,
   TitleMobile: styled.h4`
     font-size: 15px;
-    font-family: MullerRegular;
+    font-family: 'MontserratRegular';
     @media screen and (min-width: ${BREAKPOINT}) {
       display: none;
     }

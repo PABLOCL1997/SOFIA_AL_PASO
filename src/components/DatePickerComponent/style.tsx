@@ -276,7 +276,7 @@ export const CtaWrap = styled.div`
     margin-bottom: 24px;
 
     span {
-      font-family: "MullerBold";
+      font-family: 'MontserratBold';
       font-size: 14px;
       line-height: 20px;
       padding: 7px 0;

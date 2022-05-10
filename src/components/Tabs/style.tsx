@@ -99,7 +99,7 @@ export const Text = styled.span<{ active?: boolean }>`
   font-size: 14px;
   line-height: 20px;
   color: ${(props) => (props.active ? customStyles.red : customStyles.black)};
-  font-family: ${(props) => (props.active ? "MullerMedium" : "inherit;")};
+  font-family: ${(props) => (props.active ? "MontserratMedium" : "MontserratRegular")};
 
   @media (max-width: ${LG}) {
     font-size: 13px;

@@ -106,7 +106,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   color: var(--black);
@@ -114,11 +114,11 @@ const Title = styled.h2`
 `;
 
 const Count = styled.span`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 16px;
   span {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
   }
   b {
     color: var(--red);
@@ -132,7 +132,7 @@ const UnderBudget = styled.div`
   padding: 20px;
   color: white;
   text-align: center;
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   font-size: 12px;
   @media screen and (max-width: ${BREAKPOINT}) {
@@ -182,14 +182,14 @@ const NameBox = styled.div`
 `;
 
 const Name = styled.h3`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 14px;
   line-height: 14px;
   color: var(--black);
 `;
 
 const Units = styled.span`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 12px;
   line-height: 12px;
   color: var(--font);
@@ -197,7 +197,7 @@ const Units = styled.span`
 `;
 
 const UnitPrice = styled.span`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 12px;
   line-height: 12px;
   color: var(--font);
@@ -206,7 +206,7 @@ const UnitPrice = styled.span`
 
 const Price = styled.span`
   margin-right: 20px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 16px;
 `;
@@ -229,13 +229,13 @@ const Totals = styled.div`
 
 const Subtotal = styled.span`
   flex: 1;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 16px;
 `;
 
 const Total = styled.span`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 18px;
   line-height: 18px;
   color: var(--red);
@@ -271,7 +271,7 @@ const Toolbox = styled.div`
 `;
 
 const Empty = styled.button`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 14px;
   line-height: 20px;
   color: var(--black);

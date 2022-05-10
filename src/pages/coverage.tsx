@@ -33,7 +33,7 @@ const Header = styled.div`
 `;
 
 const HeaderTitle = styled.h1`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium'; 
   font-size: 40px;
   line-height: 1.5em;
   color: var(--black);

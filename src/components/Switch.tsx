@@ -9,7 +9,7 @@ const SwitchContainer = styled.div`
   width: 100%;
   font-size: 14px;
   line-height: 14px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   text-transform: uppercase;
   z-index: 0;
 `;
@@ -36,6 +36,7 @@ const Option = styled.div<{ selected: boolean; size: number }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
 `;
 
 type Props = {

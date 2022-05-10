@@ -39,7 +39,7 @@ const Wrapper = styled.section`
     margin-bottom: 4px;
   }
   h3 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     margin-bottom: 24px;
     font-size: 24px;
   }
@@ -48,7 +48,7 @@ const Wrapper = styled.section`
     font-size: 16px;
   }
   strong {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     color: var(--red);
     margin-bottom: 16px;
     font-size: 20px;

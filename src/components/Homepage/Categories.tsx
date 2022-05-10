@@ -28,7 +28,7 @@ const List = styled.div`
     span {
       background: var(--red);
       display: inline-block;
-      font-family: MullerMedium;
+      font-family: 'MontserratMedium';
       line-height: 16px;
       height: 100%;
 
@@ -48,11 +48,10 @@ const List = styled.div`
 
   & > a:hover,
   & > span:hover {
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
 
     span {
-      font-family: MullerMedium;
-      // padding-bottom: 2px;
+      font-family: 'MontserratMedium';      // padding-bottom: 2px;
       span {
         border-bottom: 1px solid #ffffff;
       }
@@ -77,7 +76,7 @@ const SubcategoriesWrapper = styled.div`
   transform: translate(-50%, 0);
 
   & > a {
-    font-family: MullerRegular;
+    font-family: 'MontserratRegular';
     padding: 0 24px;
     background: var(--red);
     text-align: left;
@@ -119,7 +118,7 @@ const SubcategoriesMobileWrapper = styled.article<{ visible: boolean; extended: 
   transform: translate(-50%, 0);
 
   a {
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
     font-size: 10px;
     color: #FFFFFF;
     padding: 0 24px;  
@@ -180,7 +179,7 @@ const MobileWrapper = styled.div`
 const Category = styled.div<{ active: boolean }>`
   color: var(--white);
   text-align: center;
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   font-size: 12px;
   padding: 16px 0 0 0;
   text-transform: uppercase;

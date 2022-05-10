@@ -39,7 +39,7 @@ export const Headline = styled.div`
 export const Title = styled.h3`
   font-size: 24px;
   line-height: 32px;
-  font-family: "MullerMedium";
+  font-family: 'MontserratMedium';
 `;
 
 export const TablaWrap = styled.div``;
@@ -55,7 +55,7 @@ export const TablaHead = styled.div`
     line-height: 18px;
     color: ${customStyles.darkGrey};
 
-    font-family: "MullerMedium";
+    font-family: 'MontserratMedium';
   }
 `;
 
@@ -105,7 +105,7 @@ export const Order = styled.div`
 `;
 
 export const Price = styled.span`
-  font-family: "MullerMedium";
+  font-family: 'MontserratMedium';
   font-size: 14px;
   line-height: 20px;
   color: ${customStyles.black};
@@ -116,7 +116,7 @@ export const VerDetalleBtn = styled.button`
   display: flex;
   align-items: center;
 
-  font-family: "MullerMedium";
+  font-family: 'MontserratMedium';
   font-size: 14px;
   line-height: 20px;
   color: ${customStyles.red};
@@ -126,7 +126,7 @@ export const VerDetalleBtn = styled.button`
   width: 106px;
 
   span {
-    font-family: "MullerMedium";
+    font-family: 'MontserratMedium';
     margin-left: 5px;
   }
 
@@ -244,7 +244,7 @@ export const CtaWrapper = styled.div`
       bottom: -90px;
       margin-bottom: 70px;
       span {
-        font-family: MullerBold;
+        font-family: 'MontserratBold';
       }
     }
   }

@@ -84,7 +84,7 @@ const Cart = styled.div`
 `;
 
 const ProductosText = styled.h6`
-  font-family: MullerRegular;
+  font-family: 'MontserratRegular';
   font-size: 26px;
   position: absolute;
   z-index: 2;
@@ -97,7 +97,7 @@ const ProductosText = styled.h6`
   }
 `;
 const DestacadosText = styled.h5`
-  font-family: MullerBold;
+  font-family: 'MontserratBold';
   font-size: 32px;
   position: absolute;
   z-index: 2;

@@ -36,8 +36,7 @@ export const Square = styled.section`
 export const ButtonPrimary = styled.button`
   width: 100%;
   font-size: 12px;
-  font-family: MullerBold;
-  font-weight: bold;
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   /* Rojo Sofía */
   background: var(--red);
@@ -54,8 +53,7 @@ export const ButtonPrimary = styled.button`
 export const ButtonSecondary = styled.button`
   width: 100%;
   font-size: 12px;
-  font-family: MullerBold;
-
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   background: #ffffff;
   border: 2px solid var(--red);
@@ -72,8 +70,7 @@ export const ButtonSecondary = styled.button`
 export const ButtonSecondaryLarge = styled.button`
   width: 100%;
   font-size: 12px;
-  font-family: MullerBold;
-
+  font-family: 'MontserratBold';
   text-transform: uppercase;
   background: #ffffff;
   border: 2px solid var(--red);
@@ -89,7 +86,7 @@ export const ButtonSecondaryLarge = styled.button`
 
 export const Title = styled.h2`
   font-size: 32px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   line-height: 40px;
   margin: 26px;
 
@@ -154,7 +151,7 @@ export const ProgressBar = {
 export const Error = styled.div`
   justify-self: start;
   color: var(--red);
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   margin-bottom: 5px;
   padding-left: 15px;
   font-size: 12px;

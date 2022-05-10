@@ -30,8 +30,7 @@ const Wrapper = styled.section`
 `;
 
 const Title = styled.h3`
-  font-family: MullerMedium;
-  font-style: normal;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 32px;
   /* identical to box height, or 133% */
@@ -47,7 +46,7 @@ const Title = styled.h3`
 `;
 const Subtitle = styled.h4`
   margin-top: 16px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-style: normal;
   font-size: 20px;
   line-height: 28px;
@@ -103,11 +102,10 @@ const Option = styled.li<{ selected: boolean }>`
     border-radius: 16px;
 
     p {
-        margin-top 24px;
+        margin-top: 24px;
 
-        font-family: MullerMedium;
+        font-family: 'MontserratMedium';
         font-style: normal;
-        font-weight: normal;
         font-size: 16px;
         line-height: 20px;
         
@@ -153,24 +151,27 @@ const Strong = styled.strong`
   margin-top: 16px;
   max-width: 203px;
   strong {
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
   }
   // timeframes
   em {
     display: block;
     font-size: 14px;
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     margin: 8px 0 10px;
+    @media screen and (max-width: ${BREAKPOINT}) {
+      font-size: 10px;
+    }
   }
   // cities available
   small {
     display: block;
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
     margin-top: 8px;
   }
 
   @media screen and (max-width: ${BREAKPOINT}) {
-    font-size: 12px;
+    font-size: 10px;
   }
 `;
 

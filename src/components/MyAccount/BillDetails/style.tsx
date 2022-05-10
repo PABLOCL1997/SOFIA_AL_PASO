@@ -26,8 +26,7 @@ export const BackButton = styled.button`
   }
 
   span {
-    font-family: "MullerMedium";
-    font-weight: 500;
+    font-family: 'MontserratMedium';
     font-size: 12px;
     line-height: 18px;
     color: ${customStyles.darkGrey};
@@ -39,8 +38,7 @@ export const BackButton = styled.button`
 `;
 
 export const OrderTitle = styled.h3`
-  font-family: "MullerMedium";
-  font-weight: 500;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 32px;
   color: ${customStyles.red};
@@ -74,7 +72,7 @@ export const CardHead = styled.div`
     text-transform: uppercase;
     color: ${customStyles.black};
 
-    font-family: "MullerMedium";
+    font-family: 'MontserratMedium';
     margin-bottom: 2px;
   }
 `;
@@ -88,7 +86,7 @@ export const EnvioYFacturacion = styled.div`
     letter-spacing: 0.5px;
     text-transform: uppercase;
     color: ${customStyles.black};
-    font-family: "MullerMedium";
+    font-family: 'MontserratMedium';
     margin-bottom: 2px;
   }
 
@@ -122,7 +120,7 @@ export const CtaWrap = styled.div`
     width: 100%;
 
     span {
-      font-family: "MullerBold";
+      font-family: 'MontserratBold';
       font-size: 14px;
       line-height: 20px;
       padding: 7px 0;
@@ -142,7 +140,7 @@ export const TablaHead = styled.div`
   span {
     font-size: 12px;
     line-height: 18px;
-    font-family: "MullerMedium";
+    font-family: 'MontserratMedium';
     color: ${customStyles.darkGrey};
 
     &:last-child {
@@ -185,21 +183,20 @@ export const SubtotalWrap = styled.div`
     }
 
     h6 {
-      font-family: "MullerBold";
+      font-family: 'MontserratBold';
       margin-bottom: 10px;
     }
 
     h5 {
       font-size: 20px;
       line-height: 28px;
-      font-family: "MullerMedium";
-    }
+      font-family: 'MontserratMedium';    }
   }
 
   @media (max-width: ${LG}) {
     > div {
       h6 {
-        font-family: "MullerMedium";
+        font-family: 'MontserratMedium';
       }
       h5 {
         font-size: 16px;

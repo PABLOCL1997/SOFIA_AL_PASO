@@ -34,7 +34,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   color: var(--black);

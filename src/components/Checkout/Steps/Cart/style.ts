@@ -43,14 +43,14 @@ export const Content = {
             margin-top: 30px;
         `,
         Tag: styled.strong`
-            font-family: MullerBold;
+            font-family: 'MontserratBold';
             color: var(--black);
             font-size: 14px;
             line-height: 14px;
         `,
         Price: styled.strong`
             text-align: right;
-            font-family: MullerBold;
+            font-family: 'MontserratBold';
             color: var(--black);
             font-size: 14px;
             line-height: 14px;

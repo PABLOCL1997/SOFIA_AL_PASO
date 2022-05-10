@@ -35,7 +35,7 @@ export const Modal = styled.div`
     border: 0;
     padding: 15px 30px;
     margin-bottom: 20px;
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.01em;
@@ -58,7 +58,7 @@ export const CloseWrapper = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 24px;
   line-height: 24px;
   color: var(--black);
@@ -66,7 +66,7 @@ export const Title = styled.h2`
 `;
 
 export const Description = styled.p`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 12px;
   line-height: 137%;
   letter-spacing: 0.01em;
@@ -123,12 +123,12 @@ export const SocialButton = styled.button<{ network: string }>`
   }
   span,
   b {
-    font-size: 12px;
+    font-size: 10px;
     line-height: 12px;
     color: var(--${(props) => props.network});
   }
   b {
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
     margin-left: 5px;
   }
   &:hover {
@@ -220,7 +220,7 @@ export const SaveLogin = styled.div`
   label {
     font-size: 14px;
     text-align: center;
-    font-family: MullerRegular;
+    font-family: 'MontserratRegular';
   }
 `
 

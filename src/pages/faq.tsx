@@ -14,7 +14,7 @@ const Header = styled.div`
   box-shadow: 0px -1px 52px rgba(0, 0, 0, 0.08);
 
   h2 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 40px;
     line-height: 1.5em;
     color: var(--black);
@@ -50,7 +50,7 @@ const Question = styled.div<{ active: boolean }>`
     border-bottom: 0;
   }
   h2 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 24px;
     line-height: 1.5em;
     letter-spacing: 0.01em;
@@ -71,16 +71,15 @@ const Footer = styled.div`
   background: var(--red);
   padding: 90px 20px;
   h2 {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-style: normal;
-    font-weight: 500;
     font-size: 32px;
     line-height: 32px;
     color: #ffffff;
     text-align: center;
   }
   p {
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     font-size: 16px;
     line-height: 16px;
     text-align: center;
@@ -88,7 +87,7 @@ const Footer = styled.div`
     color: #ffffff;
     margin-top: 32px;
     a {
-      font-family: MullerBold;
+      font-family: 'MontserratBold';
       font-size: 16px;
       line-height: 16px;
       letter-spacing: 0.01em;

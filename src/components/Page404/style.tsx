@@ -33,7 +33,7 @@ export const TextWrap = styled.div`
     font-size: 150px;
     line-height: 152px;
     color: var(--black);
-    font-family: MullerBold;
+    font-family: 'MontserratBold';
   }
 
   @media (max-width: ${LG}) {
@@ -56,7 +56,7 @@ export const Headline = styled.div`
   span {
     font-size: 32px;
     line-height: 32px;
-    font-family: MullerMedium;
+    font-family: 'MontserratMedium';
     color: var(--black);
   }
 
@@ -78,7 +78,7 @@ export const Headline = styled.div`
 export const Subtitle = styled.p`
   font-size: 16px;
   line-height: 24px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   color: var(--black);
 `;
 
@@ -104,7 +104,7 @@ export const ButtonWrap = styled.div`
       line-height: 14px;
 
       text-transform: uppercase;
-      font-family: MullerBlack;
+      font-family: 'MontserratBold';
     }
     button {
       padding: 15px 50px;

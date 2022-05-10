@@ -7,7 +7,7 @@ export const Input = styled.input`
   border-radius: 48px;
   padding: 12px 24px;
   font-size: 14px;
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   border: none;
   margin-bottom: 10px;  
 `;

@@ -20,7 +20,7 @@ const Container = styled.section`
 `;
 
 const Title = styled.div`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 40px;
   line-height: 40px;
   color: var(--black);
@@ -91,7 +91,7 @@ const Box = styled.div`
 `;
 
 const GridTitle = styled.div`
-  font-family: MullerMedium;
+  font-family: 'MontserratMedium';
   font-size: 16px;
   line-height: 110%;
   margin: 24px 0 16px;
