@@ -175,6 +175,7 @@ const Checkout = () => {
         });
         removeCoupon();
       } else {
+        if (orderData.payment.method === "todotix") return;
         showError();
       }
     },
@@ -277,10 +278,11 @@ const Checkout = () => {
       emptyCart();
       if (todotixData.todotix.url_pasarela_pagos) {
         setShowTodotixPayment(true);
-      } else
+      } else {
         showError({
           variables: { user: { showError: t("checkout.todotix_error") } },
         });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todotixData]);
