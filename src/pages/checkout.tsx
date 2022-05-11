@@ -32,7 +32,6 @@ const Review = React.lazy(() => import(/* webpackChunkName: "Review" */ "../comp
 const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ "../components/Checkout/Steps/Cart"));
 const DeliveryDate = React.lazy(() => import(/* webpackChunkName: "DeliveryDate" */ "../components/Checkout/Steps/DeliveryDate"));
 const Ticket = React.lazy(() => import(/* webpackChunkName: "Ticket" */ "../components/Checkout/Ticket"));
-const ConfirmAddress = React.lazy(() => import(/* webpackChunkName: "ConfirmAddress" */ "../components/Checkout/ConfirmAddress"));
 
 const Checkout = () => {
   const { t } = useTranslation();
@@ -175,6 +174,7 @@ const Checkout = () => {
         });
         removeCoupon();
       } else {
+        if (orderData.payment.method === "todotix") return;
         showError();
       }
     },
@@ -277,10 +277,11 @@ const Checkout = () => {
       emptyCart();
       if (todotixData.todotix.url_pasarela_pagos) {
         setShowTodotixPayment(true);
-      } else
+      } else {
         showError({
           variables: { user: { showError: t("checkout.todotix_error") } },
         });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todotixData]);
@@ -469,13 +470,7 @@ const Checkout = () => {
   };
 
   return (
-    <Suspense fallback={<Loader />}>
-      <ConfirmAddress
-        address={orderData.shipping.street ? orderData.shipping.street.replace(/\|/g, " ") : ""}
-        visible={confirmModalVisible}
-        confirm={saveOrder}
-        cancel={() => setConfirmModalVisible(false)}
-      />
+    <Suspense fallback={<Loader />}>      
       <SC.Wrapper>
         <div className="main-container">
           {!showTodotixPayment && !result.length && (
