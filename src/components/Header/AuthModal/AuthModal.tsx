@@ -97,6 +97,7 @@ const AuthModal: FC<Props> = () => {
             cityName: b2eAddress?.city,
             agency: null,
             idPriceList: b2eAddress?.id_price_list || 0,
+            store: "B2E",
           };
         } else {
           // set the default address to the first address
@@ -107,7 +108,6 @@ const AuthModal: FC<Props> = () => {
             cityName: defaultAddress?.city,
             agency: null,
             idPriceList: 0,
-            isB2E: false,
           };
         }
 
