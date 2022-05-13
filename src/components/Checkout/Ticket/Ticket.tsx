@@ -37,7 +37,9 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
 
   const [showCoupon, setShowCoupon] = useState(false);
   const [coupon, setCoupon] = useState("");
-  const { checkout: { isGuestOrder } } = useCheckout();
+  const {
+    checkout: { isGuestOrder },
+  } = useCheckout();
   const showConfirmButton = (isGuestOrder && step === Steps.Payment) || step === Steps.Review;
 
   const [getCartItems] = useLazyQuery(GET_CART_ITEMS, {
@@ -137,7 +139,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           <b>Bs. {totalAmount}</b>
         </SC.Subtotal>
         {/* only on b2c */}
-        {localUserData && !localUserData?.userInfo[0]?.agency && !localUserData?.userInfo[0]?.idPriceList ? (
+        {localUserData && localUserData?.userInfo[0]?.store !== "PICKUP" ? (
           <SC.Coupon>
             {!showCoupon && <button onClick={() => setShowCoupon(true)}>{t("checkout.ticket.coupon.ask")}</button>}
             {showCoupon && (
