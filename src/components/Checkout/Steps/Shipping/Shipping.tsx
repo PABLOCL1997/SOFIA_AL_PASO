@@ -69,11 +69,11 @@ const Shipping: FC<{
         let address = d.details.addresses.find((a: AddressType) => a.id === addressId);
         if (address) {
           const values = {
-            firstname: address.firstname,
-            lastname: address.lastname,
-            nit: address.nit || orderData.billing.nit,
-            phone: address.phone?.split(" | ")[0] || orderData.billing.phone,
-            phone2: address.phone?.split(" | ")[1] || "",
+            firstname: orderData.billing.firstname,
+            lastname: orderData.billing.lastname,
+            nit: Number(orderData.billing.nit),
+            phone: orderData.billing.phone,
+            phone2: "",
             city: localData?.userInfo[0]?.cityName || address.city,
             address: address.street,
             street: address.street,
@@ -246,8 +246,8 @@ const Shipping: FC<{
       const agencyObj = agency ? search("key", agency, agencies) : null;
       if (agencyObj) {
         updateOrder("shipping", {
-          firstname: agencyObj.name,
-          phone: agencyObj.telephone,
+          firstname: "",
+          phone: "",
           address: agencyObj.street,
           street: agencyObj.street,
           city: agencyObj.city,
@@ -288,9 +288,9 @@ const Shipping: FC<{
   useEffect(() => {
     if (showAddressForm) {
       formik.setValues({
-        firstname: orderData.shipping.firstname || orderData.billing.firstname,
-        lastname: orderData.shipping.lastname || orderData.billing.lastname,
-        nit: orderData.shipping.nit || Number(orderData.billing.nit),
+        firstname: orderData.billing.firstname,
+        lastname: orderData.billing.lastname,
+        nit: Number(orderData.billing.nit),
         phone: orderData.shipping.phone || orderData.billing.phone,
         phone2: orderData.shipping.phone2,
         city: localData?.userInfo[0]?.cityName,
