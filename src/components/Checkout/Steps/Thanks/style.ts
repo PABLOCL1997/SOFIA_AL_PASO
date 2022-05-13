@@ -30,6 +30,10 @@ export const Title = styled.div`
     margin-top: 20px;
   }
 
+  .phoneInformation {
+    max-width: 700px;
+  }
+
   @media screen and (max-width: ${BREAKPOINT}) {
     h2 {
       margin-top: 24px;

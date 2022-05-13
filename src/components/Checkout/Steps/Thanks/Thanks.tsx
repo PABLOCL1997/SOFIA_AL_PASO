@@ -43,6 +43,7 @@ const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
           <ThankCheck />
           <h2>{t("thankyou.title")}</h2>
           <p dangerouslySetInnerHTML={{ __html: subtitle }}></p>
+          <p className="phoneInformation">{t("thankyou.information")}</p>
           {Boolean(guestOrder) ? <SC.GuestDescription>{t("thankyou.guest")}</SC.GuestDescription> : null}
         </SC.Title>
         <SC.Grid>
