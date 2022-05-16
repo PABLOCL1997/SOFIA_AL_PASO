@@ -7,7 +7,7 @@ import { CREATE_ORDER, EMPTY_CART, TODOTIX_ORDER_INFO, SET_TEMP_CART } from "../
 import { TODOTIX, CHECK_CART } from "../graphql/cart/queries";
 import { ProductType } from "../graphql/products/type";
 import { useHistory, useLocation } from "react-router-dom";
-import { trackOrder, initCheckout } from "../utils/dataLayer";
+import { trackOrder } from "../utils/dataLayer";
 import { escapeSingleQuote, search } from "../utils/string";
 import { EBSProduct } from "../types/Product";
 import { getStep, handleNext, Steps } from "../types/Checkout";
@@ -49,7 +49,10 @@ const Checkout = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [result, setResult] = useState<Array<{ entity_id: string; increment_id: string }>>([]);
   const [showTodotixPayment, setShowTodotixPayment] = useState(false);
-  const { checkout: { isGuestOrder }, handleIsGuestOrder } = useCheckout();
+  const {
+    checkout: { isGuestOrder },
+    handleIsGuestOrder,
+  } = useCheckout();
 
   const { setLoading } = useContext(Courtain.Context);
   const currentStep = useContext(Location.Context);
@@ -198,7 +201,6 @@ const Checkout = () => {
               increment_id: co.increment_id,
             }))
           );
-          initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email || "Guest", data.cartItems);
           window.history.pushState("checkout", "Tienda Sofia - Checkout", "/checkout");
           history.push(`/gracias?orderGuest=${isGuestOrder || ""}&ids=${response.data.todotixPayment.map(({ increment_id }: any) => increment_id).join(",")}`);
         } catch (e) {
@@ -257,7 +259,6 @@ const Checkout = () => {
             setProcessing(false);
             setLoading(false);
             const pickup = store === "PICKUP" ? agency : "";
-            initCheckout(parseFloat(totalAmount.replace(",", ".")), (userData as any).email, data.cartItems);
             history.push(`/gracias?orderGuest=${isGuestOrder || ""}&ids=${response.data.createOrder.map(({ increment_id }: any) => increment_id).join(",")}&pickup=${pickup}`);
           }
         } catch (e) {
@@ -470,7 +471,7 @@ const Checkout = () => {
   };
 
   return (
-    <Suspense fallback={<Loader />}>      
+    <Suspense fallback={<Loader />}>
       <SC.Wrapper>
         <div className="main-container">
           {!showTodotixPayment && !result.length && (
