@@ -35,15 +35,26 @@ export interface IShipping {
 }
 
 export const weekdays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const MESSAGE_INVALID_CHARACTERS = `No se permite caracteres especiales p.ej. áº"|\\-?¿[`;
+
+export const validateEbsCharacters = (value: string | null | undefined | number) => {
+  const EBS_CHARACTERS_REGEX = /([áéíóúàèìòùãõâêîôôäëïöüçÁÉÍÓÚÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ¼º"|])|([\\\-\?¿[\]*~¬\^])/gi;
+  return !EBS_CHARACTERS_REGEX.test(String(value));
+};
 
 export const Checkout = {
   Validators: {
     billingSchema: object({
-      firstname: string().trim().required("Nombre es requerido").nullable(),
-      lastname: string().trim().required("Apellido es requerido").nullable(),
-      email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido").nullable(),
-      nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 dígitos").nullable(),
-      phone: string().matches(/^[0-9]+$/, "Solo numérico").min(6, "Teléfono debe tener al menos 6 dígitos").required("Teléfono es requerido").nullable(),
+      firstname: string().trim().required("Nombre es requerido").nullable().test("", MESSAGE_INVALID_CHARACTERS, validateEbsCharacters),
+      lastname: string().trim().required("Apellido es requerido").nullable().test("", MESSAGE_INVALID_CHARACTERS, validateEbsCharacters),
+      email: string().trim().email("Correo electrónico inválido ").required("Correo electrónico es requerido").nullable().test("", MESSAGE_INVALID_CHARACTERS, validateEbsCharacters),
+      nit: number().required("Nit es requerido").min(999, "Nit debe tener al menos 4 dígitos").nullable().test("", MESSAGE_INVALID_CHARACTERS, validateEbsCharacters),
+      phone: string()
+        .matches(/^[0-9]+$/, "Solo numérico")
+        .min(6, "Teléfono debe tener al menos 6 dígitos")
+        .required("Teléfono es requerido")
+        .nullable()
+        .test("", MESSAGE_INVALID_CHARACTERS, validateEbsCharacters),
     }),
     shippingSchema: object({
       firstname: string().trim().required("Nombre es requerido"),

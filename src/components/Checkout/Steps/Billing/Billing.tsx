@@ -6,7 +6,7 @@ import useCityPriceList from "../../../../hooks/useCityPriceList";
 import * as SC from "./style";
 import { handleNext } from "../../../../types/Checkout";
 import { useHistory } from "react-router-dom";
-import { Checkout, IBilling } from "../../../../utils/validations";
+import { Checkout, IBilling, validateEbsCharacters } from "../../../../utils/validations";
 import { FormikProvider, useFormik } from "formik";
 import Input from "../../../Formik/components/Input";
 import { useUrlQuery } from "../../../../hooks/useUrlQuery";
@@ -86,7 +86,10 @@ const Billing: FC<{
 
   const onChange = (key: string, value: string) => {
     const validateNit = Checkout.ValidationsForm.Billing.nit(key, value);
-    if(!validateNit) return;
+    const validateEBSCharacters = validateEbsCharacters(value);
+    const isWriting = formik.values[key as keyof typeof formik.values].length < value.length;
+    if(!validateNit) return;    
+    if(!validateEBSCharacters && isWriting) return;
     formik.setFieldValue(key, value);
     updateOrder("billing", {
       ...formik.values,
@@ -180,6 +183,7 @@ const Billing: FC<{
               readOnly={false}
               label={t("checkout.billing." + field)}
               placeholder={t("checkout.billing." + field)}
+              value={formik.values[field as keyof typeof formik.values]}
             />
           ))}
         </SC.Form>
