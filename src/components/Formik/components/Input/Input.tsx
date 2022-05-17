@@ -115,8 +115,8 @@ function Input(
   const [field, meta] = useField(props?.name || "field");
   const { t } = useTranslation()
 
-  const showError = meta.touched && meta.error;
-
+  const showError = (meta.error && props.value) || (!props.value && meta.touched && meta.error);
+  
   return (
     <StyledWrapper className={className}>
       {label && <Label>{label}</Label>}
@@ -125,7 +125,7 @@ function Input(
         <StyledInput ref={ref} autoComplete={props.autoComplete || 'off'} {...field} {...props} />
         {trailingAdornment}
       </StyledWrapperInput>
-      {meta.touched && meta.error && <StyledErrorText>{meta.error}</StyledErrorText>}
+      {showError && <StyledErrorText>{meta.error}</StyledErrorText>}
       {errorText && 
         <ErrorWrapper>
           <StyledErrorText>{errorText}</StyledErrorText>
