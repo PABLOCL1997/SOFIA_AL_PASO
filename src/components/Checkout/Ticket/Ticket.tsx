@@ -12,6 +12,7 @@ import useUser from "../../../hooks/useUser";
 import { CouponType, Steps } from "../../../types/Checkout";
 import useCart from "../../../hooks/useCart";
 import useCheckout from "../../../hooks/useCheckout";
+import { token as StoreToken } from "../../../utils/store";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Cta" */ "../../Cta"));
@@ -139,7 +140,7 @@ const Ticket: FC<Props> = ({ order, updateOrder, processing, userData, userDetai
           <b>Bs. {totalAmount}</b>
         </SC.Subtotal>
         {/* only on b2c */}
-        {localUserData && localUserData?.userInfo[0]?.id && localUserData?.userInfo[0]?.store !== "PICKUP" ? (
+        {(localUserData && localUserData?.userInfo[0]?.id && localUserData?.userInfo[0]?.store !== "PICKUP") || StoreToken.get() !== "null" ? (
           <SC.Coupon>
             {!showCoupon && <button onClick={() => setShowCoupon(true)}>{t("checkout.ticket.coupon.ask")}</button>}
             {showCoupon && (
