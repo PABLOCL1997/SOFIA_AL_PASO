@@ -112,7 +112,7 @@ export const trackProductList = async (products: Array<ProductType>) => {
       currency,
       value: products.reduce((acc: number, { special_price, stock }: ProductType) => acc + special_price * (stock || 0), 0),
     });
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
     (window as any).fbq("track", ViewContentPixel, { ...pixelEventData }, { event: ViewContentPixel, eventID: pixelEventData.event_id });
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) {}
@@ -149,7 +149,7 @@ export const trackProduct = async (product: ProductType) => {
       content_type,
       currency,
     });
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
     (window as any).fbq("track", PageViewPixel, { ...pixelEventData }, { event: PageViewPixel, eventID: pixelEventData.event_id });
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) {}
@@ -190,7 +190,7 @@ export const trackAddToCart = async (product: ProductType) => {
       currency,
     });
 
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
     (window as any).fbq("track", addToCartPixel, { ...pixelEventData }, { event: addToCartPixel, eventID: pixelEventData.event_id });
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) {}
@@ -217,7 +217,7 @@ export const trackRemoveFromCart = async (p: ProductType) => {
       },
     };
 
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
   } catch (e) {}
 };
 
@@ -261,7 +261,7 @@ export const initCheckout = async (total: number, email: string, products: Array
       content_type: "product",
       value: products.reduce((acc: number, { special_price, qty }: ProductType) => acc + special_price * (qty || 0), 0),
     });
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
     (window as any).fbq("track", initiateCheckoutPixel, { ...pixelEventData }, { event: initiateCheckoutPixel, eventID: pixelEventData.event_id });
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) {}
@@ -307,7 +307,7 @@ export const trackOrder = async (order: TrackOrder, products: Array<ProductType>
       content_type,
       currency,
     });
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
     (window as any).fbq("track", PurchasePixel, { ...pixelEventData }, { event: PurchasePixel, eventID: pixelEventData.event_id });
     await axios.post(PIXEL_URL, { data: [pixelEventData] });
   } catch (e) {}
@@ -319,7 +319,7 @@ export const trackGoToCartEvent = async () => {
       event: "irCarrito",
     };
 
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
   } catch (e) {}
 };
 
@@ -328,7 +328,7 @@ export const trackRemoveCartEvent = async () => {
     const event = {
       event: "removerCarrito",
     };
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
   } catch (e) {}
 };
 
@@ -349,7 +349,7 @@ export const trackGoToCheckoutEvent = async (products: Array<ProductType>) => {
         })),
       },
     };
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
   } catch (e) {}
 };
 
@@ -370,7 +370,7 @@ export const trackViewCart = async (products: Array<ProductType>) => {
         })),
       },
     };
-    (window as any).dataLayer.push(event);
+    (window as any)?.dataLayer?.push(event);
   } catch (error) {
     console.error(error);
   }

@@ -6,6 +6,13 @@ export interface Point {
   lng: string | number;
 };
 
+export const citiesLatitudes = {
+  "Cochabamba": [-17.393814, -66.156981],
+  "El Alto": [-16.515869, -68.155007],
+  "La Paz": [-16.495653, -68.133518],
+  "Santa Cruz": [-17.783326, -63.182132],
+};
+
 const getDistance = (pA: Point, pB: Point) => {
   return Math.sqrt(Math.pow(pA.lat as number - (pB.lat as number), 2) + Math.pow(pA.lng as number - (pB.lng as number), 2));
 };

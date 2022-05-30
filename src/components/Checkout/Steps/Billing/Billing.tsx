@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState, useEffect, useMemo, useContext } from "react";
+import React, { FC, Suspense, useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery } from "react-apollo";
 import { DETAILS, GET_USER } from "../../../../graphql/user/queries";
@@ -39,10 +39,7 @@ const Billing: FC<{
   
   const { data: localUserData } = useQuery(GET_USER, {});
   const [setUser] = useMutation(SET_USER);
-  const [toggleLogin] = useMutation(SET_USER, {
-    variables: { user: { isLoggedIn: true } },
-  });
-  const isLoggedIn = useMemo(() => localUserData.userInfo[0].isLoggedIn, [localUserData?.userInfo?.[0]?.isLoggedIn]);   
+  const isLoggedIn = localUserData?.userInfo?.[0]?.isLoggedIn;
   
   const formik = useFormik({
     initialValues: {
@@ -87,7 +84,7 @@ const Billing: FC<{
   const onChange = (key: string, value: string) => {
     const validateNit = Checkout.ValidationsForm.Billing.nit(key, value);
     const validateEBSCharacters = validateEbsCharacters(value);
-    const isWriting = formik.values[key as keyof typeof formik.values].length < value.length;
+    const isWriting = formik?.values?.[key as keyof typeof formik.values]?.length < value.length;
     if(!validateNit) return;    
     if(!validateEBSCharacters && isWriting) return;
     formik.setFieldValue(key, value);
@@ -110,7 +107,14 @@ const Billing: FC<{
     signUp({ variables: values })
       .then((res) => {
         const token = res.data?.signup?.token;
-        toggleLogin();
+        setUser({
+          variables: {
+            user: {
+              isLoggedIn: true,
+              id: res.data?.signup?.id || 0,
+            }
+          }
+        })
         StoreToken.set(token);
         recoverPassword({ 
           variables: { 

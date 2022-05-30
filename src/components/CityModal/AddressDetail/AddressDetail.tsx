@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 
 import { OrderType } from "../../../types/Order";
 import Map from "../../Map";
-import { setLatLng, findNearestPointFromArray } from "../../../utils/googlemaps";
+import { setLatLng, findNearestPointFromArray, citiesLatitudes } from "../../../utils/googlemaps";
 
 import PickupIcon from "../../../assets/images/ChooseShipping/pickup-icon";
 import DeliveryIcon from "../../../assets/images/ChooseShipping/delivery-icon";
@@ -270,6 +270,33 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     });
   }, [cityHook]);
 
+  useEffect(() => {
+    if (shippingMethod === ShippingMethod.Delivery) {
+      const street = selectedAddress?.street || "";      
+      const latitudes = citiesLatitudes[street as keyof typeof citiesLatitudes];
+      const lat = latitudes?.[0];
+      const lng = latitudes?.[1];
+
+      if (lat && lng && !inputs.addresses?.length) {
+        (window as any).map && setLatLng("", lat, lng);
+        setCenterMap({
+          lat,
+          lng
+        })
+      } else {
+        const userLatitud = selectedAddress?.latitude;
+        const userLongitud = selectedAddress?.longitude;
+
+        if (userLatitud && userLongitud) {
+          setCenterMap({
+            lat: parseFloat(userLatitud),
+            lng: parseFloat(userLongitud),
+          })
+        }
+      }
+    }
+  }, [selectedAddress, shippingMethod, inputs.addresses]);
+
   return (
     <>
       <SC.Wrapper withMap={withMap}>
@@ -447,7 +474,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             {shippingMethod !== ShippingMethod.Express && (
               <GoogleMapReact
                 bootstrapURLKeys={{
-                  key: "AIzaSyDkzapVsE8dx0rclt3nQzew_JzZs4BOGw4",
+                  key: "AIzaSyD-ytvHpafjsy_r9WbqGTj09_wkYuQAjSk",
                 }}
                 defaultZoom={15}
                 defaultCenter={centerMap}
@@ -455,35 +482,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                 options={{
                   fullscreenControl: false,
                 }}
-                onGoogleApiLoaded={({ map, maps }) => {}}
               >
-                {shippingMethod === ShippingMethod.Pickup &&
-                  agencies?.length &&
-                  React.Children.toArray(
-                    agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
-                      <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />
-                    ))
-                  )}
-                {shippingMethod === ShippingMethod.Delivery &&
-                  inputs.addresses &&
-                  !!inputs.addresses.length &&
-                  React.Children.toArray(
-                    inputs.addresses.map((address: AddressType) => (
-                      <Marker
-                        lat={parseFloat(address.latitude || "0")}
-                        lng={parseFloat(address.longitude || "0")}
-                        text={address.street}
-                        name={" "}
-                        maxWidth={"400px"}
-                        selected={!!(selectedAddress?.id === address.id)}
-                      />
-                    ))
-                  )}
-
-                {shippingMethod === ShippingMethod.Store &&
-                  express.map(({ name, street, latitude, longitude }: Agency) => (
-                    <PickupIcon lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={true} />
-                  ))}
+                <Marker lat={centerMap.lat} lng={centerMap.lng} />
               </GoogleMapReact>
             )}
           </Maps>
