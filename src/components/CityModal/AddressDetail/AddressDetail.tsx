@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 
 import { OrderType } from "../../../types/Order";
 import Map from "../../Map";
-import { setLatLng, findNearestPointFromArray } from "../../../utils/googlemaps";
+import { setLatLng, findNearestPointFromArray, citiesLatitudes } from "../../../utils/googlemaps";
 
 import PickupIcon from "../../../assets/images/ChooseShipping/pickup-icon";
 import DeliveryIcon from "../../../assets/images/ChooseShipping/delivery-icon";
@@ -270,6 +270,23 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     });
   }, [cityHook]);
 
+  useEffect(() => {
+    if (shippingMethod === ShippingMethod.Delivery) {
+      const street = selectedAddress?.street || "";      
+      const latitudes = citiesLatitudes[street as keyof typeof citiesLatitudes];
+      const lat = latitudes?.[0];
+      const lng = latitudes?.[1];
+
+      if (lat && lng) {
+        setLatLng(street, "", "");
+        setCenterMap({
+          lat,
+          lng
+        })
+      }
+    }
+  }, [selectedAddress, shippingMethod])
+
   return (
     <>
       <SC.Wrapper withMap={withMap}>
@@ -449,7 +466,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                 bootstrapURLKeys={{
                   key: "AIzaSyDkzapVsE8dx0rclt3nQzew_JzZs4BOGw4",
                 }}
-                defaultZoom={15}
+                defaultZoom={shippingMethod === ShippingMethod.Delivery ? 12 : 15}
                 defaultCenter={centerMap}
                 center={centerMap}
                 options={{
@@ -457,33 +474,36 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
                 }}
                 onGoogleApiLoaded={({ map, maps }) => {}}
               >
-                {shippingMethod === ShippingMethod.Pickup &&
-                  agencies?.length &&
-                  React.Children.toArray(
-                    agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
-                      <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />
-                    ))
-                  )}
-                {shippingMethod === ShippingMethod.Delivery &&
-                  inputs.addresses &&
-                  !!inputs.addresses.length &&
-                  React.Children.toArray(
-                    inputs.addresses.map((address: AddressType) => (
-                      <Marker
-                        lat={parseFloat(address.latitude || "0")}
-                        lng={parseFloat(address.longitude || "0")}
-                        text={address.street}
-                        name={" "}
-                        maxWidth={"400px"}
-                        selected={!!(selectedAddress?.id === address.id)}
-                      />
-                    ))
-                  )}
+                <>
+                
+                  {shippingMethod === ShippingMethod.Pickup &&
+                    agencies?.length &&
+                    React.Children.toArray(
+                      agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
+                        <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />
+                      ))
+                    )}
+                  {shippingMethod === ShippingMethod.Delivery &&
+                    inputs.addresses &&
+                    !!inputs.addresses.length &&
+                    React.Children.toArray(
+                      inputs.addresses.map((address: AddressType) => (
+                        <Marker
+                          lat={parseFloat(address.latitude || "0")}
+                          lng={parseFloat(address.longitude || "0")}
+                          text={address.street}
+                          name={" "}
+                          maxWidth={"400px"}
+                          selected={!!(selectedAddress?.id === address.id)}
+                        />
+                      ))
+                    )}
 
-                {shippingMethod === ShippingMethod.Store &&
-                  express.map(({ name, street, latitude, longitude }: Agency) => (
-                    <PickupIcon lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={true} />
-                  ))}
+                  {shippingMethod === ShippingMethod.Store &&
+                    express.map(({ name, street, latitude, longitude }: Agency) => (
+                      <PickupIcon lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={true} />
+                    ))}
+                </>
               </GoogleMapReact>
             )}
           </Maps>
