@@ -277,15 +277,25 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
       const lat = latitudes?.[0];
       const lng = latitudes?.[1];
 
-      if (lat && lng) {
-        setLatLng(street, "", "");
+      if (lat && lng && !inputs.addresses?.length) {
+        (window as any).map && setLatLng("", lat, lng);
         setCenterMap({
           lat,
           lng
         })
+      } else {
+        const userLatitud = selectedAddress?.latitude;
+        const userLongitud = selectedAddress?.longitude;
+
+        if (userLatitud && userLongitud) {
+          setCenterMap({
+            lat: parseFloat(userLatitud),
+            lng: parseFloat(userLongitud),
+          })
+        }
       }
     }
-  }, [selectedAddress, shippingMethod])
+  }, [selectedAddress, shippingMethod, inputs.addresses]);
 
   return (
     <>
@@ -464,46 +474,16 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
             {shippingMethod !== ShippingMethod.Express && (
               <GoogleMapReact
                 bootstrapURLKeys={{
-                  key: "AIzaSyDkzapVsE8dx0rclt3nQzew_JzZs4BOGw4",
+                  key: "AIzaSyD-ytvHpafjsy_r9WbqGTj09_wkYuQAjSk",
                 }}
-                defaultZoom={shippingMethod === ShippingMethod.Delivery ? 12 : 15}
+                defaultZoom={15}
                 defaultCenter={centerMap}
                 center={centerMap}
                 options={{
                   fullscreenControl: false,
                 }}
-                onGoogleApiLoaded={({ map, maps }) => {}}
               >
-                <>
-                
-                  {shippingMethod === ShippingMethod.Pickup &&
-                    agencies?.length &&
-                    React.Children.toArray(
-                      agencies.map(({ name, street, latitude, longitude, key }: Agency) => (
-                        <Marker lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={!!(key === selectedAddress?.key || key === agency)} />
-                      ))
-                    )}
-                  {shippingMethod === ShippingMethod.Delivery &&
-                    inputs.addresses &&
-                    !!inputs.addresses.length &&
-                    React.Children.toArray(
-                      inputs.addresses.map((address: AddressType) => (
-                        <Marker
-                          lat={parseFloat(address.latitude || "0")}
-                          lng={parseFloat(address.longitude || "0")}
-                          text={address.street}
-                          name={" "}
-                          maxWidth={"400px"}
-                          selected={!!(selectedAddress?.id === address.id)}
-                        />
-                      ))
-                    )}
-
-                  {shippingMethod === ShippingMethod.Store &&
-                    express.map(({ name, street, latitude, longitude }: Agency) => (
-                      <PickupIcon lat={parseFloat(latitude)} lng={parseFloat(longitude)} text={street} name={name} maxWidth={"400px"} selected={true} />
-                    ))}
-                </>
+                <Marker lat={centerMap.lat} lng={centerMap.lng} />
               </GoogleMapReact>
             )}
           </Maps>
