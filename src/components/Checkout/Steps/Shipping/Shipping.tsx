@@ -299,7 +299,7 @@ const Shipping: FC<{
         reference: orderData.shipping.reference, 
       })
     }
-  }, [showAddressForm]); 
+  }, [showAddressForm, localData]); 
 
   // get details when store change
   useEffect(() => {
