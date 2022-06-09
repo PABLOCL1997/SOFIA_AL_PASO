@@ -1,10 +1,11 @@
 import React, { FC, Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import { trackGoToCheckoutEvent, trackViewCart } from "../../utils/dataLayer";
+import { keepGoogleQueryParameter } from "../../utils/string";
 import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
@@ -40,7 +41,7 @@ const CartModal: FC<Props> = () => {
     }
     trackGoToCheckoutEvent(cart?.cartItems);
     closeCartModal();
-    return history.push("/checkout");
+    return history.push(keepGoogleQueryParameter("/checkout"));
   };
 
   const getRelatedProducts = () => {
@@ -65,7 +66,7 @@ const CartModal: FC<Props> = () => {
     if (userData?.userInfo[0]?.openCartModal && cart?.cartItems) {
       trackViewCart(cart?.cartItems);
     }
-}, [cart?.cartItems, userData]);
+  }, [cart?.cartItems, userData]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -85,32 +86,32 @@ const CartModal: FC<Props> = () => {
               </svg>
             </SC.CloseWrapper>
           </SC.Header>
-            <SC.Items>
-              {cart?.cartItems?.map((product: ProductType, i: number) => (
-                  <SC.Row key={product.entity_id}>
-                    <SC.Image src={product.image.split(",")[0]}></SC.Image>
-                    <SC.NameBox>
-                      <SC.Name>{product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}</SC.Name>
-                      <SC.Units>&nbsp;</SC.Units>
-                    </SC.NameBox>
-                    <SC.Qty>
-                      <select defaultValue={product.qty} onChange={(event) => updateItem(Number(event.target.value), product)}>
-                        {[...(Array(21).keys())].slice(1).map((opt: number, index: number) => (
-                          <option key={index} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                      <Chevron />
-                    </SC.Qty>
-                    <SC.UnitPrice>Bs. {product.special_price.toFixed(2).replace(".", ",")} c/u -</SC.UnitPrice>
-                    <SC.Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace(".", ",")}</SC.Price>
-                    <SC.DeleteWrapper onClick={() => removeRow(product)}>
-                      <Delete />
-                    </SC.DeleteWrapper>
-                  </SC.Row>
-                ))}
-            </SC.Items>
+          <SC.Items>
+            {cart?.cartItems?.map((product: ProductType, i: number) => (
+              <SC.Row key={product.entity_id}>
+                <SC.Image src={product.image.split(",")[0]}></SC.Image>
+                <SC.NameBox>
+                  <SC.Name>{product.useKGS ? `${product.name} DE ${Number(product.weight).toFixed(2).replace(".", ",")} KGS APROX.` : product.name}</SC.Name>
+                  <SC.Units>&nbsp;</SC.Units>
+                </SC.NameBox>
+                <SC.Qty>
+                  <select defaultValue={product.qty} onChange={(event) => updateItem(Number(event.target.value), product)}>
+                    {[...Array(21).keys()].slice(1).map((opt: number, index: number) => (
+                      <option key={index} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                  <Chevron />
+                </SC.Qty>
+                <SC.UnitPrice>Bs. {product.special_price.toFixed(2).replace(".", ",")} c/u -</SC.UnitPrice>
+                <SC.Price>Bs. {(product.special_price * (product.qty ? product.qty : 0)).toFixed(2).replace(".", ",")}</SC.Price>
+                <SC.DeleteWrapper onClick={() => removeRow(product)}>
+                  <Delete />
+                </SC.DeleteWrapper>
+              </SC.Row>
+            ))}
+          </SC.Items>
           <SC.Totals>
             <SC.Subtotal>{t("cart.subtotal")}</SC.Subtotal>
             <SC.Total>Bs. {totalAmount}</SC.Total>

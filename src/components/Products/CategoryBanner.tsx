@@ -1,36 +1,14 @@
-import React, { FC, Suspense, useState } from "react";
-import styled from "styled-components";
-import { BREAKPOINT, XL } from "../../utils/constants";
+import React, { FC, Suspense } from "react";
 import Slider from "react-slick";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Wrapper, ImageContainer } from "../../styled-components/CategoryBannerStyles";
 
 import useCategory from "../../hooks/useCategory";
-import { toCatLink, toLink } from "../../utils/string";
+import { toCatLink, toLink, keepGoogleQueryParameter } from "../../utils/string";
 import { CategoryType } from "../../graphql/categories/type";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
-
-const Root = styled.div`
-  padding: var(--padding);
-  padding-top: 0;
-  padding-bottom: 20px;
-  @media screen and (max-width: ${BREAKPOINT}) {
-    padding: 20px 20px 0 20px;
-  }
-  img {
-    border-radius: 48px;
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    @media screen and (max-width: ${XL}) {
-      border-radius: 20px;
-      height: auto;
-      object-fit: unset;
-    }
-  }
-`;
 
 type Props = {
   isMobile: Boolean | undefined;
@@ -63,7 +41,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
       <Wrapper>
         <Slider {...settings}>
           {tCategory && !tCategory.is_campaign && tCategory.banner_mobile && tCategory.banner_desktop && (
-            <Link to={`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`}>
+            <Link to={keepGoogleQueryParameter(`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`)}>
               <ImageContainer bg={isMobile ? tCategory.banner_mobile : tCategory.banner_desktop} />
             </Link>
           )}
@@ -76,7 +54,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
               .map(
                 (category: CategoryType) =>
                   category.is_campaign && (
-                    <Link to={`/productos/${toCatLink(categories, category.name, category.level)}`}>
+                    <Link to={keepGoogleQueryParameter(`/productos/${toCatLink(categories, category.name, category.level)}`)}>
                       <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
                     </Link>
                   )

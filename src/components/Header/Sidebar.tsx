@@ -1,10 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
-import React, { FC, useEffect, useState } from "react";
-
+import React, { FC, useState } from "react";
 import { GET_TOTAL, GET_QTY, GET_CART_ITEMS } from "../../graphql/cart/queries";
-
 import { token } from "../../utils/store";
-
 import { Total, CloseRow, CloseWrapper, MenuList, MenuItem, MenuBottom, MenuListTools, CartWrapper, Category, Subcategory, CartText } from "../../styled-components/HeaderStyles";
 import { Link, useHistory } from "react-router-dom";
 import Cta from "../Cta";
@@ -13,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import useCategory from "../../hooks/useCategory";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import styled from "styled-components";
-import { toLink } from "../../utils/string";
+import { toLink, keepGoogleQueryParameter } from "../../utils/string";
 import { useDeviceDetect } from "../../utils/deviceDetect";
 import useUser from "../../hooks/useUser";
 import CartImg from "../../assets/images/Carrito.svg";
@@ -111,7 +108,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2L2 10V23H9V16H15V23H22V10L12 2Z" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
           </svg>
-          <Link onClick={() => setOpen(false)} to="/">
+          <Link onClick={() => setOpen(false)} to={keepGoogleQueryParameter("/")}>
             {t("header.home")}
           </Link>
         </MenuItem>
@@ -120,7 +117,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
           <img src={MisFacturas} alt="mis-facturas" />
           <a href="https://misfacturas.sofia.com.bo/dio-public/" target="_blank" rel="noopener noreferrer">
             {t("header.bills")}
-          </a>         
+          </a>
         </MenuItem>
         <MenuItem>
           {/* faq */}
@@ -136,7 +133,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
             <path d="M8 13C9.10457 13 10 12.1046 10 11C10 9.89543 9.10457 9 8 9C6.89543 9 6 9.89543 6 11C6 12.1046 6.89543 13 8 13Z" fill="#E30613" />
             <path d="M8 14C9.06087 14 10.0783 14.4214 10.8284 15.1716C11.5786 15.9217 12 16.9391 12 18H4C4 16.9391 4.42143 15.9217 5.17157 15.1716C5.92172 14.4214 6.93913 14 8 14Z" fill="#E30613" />
           </svg>
-          <Link onClick={() => setOpen(false)} to="/preguntas-frecuentes">
+          <Link onClick={() => setOpen(false)} to={keepGoogleQueryParameter("/preguntas-frecuentes")}>
             {t("header.faq")}
           </Link>
         </MenuItem>
@@ -160,7 +157,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
               stroke-linejoin="round"
             />
           </svg>
-          <Link onClick={() => setOpen(false)} to="/segui-tu-pedido">
+          <Link onClick={() => setOpen(false)} to={keepGoogleQueryParameter("/segui-tu-pedido")}>
             {t("header.tracking")}
           </Link>
         </MenuItem>
@@ -177,7 +174,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
             <path d="M8.63651 10L2.69287 15.4484" stroke="#E30613" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M17.307 15.4484L11.3633 10" stroke="#E30613" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <Link onClick={() => setOpen(false)} to="/contacto">
+          <Link onClick={() => setOpen(false)} to={keepGoogleQueryParameter("/contacto")}>
             {t("header.contact")}
           </Link>
         </MenuItem>
@@ -189,7 +186,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
               stroke="#E30613"
             />
           </svg>
-          <Link onClick={() => setOpen(false)} to="/cobertura">
+          <Link onClick={() => setOpen(false)} to={keepGoogleQueryParameter("/cobertura")}>
             {t("header.coverage")}
           </Link>
         </MenuItem>
@@ -232,7 +229,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
                         onClick={() => {
                           isMobile && setOpen(false);
                         }}
-                        to={`/productos/${toLink(category.name)}`}
+                        to={keepGoogleQueryParameter(`/productos/${toLink(category.name)}`)}
                       >
                         {category.name}
                       </Link>
@@ -251,7 +248,7 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
                               onClick={() => {
                                 isMobile && setOpen(false);
                               }}
-                              to={`/productos/${toLink(category.name)}/${toLink(subcategory.name)}`}
+                              to={keepGoogleQueryParameter(`/productos/${toLink(category.name)}/${toLink(subcategory.name)}`)}
                             >
                               {subcategory.name}
                             </Link>

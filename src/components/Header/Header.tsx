@@ -19,6 +19,7 @@ import SofiaAlPasoLogo from "../../assets/images/sofiaAlPasoLogo.webp";
 import SofiaAlPasoColaboradoresLogo from "../../assets/images/sofiaAlPasoColaboradoresLogo.svg";
 
 import { trackGoToCartEvent } from "../../utils/dataLayer";
+import { keepGoogleQueryParameter } from "../../utils/string";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
 import ShippingType from "./ShippingType";
@@ -39,7 +40,7 @@ type Props = {
   route?: string;
 };
 
-const Header: FC<Props> = ({ checkout, page, route }) => {  
+const Header: FC<Props> = ({ checkout, page, route }) => {
   const { t } = useTranslation();
   const { showPromoBar, hideBar, isB2E } = useUser();
   const history = useHistory();
@@ -47,7 +48,9 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("");
-  const { modals: { showChooseUserType }} = useModals();
+  const {
+    modals: { showChooseUserType },
+  } = useModals();
 
   const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
@@ -78,7 +81,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const myAccount = () => {
     setOpen(false);
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      history.push("/mi-cuenta");
+      history.push(keepGoogleQueryParameter("/mi-cuenta"));
     } else {
       toggleLoginModal();
     }
@@ -86,7 +89,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
 
   const goToCollaborators = () => {
     setOpen(false);
-    history.push("/activacion");
+    history.push(keepGoogleQueryParameter("/activacion"));
   };
 
   const addressLabel = () => {
@@ -104,8 +107,8 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   useEffect(() => {
     if (route !== "/") {
       hideBar();
-    };
-  },[route]);
+    }
+  }, [route]);
 
   useEffect(() => {
     if (!userData?.userInfo.length || !userData?.userInfo[0].cityKey || userData?.userInfo[0].openCityModal || userData?.userInfo[0].openCartModal) {
@@ -135,7 +138,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   };
 
   const handleSearch = () => {
-    history.push(`/productos?q=${newQuery}`);
+    history.push(keepGoogleQueryParameter(`/productos?q=${newQuery}`));
   };
 
   useEffect(() => {
@@ -168,7 +171,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
             </SC.IngresarWrap>
           )}
           <SC.Logo isB2E={isB2E} isCheckout={isCheckout}>
-            <Link to="/">
+            <Link to={keepGoogleQueryParameter("/")}>
               <img src={!isB2E ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>
@@ -184,7 +187,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
             </SC.Steps.Container>
           ) : (
             <>
-              <ShippingType onClick={toggleCityModal}/>
+              <ShippingType onClick={toggleCityModal} />
               <SC.InputGroup>
                 <Search />
                 {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}

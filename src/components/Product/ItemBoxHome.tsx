@@ -2,12 +2,11 @@ import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { ProductType } from "../../graphql/products/type";
 import { useTranslation } from "react-i18next";
-import { capitalizeFirstLetter, toLink } from "../../utils/string";
 import { BREAKPOINT, customStyles } from "../../utils/constants";
 import DiscountIcon from "../../assets/images/descuento.svg";
 import { NewDiscount, BottomCardHome } from "../../styled-components/ItemBoxStyles";
 import useCart from "../../hooks/useCart";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useProduct from "../../hooks/useProduct";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../Loader"));
@@ -110,7 +109,7 @@ const NewLabel = styled.span`
   background-color: ${customStyles.yellow};
 
   color: ${customStyles.red};
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   padding: 7px 0 5px;
 `;
 
@@ -123,7 +122,7 @@ const Image = styled.img`
 Image.displayName = "ItemBoxImage";
 
 const Title = styled.h2`
-  font-family: 'MontserratMedium'; 
+  font-family: "MontserratMedium";
   font-size: 16px;
   line-height: 20px;
   max-height: 40px;
@@ -151,13 +150,13 @@ const PriceBox = styled.div`
 `;
 
 const Price = styled.span`
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   font-size: 14px;
   color: var(--red);
 `;
 
 const Weight = styled.span`
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   color: var(--black);
 `;
 
@@ -211,7 +210,7 @@ const Qty = styled.div`
 `;
 
 const Add = styled.button`
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   border: 0;
   background: var(--yellow);
   color: var(--black);
@@ -244,7 +243,7 @@ const Label = styled.div<{ visible?: boolean }>`
 
 const MaxUnits = styled.div`
   font-size: 12px;
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   line-height: 12px;
   text-align: center;
   letter-spacing: 0.05em;
@@ -253,7 +252,7 @@ const MaxUnits = styled.div`
 `;
 
 const OutOfStock = styled.span`
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   border: 0;
   color: var(--black);
   padding: 11px 20px;
@@ -287,6 +286,7 @@ const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = f
   const [qty, setQty] = useState<number>(1);
   const { addAndGo } = useCart();
   const { related } = useProduct(product.name);
+  const { search } = useLocation();
 
   const replaceWidthFormatImage = (name: string, width: string, format?: string) => {
     if (name.includes(".jpg")) return name.replace(".jpg", `_${width}.${format ? format : "jpg"}`);
@@ -306,7 +306,7 @@ const ItemBoxHome: FC<Props> = ({ product, openModal, dropDownQty = 21, webp = f
         )}
         {product.isNew && <NewLabel>{t("itembox.new")}</NewLabel>}
         <Block>
-          <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}`}>
+          <Link to={`/${String(product.name).toLowerCase().replaceAll("-", "--").replace(/ /g, "-")}${search}`}>
             <img
               className="lazyload"
               width="200px"

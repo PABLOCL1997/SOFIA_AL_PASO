@@ -7,6 +7,7 @@ import { SET_USER } from "../graphql/user/mutations";
 import { trackGoToCartEvent } from "../utils/dataLayer";
 import { useHistory } from "react-router-dom";
 import useModals from "../hooks/useModals";
+import { keepGoogleQueryParameter } from "../utils/string";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
@@ -40,7 +41,7 @@ const Modal = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'MontserratMedium';
+  font-family: "MontserratMedium";
   font-size: 24px;
   line-height: 24px;
   color: var(--black);
@@ -76,7 +77,7 @@ const ModalMessage: FC<Props> = () => {
   const { data } = useQuery(GET_USER, {});
   const [hideModal] = useMutation(SET_USER, {
     variables: { user: { showModal: "" } },
-  }); 
+  });
 
   useEffect(() => {
     hideModal();
@@ -84,13 +85,13 @@ const ModalMessage: FC<Props> = () => {
   }, []);
 
   const handleBuy = () => {
-    trackGoToCartEvent();  
+    trackGoToCartEvent();
     hideModal();
     if (!data?.userInfo?.[0]?.isLoggedIn) {
       handleChooseUserType(true);
       return;
     }
-    history.push("/checkout");
+    history.push(keepGoogleQueryParameter("/checkout"));
   };
 
   return (
@@ -106,11 +107,7 @@ const ModalMessage: FC<Props> = () => {
             {data.userInfo[0].showModal.split("|")[0] === "Producto agregado" && (
               <CtaWrapper>
                 <br />
-                <Cta
-                  filled={false}
-                  text={t("modal.cart")}
-                  action={handleBuy}
-                />
+                <Cta filled={false} text={t("modal.cart")} action={handleBuy} />
               </CtaWrapper>
             )}
           </Modal>
