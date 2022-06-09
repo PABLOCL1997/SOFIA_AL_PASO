@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import useCategory from "../../hooks/useCategory";
 import useWindowDimensions from "../../hooks/useWindowDimesions";
-import { toLink, keepQueryParameter } from "../../utils/string";
+import { toLink, keepGoogleQueryParameter } from "../../utils/string";
 
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 
@@ -252,7 +252,7 @@ const Categories: FC<Props> = () => {
                             if (subcategories && subcategories.length > 0) {
                               handleSelectCategory(entity_id);
                             } else {
-                              window.location.href = keepQueryParameter(`/productos/${toLink(name)}`);
+                              window.location.href = keepGoogleQueryParameter(`/productos/${toLink(name)}`);
                             }
                           }}
                         >
@@ -262,7 +262,7 @@ const Categories: FC<Props> = () => {
                           <SubcategoriesMobileWrapper visible={selectedCategory === entity_id} extended={entity_id === EmbutidosId || entity_id === Premium || entity_id === Mascotas}>
                             {React.Children.toArray(
                               subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => (
-                                <Link to={keepQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)}`)}>{nameSub.toUpperCase()}</Link>
+                                <Link to={keepGoogleQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)}`)}>{nameSub.toUpperCase()}</Link>
                               ))
                             )}
                           </SubcategoriesMobileWrapper>
@@ -283,7 +283,7 @@ const Categories: FC<Props> = () => {
                   categories
                     .filter((category: CategoryType) => !category.is_campaign)
                     .map(({ name, subcategories }: CategoryType) => (
-                      <Link to={keepQueryParameter(`/productos/${toLink(name)}`)}>
+                      <Link to={keepGoogleQueryParameter(`/productos/${toLink(name)}`)}>
                         <span>
                           <span>{name.toUpperCase()}</span>
                         </span>
@@ -291,7 +291,7 @@ const Categories: FC<Props> = () => {
                           <SubcategoriesWrapper>
                             {React.Children.toArray(
                               subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => (
-                                <Link to={keepQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)})`)}>{nameSub.toUpperCase()}</Link>
+                                <Link to={keepGoogleQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)})`)}>{nameSub.toUpperCase()}</Link>
                               ))
                             )}
                           </SubcategoriesWrapper>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Wrapper, ImageContainer } from "../../styled-components/CategoryBannerStyles";
 
 import useCategory from "../../hooks/useCategory";
-import { toCatLink, toLink, keepQueryParameter } from "../../utils/string";
+import { toCatLink, toLink, keepGoogleQueryParameter } from "../../utils/string";
 import { CategoryType } from "../../graphql/categories/type";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
@@ -41,7 +41,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
       <Wrapper>
         <Slider {...settings}>
           {tCategory && !tCategory.is_campaign && tCategory.banner_mobile && tCategory.banner_desktop && (
-            <Link to={keepQueryParameter(`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`)}>
+            <Link to={keepGoogleQueryParameter(`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`)}>
               <ImageContainer bg={isMobile ? tCategory.banner_mobile : tCategory.banner_desktop} />
             </Link>
           )}
@@ -54,7 +54,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
               .map(
                 (category: CategoryType) =>
                   category.is_campaign && (
-                    <Link to={keepQueryParameter(`/productos/${toCatLink(categories, category.name, category.level)}`)}>
+                    <Link to={keepGoogleQueryParameter(`/productos/${toCatLink(categories, category.name, category.level)}`)}>
                       <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
                     </Link>
                   )

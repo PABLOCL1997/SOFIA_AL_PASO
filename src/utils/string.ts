@@ -127,7 +127,7 @@ export const mapMonths = (name: string): string => {
   }
 };
 
-export const keepQueryParameter = (url: string) => {
+export const keepGoogleQueryParameter = (url: string) => {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
   let urlFinal = url;

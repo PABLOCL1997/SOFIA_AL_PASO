@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import { trackGoToCheckoutEvent, trackViewCart } from "../../utils/dataLayer";
-import { keepQueryParameter } from "../../utils/string";
+import { keepGoogleQueryParameter } from "../../utils/string";
 import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
@@ -41,7 +41,7 @@ const CartModal: FC<Props> = () => {
     }
     trackGoToCheckoutEvent(cart?.cartItems);
     closeCartModal();
-    return history.push(keepQueryParameter("/checkout"));
+    return history.push(keepGoogleQueryParameter("/checkout"));
   };
 
   const getRelatedProducts = () => {

@@ -7,7 +7,7 @@ import { SET_USER } from "../graphql/user/mutations";
 import { trackGoToCartEvent } from "../utils/dataLayer";
 import { useHistory } from "react-router-dom";
 import useModals from "../hooks/useModals";
-import { keepQueryParameter } from "../utils/string";
+import { keepGoogleQueryParameter } from "../utils/string";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
@@ -91,7 +91,7 @@ const ModalMessage: FC<Props> = () => {
       handleChooseUserType(true);
       return;
     }
-    history.push(keepQueryParameter("/checkout"));
+    history.push(keepGoogleQueryParameter("/checkout"));
   };
 
   return (
