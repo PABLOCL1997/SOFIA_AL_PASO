@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import * as SC from "../components/CartModal/style";
 import { ProductType } from "../graphql/products/type";
@@ -9,6 +9,7 @@ import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
 import useCart from "../hooks/useCart";
 import { trackGoToCheckoutEvent, trackViewCart } from "../utils/dataLayer";
+import { keepQueryParameter } from "../utils/string";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Cta"));
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../components/Images/Delete"));
@@ -21,7 +22,6 @@ const Cart = () => {
   const { cart, totalAmount, quantity, updateItem, removeRow, empty, closeCartModal } = useCart();
   const [relatedProducts, setRelatedProducts] = useState<Array<ProductType>>([]);
   const { data: userData } = useQuery(GET_USER, {});
-  const { search } = useLocation();
 
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } },
@@ -34,7 +34,7 @@ const Cart = () => {
       (window as any).navigateToCheckout = true;
       toggleLoginModal();
     }
-    history.push(`/checkout${search}`);
+    history.push(keepQueryParameter(`/checkout`));
   };
 
   useEffect(() => {

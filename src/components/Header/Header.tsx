@@ -1,6 +1,6 @@
 import React, { FC, Suspense, useState, useEffect, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, Link, useLocation } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_CART_ITEMS, GET_QTY } from "../../graphql/cart/queries";
 import { GET_USER } from "../../graphql/user/queries";
@@ -19,6 +19,7 @@ import SofiaAlPasoLogo from "../../assets/images/sofiaAlPasoLogo.webp";
 import SofiaAlPasoColaboradoresLogo from "../../assets/images/sofiaAlPasoColaboradoresLogo.svg";
 
 import { trackGoToCartEvent } from "../../utils/dataLayer";
+import { keepQueryParameter } from "../../utils/string";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
 import ShippingType from "./ShippingType";
@@ -42,7 +43,6 @@ type Props = {
 const Header: FC<Props> = ({ checkout, page, route }) => {
   const { t } = useTranslation();
   const { showPromoBar, hideBar, isB2E } = useUser();
-  const { search } = useLocation();
   const history = useHistory();
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
   const [open, setOpen] = useState(false);
@@ -81,7 +81,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const myAccount = () => {
     setOpen(false);
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      history.push(`/mi-cuenta${search}`);
+      history.push(keepQueryParameter("/mi-cuenta"));
     } else {
       toggleLoginModal();
     }
@@ -89,7 +89,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
 
   const goToCollaborators = () => {
     setOpen(false);
-    history.push(`/activacion${search}`);
+    history.push(keepQueryParameter("/activacion"));
   };
 
   const addressLabel = () => {
@@ -138,8 +138,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   };
 
   const handleSearch = () => {
-    const url = search ? `/productos${search}&q=${newQuery}` : `/productos?q=${newQuery}`;
-    history.push(url);
+    history.push(keepQueryParameter(`/productos?q=${newQuery}`));
   };
 
   useEffect(() => {
@@ -172,7 +171,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
             </SC.IngresarWrap>
           )}
           <SC.Logo isB2E={isB2E} isCheckout={isCheckout}>
-            <Link to={`/${search}`}>
+            <Link to={keepQueryParameter("/")}>
               <img src={!isB2E ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>

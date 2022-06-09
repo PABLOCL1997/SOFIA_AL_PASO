@@ -1,10 +1,10 @@
 import React, { FC, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import useCategory from "../../hooks/useCategory";
 import useWindowDimensions from "../../hooks/useWindowDimesions";
-import { toLink } from "../../utils/string";
+import { toLink, keepQueryParameter } from "../../utils/string";
 
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 
@@ -211,7 +211,6 @@ const Categories: FC<Props> = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(0);
   const [isMobile, setIsMobile] = useState(false);
   const { width: innerWidth } = useWindowDimensions();
-  const { search } = useLocation();
   const EmbutidosId = 317;
   const Premium = 356;
   const Mascotas = 354;
@@ -253,7 +252,7 @@ const Categories: FC<Props> = () => {
                             if (subcategories && subcategories.length > 0) {
                               handleSelectCategory(entity_id);
                             } else {
-                              window.location.href = `/productos/${toLink(name)}${search}`;
+                              window.location.href = keepQueryParameter(`/productos/${toLink(name)}`);
                             }
                           }}
                         >
@@ -262,7 +261,9 @@ const Categories: FC<Props> = () => {
                         {!!subcategories?.length && (
                           <SubcategoriesMobileWrapper visible={selectedCategory === entity_id} extended={entity_id === EmbutidosId || entity_id === Premium || entity_id === Mascotas}>
                             {React.Children.toArray(
-                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => <Link to={`/productos/${toLink(name)}/${toLink(nameSub)}${search}`}>{nameSub.toUpperCase()}</Link>)
+                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => (
+                                <Link to={keepQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)}`)}>{nameSub.toUpperCase()}</Link>
+                              ))
                             )}
                           </SubcategoriesMobileWrapper>
                         )}
@@ -282,14 +283,16 @@ const Categories: FC<Props> = () => {
                   categories
                     .filter((category: CategoryType) => !category.is_campaign)
                     .map(({ name, subcategories }: CategoryType) => (
-                      <Link to={`/productos/${toLink(name)}${search}`}>
+                      <Link to={keepQueryParameter(`/productos/${toLink(name)}`)}>
                         <span>
                           <span>{name.toUpperCase()}</span>
                         </span>
                         {!!subcategories?.length && (
                           <SubcategoriesWrapper>
                             {React.Children.toArray(
-                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => <Link to={`/productos/${toLink(name)}/${toLink(nameSub)}${search}`}>{nameSub.toUpperCase()}</Link>)
+                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => (
+                                <Link to={keepQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)})`)}>{nameSub.toUpperCase()}</Link>
+                              ))
                             )}
                           </SubcategoriesWrapper>
                         )}

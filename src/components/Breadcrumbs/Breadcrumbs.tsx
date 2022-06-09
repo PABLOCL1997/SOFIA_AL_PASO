@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { fromLink } from "../../utils/string";
+import { fromLink, keepQueryParameter } from "../../utils/string";
 import { Alias, Props, BreadCrum } from "./types";
 import { ListItem, ListItemTitle } from "./styled";
 
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
 
 const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => {
-  const { pathname, search } = useLocation();
+  const { pathname } = useLocation();
   const Home = "Home";
   const routes = pathname.split("/");
 
@@ -46,7 +46,7 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
   return (
     <nav>
       {finalLinks.map(({ routeLink, routeName, length }, index) => (
-        <Link key={index} to={routeLink + search}>
+        <Link key={index} to={keepQueryParameter(routeLink)}>
           <ListItem>
             {isMobile && <Chevron />}
             <ListItemTitle>{routeName}</ListItemTitle>

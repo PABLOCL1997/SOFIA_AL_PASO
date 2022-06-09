@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "react-apollo";
 import { SET_USER } from "../../graphql/user/mutations";
 import { GET_USER } from "../../graphql/user/queries";
 import { trackGoToCheckoutEvent, trackViewCart } from "../../utils/dataLayer";
+import { keepQueryParameter } from "../../utils/string";
 import { ProductType } from "../../graphql/products/type";
 
 import * as SC from "../CartModal/style";
@@ -26,7 +27,6 @@ const CartModal: FC<Props> = () => {
   const [relatedProducts, setRelatedProducts] = useState<ProductType[]>([]);
   const { data: userData } = useQuery(GET_USER, {});
   const { handleChooseUserType } = useModals();
-  const { search } = useLocation();
 
   const [toggleLoginModal] = useMutation(SET_USER, {
     variables: { user: { openLoginModal: true } },
@@ -41,7 +41,7 @@ const CartModal: FC<Props> = () => {
     }
     trackGoToCheckoutEvent(cart?.cartItems);
     closeCartModal();
-    return history.push(`/checkout${search}`);
+    return history.push(keepQueryParameter("/checkout"));
   };
 
   const getRelatedProducts = () => {

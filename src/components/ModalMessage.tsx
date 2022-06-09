@@ -5,8 +5,9 @@ import { useQuery, useMutation } from "react-apollo";
 import { GET_USER } from "../graphql/user/queries";
 import { SET_USER } from "../graphql/user/mutations";
 import { trackGoToCartEvent } from "../utils/dataLayer";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import useModals from "../hooks/useModals";
+import { keepQueryParameter } from "../utils/string";
 
 const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Loader"));
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "./Cta"));
@@ -77,7 +78,6 @@ const ModalMessage: FC<Props> = () => {
   const [hideModal] = useMutation(SET_USER, {
     variables: { user: { showModal: "" } },
   });
-  const { search } = useLocation();
 
   useEffect(() => {
     hideModal();
@@ -91,7 +91,7 @@ const ModalMessage: FC<Props> = () => {
       handleChooseUserType(true);
       return;
     }
-    history.push(`/checkout${search}`);
+    history.push(keepQueryParameter("/checkout"));
   };
 
   return (

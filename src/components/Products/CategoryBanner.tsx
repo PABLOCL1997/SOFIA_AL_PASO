@@ -1,10 +1,10 @@
 import React, { FC, Suspense } from "react";
 import Slider from "react-slick";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Wrapper, ImageContainer } from "../../styled-components/CategoryBannerStyles";
 
 import useCategory from "../../hooks/useCategory";
-import { toCatLink, toLink } from "../../utils/string";
+import { toCatLink, toLink, keepQueryParameter } from "../../utils/string";
 import { CategoryType } from "../../graphql/categories/type";
 import useCityPriceList from "../../hooks/useCityPriceList";
 
@@ -17,7 +17,6 @@ type Props = {
 const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
   const { city } = useCityPriceList();
   const { categories, tCategory } = useCategory();
-  const { search } = useLocation();
 
   const settings = {
     dots: true,
@@ -42,7 +41,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
       <Wrapper>
         <Slider {...settings}>
           {tCategory && !tCategory.is_campaign && tCategory.banner_mobile && tCategory.banner_desktop && (
-            <Link to={`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}${search}`}>
+            <Link to={keepQueryParameter(`/productos/${toCatLink(categories, tCategory?.name, tCategory?.level)}`)}>
               <ImageContainer bg={isMobile ? tCategory.banner_mobile : tCategory.banner_desktop} />
             </Link>
           )}
@@ -55,7 +54,7 @@ const CategoryBanner: FC<Props> = ({ isMobile = true }) => {
               .map(
                 (category: CategoryType) =>
                   category.is_campaign && (
-                    <Link to={`/productos/${toCatLink(categories, category.name, category.level)}${search}`}>
+                    <Link to={keepQueryParameter(`/productos/${toCatLink(categories, category.name, category.level)}`)}>
                       <ImageContainer bg={isMobile ? category.banner_mobile : category.banner_desktop} />
                     </Link>
                   )
