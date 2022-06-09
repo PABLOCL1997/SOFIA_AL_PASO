@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { CategoryType, SubCategoryLvl3Type } from "../../graphql/categories/type";
 import useCategory from "../../hooks/useCategory";
@@ -28,7 +28,7 @@ const List = styled.div`
     span {
       background: var(--red);
       display: inline-block;
-      font-family: 'MontserratMedium';
+      font-family: "MontserratMedium";
       line-height: 16px;
       height: 100%;
 
@@ -48,10 +48,10 @@ const List = styled.div`
 
   & > a:hover,
   & > span:hover {
-    font-family: 'MontserratBold';
+    font-family: "MontserratBold";
 
     span {
-      font-family: 'MontserratMedium';      // padding-bottom: 2px;
+      font-family: "MontserratMedium"; // padding-bottom: 2px;
       span {
         border-bottom: 1px solid #ffffff;
       }
@@ -76,7 +76,7 @@ const SubcategoriesWrapper = styled.div`
   transform: translate(-50%, 0);
 
   & > a {
-    font-family: 'MontserratRegular';
+    font-family: "MontserratRegular";
     padding: 0 24px;
     background: var(--red);
     text-align: left;
@@ -179,7 +179,7 @@ const MobileWrapper = styled.div`
 const Category = styled.div<{ active: boolean }>`
   color: var(--white);
   text-align: center;
-  font-family: 'MontserratBold';
+  font-family: "MontserratBold";
   font-size: 12px;
   padding: 16px 0 0 0;
   text-transform: uppercase;
@@ -204,14 +204,14 @@ const Block = styled.div`
   z-index: 1;
 `;
 
-interface Props {
-}
+interface Props {}
 
 const Categories: FC<Props> = () => {
   const { categories } = useCategory();
   const [selectedCategory, setSelectedCategory] = useState<number>(0);
   const [isMobile, setIsMobile] = useState(false);
   const { width: innerWidth } = useWindowDimensions();
+  const { search } = useLocation();
   const EmbutidosId = 317;
   const Premium = 356;
   const Mascotas = 354;
@@ -220,9 +220,9 @@ const Categories: FC<Props> = () => {
     setSelectedCategory(entity_id);
   };
 
-  useEffect(() => {    
+  useEffect(() => {
     setIsMobile(innerWidth < 1100);
-  },[innerWidth]);
+  }, [innerWidth]);
 
   const settings = {
     dots: false,
@@ -253,7 +253,7 @@ const Categories: FC<Props> = () => {
                             if (subcategories && subcategories.length > 0) {
                               handleSelectCategory(entity_id);
                             } else {
-                              window.location.href = `/productos/${toLink(name)}`;
+                              window.location.href = `/productos/${toLink(name)}${search}`;
                             }
                           }}
                         >
@@ -262,7 +262,7 @@ const Categories: FC<Props> = () => {
                         {!!subcategories?.length && (
                           <SubcategoriesMobileWrapper visible={selectedCategory === entity_id} extended={entity_id === EmbutidosId || entity_id === Premium || entity_id === Mascotas}>
                             {React.Children.toArray(
-                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => <Link to={`/productos/${toLink(name)}/${toLink(nameSub)}`}>{nameSub.toUpperCase()}</Link>)
+                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => <Link to={`/productos/${toLink(name)}/${toLink(nameSub)}${search}`}>{nameSub.toUpperCase()}</Link>)
                             )}
                           </SubcategoriesMobileWrapper>
                         )}
@@ -282,14 +282,14 @@ const Categories: FC<Props> = () => {
                   categories
                     .filter((category: CategoryType) => !category.is_campaign)
                     .map(({ name, subcategories }: CategoryType) => (
-                      <Link to={`/productos/${toLink(name)}`}>
+                      <Link to={`/productos/${toLink(name)}${search}`}>
                         <span>
                           <span>{name.toUpperCase()}</span>
                         </span>
                         {!!subcategories?.length && (
                           <SubcategoriesWrapper>
                             {React.Children.toArray(
-                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => <Link to={`/productos/${toLink(name)}/${toLink(nameSub)}`}>{nameSub.toUpperCase()}</Link>)
+                              subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => <Link to={`/productos/${toLink(name)}/${toLink(nameSub)}${search}`}>{nameSub.toUpperCase()}</Link>)
                             )}
                           </SubcategoriesWrapper>
                         )}

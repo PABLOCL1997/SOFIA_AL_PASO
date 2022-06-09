@@ -7,7 +7,7 @@ import { ListItem, ListItemTitle } from "./styled";
 const Chevron = React.lazy(() => import(/* webpackChunkName: "Chevron" */ "../Images/Chevron"));
 
 const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const Home = "Home";
   const routes = pathname.split("/");
 
@@ -46,7 +46,7 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
   return (
     <nav>
       {finalLinks.map(({ routeLink, routeName, length }, index) => (
-        <Link key={index} to={routeLink}>
+        <Link key={index} to={routeLink + search}>
           <ListItem>
             {isMobile && <Chevron />}
             <ListItemTitle>{routeName}</ListItemTitle>

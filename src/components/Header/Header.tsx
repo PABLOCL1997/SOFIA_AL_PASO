@@ -1,6 +1,6 @@
 import React, { FC, Suspense, useState, useEffect, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_CART_ITEMS, GET_QTY } from "../../graphql/cart/queries";
 import { GET_USER } from "../../graphql/user/queries";
@@ -39,15 +39,18 @@ type Props = {
   route?: string;
 };
 
-const Header: FC<Props> = ({ checkout, page, route }) => {  
+const Header: FC<Props> = ({ checkout, page, route }) => {
   const { t } = useTranslation();
   const { showPromoBar, hideBar, isB2E } = useUser();
+  const { search } = useLocation();
   const history = useHistory();
   const [addressCity, setAddressCity] = useState("Santa Cruz, Bolivia");
   const [open, setOpen] = useState(false);
   const [shadow, setShadow] = useState(false);
   const [newQuery, setNewQuery] = useState("");
-  const { modals: { showChooseUserType }} = useModals();
+  const {
+    modals: { showChooseUserType },
+  } = useModals();
 
   const currentStep = useContext(Location.Context);
   const step: Steps = useMemo(() => getStep(currentStep), [currentStep]);
@@ -78,7 +81,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const myAccount = () => {
     setOpen(false);
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      history.push("/mi-cuenta");
+      history.push(`/mi-cuenta${search}`);
     } else {
       toggleLoginModal();
     }
@@ -86,7 +89,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
 
   const goToCollaborators = () => {
     setOpen(false);
-    history.push("/activacion");
+    history.push(`/activacion${search}`);
   };
 
   const addressLabel = () => {
@@ -104,8 +107,8 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   useEffect(() => {
     if (route !== "/") {
       hideBar();
-    };
-  },[route]);
+    }
+  }, [route]);
 
   useEffect(() => {
     if (!userData?.userInfo.length || !userData?.userInfo[0].cityKey || userData?.userInfo[0].openCityModal || userData?.userInfo[0].openCartModal) {
@@ -135,7 +138,8 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   };
 
   const handleSearch = () => {
-    history.push(`/productos?q=${newQuery}`);
+    const url = search ? `/productos${search}&q=${newQuery}` : `/productos?q=${newQuery}`;
+    history.push(url);
   };
 
   useEffect(() => {
@@ -168,7 +172,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
             </SC.IngresarWrap>
           )}
           <SC.Logo isB2E={isB2E} isCheckout={isCheckout}>
-            <Link to="/">
+            <Link to={`/${search}`}>
               <img src={!isB2E ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>
@@ -184,7 +188,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
             </SC.Steps.Container>
           ) : (
             <>
-              <ShippingType onClick={toggleCityModal}/>
+              <ShippingType onClick={toggleCityModal} />
               <SC.InputGroup>
                 <Search />
                 {/* https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off */}
