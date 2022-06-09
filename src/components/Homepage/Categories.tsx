@@ -291,7 +291,7 @@ const Categories: FC<Props> = () => {
                           <SubcategoriesWrapper>
                             {React.Children.toArray(
                               subcategories.map(({ name: nameSub }: SubCategoryLvl3Type) => (
-                                <Link to={keepGoogleQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)})`)}>{nameSub.toUpperCase()}</Link>
+                                <Link to={keepGoogleQueryParameter(`/productos/${toLink(name)}/${toLink(nameSub)}`)}>{nameSub.toUpperCase()}</Link>
                               ))
                             )}
                           </SubcategoriesWrapper>
