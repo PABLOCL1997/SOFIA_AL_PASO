@@ -2,6 +2,7 @@ import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
+import { keepGoogleQueryParameter } from "../utils/string";
 import Loader from "./Loader";
 import PhoneImg from "../assets/images/footer-phone.svg";
 import EmailImg from "../assets/images/footer-email.svg";
@@ -25,7 +26,8 @@ const Container = styled.div<{ page?: string }>`
 `;
 
 const Text = styled.p`
-  font-family: 'MontserratBold';  font-size: 19px;
+  font-family: "MontserratBold";
+  font-size: 19px;
   padding: 0 20% 10px 0px;
   line-height: 31px;
   letter-spacing: 0.015em;
@@ -47,7 +49,8 @@ const Disclaimer = styled.p`
 `;
 
 const Slogan = styled.h2`
-  font-family: 'MontserratBold';  font-size: 20px;
+  font-family: "MontserratBold";
+  font-size: 20px;
   line-height: 20px;
   letter-spacing: 0.015em;
   color: white;
@@ -280,7 +283,10 @@ const Footer: FC<Props> = ({ page }) => {
           let item_index = 1;
           for (let j = 0; j < items.length; j += categories.length) {
             if (items[j + i] !== "&nbsp;") {
-              list[i].items.push({ id: item_index, name: items[j + i] });
+              const url = items[j + i].replace(/href="(.*?)"/, (m: any, s: string) => {
+                return 'href="' + keepGoogleQueryParameter(s) + '"';
+              });
+              list[i].items.push({ id: item_index, name: url });
               item_index++;
             }
           }

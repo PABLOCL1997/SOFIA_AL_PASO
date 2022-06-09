@@ -1,11 +1,11 @@
 import React, { FC, Suspense, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from "../../graphql/categories/type";
 import { BREAKPOINT } from "../../utils/constants";
 
-import { search, toLink } from "../../utils/string";
+import { search, toLink, keepGoogleQueryParameter } from "../../utils/string";
 import {
   TitleWrap,
   LevelSub,
@@ -60,7 +60,7 @@ const Container = styled.div`
       display: none;
     }
     span {
-      font-family: 'MontserratBold';
+      font-family: "MontserratBold";
       font-size: 14px;
       line-height: 14px;
     }
@@ -93,7 +93,7 @@ const ContainerBrands = styled.div`
       display: none;
     }
     span {
-      font-family: 'MontserratBold';
+      font-family: "MontserratBold";
       font-size: 14px;
       line-height: 14px;
     }
@@ -164,7 +164,7 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
   a {
     color: inherit; /* blue colors for links too */
     text-decoration: inherit; /* no underline */
-    font-family: 'MontserratMedium';
+    font-family: "MontserratMedium";
     font-size: 14px;
     line-height: 20px;
     color: ${customStyles.black};
@@ -182,7 +182,7 @@ const Category = styled.li<{ selected: boolean; key?: number; lvl?: any }>`
   }
 
   em {
-    font-family: 'MontserratBold';
+    font-family: "MontserratBold";
     color: ${customStyles.black};
     font-size: 12px;
     line-height: 16px;
@@ -209,7 +209,7 @@ const SubCategory = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   padding: 0 0 10px;
 
   span {
-    font-family: 'MontserratMedium';
+    font-family: "MontserratMedium";
   }
 
   a {
@@ -234,7 +234,7 @@ const SubCategory4 = styled.div<{ selected: boolean; key?: number; lvl?: any }>`
   }
 
   span {
-    font-family: 'MontserratMedium';
+    font-family: "MontserratMedium";
   }
 `;
 
@@ -259,7 +259,7 @@ const Title = styled.div`
 `;
 
 const Text = styled.div`
-  font-family: 'MontserratMedium';
+  font-family: "MontserratMedium";
   font-size: 14px;
   line-height: 18px;
   color: var(--black);
@@ -483,7 +483,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                 })
                 .map((row: CategoryType) => (
                   <Category lvl={1} selected={compare(row)} key={row.entity_id}>
-                    <Link to={navigateLink(row)}>
+                    <Link to={keepGoogleQueryParameter(navigateLink(row))}>
                       <SmallCatImage src={row.category_image} alt="" />
                       {row.name}
                       <span className="cantidad">({row.quantity})</span>
@@ -497,7 +497,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                           return (
                             <SubCategory selected={compare(row, s3row)} key={s3row.entity_id} lvl={compare(row, s3row)}>
                               <span onClick={() => {}}>
-                                <Link to={navigateLink(row, s3row)}>
+                                <Link to={keepGoogleQueryParameter(navigateLink(row, s3row))}>
                                   {s3row.name}
 
                                   <span className="cantidad">({s3row?.quantity})</span>
@@ -512,7 +512,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                                     if (s4row) {
                                       return (
                                         <SubCategory4 selected={compare(row, s3row, s4row)} key={s4row.entity_id} lvl={compare(row, s3row, s4row)}>
-                                          <Link to={navigateLink(row, s3row, s4row)}>
+                                          <Link to={keepGoogleQueryParameter(navigateLink(row, s3row, s4row))}>
                                             {s4row.name}
                                             <span className="cantidad">({s4row.quantity})</span>
                                           </Link>
@@ -559,7 +559,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                         })
                         .map((row: CategoryType) => (
                           <Category lvl={1} selected={compare(row)} key={row.entity_id}>
-                            <Link to={navigateLink(row)}>
+                            <Link to={keepGoogleQueryParameter(navigateLink(row))}>
                               <SmallCatImage src={row.category_image} alt="" />
                               {row.name}
                               <span className="cantidad">({row?.quantity})</span>
@@ -573,7 +573,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                                   return (
                                     <SubCategory selected={compare(row, s3row)} key={s3row.entity_id} lvl={compare(row, s3row)}>
                                       <span onClick={() => {}}>
-                                        <Link to={navigateLink(row, s3row)}>
+                                        <Link to={keepGoogleQueryParameter(navigateLink(row, s3row))}>
                                           {s3row.name}
                                           <span className="cantidad">({s3row?.quantity})</span>
                                         </Link>
@@ -586,7 +586,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                                             if (s4row) {
                                               return (
                                                 <SubCategory4 selected={compare(row, s3row, s4row)} key={s4row.entity_id} lvl={compare(row, s3row, s4row)}>
-                                                  <Link to={navigateLink(row, s3row, s4row)}>
+                                                  <Link to={keepGoogleQueryParameter(navigateLink(row, s3row, s4row))}>
                                                     {s4row.name}
                                                     <span className="cantidad">({s4row.quantity})</span>
                                                   </Link>
