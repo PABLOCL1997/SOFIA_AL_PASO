@@ -126,17 +126,3 @@ export const mapMonths = (name: string): string => {
       return "01";
   }
 };
-
-export const keepGoogleQueryParameter = (url: string) => {
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-  let urlFinal = url;
-  if (params.gclid) {
-    if (urlFinal.indexOf("?") === -1) {
-      urlFinal += "?gclid=" + params.gclid;
-    } else {
-      urlFinal += "&gclid=" + params.gclid;
-    }
-  }
-  return urlFinal;
-};

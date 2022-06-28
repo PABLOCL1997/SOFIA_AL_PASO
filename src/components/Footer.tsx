@@ -2,7 +2,6 @@ import React, { FC, Suspense, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BREAKPOINT } from "../utils/constants";
-import { keepGoogleQueryParameter } from "../utils/string";
 import Loader from "./Loader";
 import PhoneImg from "../assets/images/footer-phone.svg";
 import EmailImg from "../assets/images/footer-email.svg";
@@ -284,7 +283,7 @@ const Footer: FC<Props> = ({ page }) => {
           for (let j = 0; j < items.length; j += categories.length) {
             if (items[j + i] !== "&nbsp;") {
               const url = items[j + i].replace(/href="(.*?)"/, (m: any, s: string) => {
-                return 'href="' + keepGoogleQueryParameter(s) + '"';
+                return 'href="' + s + '"';
               });
               list[i].items.push({ id: item_index, name: url });
               item_index++;

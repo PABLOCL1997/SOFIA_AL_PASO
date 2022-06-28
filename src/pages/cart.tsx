@@ -9,7 +9,6 @@ import { SET_USER } from "../graphql/user/mutations";
 import { GET_USER } from "../graphql/user/queries";
 import useCart from "../hooks/useCart";
 import { trackGoToCheckoutEvent, trackViewCart } from "../utils/dataLayer";
-import { keepGoogleQueryParameter } from "../utils/string";
 
 const Cta = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../components/Cta"));
 const Delete = React.lazy(() => import(/* webpackChunkName: "Delete" */ "../components/Images/Delete"));
@@ -34,7 +33,7 @@ const Cart = () => {
       (window as any).navigateToCheckout = true;
       toggleLoginModal();
     }
-    history.push(keepGoogleQueryParameter(`/checkout`));
+    history.push(`/checkout`);
   };
 
   useEffect(() => {

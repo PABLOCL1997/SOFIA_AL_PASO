@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { fromLink, keepGoogleQueryParameter } from "../../utils/string";
+import { fromLink } from "../../utils/string";
 import { Alias, Props, BreadCrum } from "./types";
 import { ListItem, ListItemTitle } from "./styled";
 
@@ -46,7 +46,7 @@ const BreadCrumbs: FC<Props> = ({ alias, isMobile = true, additionalLinks }) => 
   return (
     <nav>
       {finalLinks.map(({ routeLink, routeName, length }, index) => (
-        <Link key={index} to={keepGoogleQueryParameter(routeLink)}>
+        <Link key={index} to={routeLink}>
           <ListItem>
             {isMobile && <Chevron />}
             <ListItemTitle>{routeName}</ListItemTitle>
