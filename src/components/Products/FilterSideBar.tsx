@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { CategoryType, SubCategoryLvl3Type, SubCategoryLvl4Type } from "../../graphql/categories/type";
 import { BREAKPOINT } from "../../utils/constants";
 
-import { search, toLink, keepGoogleQueryParameter } from "../../utils/string";
+import { search, toLink } from "../../utils/string";
 import {
   TitleWrap,
   LevelSub,
@@ -483,7 +483,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                 })
                 .map((row: CategoryType) => (
                   <Category lvl={1} selected={compare(row)} key={row.entity_id}>
-                    <Link to={keepGoogleQueryParameter(navigateLink(row))}>
+                    <Link to={navigateLink(row)}>
                       <SmallCatImage src={row.category_image} alt="" />
                       {row.name}
                       <span className="cantidad">({row.quantity})</span>
@@ -497,7 +497,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                           return (
                             <SubCategory selected={compare(row, s3row)} key={s3row.entity_id} lvl={compare(row, s3row)}>
                               <span onClick={() => {}}>
-                                <Link to={keepGoogleQueryParameter(navigateLink(row, s3row))}>
+                                <Link to={navigateLink(row, s3row)}>
                                   {s3row.name}
 
                                   <span className="cantidad">({s3row?.quantity})</span>
@@ -512,7 +512,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                                     if (s4row) {
                                       return (
                                         <SubCategory4 selected={compare(row, s3row, s4row)} key={s4row.entity_id} lvl={compare(row, s3row, s4row)}>
-                                          <Link to={keepGoogleQueryParameter(navigateLink(row, s3row, s4row))}>
+                                          <Link to={navigateLink(row, s3row, s4row)}>
                                             {s4row.name}
                                             <span className="cantidad">({s4row.quantity})</span>
                                           </Link>
@@ -559,7 +559,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                         })
                         .map((row: CategoryType) => (
                           <Category lvl={1} selected={compare(row)} key={row.entity_id}>
-                            <Link to={keepGoogleQueryParameter(navigateLink(row))}>
+                            <Link to={navigateLink(row)}>
                               <SmallCatImage src={row.category_image} alt="" />
                               {row.name}
                               <span className="cantidad">({row?.quantity})</span>
@@ -573,7 +573,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                                   return (
                                     <SubCategory selected={compare(row, s3row)} key={s3row.entity_id} lvl={compare(row, s3row)}>
                                       <span onClick={() => {}}>
-                                        <Link to={keepGoogleQueryParameter(navigateLink(row, s3row))}>
+                                        <Link to={navigateLink(row, s3row)}>
                                           {s3row.name}
                                           <span className="cantidad">({s3row?.quantity})</span>
                                         </Link>
@@ -586,7 +586,7 @@ const FilterSideBar: FC<Props> = ({ count, categories, brands, order, orderQuery
                                             if (s4row) {
                                               return (
                                                 <SubCategory4 selected={compare(row, s3row, s4row)} key={s4row.entity_id} lvl={compare(row, s3row, s4row)}>
-                                                  <Link to={keepGoogleQueryParameter(navigateLink(row, s3row, s4row))}>
+                                                  <Link to={navigateLink(row, s3row, s4row)}>
                                                     {s4row.name}
                                                     <span className="cantidad">({s4row.quantity})</span>
                                                   </Link>

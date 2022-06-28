@@ -101,6 +101,12 @@ type Props = {
   page?: string;
 };
 
+declare global {
+  interface Window {
+    ga: any;
+  }
+}
+
 const LayoutGeneral: FC<Props> = ({ children, page }) => {
   const { logout, toggleLoginModal } = useUser();
   const history = useHistory();
@@ -149,6 +155,18 @@ const LayoutGeneral: FC<Props> = ({ children, page }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const trackPage = () => {
+    history.listen(() => {
+      window.ga("set", "page", window.location.pathname + window.location.search);
+      window.ga("send", "pageview");
+    });
+  };
+
+  useEffect(() => {
+    trackPage();
+    history.listen(trackPage);
+  }, [history]);
 
   return (
     <Suspense fallback={<Loader />}>

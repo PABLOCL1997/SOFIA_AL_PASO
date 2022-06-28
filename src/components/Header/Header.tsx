@@ -19,7 +19,6 @@ import SofiaAlPasoLogo from "../../assets/images/sofiaAlPasoLogo.webp";
 import SofiaAlPasoColaboradoresLogo from "../../assets/images/sofiaAlPasoColaboradoresLogo.svg";
 
 import { trackGoToCartEvent } from "../../utils/dataLayer";
-import { keepGoogleQueryParameter } from "../../utils/string";
 import useCityPriceList from "../../hooks/useCityPriceList";
 import { getStep, Steps } from "../../types/Checkout";
 import ShippingType from "./ShippingType";
@@ -81,7 +80,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   const myAccount = () => {
     setOpen(false);
     if (userData.userInfo.length && userData.userInfo[0].isLoggedIn) {
-      history.push(keepGoogleQueryParameter("/mi-cuenta"));
+      history.push("/mi-cuenta");
     } else {
       toggleLoginModal();
     }
@@ -89,7 +88,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
 
   const goToCollaborators = () => {
     setOpen(false);
-    history.push(keepGoogleQueryParameter("/activacion"));
+    history.push("/activacion");
   };
 
   const addressLabel = () => {
@@ -138,7 +137,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
   };
 
   const handleSearch = () => {
-    history.push(keepGoogleQueryParameter(`/productos?q=${newQuery}`));
+    history.push(`/productos?q=${newQuery}`);
   };
 
   useEffect(() => {
@@ -171,7 +170,7 @@ const Header: FC<Props> = ({ checkout, page, route }) => {
             </SC.IngresarWrap>
           )}
           <SC.Logo isB2E={isB2E} isCheckout={isCheckout}>
-            <Link to={keepGoogleQueryParameter("/")}>
+            <Link to={"/"}>
               <img src={!isB2E ? SofiaAlPasoLogo : SofiaAlPasoColaboradoresLogo} height="30px" alt={"Sofía"} />
             </Link>
           </SC.Logo>
