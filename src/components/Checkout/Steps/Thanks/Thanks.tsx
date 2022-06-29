@@ -11,7 +11,6 @@ const ThankMail = React.lazy(() => import(/* webpackChunkName: "ThankMail" */ ".
 const ThankPhone = React.lazy(() => import(/* webpackChunkName: "ThankPhone" */ "../../../Images/ThankPhone"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
 
-
 type Props = {
   orders: Array<{ increment_id: string }>;
   isPickup: boolean;
@@ -30,15 +29,16 @@ const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
         t("thankyou.multiple_subtitle_numbers", {
           increment_ids: orders.map((order: { increment_id: string }) => `#${order.increment_id}`).join(" y "),
         });
-    
-    useEffect(() => {
-      const body = document.querySelector("body");
-      if (body && window.innerWidth >= 768) body.style.overflow = "unset";
-    }, []);
+
+  useEffect(() => {
+    const body = document.querySelector("body");
+    if (body && window.innerWidth >= 768) body.style.overflow = "unset";
+  }, []);
 
   return (
     <Suspense fallback={<Loader />}>
-      <SC.Container>        
+      <SC.Container>
+        <img src="http://email.sofia.com.bo/pub/cct?_ri_=X0Gzc2X%3DAQpglLjHJlDQG5q7yKzbiC41uAUCuzbwMzcpzcW&_ei_=E-u1DM6nNGcvQEXNlgFB7pk" width="1" height="1" />
         <SC.Title>
           <ThankCheck />
           <h2>{t("thankyou.title")}</h2>
@@ -83,13 +83,9 @@ const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
         </SC.Disclaimer>
 
         <SC.Footer.Wrapper>
-            <SC.Footer.Cta>
-                <CallToAction
-                    text={t("thankyou.go_home")}
-                    action={() => history.push("/")}
-                    filled
-                />
-            </SC.Footer.Cta>
+          <SC.Footer.Cta>
+            <CallToAction text={t("thankyou.go_home")} action={() => history.push("/")} filled />
+          </SC.Footer.Cta>
         </SC.Footer.Wrapper>
       </SC.Container>
     </Suspense>
