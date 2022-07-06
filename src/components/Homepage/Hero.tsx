@@ -182,11 +182,11 @@ const Hero: FC<Props> = () => {
               .reverse()
               .filter((banner: Banner) => {
                 if (city === "SC") {
-                  return String(banner.title).match(/santacruz/);
-                } else if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
-                  return String(banner.title).match(/lapaz/);
-                } else {
                   return banner;
+                } else if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
+                  return String(banner.title).match(/lapaz/) ? null : banner;
+                } else {
+                  return String(banner.title).match(/santacruz/) ? null : banner;
                 }
               })
               .sort((a: Banner, b: Banner) => {
