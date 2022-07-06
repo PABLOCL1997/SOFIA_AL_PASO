@@ -6,6 +6,15 @@ import { Link } from "react-router-dom";
 import Banner from "../../types/Banner";
 import { LazyLoadTypes } from "react-slick";
 import useCityPriceList from "../../hooks/useCityPriceList";
+import dayjs from "dayjs";
+const es = require("dayjs/locale/es");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+const isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
+dayjs.locale(es);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
 
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 
@@ -133,6 +142,7 @@ const NextArrow = (props: any) => {
 type Props = {};
 
 const Hero: FC<Props> = () => {
+  const today = dayjs();
   const { city } = useCityPriceList();
   const banners = useBanners();
   const typeLazy: LazyLoadTypes = "ondemand";
@@ -171,7 +181,13 @@ const Hero: FC<Props> = () => {
             banners
               .reverse()
               .filter((banner: Banner) => {
-                return city === "SC" ? banner : String(banner.title).match(/santacruz/) ? null : banner;
+                if (city === "SC") {
+                  return String(banner.title).match(/santacruz/);
+                } else if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
+                  return String(banner.title).match(/lapaz/);
+                } else {
+                  return banner;
+                }
               })
               .sort((a: Banner, b: Banner) => {
                 return a.order - b.order;
