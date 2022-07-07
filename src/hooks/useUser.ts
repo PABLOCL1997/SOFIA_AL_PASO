@@ -37,7 +37,7 @@ const useUser = (): IUseUser => {
     variables: { user: { openLoginModal: true } },
   });
   const [togglePromoBar] = useMutation(SET_USER, {
-    variables: { user: { showPromoBar: true } },
+    variables: { user: { showPromoBar: false } },
   });
   const [toggleExpressModal] = useMutation(SET_USER, {
     variables: { user: { showExpressModal: true } },
@@ -74,7 +74,7 @@ const useUser = (): IUseUser => {
         defaultAddressId: null,
         isLoggedIn: false,
         id: null,
-        store: null
+        store: null,
       },
     },
   });
@@ -85,8 +85,8 @@ const useUser = (): IUseUser => {
   }, [user]);
 
   const store: OrderType = useMemo(() => {
-    return user?.userInfo[0]?.store || 'ECOMMERCE';
-  }, [user])
+    return user?.userInfo[0]?.store || "ECOMMERCE";
+  }, [user]);
 
   const showPromoBar: boolean = useMemo(() => {
     return user?.userInfo[0]?.showPromoBar;
@@ -98,7 +98,7 @@ const useUser = (): IUseUser => {
 
   const isB2E: boolean = useMemo(() => {
     return user?.userInfo[0]?.idPriceList > 0;
-  }, [user])
+  }, [user]);
 
   return {
     toggleCartModal,
@@ -117,7 +117,7 @@ const useUser = (): IUseUser => {
     coupon,
     showPromoBar,
     showExpressModal,
-    isB2E
+    isB2E,
   };
 };
 
