@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Banner from "../../types/Banner";
 import { LazyLoadTypes } from "react-slick";
 import useCityPriceList from "../../hooks/useCityPriceList";
+import useUser from "../../hooks/useUser";
 import dayjs from "dayjs";
 const es = require("dayjs/locale/es");
 const utc = require("dayjs/plugin/utc");
@@ -143,6 +144,7 @@ type Props = {};
 
 const Hero: FC<Props> = () => {
   const today = dayjs();
+  const { user } = useUser();
   const { city, agency } = useCityPriceList();
   const banners = useBanners();
   const typeLazy: LazyLoadTypes = "ondemand";
@@ -186,11 +188,11 @@ const Hero: FC<Props> = () => {
                 const isSantaCruz = String(banner.title).match(/santacruz/);
 
                 if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
-                  return !isSantaCruz && (isLaPaz || !agency) ? banner : null;
+                  return isSantaCruz ? null : banner;
                 } else if (city === "SC") {
-                  return !isLaPaz && (isSantaCruz || !agency) ? banner : null;
+                  return isLaPaz ? null : banner;
                 } else {
-                  return (!isLaPaz && !isSantaCruz) || !agency ? banner : null;
+                  return isLaPaz || isSantaCruz ? null : banner;
                 }
               })
               .sort((a: Banner, b: Banner) => {
