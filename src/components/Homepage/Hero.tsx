@@ -143,7 +143,7 @@ type Props = {};
 
 const Hero: FC<Props> = () => {
   const today = dayjs();
-  const { city } = useCityPriceList();
+  const { city, agency } = useCityPriceList();
   const banners = useBanners();
   const typeLazy: LazyLoadTypes = "ondemand";
   const settings = {
@@ -167,6 +167,7 @@ const Hero: FC<Props> = () => {
       },
     ],
   };
+
   return (
     <Suspense
       fallback={
@@ -181,12 +182,15 @@ const Hero: FC<Props> = () => {
             banners
               .reverse()
               .filter((banner: Banner) => {
-                if (city === "SC") {
-                  return banner;
-                } else if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
-                  return String(banner.title).match(/lapaz/) ? null : banner;
+                const isLaPaz = String(banner.title).match(/lapaz/);
+                const isSantaCruz = String(banner.title).match(/santacruz/);
+
+                if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
+                  return (isLaPaz && !isSantaCruz) || (!agency && !isSantaCruz) ? banner : null;
+                } else if (city === "SC") {
+                  return (!isLaPaz && isSantaCruz) || (!agency && !isLaPaz) ? banner : null;
                 } else {
-                  return String(banner.title).match(/santacruz/) ? null : banner;
+                  return (!isLaPaz && !isSantaCruz) || (!agency && !isLaPaz && !isSantaCruz) ? banner : null;
                 }
               })
               .sort((a: Banner, b: Banner) => {
