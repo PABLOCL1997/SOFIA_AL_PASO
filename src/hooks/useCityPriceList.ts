@@ -83,7 +83,9 @@ const useCityPriceList = (): usePriceListType => {
                           if (city.includes("la paz")) {
                             setCity("LP");
                           } else if (city.includes("el alto")) {
-                            console.log("EA");
+                            setCity("EA");
+                          } else if (city.includes("cochabamba")) {
+                            setCity("CB");
                           }
                         }
                       });
