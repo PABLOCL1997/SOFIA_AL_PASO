@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import Banner from "../../types/Banner";
 import { LazyLoadTypes } from "react-slick";
 import useCityPriceList from "../../hooks/useCityPriceList";
-import useUser from "../../hooks/useUser";
 import dayjs from "dayjs";
 const es = require("dayjs/locale/es");
 const utc = require("dayjs/plugin/utc");
@@ -144,8 +143,7 @@ type Props = {};
 
 const Hero: FC<Props> = () => {
   const today = dayjs();
-  const { user } = useUser();
-  const { city, agency } = useCityPriceList();
+  const { city } = useCityPriceList();
   const banners = useBanners();
   const typeLazy: LazyLoadTypes = "ondemand";
   const settings = {
