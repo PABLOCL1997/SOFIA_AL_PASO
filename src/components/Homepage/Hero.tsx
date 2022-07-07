@@ -186,11 +186,11 @@ const Hero: FC<Props> = () => {
                 const isSantaCruz = String(banner.title).match(/santacruz/);
 
                 if ((city === "LP" || city === "EA") && today.isSameOrBefore(dayjs("2022-07-31"))) {
-                  return (isLaPaz && !isSantaCruz) || (!agency && !isSantaCruz) ? banner : null;
+                  return !isSantaCruz && (isLaPaz || !agency) ? banner : null;
                 } else if (city === "SC") {
-                  return (!isLaPaz && isSantaCruz) || (!agency && !isLaPaz) ? banner : null;
+                  return !isLaPaz && (isSantaCruz || !agency) ? banner : null;
                 } else {
-                  return (!isLaPaz && !isSantaCruz) || (!agency && !isLaPaz && !isSantaCruz) ? banner : null;
+                  return (!isLaPaz && !isSantaCruz) || !agency ? banner : null;
                 }
               })
               .sort((a: Banner, b: Banner) => {

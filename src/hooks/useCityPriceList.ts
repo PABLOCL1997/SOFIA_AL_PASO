@@ -35,7 +35,7 @@ const useCityPriceList = (): usePriceListType => {
   useEffect(() => {
     (async () => {
       // update price list
-      if (userData?.userInfo?.length && userData?.userInfo[0] && userData.userInfo[0].idPriceList >= 0) {
+      if (userData?.userInfo?.length && userData?.userInfo[0]?.idPriceList >= 0) {
         if (userData.userInfo[0].idPriceList !== idPriceList) {
           setIdPriceList(userData.userInfo[0].idPriceList);
           setAgency(null);
@@ -57,11 +57,8 @@ const useCityPriceList = (): usePriceListType => {
       }
 
       // update express
-      if (userData?.userInfo.length && userData.userInfo[0].store === "EXPRESS") {
-        setIsExpress(true);
-      } else {
-        setIsExpress(false);
-      }
+      const updatedIsExpress = userData?.userInfo.length && userData.userInfo[0].store === "EXPRESS";
+      setIsExpress(updatedIsExpress);
 
       if (userData?.userInfo.length && !userData.userInfo[0].id) {
         if (navigator.geolocation) {
@@ -77,7 +74,7 @@ const useCityPriceList = (): usePriceListType => {
                   if (geolocationResult.data.status === "OK") {
                     const { results } = geolocationResult.data;
                     results.forEach((result: any) => {
-                      result.types.forEach((type: any) => {
+                      result.types.forEach((type: string) => {
                         if (type === "administrative_area_level_1") {
                           const city = result.address_components[0].short_name.toLowerCase();
                           if (city.includes("la paz")) {
