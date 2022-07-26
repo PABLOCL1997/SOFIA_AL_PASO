@@ -378,11 +378,11 @@ const generateSitemap = async () => {
 app.use(expressCspHeader({
   directives: {
       'default-src': [SELF],
-      'script-src': [SELF, INLINE, 'sofia.com.bo'],
-      'style-src': [SELF, 'sofia.com.bo'],
-      'img-src': ['data:', 'images.com'],
+      'script-src': [SELF, INLINE, 'https://sofia.com.bo/'],
+      'style-src': [SELF, 'https://sofia.com.bo/'],
+      'img-src': ['data:', 'https://sofia.com.bo/'],
       'worker-src': [NONE],
-      'block-all-mixed-content': true
+      'block-all-mixed-content': false
   }
 }));
 
