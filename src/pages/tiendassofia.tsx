@@ -11,7 +11,7 @@ const Container = styled.div`
   iframe {
     margin: 20px auto;
     width: 100%;
-    height: 1000px;
+    height: 500px;
   }
 `;
 
