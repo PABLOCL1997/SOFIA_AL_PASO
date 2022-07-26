@@ -11,6 +11,7 @@ const { SitemapStream } = require("sitemap");
 const axios = require("axios");
 const port = process.env.PORT || 26235;
 const base_url = process.env.BASE_URL;
+const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
 
 const {
   GET_METADATA,
@@ -373,6 +374,17 @@ const generateSitemap = async () => {
     }
   }
 };
+
+app.use(expressCspHeader({
+  directives: {
+      'default-src': [SELF],
+      'script-src': [SELF, INLINE, 'https://sofia.com.bo/'],
+      'style-src': [SELF, 'https://sofia.com.bo/'],
+      'img-src': ['data:', 'https://sofia.com.bo/'],
+      'worker-src': [NONE],
+      'block-all-mixed-content': false
+  }
+}));
 
 cron.schedule("0 0 * * *", async () => {
   await generateSitemap();
