@@ -382,7 +382,8 @@ app.use(expressCspHeader({
       'style-src': [SELF, 'https://sofia.com.bo/'],
       'img-src': ['data:', 'https://sofia.com.bo/'],
       'worker-src': [NONE],
-      'block-all-mixed-content': false
+      'block-all-mixed-content': false,
+      'frame-ancestors': 'https://sofia.com.bo/'
   }
 }));
 
