@@ -14,10 +14,11 @@ const Products = React.lazy(() => import(/* webpackChunkName: "Products" */ "./p
 const Product = React.lazy(() => import(/* webpackChunkName: "Product" */ "./pages/product"));
 const Checkout = React.lazy(() => import(/* webpackChunkName: "Checkout" */ "./pages/checkout"));
 const Faq = React.lazy(() => import(/* webpackChunkName: "Faq" */ "./pages/faq"));
-const Contact = React.lazy(() => import(/* webpackChunkName: "Faq" */ "./pages/contact"));
+const Contact = React.lazy(() => import(/* webpackChunkName: "Contact" */ "./pages/contact"));
 const Terms = React.lazy(() => import(/* webpackChunkName: "Terms" */ "./pages/terms"));
 const Coverage = React.lazy(() => import(/* webpackChunkName: "Coverage" */ "./pages/coverage"));
 const Page404 = React.lazy(() => import(/* webpackChunkName: "Page404" */ "./components/Page404"));
+const TiendasSofia = React.lazy(() => import(/* webpackChunkName: "Page404" */ "./pages/tiendassofia"));
 const Incentivos = React.lazy(() => import(/* webpackChunkName: "Incentivos" */ "./pages/incentivos"));
 const Thanks = React.lazy(() => import(/* webpackChunkName: "Thanks" */ "./pages/thanks"));
 const RetiroAlPaso = React.lazy(() => import(/* webpackChunkName: "RetiroAlPaso" */ "./pages/retiroAlPaso"));
@@ -45,7 +46,7 @@ const App = () => {
         </Loader>
       }
     >
-      <MapProvider>      
+      <MapProvider>
         <Router>
           <Switch>
             <Route
@@ -122,30 +123,10 @@ const App = () => {
                 </LayoutGeneral>
               }
             />
-            <Route
-              path="/productos/monitor/:city/:category"
-              children={
-                  <Monitor />
-              }
-            />
-            <Route
-              path="/productos/monitor/:city/:category/:subcategory"
-              children={
-                  <Monitor />
-              }
-            />
-            <Route
-              path="/productos/monitor/:city/:category/:subcategory/:lastlevel"
-              children={
-                  <Monitor />
-              }
-            />
-            <Route
-              path="/productos/monitor/:city"
-              children={
-                  <Monitor />
-              }
-            />
+            <Route path="/productos/monitor/:city/:category" children={<Monitor />} />
+            <Route path="/productos/monitor/:city/:category/:subcategory" children={<Monitor />} />
+            <Route path="/productos/monitor/:city/:category/:subcategory/:lastlevel" children={<Monitor />} />
+            <Route path="/productos/monitor/:city" children={<Monitor />} />
             <Route
               path="/terminos-y-condiciones"
               children={
@@ -208,6 +189,14 @@ const App = () => {
               children={
                 <LayoutGeneral>
                   <Thanks />
+                </LayoutGeneral>
+              }
+            />
+            <Route
+              path="/tiendas-sofia"
+              children={
+                <LayoutGeneral>
+                  <TiendasSofia />
                 </LayoutGeneral>
               }
             />
