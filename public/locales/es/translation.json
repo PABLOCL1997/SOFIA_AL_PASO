@@ -12,6 +12,7 @@
     "faq": "Preguntas frecuentes",
     "tracking": "Seguí tu pedido",
     "coverage": "Cobertura",
+    "tiendassofia": "Nuestras tiendas",
     "contact": "Contacto",
     "slogan": "En Sofía se confía.",
     "bills": "Mis facturas",
@@ -23,7 +24,7 @@
     "shipping_type": {
       "express": "Envío Express",
       "pickup": "Retirá al paso",
-      "delivery": "Recibe en casa"      
+      "delivery": "Recibe en casa"
     },
     "choose_user_type": {
       "title": "¿Cómo deseas finalizar tu pedido?",
@@ -37,8 +38,8 @@
       },
       "singup": {
         "title": "Regístrate",
-        "description": "Crea tu cuenta para guardar los datos" 
-      }      
+        "description": "Crea tu cuenta para guardar los datos"
+      }
     }
   },
   "modal": {
@@ -69,16 +70,16 @@
       "title": "Los mejores beneficios",
       "text": "Nuestra tienda te conviene, porque nos preocupamos por darte el mejor servicio.",
       "delivery": {
-          "title": "Envío a domicilio",
-          "text": "Hacé tu pedido hasta las 17:00 y recibilo en tu hogar al día siguiente."
+        "title": "Envío a domicilio",
+        "text": "Hacé tu pedido hasta las 17:00 y recibilo en tu hogar al día siguiente."
       },
       "payment": {
-          "title": "Pagá como más te convenga",
-          "text": "Paga online, con tarjeta o efectivo cuando recibas tu pedido."
+        "title": "Pagá como más te convenga",
+        "text": "Paga online, con tarjeta o efectivo cuando recibas tu pedido."
       },
       "order": {
-          "title": "Pedido mínimo, envío gratis",
-          "text": "Tienda Sofía es el primer sitio donde podés comprar carne por kilo online."
+        "title": "Pedido mínimo, envío gratis",
+        "text": "Tienda Sofía es el primer sitio donde podés comprar carne por kilo online."
       }
     },
     "promotions": {
@@ -154,17 +155,17 @@
       "text": "Selecciona esta opción y retira tus productos de Sofía al Paso para mayor comodidad."
     },
     "delivery": {
-        "title": "ENVÍO GRATIS AL DÍA SIGUIENTE",
-        "text": "Hacé tu pedido hasta las 17:00 de Lunes a Viernes y recibilo al día siguiente"
+      "title": "ENVÍO GRATIS AL DÍA SIGUIENTE",
+      "text": "Hacé tu pedido hasta las 17:00 de Lunes a Viernes y recibilo al día siguiente"
     },
     "warranty": {
-        "title": "100% GARANTÍA DE CALIDAD",
-        "text": "Los productos más frescos para tu familia."
+      "title": "100% GARANTÍA DE CALIDAD",
+      "text": "Los productos más frescos para tu familia."
     },
     "disclaimer": "",
     "related": {
-        "title": "También te recomendamos",
-        "see": "Ver"
+      "title": "También te recomendamos",
+      "see": "Ver"
     },
     "modal": {
       "text": "El producto ha sido añadido a tu cesta.",
@@ -267,7 +268,7 @@
       "start_shopping": "INICIAR COMPRA",
       "mail_error": "Revisa que tu dirección esté bien escrita.",
       "wrong_password": "Contraseña incorrecta. Vuelve a intentarlo o haz click en recuperar contraseña.",
-      "wrong_code": "Código incorrecto."   
+      "wrong_code": "Código incorrecto."
     }
   },
   "controls": {
@@ -275,17 +276,17 @@
     "edit": "Editar"
   },
   "employeeModal": {
-     "activar_cuenta": "Activar cuenta",
-     "carnet_de_identidad": "Carnet de identidad",
-     "enviar_pin": "ENVIAR PIN",
-     "carnet_incorrecto": "Carnet incorrecto.",
-     "no_recibiste_pin": "¿No recibiste el PIN?",
-     "reenviar": "Reenviar",
-     "pin_incorrecto": "PIN incorrecto",
-     "cuenta_activada": "Tu cuenta de empleado ya está activa",
-     "cuenta_activada_subtitulo": "¡Aprovecha descuentos exclusivos en nuestros productos!",
-     "siguiente": "SIGUIENTE",
-     "comenzar": "COMENZAR"
+    "activar_cuenta": "Activar cuenta",
+    "carnet_de_identidad": "Carnet de identidad",
+    "enviar_pin": "ENVIAR PIN",
+    "carnet_incorrecto": "Carnet incorrecto.",
+    "no_recibiste_pin": "¿No recibiste el PIN?",
+    "reenviar": "Reenviar",
+    "pin_incorrecto": "PIN incorrecto",
+    "cuenta_activada": "Tu cuenta de empleado ya está activa",
+    "cuenta_activada_subtitulo": "¡Aprovecha descuentos exclusivos en nuestros productos!",
+    "siguiente": "SIGUIENTE",
+    "comenzar": "COMENZAR"
   },
   "cart": {
     "title": "Carrito",
@@ -399,8 +400,8 @@
       }
     },
     "recommendedproducts": {
-      "title" : "Productos recomendados",
-      "close" : "Continuar"
+      "title": "Productos recomendados",
+      "close": "Continuar"
     },
     "ticket": {
       "title": "Mi pedido",
@@ -433,7 +434,7 @@
       "text": "Recuerda que algunos de nuestros productos son vendidos por peso. El valor expresado es referencial, ya que el monto final a facturar puede variar de acuerdo al peso final de los artículos seleccionados al momento de preparar tu pedido.",
       "thanks": "¡Gracias por confiar en Sofía!"
     },
-    "guest": "Para su próxima compra hemos enviado a su correo electrónico instrucciones para configurar su cuenta.",    
+    "guest": "Para su próxima compra hemos enviado a su correo electrónico instrucciones para configurar su cuenta.",
     "go_home": "Volver al inicio"
   },
   "account": {
@@ -479,7 +480,7 @@
       "value": "Valor",
       "status": "Estado",
       "actions": "Acciones",
-      "button":"Repetir",
+      "button": "Repetir",
       "no_results": "No has realizado órdenes aún.",
       "labels": {
         "pending": "Pendiente",
@@ -544,24 +545,24 @@
         "activate": "activar",
         "warning": "Recuerda primero iniciar sesión. Si aún no tienes cuenta <sofialink>creala desde aquí.</sofialink>",
         "already_activated": "Cuenta de colaborador activada"
-      },      
+      },
       "insert_nit": {
         "title": "Activa tu cuenta de colaborador",
         "instructions": "Primero, <strong>ingresa tu Carnet de Identidad</strong> (CI) para que busquemos tus datos:",
         "placeholder": "Carnet de Identidad",
         "next": "Siguiente",
-        "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún.",        
+        "error": "Este CI no corresponde a un colaborador o no ha sido habilitado aún.",
         "no_address": "El usuario no tiene datos de contacto. Por favor contacte a soporte.",
         "whatsapp_title": "Escríbenos",
         "whatsapp_link": "https://wa.me/59177605819"
       },
       "validate_options": {
         "title": "Selecciona un método de validación",
-        "instructions": "¡Muy bien! Puedes verificar tu cuenta ingresando tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago) o recibiendo un <strong>SMS</strong> en tu número de celular registrado en el sistema.",        
+        "instructions": "¡Muy bien! Puedes verificar tu cuenta ingresando tu <strong>código de empleado</strong> (este dato está en tu Boleta de Pago) o recibiendo un <strong>SMS</strong> en tu número de celular registrado en el sistema.",
         "instructions_code": "¡Ya casi estamos! Debes ingresar tu <strong>código de empleado</strong> a continuación (<strong>este dato está en tu Boleta de Pago</strong>):",
         "instructions_sms": "¡Ya casi estamos! Haz clic en siguiente para recibir un PIN por <strong>SMS</strong> y validar tu cuenta:",
         "next": "Siguiente",
-        "back": "Volver"       
+        "back": "Volver"
       },
       "insert_employee_code": {
         "title": "Activa tu cuenta de colaborador",
@@ -617,7 +618,6 @@
           "call_to_action": "Editar dirección"
         }
       }
-
     }
   },
   "tracking": {
