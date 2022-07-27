@@ -192,8 +192,17 @@ const Sidebar: FC<Props> = ({ setOpen }) => {
         </MenuItem>
         <MenuItem>
           {/* Nuestras tiendas */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 10V23H9V16H15V23H22V10L12 2Z" stroke="#E30613" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M20.5 1.75H5.5L1.75 8.5C1.75 10.5715 3.4285 12.25 5.5 12.25C7.5715 12.25 9.25 10.5715 9.25 8.5C9.25 10.5715 10.9285 12.25 13 12.25C15.0715 12.25 16.75 10.5715 16.75 8.5C16.75 10.5715 18.4285 12.25 20.5 12.25C22.5715 12.25 24.25 10.5715 24.25 8.5L20.5 1.75Z"
+              stroke="#E30613"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path d="M21.25 15.25V24.25H4.75V15.25" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M10.75 24.25V18.25H15.25V24.25" stroke="#E30613" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           <Link onClick={() => setOpen(false)} to={"/tiendas-sofia"}>
             {t("header.tiendassofia")}
