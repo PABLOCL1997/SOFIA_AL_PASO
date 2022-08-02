@@ -184,11 +184,7 @@ const Faq: FC<Props> = () => {
   const [sendContactForm] = useMutation(SEND_CONTACT_FORM, {
     onError: (e) => console.error("err", e),
     onCompleted: (d) => {
-      if (d.sendcontactform) {
-        return d.sendcontactform.status;
-      } else {
-        return null;
-      }
+      return d.sendcontactform;
     },
   });
 
@@ -217,7 +213,7 @@ const Faq: FC<Props> = () => {
 
     setSending(false);
 
-    let result = await sendContactForm({
+    const result = await sendContactForm({
       variables: {
         name: inputs.name,
         email: inputs.email,
@@ -229,7 +225,7 @@ const Faq: FC<Props> = () => {
       },
     });
 
-    if (result?.data?.sendcontactform?.status) {
+    if (result?.data?.sendcontactform) {
       showSuccess({
         variables: {
           user: {
