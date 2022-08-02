@@ -140,8 +140,6 @@ export const UPDATE_B2E_ADDRESS = gql`
 
 export const SEND_CONTACT_FORM = gql`
   mutation sendContactForm($name: String!, $email: String!, $question: String!, $phone: String!, $city: String!, $country: String!, $message: String!) {
-    sendcontactform(name: $name, email: $email, question: $question, phone: $phone, city: $city, country: $country, message: $message) {
-      status
-    }
+    sendcontactform(name: $name, email: $email, question: $question, phone: $phone, city: $city, country: $country, message: $message)
   }
 `;
