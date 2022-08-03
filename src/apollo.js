@@ -50,6 +50,7 @@ export default async () => {
         store: String
         coupon: String
         expressAltAddress: String
+        geoLocationResult: String
       }
       type Product {
         entity_id: Int!
