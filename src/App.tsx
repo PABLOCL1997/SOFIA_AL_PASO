@@ -1,10 +1,16 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
+import { useQuery, useMutation } from "react-apollo";
 import styled from "styled-components";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MapProvider } from "./context/MapProvider";
+
+import { GET_USER } from "./graphql/user/queries";
+import { SET_USER } from "./graphql/user/mutations";
+
+import axios from "axios";
 
 const LayoutGeneral = React.lazy(() => import(/* webpackChunkName: "LayoutGeneral" */ "./layout/general"));
 const LayoutHomepage = React.lazy(() => import(/* webpackChunkName: "LayoutHomepage" */ "./layout/homepage"));
@@ -38,6 +44,62 @@ const Loader = styled.div`
 `;
 
 const App = () => {
+  const { data: userData } = useQuery(GET_USER, {});
+  const [setUser] = useMutation(SET_USER);
+
+  useEffect(() => {
+    if (userData?.userInfo.length && !userData.userInfo[0].id) {
+      if (userData.userInfo[0].geoLocationResult) {
+        const results = JSON.parse(userData.userInfo[0].geoLocationResult);
+        setUserCity(results);
+      } else {
+        if (navigator.geolocation) {
+          try {
+            navigator.geolocation.getCurrentPosition(
+              function (position) {
+                (async () => {
+                  const geolocationResult = await axios.get(
+                    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&components=city&key=AIzaSyD-ytvHpafjsy_r9WbqGTj09_wkYuQAjSk`
+                  );
+                  if (geolocationResult.status === 200) {
+                    const { results } = geolocationResult.data;
+                    setUser({ variables: { user: { geoLocationResult: JSON.stringify(results) } } });
+                    setUserCity(results);
+                  }
+                })();
+              },
+              function (errors) {
+                console.error(errors);
+              },
+              {
+                timeout: 5000,
+              }
+            );
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }
+    }
+  }, []);
+
+  const setUserCity = (results: any) => {
+    results.forEach((result: any) => {
+      result.types.forEach((type: string) => {
+        if (type === "administrative_area_level_1") {
+          const city = result.address_components[0].short_name.toLowerCase();
+          if (city.includes("la paz")) {
+            setUser({ variables: { user: { cityKey: "LP" } } });
+          } else if (city.includes("el alto")) {
+            setUser({ variables: { user: { cityKey: "EA" } } });
+          } else if (city.includes("cochabamba")) {
+            setUser({ variables: { user: { cityKey: "CB" } } });
+          }
+        }
+      });
+    });
+  };
+
   return (
     <Suspense
       fallback={
