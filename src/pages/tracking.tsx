@@ -427,46 +427,47 @@ const Tracking: FC = () => {
     },
   });
 
-  const getMyIp = () => {
-    fetch("https://api.ipify.org?format=json")
-      .then((response) => {
-        return response.json();
-      })
-      .then((res: any) => {
-        console.log(res);
-      })
-      .catch((err: any) => console.error("Problem fetching my IP", err));
+  const getMyIp = async () => {
+    let out: any = await fetch("https://api.ipify.org?format=json");
+    if (out.status === 200) {
+      out = await out.json();
+      return out.ip;
+    } else {
+      return "";
+    }
   };
 
   useEffect(() => {
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const orderId = params.get("orderId");
-    const userNit = params.get("userNit");
-    const clientIp = getMyIp();
+    (async () => {
+      const search = window.location.search;
+      const params = new URLSearchParams(search);
+      const orderId = params.get("orderId");
+      const userNit = params.get("userNit");
+      const clientIp = await getMyIp();
 
-    if (orderId && userNit) {
-      setLoader(true);
-      setTrackingNumber(orderId);
-      const interval = window.setInterval(() => {
+      if (orderId && userNit) {
+        setLoader(true);
+        setTrackingNumber(orderId);
+        const interval = window.setInterval(() => {
+          getTrackingInfo({
+            variables: {
+              orderId,
+              nit: userNit,
+              isB2C: true,
+              clientIp,
+            },
+          });
+        }, 120000);
+        setTrackingInfoInterval(interval);
         getTrackingInfo({
           variables: {
             orderId,
             nit: userNit,
             isB2C: true,
-            clientIp,
           },
         });
-      }, 120000);
-      setTrackingInfoInterval(interval);
-      getTrackingInfo({
-        variables: {
-          orderId,
-          nit: userNit,
-          isB2C: true,
-        },
-      });
-    }
+      }
+    })();
   }, []);
 
   const getMapBounds = (map: any, maps: any, places: any) => {
