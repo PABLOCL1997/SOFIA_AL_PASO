@@ -464,6 +464,7 @@ const Tracking: FC = () => {
             orderId,
             nit: userNit,
             isB2C: true,
+            clientIp,
           },
         });
       }
