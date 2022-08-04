@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const GET_TRACKING_INFO = gql`
-  query getTrackingInfo($orderId: String, $nit: String, $isB2C: Boolean) {
-    getTrackingInfo(orderId: $orderId, nit: $nit, isB2C: $isB2C) {
+  query getTrackingInfo($orderId: String, $nit: String, $isB2C: Boolean, $clientIp: String) {
+    getTrackingInfo(orderId: $orderId, nit: $nit, isB2C: $isB2C, clientIp: $clientIp) {
       status
       resMsg
       equipmentId
