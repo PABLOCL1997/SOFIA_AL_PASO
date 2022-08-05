@@ -9,8 +9,8 @@ import arrow from "../../../../assets/images/arrow-back-checkout.svg";
 import * as SC from "./style";
 import dayjs from "dayjs";
 
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { useQuery } from "react-apollo";
 import { GET_TIME_FRAMES } from "../../../../graphql/metadata/queries";
 import useCityPriceList from "../../../../hooks/useCityPriceList";
@@ -33,7 +33,7 @@ const Loader = React.lazy(() => import(/* webpackChunkName: "Loader" */ "../../.
 const Slider = React.lazy(() => import(/* webpackChunkName: "Slider" */ "react-slick"));
 const CallToAction = React.lazy(() => import(/* webpackChunkName: "CallToAction" */ "../../../Cta"));
 
-const previousStep = "shipping"
+const previousStep = "shipping";
 const dateComparator: dayjs.OpUnitType = "day";
 const settings = {
   dots: true,
@@ -49,34 +49,30 @@ const settings = {
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
-        initialSlide: 2
-      }
+        initialSlide: 2,
+      },
     },
     {
       breakpoint: 480,
       settings: {
         slidesToShow: 2,
-        slidesToScroll: 1
-      }
-    }      
-  ]
+        slidesToScroll: 1,
+      },
+    },
+  ],
 };
 
 const DeliveryDate: FC<{
-    updateOrder: (field: string, value: string) => void;
-    setOrderData: (order: OrderData) => void;
-    orderData: OrderData;
-  }> = ({
-    updateOrder,
-    setOrderData,
-    orderData
-  }) => {
+  updateOrder: (field: string, value: string) => void;
+  setOrderData: (order: OrderData) => void;
+  orderData: OrderData;
+}> = ({ updateOrder, setOrderData, orderData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const query = useUrlQuery();
   const nextStep = query.get("next") || "payment";
-  const { city } = useCityPriceList()
-  const [isValid, setIsValid] = useState(false)
+  const { city } = useCityPriceList();
+  const [isValid, setIsValid] = useState(false);
 
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame | null>(null);
   const [deliveryDate, setDeliveryDate] = useState<dayjs.Dayjs | null>(null);
@@ -85,23 +81,26 @@ const DeliveryDate: FC<{
 
   const daysAvailable = useMemo(() => {
     let counter = 0;
-    const daysRequired = 5;
+    let daysRequired = 5;
     const SundayKey = 7;
-   
+
     // generate daysRequired days
     const daysAvailable = [];
     while (counter < daysRequired) {
       const newDay = dayjs().add(counter, "days");
 
       if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
-        const nextDay = dayjs().add(counter, "days");
-        daysAvailable.push(nextDay);
+        if (parseInt(newDay.format("D")) !== 8 && parseInt(newDay.format("D")) !== 9 && parseInt(newDay.format("M")) === 8) {
+          const nextDay = dayjs().add(counter, "days");
+          daysAvailable.push(nextDay);
+        } else {
+          daysRequired++;
+        }
       }
       counter++;
     }
     return daysAvailable;
-  }, [])
-  
+  }, []);
 
   const handleSelectDay = (day: dayjs.Dayjs) => {
     setDeliveryDate(day);
@@ -117,7 +116,6 @@ const DeliveryDate: FC<{
     },
   });
 
-    
   useEffect(() => {
     if (selectedTimeFrame?.turno?.inicio && selectedTimeFrame?.turno?.fin) {
       setOrderData({
@@ -192,18 +190,17 @@ const DeliveryDate: FC<{
     const checkTimeframe = async () => {
       try {
         await Checkout.Validations.Timeframe({
-          deliveryDate, 
+          deliveryDate,
           timeFrame: selectedTimeFrame?.turno?.inicio,
         });
         setIsValid(true);
       } catch (error) {
         setIsValid(false);
       }
-    }
+    };
 
     checkTimeframe();
-    
-}, [deliveryDate, selectedTimeFrame]);
+  }, [deliveryDate, selectedTimeFrame]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -214,24 +211,24 @@ const DeliveryDate: FC<{
         <SC.Title>
           <img onClick={() => handleNext(history, previousStep)} src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
           <h2>{t("checkout.delivery_datetime.title")}</h2>
-          </SC.Title>
+        </SC.Title>
         <SC.DateWrapper>
           <Slider {...settings}>
-          {daysAvailable?.length > 0
-            ? daysAvailable.map((day: dayjs.Dayjs, index: number) => (
-                <SC.DateSquare selected={dayjs(day).isSame(deliveryDate, dateComparator)} onClick={() => handleSelectDay(day)}>
-                  <SC.Date>
-                    {index === 0 ? `Hoy ` : null}
-                    {`${day.get("date") < 10 ? `0${day.get("date")}` : day.get("date")}/${day.get("month") + 1 < 10 ? `0${day.get("month") + 1}` : day.get("month") + 1}`}
-                  </SC.Date>
-                  <SC.Day>{weekdays[day.get("d")]}</SC.Day>
-                </SC.DateSquare>
-              ))
-            : null}
+            {daysAvailable?.length > 0
+              ? daysAvailable.map((day: dayjs.Dayjs, index: number) => (
+                  <SC.DateSquare selected={dayjs(day).isSame(deliveryDate, dateComparator)} onClick={() => handleSelectDay(day)}>
+                    <SC.Date>
+                      {index === 0 ? `Hoy ` : null}
+                      {`${day.get("date") < 10 ? `0${day.get("date")}` : day.get("date")}/${day.get("month") + 1 < 10 ? `0${day.get("month") + 1}` : day.get("month") + 1}`}
+                    </SC.Date>
+                    <SC.Day>{weekdays[day.get("d")]}</SC.Day>
+                  </SC.DateSquare>
+                ))
+              : null}
           </Slider>
         </SC.DateWrapper>
         <SC.TimeWrapper>
-          {filteredTimeFrames?.map((timeFrame: TimeFrame, index: number) => 
+          {filteredTimeFrames?.map((timeFrame: TimeFrame, index: number) => (
             <SC.TimeRadio key={`timeFrame#${index}`} selected={JSON.stringify(timeFrame) === JSON.stringify(selectedTimeFrame)}>
               <SC.Time onClick={() => setSelectedTimeFrame(timeFrame)}>
                 <SC.Radio
@@ -245,16 +242,11 @@ const DeliveryDate: FC<{
                 {`${timeFrame.turno.inicio} - ${timeFrame.turno.fin} hs`}
               </SC.Time>
             </SC.TimeRadio>
-          )}
+          ))}
           {!filteredTimeFrames.length && <>{t("checkout.delivery_datetime.no_time_frame")}</>}
         </SC.TimeWrapper>
         <SC.Next.Wrapper>
-          <CallToAction
-            filled={true}
-            text={t("general.next")}
-            action={() => handleNext(history, nextStep)}
-            active={isValid}
-          />
+          <CallToAction filled={true} text={t("general.next")} action={() => handleNext(history, nextStep)} active={isValid} />
         </SC.Next.Wrapper>
       </React.Fragment>
     </Suspense>
