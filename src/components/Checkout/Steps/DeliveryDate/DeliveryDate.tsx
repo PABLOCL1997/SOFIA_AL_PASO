@@ -81,7 +81,7 @@ const DeliveryDate: FC<{
 
   const daysAvailable = useMemo(() => {
     let counter = 0;
-    let daysRequired = 5;
+    const daysRequired = 5;
     const SundayKey = 7;
 
     // generate daysRequired days
@@ -90,12 +90,8 @@ const DeliveryDate: FC<{
       const newDay = dayjs().add(counter, "days");
 
       if (!(newDay.isoWeekday() === SundayKey) && daysAvailable.length < daysRequired - 1) {
-        if (parseInt(newDay.format("D")) !== 8 && parseInt(newDay.format("D")) !== 9 && parseInt(newDay.format("M")) === 8) {
-          const nextDay = dayjs().add(counter, "days");
-          daysAvailable.push(nextDay);
-        } else {
-          daysRequired++;
-        }
+        const nextDay = dayjs().add(counter, "days");
+        daysAvailable.push(nextDay);
       }
       counter++;
     }
