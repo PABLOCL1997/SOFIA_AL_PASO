@@ -46,27 +46,27 @@
             ) {
                 setTimeout(initGTM, 7500);
             }
-            setTimeout(initSocialLogin, 3500);
+            // setTimeout(initSocialLogin, 3500);
         });
 
-        function initSocialLogin () {
-            (function() {
-                var s = document.createElement('script');
-                s.type = 'application/javascript';
-                s.src = 'https://connect.facebook.net/en_US/sdk.js';
-                (document.getElementsByTagName('body')[0] || document.documentElement).appendChild(s);
-            })();
+        // function initSocialLogin () {
+        //     (function() {
+        //         var s = document.createElement('script');
+        //         s.type = 'application/javascript';
+        //         s.src = 'https://connect.facebook.net/en_US/sdk.js';
+        //         (document.getElementsByTagName('body')[0] || document.documentElement).appendChild(s);
+        //     })();
 
-            window.fbAsyncInit = function () {
-                FB.init({
-                appId: "614067362874540",
-                cookie: true,
-                xfbml: true,
-                version: "v7.0"
-                });
-                FB.AppEvents.logPageView();
-            };
-        }
+        //     window.fbAsyncInit = function () {
+        //         FB.init({
+        //         appId: "614067362874540",
+        //         cookie: true,
+        //         xfbml: true,
+        //         version: "v7.0"
+        //         });
+        //         FB.AppEvents.logPageView();
+        //     };
+        // }
 
         function initGTM () {
             if (window.gtmDidInit) {

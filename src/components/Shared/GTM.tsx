@@ -6,7 +6,7 @@ const GTM = () => {
     <Helmet>
       <script type="application/javascript" async defer src="https://apis.google.com/js/platform.js"></script>
       <meta name="google-signin-client_id" content="477197213348-fjk4p43702gn9t61jja26iqsj6j7j2of.apps.googleusercontent.com" />
-      <script type="application/javascript">
+      {/* <script type="application/javascript">
         {`
                 window.fbAsyncInit = function () {
                     FB.init({
@@ -18,7 +18,7 @@ const GTM = () => {
                     FB.AppEvents.logPageView();
                 };
                 `}
-      </script>
+      </script> */}
       <script type="application/javascript" async defer crossOrigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
       <script type="application/javascript">
         {`
