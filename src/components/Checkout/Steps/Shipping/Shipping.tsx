@@ -51,7 +51,7 @@ const Shipping: FC<{
       city: "",
       address: "",
       reference: "",
-      street: ""
+      street: "",
     },
     validationSchema: Checkout.Validators.shippingSchema,
     onSubmit: () => {},
@@ -60,7 +60,9 @@ const Shipping: FC<{
 
   const [other, setOther] = useState(false);
   const addressId = useMemo(() => localData.userInfo.length && localData.userInfo[0].defaultAddressId, [localData]);
-  const { checkout: { isGuestOrder } } = useCheckout();
+  const {
+    checkout: { isGuestOrder },
+  } = useCheckout();
 
   const [getDetails, { data: userDetails }] = useLazyQuery(DETAILS, {
     fetchPolicy: "network-only",
@@ -77,7 +79,7 @@ const Shipping: FC<{
             city: localData?.userInfo[0]?.cityName || address.city,
             address: address.street,
             street: address.street,
-            reference: address.reference,            
+            reference: address.reference,
           };
           formik.setValues(values);
           updateOrder("shipping", {
@@ -85,18 +87,18 @@ const Shipping: FC<{
             ...values,
           });
           setShowAddressForm(false);
-        };
+        }
       }
-    },    
+    },
   });
 
   const [setUser] = useMutation(SET_USER);
 
   const newAddress = useMemo(() => !(localData.userInfo.length && localData.userInfo[0].defaultAddressId), [localData]);
-  const street = useMemo(() => {    
+  const street = useMemo(() => {
     const s = localData.userInfo.length && localData.userInfo[0].defaultAddressLabel;
     if (s) {
-      const result = cities.find(((c: KeyValue) => c.value === s));
+      const result = cities.find((c: KeyValue) => c.value === s);
       if (result) return "";
       return s;
     }
@@ -113,7 +115,7 @@ const Shipping: FC<{
       updateOrder("shipping", {
         ...formik.values,
         address: value as string,
-        street: value as string
+        street: value as string,
       });
     } else {
       updateOrder("shipping", {
@@ -239,7 +241,6 @@ const Shipping: FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails, agency]);
 
-
   // Update order when pickup is selected
   useEffect(() => {
     if (agencies && agency && store === "PICKUP") {
@@ -251,11 +252,11 @@ const Shipping: FC<{
           address: agencyObj.street,
           street: agencyObj.street,
           city: agencyObj.city,
-          reference: agencyObj.reference
+          reference: agencyObj.reference,
         });
       }
     }
-  }, [agency, store, agencies, formik.values]);  
+  }, [agency, store, agencies, formik.values]);
 
   // Validate form
   useEffect(() => {
@@ -274,13 +275,13 @@ const Shipping: FC<{
 
     if (formik) {
       checkShipping();
-    }    
-  }, [formik, userDetails, store]);  
+    }
+  }, [formik, userDetails, store]);
 
   // enable form if user not have an address
   useEffect(() => {
-    if ((!formik.values.street || !formik.values.address) && (store !== "PICKUP")) { 
-      setShowAddressForm(true);          
+    if ((!formik.values.street || !formik.values.address) && store !== "PICKUP") {
+      setShowAddressForm(true);
     }
   }, [formik.values.street, formik.values.address, store, setShowAddressForm]);
 
@@ -296,15 +297,15 @@ const Shipping: FC<{
         city: localData?.userInfo[0]?.cityName,
         address: orderData.shipping.address,
         street: orderData.shipping.street,
-        reference: orderData.shipping.reference, 
-      })
+        reference: orderData.shipping.reference,
+      });
     }
-  }, [showAddressForm, localData]); 
+  }, [showAddressForm, localData]);
 
   // get details when store change
   useEffect(() => {
     getDetails();
-  },[store, street]);  
+  }, [store, street]);
 
   // update order
   useEffect(() => {
@@ -317,7 +318,7 @@ const Shipping: FC<{
         street: store === "EXPRESS" ? street : formik.values.address,
       });
     }
-  },[formIsValid, localData?.userInfo[0]?.cityName, street, store]);
+  }, [formIsValid, localData?.userInfo[0]?.cityName, street, store]);
 
   // update order express
   useEffect(() => {
@@ -335,16 +336,16 @@ const Shipping: FC<{
   }, [store, localData?.userInfo[0]?.cityName, street]);
 
   return (
-    <Suspense fallback={<Loader />}>     
+    <Suspense fallback={<Loader />}>
       <React.Fragment>
         <SC.Back.Wrapper onClick={() => handleNext(history, previousStep)}>
           <img src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
         </SC.Back.Wrapper>
         <SC.Title>
           <img onClick={() => handleNext(history, previousStep)} src={arrow} alt={t("controls.back_arrow")} width={16} height={11} />
-          {isGuestOrder ? <SC.TitleGuest>{t("checkout.delivery.title_guest")}</SC.TitleGuest> :<h2>{t("checkout.delivery.title")}</h2>}
+          {isGuestOrder ? <SC.TitleGuest>{t("checkout.delivery.title_guest")}</SC.TitleGuest> : <h2>{t("checkout.delivery.title")}</h2>}
         </SC.Title>
-        
+
         <ChooseShipping street={street} addressId={addressId} showNewAddress={showAddressForm} />
 
         {showAddressForm && (store === "B2E" || store === "ECOMMERCE") && (

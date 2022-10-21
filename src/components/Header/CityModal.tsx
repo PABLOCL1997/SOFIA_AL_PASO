@@ -105,7 +105,7 @@ export const RadionGroup = styled.div<any>`
   }
   label {
     cursor: pointer;
-    font-family: 'MontserratMedium';
+    font-family: "MontserratMedium";
     font-size: 14px;
     line-height: 14px;
     color: var(--red);
@@ -141,8 +141,11 @@ const CityModal: FC<Props> = () => {
   const [modalStepType, setModalStepType] = useState<Changes>(Changes.PickupToPickup);
   const [newAddressText, setNewAddressText] = useState<string>("");
 
-  const [step, setStep] = useState<Steps>(Steps.Choosing);
-  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(agency ? ShippingMethod.Pickup : ShippingMethod.Delivery);
+  // const [step, setStep] = useState<Steps>(Steps.Choosing);
+  // const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(agency ? ShippingMethod.Pickup : ShippingMethod.Delivery);
+
+  const [step, setStep] = useState<Steps>(Steps.Detailing);
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(ShippingMethod.Delivery);
 
   const changeCity = (c: KeyValue) => {
     setCity({
@@ -159,7 +162,7 @@ const CityModal: FC<Props> = () => {
       setShippingMethod(ShippingMethod.Express);
       setStep(Steps.Detailing);
     }
-  },[showExpressModal]);
+  }, [showExpressModal]);
 
   useEffect(() => {
     const userInfo = data && data.userInfo.length ? data.userInfo[0] : {};
@@ -230,33 +233,28 @@ const CityModal: FC<Props> = () => {
               <path d="M16 16L2 2" stroke="#808080" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
             </svg>
           </CloseWrapper>
-          {step === Steps.Detailing && (
+          {/* {step === Steps.Detailing && (
             <BackWrapper onClick={() => setStep(Steps.Choosing)}>
               {/* back icon */}
-              <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14.5 5.5H1" stroke="#2F2F2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M5.5 1L1 5.5L5.5 10" stroke="#2F2F2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </BackWrapper>
-          )}
+              </svg> */}
+          {/* </BackWrapper> */}
+          {/* )}} */}
           {/* Back Icon above */}
 
-          {step === Steps.Choosing &&
-            <ChooseShipping
-              setShippingMethod={setShippingMethod}
-              setStep={setStep}
-              street={data?.userInfo[0]?.defaultAddressLabel || ""}
-          />}
-          {step === Steps.Detailing && (
-            <AddressDetail
-              shippingMethod={shippingMethod}
-              setShippingMethod={setShippingMethod}
-              setStep={setStep}
-              setChangeModalVisible={setModalVisible}
-              setModalStepType={setModalStepType}
-              setNewAddressText={setNewAddressText}
-            />
-          )}
+          {/* {step === Steps.Choosing && <ChooseShipping setShippingMethod={setShippingMethod} setStep={setStep} street={data?.userInfo[0]?.defaultAddressLabel || ""} />}
+          {step === Steps.Detailing && ( */}
+          <AddressDetail
+            shippingMethod={shippingMethod}
+            setShippingMethod={setShippingMethod}
+            setStep={setStep}
+            setChangeModalVisible={setModalVisible}
+            setModalStepType={setModalStepType}
+            setNewAddressText={setNewAddressText}
+          />
+          {/* )} */}
         </Modal>
       </Courtain>
 

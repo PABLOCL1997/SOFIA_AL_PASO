@@ -24,7 +24,7 @@
     "shipping_type": {
       "express": "Envío Express",
       "pickup": "Retirá al paso",
-      "delivery": "Recibe en casa"
+      "delivery": "Elige tu ciudad"
     },
     "choose_user_type": {
       "title": "¿Cómo deseas finalizar tu pedido?",
