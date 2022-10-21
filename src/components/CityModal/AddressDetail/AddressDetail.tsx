@@ -143,7 +143,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
     }
 
     setChangeModalVisible(true);
-    setStep(Steps.Choosing);
+    setStep(Steps.Detailing);
   };
 
   const handleSetAgency = async () => {
@@ -173,7 +173,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
 
     setChangeModalVisible(true);
     setNewAddressText(selectedAddress?.name);
-    setStep(Steps.Choosing);
+    setStep(Steps.Detailing);
     setUserMinimumPrice({
       variables: { user: { showMinimumPrice: String("show") } },
     });
@@ -210,7 +210,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
           },
         },
       });
-      setStep(Steps.Choosing);
+      setStep(Steps.Detailing);
       hideExpressModal();
       setExpressAddress({ variables: { user: { expressAltAddress: altExpressAddress } } });
     }
@@ -272,7 +272,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
 
   useEffect(() => {
     if (shippingMethod === ShippingMethod.Delivery) {
-      const street = selectedAddress?.street || "";      
+      const street = selectedAddress?.street || "";
       const latitudes = citiesLatitudes[street as keyof typeof citiesLatitudes];
       const lat = latitudes?.[0];
       const lng = latitudes?.[1];
@@ -281,8 +281,8 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
         (window as any).map && setLatLng("", lat, lng);
         setCenterMap({
           lat,
-          lng
-        })
+          lng,
+        });
       } else {
         const userLatitud = selectedAddress?.latitude;
         const userLongitud = selectedAddress?.longitude;
@@ -291,7 +291,7 @@ const AddressDetail: FC<Props> = ({ setStep, setShippingMethod, shippingMethod, 
           setCenterMap({
             lat: parseFloat(userLatitud),
             lng: parseFloat(userLongitud),
-          })
+          });
         }
       }
     }

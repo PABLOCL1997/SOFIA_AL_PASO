@@ -50,7 +50,7 @@ const ChooseShipping: FC<{
       {hasB2EAddress ? null : (
         <ShippingOption
           option={ShippingOptions.Delivery}
-          title="Recibe en casa"
+          title="Verifica tu información"
           description="Compra sin descuento"
           street={street}
           isSelected={store === ("ECOMMERCE" as OrderType)}
@@ -77,7 +77,7 @@ const ChooseShipping: FC<{
         />
       )}
 
-      <ShippingOption
+      {/* <ShippingOption
         option={ShippingOptions.Express}
         title="Envío express"
         description="Recibe en casa"
@@ -108,7 +108,7 @@ const ChooseShipping: FC<{
         onAddAddress={() => {
           toggleAndClickSelector(pickupSelector);
         }}
-      />
+      /> */}
     </React.Fragment>
   );
 };
