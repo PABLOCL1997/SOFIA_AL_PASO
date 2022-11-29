@@ -38,7 +38,7 @@ const Thanks: FC<Props> = ({ orders, isPickup, guestOrder }) => {
   return (
     <Suspense fallback={<Loader />}>
       <SC.Container>
-        <img src="http://email.sofia.com.bo/pub/cct?_ri_=X0Gzc2X%3DAQpglLjHJlDQG5q7yKzbiC41uAUCuzbwMzcpzcW&_ei_=E-u1DM6nNGcvQEXNlgFB7pk" width="1" height="1" />
+        <img src="https://email.sofia.com.bo/pub/cct?_ri_=X0Gzc2X%3DAQpglLjHJlDQG5q7yKzbiC41uAUCuzbwMzcpzcW&_ei_=E-u1DM6nNGcvQEXNlgFB7pk" width="1" height="1" />
         <SC.Title>
           <ThankCheck />
           <h2>{t("thankyou.title")}</h2>
